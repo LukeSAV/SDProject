@@ -4,7 +4,7 @@ import serial
 import time
 from sensor_msgs import msg
 
-ser = serial.Serial(port="/dev/ttyUSB0", baudrate=9600, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=0)
+ser = serial.Serial(port="/dev/ttyUSB1", baudrate=9600, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=0)
 
 left_speed = '0'
 right_speed = '0'
