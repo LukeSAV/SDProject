@@ -18,8 +18,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="2018-01-27 17_33_55-FUSION.png" translatesAutoresizingMaskIntoConstraints="NO" id="wZJ-XX-vyg">
+                                <rect key="frame" x="36" y="29" width="352" height="317"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="352" id="4U0-IR-13m"/>
+                                    <constraint firstAttribute="height" constant="317" id="ACb-fc-QQv"/>
+                                </constraints>
+                            </imageView>
                             <button clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ieh-yn-Zx2">
-                                <rect key="frame" x="396" y="156.5" width="180" height="62"/>
+                                <rect key="frame" x="440" y="156" width="180" height="62"/>
                                 <color key="backgroundColor" red="0.83246500097457687" green="0.88660695257117905" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="62" id="fPo-GR-kwg"/>
@@ -30,7 +37,7 @@
                                 </state>
                             </button>
                             <button hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="euF-8J-l2X">
-                                <rect key="frame" x="396" y="156.5" width="180" height="62"/>
+                                <rect key="frame" x="440" y="156" width="180" height="62"/>
                                 <color key="backgroundColor" red="0.83246500099999998" green="0.8866069526" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="62" id="YOz-Fo-coJ"/>
@@ -40,13 +47,6 @@
                                     <color key="titleColor" red="0.25122304829999997" green="0.35872640389999999" blue="0.62414993519999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="2018-01-27 17_33_55-FUSION.png" translatesAutoresizingMaskIntoConstraints="NO" id="wZJ-XX-vyg">
-                                <rect key="frame" x="36" y="29" width="352" height="317"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="352" id="4U0-IR-13m"/>
-                                    <constraint firstAttribute="height" constant="317" id="ACb-fc-QQv"/>
-                                </constraints>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.30018584768252393" green="0.38229939987886513" blue="0.46451991580310881" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -54,11 +54,15 @@
                             <constraint firstItem="wZJ-XX-vyg" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="29" id="Jx4-cj-XNS"/>
                             <constraint firstItem="euF-8J-l2X" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="106" id="LGB-Rc-OVk"/>
                             <constraint firstItem="euF-8J-l2X" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="MYQ-f8-Vfb"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="euF-8J-l2X" secondAttribute="trailing" constant="91" id="POr-I7-foz"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="euF-8J-l2X" secondAttribute="trailing" constant="91" id="POr-I7-foz">
+                                <variation key="heightClass=compact-widthClass=compact" constant="47"/>
+                            </constraint>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="wZJ-XX-vyg" secondAttribute="bottom" constant="50" id="b6k-PD-fdv"/>
                             <constraint firstItem="wZJ-XX-vyg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="36" id="cWS-Q0-nki"/>
                             <constraint firstItem="wZJ-XX-vyg" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="dhu-XX-YCQ"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ieh-yn-Zx2" secondAttribute="trailing" constant="91" id="ifq-Rc-STh"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ieh-yn-Zx2" secondAttribute="trailing" constant="91" id="ifq-Rc-STh">
+                                <variation key="heightClass=compact-widthClass=compact" constant="47"/>
+                            </constraint>
                             <constraint firstItem="ieh-yn-Zx2" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="106" id="olB-B9-q3n"/>
                             <constraint firstItem="euF-8J-l2X" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="rdU-QO-CaJ"/>
                             <constraint firstItem="ieh-yn-Zx2" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="sWV-3E-qKD"/>
