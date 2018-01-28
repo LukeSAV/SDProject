@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A34EAEC4201D5717001E5B44 /* 2018-01-27 17_33_55-FUSION.png in Resources */ = {isa = PBXBuildFile; fileRef = A34EAEC3201D5717001E5B44 /* 2018-01-27 17_33_55-FUSION.png */; };
 		A3A57ADE201D242400316BA7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A57ADD201D242400316BA7 /* AppDelegate.swift */; };
 		A3A57AE0201D242400316BA7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A57ADF201D242400316BA7 /* ViewController.swift */; };
 		A3A57AE3201D242400316BA7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3A57AE1201D242400316BA7 /* Main.storyboard */; };
-		A3A57AE5201D242400316BA7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A3A57AE4201D242400316BA7 /* Assets.xcassets */; };
 		A3A57AE8201D242400316BA7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3A57AE6201D242400316BA7 /* LaunchScreen.storyboard */; };
 		A3A57AF3201D242500316BA7 /* SDProjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A57AF2201D242500316BA7 /* SDProjectTests.swift */; };
 		A3A57AFE201D242500316BA7 /* SDProjectUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A57AFD201D242500316BA7 /* SDProjectUITests.swift */; };
@@ -34,11 +34,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A34EAEC3201D5717001E5B44 /* 2018-01-27 17_33_55-FUSION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "2018-01-27 17_33_55-FUSION.png"; sourceTree = "<group>"; };
 		A3A57ADA201D242400316BA7 /* SDProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SDProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3A57ADD201D242400316BA7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A3A57ADF201D242400316BA7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		A3A57AE2201D242400316BA7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		A3A57AE4201D242400316BA7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A3A57AE7201D242400316BA7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A3A57AE9201D242500316BA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A3A57AEE201D242500316BA7 /* SDProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SDProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -74,6 +74,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A34EAEC2201D5668001E5B44 /* Assets.xcassets */ = {
+			isa = PBXGroup;
+			children = (
+				A34EAEC3201D5717001E5B44 /* 2018-01-27 17_33_55-FUSION.png */,
+			);
+			path = Assets.xcassets;
+			sourceTree = "<group>";
+		};
 		A3A57AD1201D242400316BA7 = {
 			isa = PBXGroup;
 			children = (
@@ -97,10 +105,10 @@
 		A3A57ADC201D242400316BA7 /* SDProject */ = {
 			isa = PBXGroup;
 			children = (
+				A34EAEC2201D5668001E5B44 /* Assets.xcassets */,
 				A3A57ADD201D242400316BA7 /* AppDelegate.swift */,
 				A3A57ADF201D242400316BA7 /* ViewController.swift */,
 				A3A57AE1201D242400316BA7 /* Main.storyboard */,
-				A3A57AE4201D242400316BA7 /* Assets.xcassets */,
 				A3A57AE6201D242400316BA7 /* LaunchScreen.storyboard */,
 				A3A57AE9201D242500316BA7 /* Info.plist */,
 			);
@@ -232,8 +240,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A34EAEC4201D5717001E5B44 /* 2018-01-27 17_33_55-FUSION.png in Resources */,
 				A3A57AE8201D242400316BA7 /* LaunchScreen.storyboard in Resources */,
-				A3A57AE5201D242400316BA7 /* Assets.xcassets in Resources */,
 				A3A57AE3201D242400316BA7 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -429,6 +437,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PSXS6BYE4G;
 				INFOPLIST_FILE = SDProject/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Welland.SDProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -444,6 +453,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PSXS6BYE4G;
 				INFOPLIST_FILE = SDProject/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Welland.SDProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";

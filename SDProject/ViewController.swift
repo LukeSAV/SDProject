@@ -10,9 +10,13 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var connectControllerBtn: UIButton!
+    @IBOutlet weak var connectVideoBtn: UIButton!
+    @IBOutlet weak var iphoneImg: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        connectControllerBtn.layer.cornerRadius = 5;
     }
 
     override func didReceiveMemoryWarning() {
