@@ -20,10 +20,16 @@ class SecondViewController: UIViewController {
     
     @objc func leftButtonDown(sender: AnyObject) {
         print("Left")
+        let mystr = "L"
+        let data = mystr.data(using: String.Encoding.utf8)
+        connectedDevice.writeValue(data!, for: charTopic, type: CBCharacteristicWriteType.withoutResponse)
         leftTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(moveLeftMotor), userInfo: nil, repeats: true)
     }
     @objc func rightButtonDown(sender: AnyObject) {
         print("Right")
+        let mystr = "R"
+        let data = mystr.data(using: String.Encoding.utf8)
+        connectedDevice.writeValue(data!, for: charTopic, type: CBCharacteristicWriteType.withoutResponse)
         rightTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(moveRightMotor), userInfo: nil, repeats: true)
     }
 
