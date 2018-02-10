@@ -45,14 +45,17 @@ class MainGui(QMainWindow, Ui_MainWindow):
         self.driveLabel.setText("0")
 
     def pSliderReleased(self):
-        self.bluetoothManager.send("P:"+self.pEdit.text() + ";")
+        self.bluetoothManager.send("tP:{:07.2f};".format(float(self.pEdit.text())))
 
     def iSliderReleased(self):
-        pass
+        self.bluetoothManager.send("tI:{:07.2f};".format(float(self.iEdit.text())))
+
     def dSliderReleased(self):
-        pass
+        self.bluetoothManager.send("tD:{:07.2f};".format(float(self.dEdit.text())))
+
+
     def driveSliderReleased(self):
-        #TODO send drive command
+        self.bluetoothManager.send("tF:{:07.2f};".format(float(self.dEdit.text())))
         pass
 
 

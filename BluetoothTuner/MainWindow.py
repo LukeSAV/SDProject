@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Qt/untitled/mainwindow.ui'
 #
-# Created: Fri Feb 09 23:30:26 2018
+# Created: Sat Feb 10 17:43:27 2018
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
