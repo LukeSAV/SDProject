@@ -6,9 +6,10 @@ from BluetoothManager import *
 
 
 class MainGui(QMainWindow, Ui_MainWindow):
-    def __init__(self, parent=None):
+    def __init__(self, bluetoothManager, parent=None):
         super(MainGui, self).__init__(parent)
         self.setupUi(self)
+        self.bluetoothManager = bluetoothManager
 
 
 
@@ -44,7 +45,8 @@ class MainGui(QMainWindow, Ui_MainWindow):
         self.driveLabel.setText("0")
 
     def pSliderReleased(self):
-        pass
+        self.bluetoothManager.send("P:"+self.pEdit.text() + ";")
+
     def iSliderReleased(self):
         pass
     def dSliderReleased(self):
@@ -54,12 +56,10 @@ class MainGui(QMainWindow, Ui_MainWindow):
         pass
 
 
-
-
 if __name__ == "__main__":
-    manager = BluetoothManager("3")
+    manager = BluetoothManager("20:16:01:20:58:33")
     currentApp = QApplication(sys.argv)
-    currentForm = MainGui()
+    currentForm = MainGui(manager)
     currentForm.show()
     currentApp.exec_()
     manager.close()

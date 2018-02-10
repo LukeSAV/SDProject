@@ -15,23 +15,14 @@ if __name__ == "__main__":
 
 class BluetoothManager:
     """Establish and save a connection to the Arduino"""
-    def __init__(self, addr):
+    def __init__(self, address):
         uuid = "94f39d29-7d6d-437d-973b-fba39e49d4ee"
-        service_matches = find_service( uuid = uuid, address = addr )
-
-        if len(service_matches) == 0:
-            print("couldn't find the SampleServer service =(")
-            sys.exit(0)
-
-        first_match = service_matches[0]
-        port = first_match["port"]
-        name = first_match["name"]
-        host = first_match["host"]
-
-        print("connecting to \"%s\" on %s" % (name, host))
+        print(address)
 
         self.sock = BluetoothSocket(RFCOMM)
-        self.sock.connect((host, port))
+        self.sock.connect((address,1 ))
+    def send(self,data):
+        self.sock.send(data)
 
     def close(self):
         self.sock.close()
