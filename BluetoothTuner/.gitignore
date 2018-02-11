@@ -107,3 +107,6 @@ venv.bak/
 
 GenQtGui.pyc
 MainWindow.pyc
+
+# Ignore jetbrains stuff
+.idea/
