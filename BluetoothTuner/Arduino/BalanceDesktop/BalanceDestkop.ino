@@ -96,8 +96,10 @@ void setup() {
 }
 
 double degrees = 1;
-int kp  = 0;
-int ki = 0;
+float kp = 0;
+float ki = 0;
+float kd = 0;
+
 double sum = 0;
 int sp = 2;
 unsigned long lastUpdateTime = 0;
