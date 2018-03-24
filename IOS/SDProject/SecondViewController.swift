@@ -12,45 +12,26 @@ import CoreBluetooth
 class SecondViewController: UIViewController {
     var connectedDevice:CBPeripheral!
     var charTopic:CBCharacteristic!
-    var leftTimer:Timer!
-    var rightTimer:Timer!
+    //var leftTimer:Timer!
+    //var rightTimer:Timer!
     
-    @IBOutlet weak var leftBtn: UIButton!
-    @IBOutlet weak var rightBtn: UIButton!
     
-    @objc func leftButtonDown(sender: AnyObject) {
-        print("Left")
-        let mystr = "L"
-        let data = mystr.data(using: String.Encoding.utf8)
+    @IBOutlet weak var leftSlider: UISlider!
+    @IBOutlet weak var rightSlider: UISlider!
+    
+    @IBAction func leftSliderAct(_ sender: UISlider) {
+        var myStr = "L" + String(Int(leftSlider.value)) + "\n"
+        var data = myStr.data(using: String.Encoding.utf8)
         connectedDevice.writeValue(data!, for: charTopic, type: CBCharacteristicWriteType.withoutResponse)
-        leftTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(moveLeftMotor), userInfo: nil, repeats: true)
     }
-    @objc func rightButtonDown(sender: AnyObject) {
-        print("Right")
-        let mystr = "R"
-        let data = mystr.data(using: String.Encoding.utf8)
+    
+    
+    @IBAction func rightSliderAct(_ sender: UISlider) {
+        var myStr = "R" + String(Int(rightSlider.value)) + "\n"
+        var data = myStr.data(using: String.Encoding.utf8)
         connectedDevice.writeValue(data!, for: charTopic, type: CBCharacteristicWriteType.withoutResponse)
-        rightTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(moveRightMotor), userInfo: nil, repeats: true)
     }
 
-    @objc func leftButtonUp(sender: AnyObject) {
-        leftTimer.invalidate()
-    }
-    @objc func rightButtonUp(sender: AnyObject) {
-        rightTimer.invalidate()
-    }
-    
-    @objc func moveLeftMotor() {
-        let mystr = "L"
-        let data = mystr.data(using: String.Encoding.utf8)
-        connectedDevice.writeValue(data!, for: charTopic, type: CBCharacteristicWriteType.withoutResponse)
-    }
-    @objc func moveRightMotor() {
-        let mystr = "R"
-        let data = mystr.data(using: String.Encoding.utf8)
-        connectedDevice.writeValue(data!, for: charTopic, type: CBCharacteristicWriteType.withoutResponse)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -58,14 +39,6 @@ class SecondViewController: UIViewController {
         let mystr = "SUCCESS"
         let data = mystr.data(using: String.Encoding.utf8)
         connectedDevice.writeValue(data!, for: charTopic, type: CBCharacteristicWriteType.withoutResponse)
-        leftBtn.layer.cornerRadius = 5
-        rightBtn.layer.cornerRadius = 5
-        
-        leftBtn.addTarget(self, action:#selector(leftButtonDown(sender:)), for: .touchDown)
-        leftBtn.addTarget(self, action:#selector(leftButtonUp(sender:)), for: [.touchUpInside, .touchUpOutside])
-        
-        rightBtn.addTarget(self, action:#selector(rightButtonDown(sender:)), for: .touchDown)
-        rightBtn.addTarget(self, action:#selector(rightButtonUp(sender:)), for: [.touchUpInside, .touchUpOutside])
     }
 
     override func didReceiveMemoryWarning() {

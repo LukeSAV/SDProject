@@ -126,29 +126,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bek-Jz-GnV">
-                                <rect key="frame" x="20" y="291" width="69" height="64"/>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="90" minValue="0.0" maxValue="180" translatesAutoresizingMaskIntoConstraints="NO" id="vRO-cD-2YO">
+                                <rect key="frame" x="18" y="265" width="300" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.83114355799999995" green="0.88707286119999995" blue="0.99984973669999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="Left">
-                                    <color key="titleColor" red="0.30018584770000001" green="0.3822993999" blue="0.46451991580000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O9E-H3-rtp">
-                                <rect key="frame" x="578" y="291" width="69" height="64"/>
+                                <connections>
+                                    <action selector="leftSliderAct:" destination="oay-xw-n7t" eventType="valueChanged" id="Dh7-2Y-OQN"/>
+                                </connections>
+                            </slider>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="90" minValue="0.0" maxValue="180" translatesAutoresizingMaskIntoConstraints="NO" id="cve-CP-Hlp">
+                                <rect key="frame" x="352" y="265" width="297" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.83114355799999995" green="0.88707286119999995" blue="0.99984973669999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title="Right">
-                                    <color key="titleColor" red="0.30018584770000001" green="0.3822993999" blue="0.46451991580000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                            </button>
+                                <connections>
+                                    <action selector="rightSliderAct:" destination="oay-xw-n7t" eventType="valueChanged" id="3c6-Ho-XFp"/>
+                                </connections>
+                            </slider>
                         </subviews>
                         <color key="backgroundColor" red="0.30018584770000001" green="0.3822993999" blue="0.46451991580000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="Xn5-lT-dBF"/>
                     </view>
                     <connections>
-                        <outlet property="leftBtn" destination="bek-Jz-GnV" id="Tqe-qL-pN7"/>
-                        <outlet property="rightBtn" destination="O9E-H3-rtp" id="GWj-0Y-gmS"/>
+                        <outlet property="leftSlider" destination="vRO-cD-2YO" id="T0a-Ar-4M8"/>
+                        <outlet property="rightSlider" destination="cve-CP-Hlp" id="xSs-Rs-QIN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QK0-Tj-ey6" userLabel="First Responder" sceneMemberID="firstResponder"/>
