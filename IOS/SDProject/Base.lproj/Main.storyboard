@@ -126,27 +126,35 @@
                         <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="95" minValue="70" maxValue="120" translatesAutoresizingMaskIntoConstraints="NO" id="vRO-cD-2YO">
-                                <rect key="frame" x="18" y="265" width="300" height="30"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1aF-PK-rvc" customClass="CDJoystick" customModule="CDJoystick">
+                                <rect key="frame" x="43" y="62" width="250" height="250"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <connections>
-                                    <action selector="leftSliderAct:" destination="oay-xw-n7t" eventType="valueChanged" id="Dh7-2Y-OQN"/>
-                                </connections>
-                            </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="95" minValue="70" maxValue="120" translatesAutoresizingMaskIntoConstraints="NO" id="cve-CP-Hlp">
-                                <rect key="frame" x="352" y="265" width="297" height="30"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ifh-0B-DrB">
+                                <rect key="frame" x="474" y="140" width="134" height="95"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="0.38408388635761814" blue="0.45222080681597876" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="Oh fuck oh fuck">
+                                    <color key="titleColor" red="0.30018584770000001" green="0.3822993999" blue="0.46451991580000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
                                 <connections>
-                                    <action selector="rightSliderAct:" destination="oay-xw-n7t" eventType="valueChanged" id="3c6-Ho-XFp"/>
+                                    <action selector="stopBtn:" destination="oay-xw-n7t" eventType="touchUpInside" id="f0C-KU-oHq"/>
                                 </connections>
-                            </slider>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Robot master controller" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cmV-oy-fRL">
+                                <rect key="frame" x="78" y="20" width="181" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.83114355799999995" green="0.88707286119999995" blue="0.99984973669999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.30018584770000001" green="0.3822993999" blue="0.46451991580000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="Xn5-lT-dBF"/>
                     </view>
                     <connections>
-                        <outlet property="leftSlider" destination="vRO-cD-2YO" id="T0a-Ar-4M8"/>
-                        <outlet property="rightSlider" destination="cve-CP-Hlp" id="xSs-Rs-QIN"/>
+                        <outlet property="robotJS" destination="1aF-PK-rvc" id="b1x-bC-hup"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QK0-Tj-ey6" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -40,7 +40,7 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
         connectControllerBtn.layer.cornerRadius = 5
         goToControllerBtn.layer.cornerRadius = 5
         btConnectedLbl.isHidden = true
-        goToControllerBtn.isEnabled = false
+        //goToControllerBtn.isEnabled = false
         goToControllerBtn.alpha = 0.5
         manager = CBCentralManager(delegate: self, queue: nil)
     }
