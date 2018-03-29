@@ -9,14 +9,11 @@
 import UIKit
 import CoreBluetooth
 import CDJoystick
-//import GameController
 
 class SecondViewController: UIViewController {
     var connectedDevice:CBPeripheral!
     var charTopic:CBCharacteristic!
-    //var leftTimer:Timer!
-    //var rightTimer:Timer!
-    
+
     @IBAction func stopBtn(_ sender: Any) {
         connectedDevice.writeValue("L90\n".data(using: String.Encoding.utf8)!, for: charTopic, type: CBCharacteristicWriteType.withoutResponse)
         connectedDevice.writeValue("R90\n".data(using: String.Encoding.utf8)!, for: charTopic, type: CBCharacteristicWriteType.withoutResponse)
@@ -25,12 +22,6 @@ class SecondViewController: UIViewController {
     
     @IBOutlet weak var robotJS: CDJoystick!
     
-/*    @IBAction func rightSliderAct(_ sender: UISlider) {
-        var myStr = "R" + String(Int(rightSlider.value)) + "\n"
-        var data = myStr.data(using: String.Encoding.utf8)
-        connectedDevice.writeValue(data!, for: charTopic, type: CBCharacteristicWriteType.withoutResponse)
-    }*/
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -75,13 +66,11 @@ class SecondViewController: UIViewController {
             }
             let left_str = "L" + String(Int(left_base * multi + 90)) + "\n"
             let right_str = "R" + String(Int(right_base * multi + 90)) + "\n"
-            let left_data = String(left_base * multi).data(using: String.Encoding.utf8)
-            let right_data = String(right_base * multi).data(using: String.Encoding.utf8)
-            print(left_str)
-            print(right_str)
-            
-            //connectedDevice.writeValue(left_data!, for: charTopic, type: CBCharacteristicWriteType.withoutResponse)
-            //connectedDevice.writeValue(right_data!, for: charTopic, type: CBCharacteristicWriteType.withoutResponse)
+            let left_data = String(left_str).data(using: String.Encoding.utf8)
+            let right_data = String(right_str).data(using: String.Encoding.utf8)
+
+            self.connectedDevice.writeValue(left_data!, for: self.charTopic, type: CBCharacteristicWriteType.withoutResponse)
+            self.connectedDevice.writeValue(right_data!, for: self.charTopic, type: CBCharacteristicWriteType.withoutResponse)
             
         }
 
