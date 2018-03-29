@@ -15,9 +15,9 @@ class ViewController: UIViewController, CBCentralManagerDelegate, CBPeripheralDe
     var bluetoothReady = false;
     var connectedDevice:CBPeripheral!
     var charTopic:CBCharacteristic!
-    private var uuidSerialService = "8D164112-D095-90E1-C251-78C2D97DE669"
-    private var txSerialService = "8D164113-D095-90E1-C251-78C2D97DE669"
-    private var rxSerialService = "8D164114-D095-90E1-C251-78C2D97DE669"
+    //private var uuidSerialService = "8D164112-D095-90E1-C251-78C2D97DE669"
+    //private var txSerialService = "8D164113-D095-90E1-C251-78C2D97DE669"
+    //private var rxSerialService = "8D164114-D095-90E1-C251-78C2D97DE669"
 
     @IBOutlet weak var btConnectedLbl: UILabel!
     @IBOutlet weak var connectControllerBtn: UIButton!
