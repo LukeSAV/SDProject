@@ -19,7 +19,6 @@
 		A321EF522069D7D100B6D01F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A321EF512069D7D100B6D01F /* Assets.xcassets */; };
 		A321EF572069D7D100B6D01F /* Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = A321EF3A2069D7D100B6D01F /* Watch.app */; };
 		A3333822206B07E700612506 /* SecondInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3333821206B07E700612506 /* SecondInterfaceController.swift */; };
-		A34B30FC206B1AC300FBCE58 /* WatchDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34B30FB206B1AC300FBCE58 /* WatchDriver.swift */; };
 		A34B30FE206B281400FBCE58 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A34B30FD206B281400FBCE58 /* Interface.storyboard */; };
 		A34B30FF206B35F000FBCE58 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A34B30FD206B281400FBCE58 /* Interface.storyboard */; };
 		A34EAEC4201D5717001E5B44 /* 2018-01-27 17_33_55-FUSION.png in Resources */ = {isa = PBXBuildFile; fileRef = A34EAEC3201D5717001E5B44 /* 2018-01-27 17_33_55-FUSION.png */; };
@@ -105,7 +104,6 @@
 		A321EF532069D7D100B6D01F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A321EF542069D7D100B6D01F /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
 		A3333821206B07E700612506 /* SecondInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondInterfaceController.swift; sourceTree = "<group>"; };
-		A34B30FB206B1AC300FBCE58 /* WatchDriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDriver.swift; sourceTree = "<group>"; };
 		A34B30FD206B281400FBCE58 /* Interface.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Interface.storyboard; sourceTree = "<group>"; };
 		A34EAEC3201D5717001E5B44 /* 2018-01-27 17_33_55-FUSION.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "2018-01-27 17_33_55-FUSION.png"; sourceTree = "<group>"; };
 		A3A57ADA201D242400316BA7 /* SDProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SDProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -197,7 +195,6 @@
 				A3333821206B07E700612506 /* SecondInterfaceController.swift */,
 				A321EF4D2069D7D100B6D01F /* ExtensionDelegate.swift */,
 				A321EF4F2069D7D100B6D01F /* NotificationController.swift */,
-				A34B30FB206B1AC300FBCE58 /* WatchDriver.swift */,
 				A321EF512069D7D100B6D01F /* Assets.xcassets */,
 				A321EF532069D7D100B6D01F /* Info.plist */,
 				A321EF542069D7D100B6D01F /* PushNotificationPayload.apns */,
@@ -377,7 +374,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Luke Armbruster";
 				TargetAttributes = {
 					A321EF392069D7D000B6D01F = {
@@ -535,7 +532,6 @@
 				A321EF502069D7D100B6D01F /* NotificationController.swift in Sources */,
 				A321EF4E2069D7D100B6D01F /* ExtensionDelegate.swift in Sources */,
 				A321EF4C2069D7D100B6D01F /* InterfaceController.swift in Sources */,
-				A34B30FC206B1AC300FBCE58 /* WatchDriver.swift in Sources */,
 				A3333822206B07E700612506 /* SecondInterfaceController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -699,6 +695,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -706,6 +703,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -756,6 +754,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -763,6 +762,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
