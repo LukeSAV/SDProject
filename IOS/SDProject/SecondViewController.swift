@@ -13,6 +13,7 @@ import CDJoystick
 class SecondViewController: UIViewController {
     var connectedDevice:CBPeripheral!
     var charTopic:CBCharacteristic!
+    var syncTimer:Timer? = nil
 
     @IBAction func stopBtn(_ sender: Any) {
         connectedDevice.writeValue("L90\n".data(using: String.Encoding.utf8)!, for: charTopic, type: CBCharacteristicWriteType.withoutResponse)
@@ -22,9 +23,16 @@ class SecondViewController: UIViewController {
     
     @IBOutlet weak var robotJS: CDJoystick!
     
+    @objc func sync() {
+        let mystr = "S\n"
+        let data = mystr.data(using: String.Encoding.utf8)
+        connectedDevice.writeValue(data!, for: charTopic, type: CBCharacteristicWriteType.withoutResponse)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        syncTimer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(self.sync), userInfo: nil, repeats: true)
         robotJS.trackingHandler = { joystickData in
             let x_vel = Double(joystickData.velocity.x)
             let y_vel = Double(joystickData.velocity.y) * -1.0
