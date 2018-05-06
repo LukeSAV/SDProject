@@ -18,9 +18,14 @@ class InterfaceController: WKInterfaceController, CBCentralManagerDelegate, CBPe
     
     @IBOutlet var BTConnLbl: WKInterfaceLabel!
     @IBOutlet var nextBtn: WKInterfaceButton!
+    /*
+    * @brief Search for Bluetooth devices if watch is ready
+    */
     @IBAction func BTConnBtn() {
         if(bluetoothReady) {
             discoverDevices()
+        } else {
+            print("Bluetooth not ready")
         }
         if charTopic != nil && connectedDevice != nil {
             print("Device alread connected")
@@ -28,17 +33,28 @@ class InterfaceController: WKInterfaceController, CBCentralManagerDelegate, CBPe
     }
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
-        // Configure interface objects here.
+        // Hide labels and deactivate button until BT is connected
         BTConnLbl.setHidden(true)
         nextBtn.setAlpha(0.3)
         nextBtn.setEnabled(false)
+        // Start CBCentralManager for watch
         manager = CBCentralManager(delegate: self, queue: nil)
-        
+        // Cancel existing connection when interface initiates
+        if(connectedDevice != nil) {
+            manager.cancelPeripheralConnection(connectedDevice)
+        }
+
     }
     
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
+        if(connectedDevice != nil) {
+            manager.cancelPeripheralConnection(connectedDevice)
+        }
+        BTConnLbl.setHidden(true)
+        nextBtn.setAlpha(0.3)
+        nextBtn.setEnabled(false)
     }
     
     override func didDeactivate() {
@@ -46,6 +62,9 @@ class InterfaceController: WKInterfaceController, CBCentralManagerDelegate, CBPe
         super.didDeactivate()
     }
     
+    /*
+    *  @brief Segues to second interface controller and sends BT info in dictionary
+    */
     override func contextForSegue(withIdentifier segueIdentifier: String) -> Any? {
         if segueIdentifier == "Next" {
             return ["manager": manager, "connectedDevice": connectedDevice, "charTopic": charTopic]
@@ -74,6 +93,10 @@ class InterfaceController: WKInterfaceController, CBCentralManagerDelegate, CBPe
         }
         print("\(consoleMsg)")
     }
+    
+    /*
+    *  @brief Searches for bluetooth devices to connect to matching CBUUID
+    */
     func discoverDevices() {
         manager.scanForPeripherals(withServices: [CBUUID(string:"FFE0")], options: nil)
     }

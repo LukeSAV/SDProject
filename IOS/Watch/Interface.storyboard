@@ -14,14 +14,14 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Watch_Extension">
                     <items>
-                        <button width="1" alignment="left" title="Connect to BT" id="ZhC-W6-YR4">
+                        <button width="1" height="53" alignment="left" title="Connect to BT" id="ZhC-W6-YR4">
                             <color key="titleColor" red="0.30018584770000001" green="0.3822993999" blue="0.46451991580000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="backgroundColor" red="0.83114355799999995" green="0.88707286119999995" blue="0.99984973669999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <action selector="BTConnBtn" destination="AgC-eL-Hgc" id="krk-yy-Fkq"/>
                             </connections>
                         </button>
-                        <button width="1" alignment="left" title="Next" id="1hw-yb-NeM">
+                        <button width="1" height="51" alignment="left" title="Next" id="1hw-yb-NeM">
                             <color key="titleColor" red="0.30018584770000001" green="0.3822993999" blue="0.46451991580000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="backgroundColor" red="0.83114355799999995" green="0.88707286119999995" blue="0.99984973669999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
@@ -100,6 +100,10 @@
                         </group>
                     </items>
                     <color key="backgroundColor" red="0.30018584770000001" green="0.3822993999" blue="0.46451991580000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <connections>
+                        <outlet property="leftLbl" destination="ORd-Ug-X7K" id="JgF-N8-fa3"/>
+                        <outlet property="rightLbl" destination="p0C-Xw-JH4" id="eUy-ex-DlZ"/>
+                    </connections>
                 </controller>
             </objects>
             <point key="canvasLocation" x="452.46153846153851" y="338.69230769230774"/>
