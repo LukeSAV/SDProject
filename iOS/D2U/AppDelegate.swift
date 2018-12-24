@@ -18,6 +18,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
+        ref = Database.database().reference() // Reference to the D2U database specified in pod file
+        ref.updateChildValues(["Delivery Requested" : false])
+        ref.observe(DataEventType.value, with: { (snapshot : DataSnapshot) in
+            let postDict = snapshot.value as! [String : AnyObject]
+            for entry in postDict {
+                if entry.key == "Delivery Requested" { // Check if the delivery has been requested by the user
+                    if entry.value as! Bool == true {
+                        print("Request received")
+                    }
+                }
+            }
+        })
         return true
     }
 

@@ -10,13 +10,15 @@
 		0A702174B6A729C3ED081C56 /* Pods_D2U.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3E9377A33CE99784D4F8421 /* Pods_D2U.framework */; };
 		83E0E765AF6406BA2CF1075A /* Pods_D2UUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE29E9D97F92BFF9029B14CA /* Pods_D2UUITests.framework */; };
 		A385482C21C4519F00C843C7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A385482B21C4519F00C843C7 /* AppDelegate.swift */; };
-		A385482E21C4519F00C843C7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A385482D21C4519F00C843C7 /* ViewController.swift */; };
+		A385482E21C4519F00C843C7 /* MapMainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A385482D21C4519F00C843C7 /* MapMainController.swift */; };
 		A385483121C4519F00C843C7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A385482F21C4519F00C843C7 /* Main.storyboard */; };
 		A385483321C451A100C843C7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A385483221C451A100C843C7 /* Assets.xcassets */; };
 		A385483621C451A100C843C7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A385483421C451A100C843C7 /* LaunchScreen.storyboard */; };
 		A385484121C451A100C843C7 /* D2UTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A385484021C451A100C843C7 /* D2UTests.swift */; };
 		A385484C21C451A100C843C7 /* D2UUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A385484B21C451A100C843C7 /* D2UUITests.swift */; };
 		A385485A21C455C100C843C7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A385485921C455C100C843C7 /* GoogleService-Info.plist */; };
+		A3B7E76421D042800034A875 /* DeliveryLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B7E76321D042800034A875 /* DeliveryLocation.swift */; };
+		A3B7E76621D044530034A875 /* DeliverySettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B7E76521D044530034A875 /* DeliverySettingsController.swift */; };
 		BABF3A326E1824801E591031 /* Pods_D2UTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFD9B07A429DFCDACC5E004A /* Pods_D2UTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -43,7 +45,7 @@
 		8E457504F86FB33D77B6B67E /* Pods-D2U.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-D2U.debug.xcconfig"; path = "Pods/Target Support Files/Pods-D2U/Pods-D2U.debug.xcconfig"; sourceTree = "<group>"; };
 		A385482821C4519F00C843C7 /* D2U.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = D2U.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A385482B21C4519F00C843C7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		A385482D21C4519F00C843C7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		A385482D21C4519F00C843C7 /* MapMainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMainController.swift; sourceTree = "<group>"; };
 		A385483021C4519F00C843C7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A385483221C451A100C843C7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A385483521C451A100C843C7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -55,6 +57,8 @@
 		A385484B21C451A100C843C7 /* D2UUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = D2UUITests.swift; sourceTree = "<group>"; };
 		A385484D21C451A100C843C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A385485921C455C100C843C7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A3B7E76321D042800034A875 /* DeliveryLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DeliveryLocation.swift; path = /Users/luke/Documents/SDProject/iOS/D2U/DeliveryLocation.swift; sourceTree = "<absolute>"; };
+		A3B7E76521D044530034A875 /* DeliverySettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliverySettingsController.swift; sourceTree = "<group>"; };
 		C032ABD99857CF5BD0CD13BC /* Pods-D2UTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-D2UTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-D2UTests/Pods-D2UTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C3E9377A33CE99784D4F8421 /* Pods_D2U.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_D2U.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD419AD39F84D2E91481CD5A /* Pods-D2UTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-D2UTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-D2UTests/Pods-D2UTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -126,13 +130,15 @@
 		A385482A21C4519F00C843C7 /* D2U */ = {
 			isa = PBXGroup;
 			children = (
+				A3B7E76321D042800034A875 /* DeliveryLocation.swift */,
 				A385482B21C4519F00C843C7 /* AppDelegate.swift */,
-				A385482D21C4519F00C843C7 /* ViewController.swift */,
+				A385482D21C4519F00C843C7 /* MapMainController.swift */,
 				A385482F21C4519F00C843C7 /* Main.storyboard */,
 				A385483221C451A100C843C7 /* Assets.xcassets */,
 				A385483421C451A100C843C7 /* LaunchScreen.storyboard */,
 				A385485921C455C100C843C7 /* GoogleService-Info.plist */,
 				A385483721C451A100C843C7 /* Info.plist */,
+				A3B7E76521D044530034A875 /* DeliverySettingsController.swift */,
 			);
 			path = D2U;
 			sourceTree = "<group>";
@@ -399,7 +405,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A385482E21C4519F00C843C7 /* ViewController.swift in Sources */,
+				A3B7E76621D044530034A875 /* DeliverySettingsController.swift in Sources */,
+				A385482E21C4519F00C843C7 /* MapMainController.swift in Sources */,
+				A3B7E76421D042800034A875 /* DeliveryLocation.swift in Sources */,
 				A385482C21C4519F00C843C7 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
