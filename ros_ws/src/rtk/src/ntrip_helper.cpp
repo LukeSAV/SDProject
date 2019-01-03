@@ -11,6 +11,8 @@
 #include <chrono>
 #include <stdlib.h>
 #include <sys/reboot.h>
+#include "ros/ros.h"
+#include "std_msgs/String.h"
 #include "../include/xml_reader.h"
 #include "../include/Node.h"
 #include "../include/NMEAData.h"
@@ -88,11 +90,11 @@ void setClosestLandmark() { // Set the closest landmark to the user position bas
 	closest_landmark.insert(0, "LM:");
 }
 
-void parseNMEA(char* read_buf, int readBytes) { // Make sense of what's in the read buffer and pull out the GPGGA string if there is one
-	if(FILE* fp = fopen("DataLog.txt", "w+")) { // Writing to data log
+void parseNMEA(char* read_buf, int readBytes, ros::Publisher gpgga_pub) { // Make sense of what's in the read buffer and pull out the GPGGA string if there is one
+	/*if(FILE* fp = fopen("DataLog.txt", "w+")) { // Writing to data log
 		fprintf(fp, read_buf);
 		fclose(fp);
-	}
+	}*/
 	int index = 0;
 	int gpgga_index = 0;
 	std::string new_gpgga = "";
@@ -122,12 +124,15 @@ void parseNMEA(char* read_buf, int readBytes) { // Make sense of what's in the r
 	if(new_gpgga != "" && new_gpgga.substr(17, 4) != "0000" && new_gpgga.substr(30, 5) != "00000") { // Check that the message is at least feasible
 		gpgga_mu.lock();
 		NMEAData::gpgga_msg = new_gpgga;
+		std_msgs::String msg;
+		msg.data = new_gpgga;
+		gpgga_pub.publish(msg);
 		gpgga_ready.store(true);
 		gpgga_mu.unlock();
 	}
 }
 
-void nmeaHandler(const char* nmea_conn, struct serial* nmea_in) { // Handles reading NMEA data from RTK device
+/*void nmeaHandler(const char* nmea_conn, struct serial* nmea_in) { // Handles reading NMEA data from RTK device
 	if(nmea_conn) {
 		std::cout << "Not running NMEA thread.\n" << std::endl;
 		return;
@@ -194,4 +199,4 @@ void btHandler(const char* bt_conn, struct serial* bt_serial) { // Handles readi
 		counter++;
 		
 	}
-}
+}*/

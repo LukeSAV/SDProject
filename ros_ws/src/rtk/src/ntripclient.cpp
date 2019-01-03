@@ -18,21 +18,21 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
    or read http://www.gnu.org/licenses/gpl.txt
 
-*/
+ */
 
 /**
-*
-*	@brief This contains the client code for running NTRIP corrections services with an RTK capable device.
-*			
-*	Currently supports Raspberry Pi 3b. This device uses two USB ports for NMEA read and RTCM write. It also
-*	uses on-board UART on Pi to read/write to bluetooth device for companion iOS app.
-*
-*	@author Luke Armbruster
-*
-*	@bug No known bugs.
-*/
-	
-	
+ *
+ *	@brief This contains the client code for running NTRIP corrections services with an RTK capable device.
+ *			
+ *	Currently supports Raspberry Pi 3b. This device uses two USB ports for NMEA read and RTCM write. It also
+ *	uses on-board UART on Pi to read/write to bluetooth device for companion iOS app.
+ *
+ *	@author Luke Armbruster
+ *
+ *	@bug No known bugs.
+ */
+
+
 
 #include <ctype.h>
 #include <getopt.h>
@@ -46,6 +46,8 @@
 #include <numeric>
 #include <iostream>
 #include <thread>
+#include "ros/ros.h"
+#include "std_msgs/String.h"
 #include "../include/NMEAData.h"
 #include "../include/ntrip_helper.h"
 
@@ -197,16 +199,16 @@ static int getargs(int argc, char **argv, struct Args *args)
 	char *a;
 	int i = 0;
 
-	args->server = "www.euref-ip.net";
-	args->port = "2101";
-	args->user = "";
-	args->password = "";
+	args->server = "108.59.49.226";
+	args->port = "10000";
+	args->user = "lukea1";
+	args->password = "lukea1";
 	args->nmea = 0;
-	args->data = 0;
+	args->data = "RTCM3_MAX";
 	args->bitrate = 0;
 	args->proxyhost = 0;
 	args->proxyport = "2101";
-	args->mode = AUTO;
+	args->mode = NTRIP1;
 	args->initudp = 0;
 	args->udpport = 0;
 	args->protocol = SPAPROTOCOL_NONE;
@@ -411,226 +413,229 @@ static int btConnected = 1;
 
 int main(int argc, char **argv)
 {
-	struct Args args;
 
-	setbuf(stdout, 0);
-	setbuf(stdin, 0);
-	setbuf(stderr, 0);
+	ros::init(argc, argv, "rtk_gps_node");
+	ros::NodeHandle nh;
+	ros::Publisher gpgga_pub = nh.advertise<std_msgs::String>("rtk_gps_node", 1000);
+
+	while(ros::ok()) {
+		struct Args args;
+
+		setbuf(stdout, 0);
+		setbuf(stdin, 0);
+		setbuf(stderr, 0);
 #ifndef WINDOWSVERSION
-	signal(SIGALRM,sighandler_alarm);
-	signal(SIGINT,sighandler_int);
-	alarm(ALARMTIME);
+		signal(SIGALRM,sighandler_alarm);
+		signal(SIGINT,sighandler_int);
+		alarm(ALARMTIME);
 #else
-	WSADATA wsaData;
-	if(WSAStartup(MAKEWORD(1,1),&wsaData))
-	{
-		fprintf(stderr, "Could not init network access.\n");
-		return 20;
-	}
-#endif
-	if(getargs(argc, argv, &args))
-	{
-		struct serial rtcm_out; // RTCM data out of Pi (write at 57600)
-		struct serial nmea_in; // NMEA data into Pi (read at 115200)
-		struct serial bt_serial; // Bluetooth connection (read/write at 115200)
-		FILE *ser = 0;
-		char nmeabuffer[200] = "$GPGGA,"; /* our start string */
-		size_t nmeabufpos = 0;
-		size_t nmeastarpos = 0;
-		int sleeptime = 0;
-		const char *rtk_rtcm_conn = SerialInit(&rtcm_out, args.rtcm_usb, args.baud,
-				args.stopbits, args.protocol, args.parity, args.databits, 1);
-
-		const char *rtk_nmea_conn = SerialInit(&nmea_in, args.nmea_usb, SPABAUD_115200,
-				args.stopbits, args.protocol, args.parity, args.databits, 1);
-
-		const char *bt_conn = SerialInit(&bt_serial, "/dev/serial0", SPABAUD_115200,
-				args.stopbits, args.protocol, args.parity, args.databits, 1);
-		std::thread bt_thread(btHandler, bt_conn, &bt_serial);
-		if(rtk_rtcm_conn)
+		WSADATA wsaData;
+		if(WSAStartup(MAKEWORD(1,1),&wsaData))
 		{
-			printf("Not writing data to RTK device\n");
-			isWriting = 0;
+			fprintf(stderr, "Could not init network access.\n");
+			return 20;
 		}
-		if(rtk_nmea_conn) {
-			printf("Not reading data from RTK device\n");
-			isReading = 0;
-		}
-		if(bt_conn) {
-			printf("Not connected to bluetooth device\n");
-			btConnected = 0;
-		}
-		do {
-			sockettype sockfd = 0;
-			struct sockaddr_in their_addr;
-			struct hostent *he;
-			const char* server;
-			const char* port;
-			char* b;
-			long in_i;
-			long out_i;
-			int numbytes;
-			char output_buf[MAXDATASIZE];
-			char input_buf[MAXDATASIZE];
+#endif
+		if(getargs(argc, argv, &args))
+		{
+			//struct serial rtcm_out; // RTCM data out of Pi (write at 57600)
+			//struct serial nmea_in; // NMEA data into Pi (read at 115200)
+			//struct serial bt_serial; // Bluetooth connection (read/write at 115200)
+			struct serial rtk_uart;
+			FILE *ser = 0;
+			char nmeabuffer[200] = "$GPGGA,"; /* our start string */
+			size_t nmeabufpos = 0;
+			size_t nmeastarpos = 0;
+			int sleeptime = 0;
+			const char *rtk_uart_conn = SerialInit(&rtk_uart, "/dev/ttyUSB0", SPABAUD_57600,
+					args.stopbits, args.protocol, args.parity, args.databits, 1);
 
-			char read_buf[MAXDATASIZE];
-			int readBytes = 0;
+			//const char *rtk_nmea_conn = SerialInit(&nmea_in, args.nmea_usb, SPABAUD_115200,
+			//args.stopbits, args.protocol, args.parity, args.databits, 1);
 
-			server = args.server;
-			printf("Server: %s\n", server);
-			port = args.port;
-			printf("Port: %s\n", port);
-			memset(&their_addr, 0, sizeof(struct sockaddr_in));
+			//const char *bt_conn = SerialInit(&bt_serial, "/dev/serial0", SPABAUD_115200,
+			//args.stopbits, args.protocol, args.parity, args.databits, 1);
+			//std::thread bt_thread(btHandler, bt_conn, &bt_serial);
+			if(rtk_uart_conn)
+			{
+				printf("Not writing data to RTK device\n");
+				isWriting = 0;
+			}
+			do {
+				sockettype sockfd = 0;
+				struct sockaddr_in their_addr;
+				struct hostent *he;
+				const char* server;
+				const char* port;
+				char* b;
+				long in_i;
+				long out_i;
+				int numbytes;
+				char output_buf[MAXDATASIZE];
+				char input_buf[MAXDATASIZE];
 
-			if(isReading) { // Connected to GPS
-				printf("Waiting for data...\n");
-				while(1) { // Wait until a message is received from the GPS
-					gpgga_mu.lock();
-					if(NMEAData::gpgga_msg != "") {
-						gpgga_mu.unlock();
-						break;
-					}
-					gpgga_mu.unlock();
+				char read_buf[MAXDATASIZE];
+				int readBytes = 0;
 
-					read_buf[0] = 0;
-					readBytes = SerialRead(&nmea_in, read_buf, MAXDATASIZE);	
-					if(readBytes) { // Read some data. Check to see if it contains the GPGGA message
-						//std::cout << read_buf << std::endl;
-						alarm(ALARMTIME); // Data has been received, reset the alarm
-						parseNMEA(read_buf, readBytes);
-					}
-					gpgga_mu.lock();
-					std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-					if(NMEAData::gpgga_msg.size() < 36 || (NMEAData::gpgga_msg.substr(17, 4) == "0000" && NMEAData::gpgga_msg.substr(30, 5) == "00000")) { // No good yet (latitude and longitude are both 0)
-						std::cout << NMEAData::gpgga_msg << std::endl;
-						std::cout << "Data not valid yet" << std::endl;
-						NMEAData::gpgga_msg = "";
-						readBytes = 0;
-					}
-					gpgga_mu.unlock();
+				server = args.server;
+				printf("Server: %s\n", server);
+				port = args.port;
+				printf("Port: %s\n", port);
+				memset(&their_addr, 0, sizeof(struct sockaddr_in));
 
-				}
-				gpgga_ready.store(true);
-				std::cout << "Obtained valid first GPGGA message to send to caster" << std::endl;
-			}
-			//	
-			if((out_i = strtol(port, &b, 10)) && (!b || !*b)) { 
-				their_addr.sin_port = htons(out_i);
-			}
-			//
-			if(!(he = gethostbyname(server))) {
-				printf("Couldn't find server\n");	
-			}
-			else if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-				printf("Socket error\n");
-			}
-			else {
-				their_addr.sin_family = AF_INET;
-				their_addr.sin_addr = *((struct in_addr *)he->h_addr);
-			}
-			//		
-			if(connect(sockfd, (struct sockaddr *)&their_addr, sizeof(struct sockaddr)) == -1) {
-				printf("Could not connect on socket\n");
-			}
-			else {
-				printf("Connected on socket\n");
-			}
-			//
-			if(!args.data) { // No specific stream supplied. Showing entire source table.
-				out_i = snprintf(output_buf, MAXDATASIZE, "GET %s%s%s%s/ HTTP/1.1\r\n" "Host: %s\r\n%s" "User-Agent: %s/%s\r\n" "Connection: close\r\n" "\r\n", "", "", args.server, "", AGENTSTRING, revisionstr); // Write this to the sized input buffer
-			}	
-			else { // Supplying a specific stream
-				const char *nmeahead = (args.nmea && args.mode == HTTP) ? args.nmea : 0;
-				printf("Arg data: %s\n", args.data);
-				out_i=snprintf(output_buf, MAXDATASIZE-40, /* leave some space for login */
-						"GET %s%s%s%s/%s HTTP/1.1\r\n"
-						"Host: %s\r\n%s"
-						"User-Agent: %s/%s\r\n"
-						"%s%s%s"
-						"Connection: close%s"
-						, "", "",
-						"", "",
-						args.data, args.server,
-						args.mode == NTRIP1 ? "" : "Ntrip-Version: Ntrip/2.0\r\n",
-						AGENTSTRING, revisionstr,
-						nmeahead ? "Ntrip-GGA: " : "", nmeahead ? nmeahead : "",
-						nmeahead ? "\r\n" : "",
-						//"Ntrip-GGA: ", "\r\n",
-						(*args.user || *args.password) ? "\r\nAuthorization: Basic " : "");
-				printf("%s\n", output_buf);
-				out_i += encode(output_buf + out_i, MAXDATASIZE - out_i - 4, args.user, args.password); // -4 is to save room for carriage returns and line feeds
-				output_buf[out_i++] = '\r';
-				output_buf[out_i++] = '\n';
-				output_buf[out_i++] = '\r';
-				output_buf[out_i++] = '\n';
-			}
-			//
-			if(send(sockfd, output_buf, (size_t)out_i, 0) != out_i) {
-				printf("Issue writing on socket\n");
-			}
-			else if(args.data) { // Specific stream
-				printf("Getting data from NTRIP stream:\n");
-
-				numbytes = recv(sockfd, input_buf, MAXDATASIZE-1, 0);
-
-				if(numbytes > 17 && strstr(input_buf, "ICY 200 OK")) {
-					printf("Proper stream connected. Caster expects data.\n");
-					numbytes = 0;	
-					gpgga_mu.lock();
-					if(send(sockfd, NMEAData::gpgga_msg.c_str(), NMEAData::gpgga_msg.size(), 0) != NMEAData::gpgga_msg.size()) {
-						printf("Issue writing on socket");
-						gpgga_mu.unlock();
-						break;
-					}
-					else {
-						std::cout << NMEAData::gpgga_msg << std::endl;
-						printf("GPGGA message written on socket\n");
-					}
-					gpgga_mu.unlock();
-				}
-				else {
-					printf("Could not connect to caster source table");
-					break;
-				}
-				
-
-				std::thread nmea_thread(nmeaHandler, rtk_nmea_conn, &nmea_in); // Run the thread to handle reading NMEA data from device
-
-				auto start = std::chrono::system_clock::now();
-				auto cur_time = start;
-				std::chrono::duration<double> elapsed_time = std::chrono::duration<double>(10.0f); // Initially send message to caster
-				while(true) { // Read Caster data on socket and send GPGGA message every 5s
-					if(elapsed_time.count() >= 5.0f) { // 5 second passed, send caster most recent GPGGA message
+				if(isReading) { // Connected to GPS
+					printf("Waiting for data...\n");
+					while(1) { // Wait until a message is received from the GPS
 						gpgga_mu.lock();
-						if(NMEAData::gpgga_msg.size() < 36 || (NMEAData::gpgga_msg.substr(17, 4) == "0000" && NMEAData::gpgga_msg.substr(30, 5) == "00000")) { // Lost signal 
-							std::cout << "Lost signal" << std::endl;
+						if(NMEAData::gpgga_msg != "") {
 							gpgga_mu.unlock();
 							break;
 						}
-						if(send(sockfd, NMEAData::gpgga_msg.c_str(), NMEAData::gpgga_msg.size(), 0) != NMEAData::gpgga_msg.size()) {
-							printf("Issue writing on socket");
+						gpgga_mu.unlock();
+
+						read_buf[0] = 0;
+						readBytes = SerialRead(&rtk_uart, read_buf, MAXDATASIZE);	
+						if(readBytes) { // Read some data. Check to see if it contains the GPGGA message
+							//std::cout << read_buf << std::endl;
+							alarm(ALARMTIME); // Data has been received, reset the alarm
+							parseNMEA(read_buf, readBytes, gpgga_pub);
+						}
+						gpgga_mu.lock();
+						std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+						if(NMEAData::gpgga_msg.size() < 36 || (NMEAData::gpgga_msg.substr(17, 4) == "0000" && NMEAData::gpgga_msg.substr(30, 5) == "00000")) { // No good yet (latitude and longitude are both 0)
+							std::cout << NMEAData::gpgga_msg << std::endl;
+							std::cout << "Data not valid yet" << std::endl;
+							NMEAData::gpgga_msg = "";
+							readBytes = 0;
 						}
 						gpgga_mu.unlock();
-						start = std::chrono::system_clock::now();
-					}
 
+					}
+					gpgga_ready.store(true);
+					std::cout << "Obtained valid first GPGGA message to send to caster" << std::endl;
+				}
+				//	
+				if((out_i = strtol(port, &b, 10)) && (!b || !*b)) { 
+					their_addr.sin_port = htons(out_i);
+				}
+				//
+				if(!(he = gethostbyname(server))) {
+					printf("Couldn't find server\n");	
+				}
+				else if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+					printf("Socket error\n");
+				}
+				else {
+					their_addr.sin_family = AF_INET;
+					their_addr.sin_addr = *((struct in_addr *)he->h_addr);
+				}
+				//		
+				if(connect(sockfd, (struct sockaddr *)&their_addr, sizeof(struct sockaddr)) == -1) {
+					printf("Could not connect on socket\n");
+				}
+				else {
+					printf("Connected on socket\n");
+				}
+				//
+				if(!args.data) { // No specific stream supplied. Showing entire source table.
+					out_i = snprintf(output_buf, MAXDATASIZE, "GET %s%s%s%s/ HTTP/1.1\r\n" "Host: %s\r\n%s" "User-Agent: %s/%s\r\n" "Connection: close\r\n" "\r\n", "", "", args.server, "", AGENTSTRING, revisionstr); // Write this to the sized input buffer
+				}	
+				else { // Supplying a specific stream
+					const char *nmeahead = (args.nmea && args.mode == HTTP) ? args.nmea : 0;
+					printf("Arg data: %s\n", args.data);
+					out_i=snprintf(output_buf, MAXDATASIZE-40, /* leave some space for login */
+							"GET %s%s%s%s/%s HTTP/1.1\r\n"
+							"Host: %s\r\n%s"
+							"User-Agent: %s/%s\r\n"
+							"%s%s%s"
+							"Connection: close%s"
+							, "", "",
+							"", "",
+							args.data, args.server,
+							args.mode == NTRIP1 ? "" : "Ntrip-Version: Ntrip/2.0\r\n",
+							AGENTSTRING, revisionstr,
+							nmeahead ? "Ntrip-GGA: " : "", nmeahead ? nmeahead : "",
+							nmeahead ? "\r\n" : "",
+							//"Ntrip-GGA: ", "\r\n",
+							(*args.user || *args.password) ? "\r\nAuthorization: Basic " : "");
+					printf("%s\n", output_buf);
+					out_i += encode(output_buf + out_i, MAXDATASIZE - out_i - 4, args.user, args.password); // -4 is to save room for carriage returns and line feeds
+					output_buf[out_i++] = '\r';
+					output_buf[out_i++] = '\n';
+					output_buf[out_i++] = '\r';
+					output_buf[out_i++] = '\n';
+				}
+				//
+				if(send(sockfd, output_buf, (size_t)out_i, 0) != out_i) {
+					printf("Issue writing on socket\n");
+				}
+				else if(args.data) { // Specific stream
+					printf("Getting data from NTRIP stream:\n");
 
 					numbytes = recv(sockfd, input_buf, MAXDATASIZE-1, 0);
-					if(numbytes > 0) { // This should be the full blown RTCM3 message
-						alarm(ALARMTIME); // Data has been received, reset the alarm
-						SerialWrite(&rtcm_out, input_buf, numbytes);	
+
+					if(numbytes > 17 && strstr(input_buf, "ICY 200 OK")) {
+						printf("Proper stream connected. Caster expects data.\n");
+						numbytes = 0;	
+						gpgga_mu.lock();
+						if(send(sockfd, NMEAData::gpgga_msg.c_str(), NMEAData::gpgga_msg.size(), 0) != NMEAData::gpgga_msg.size()) {
+							printf("Issue writing on socket");
+							gpgga_mu.unlock();
+							break;
+						}
+						else {
+							std::cout << NMEAData::gpgga_msg << std::endl;
+							printf("GPGGA message written on socket\n");
+						}
+						gpgga_mu.unlock();
+					}
+					else {
+						printf("Could not connect to caster source table");
+						break;
 					}
 
-					cur_time = std::chrono::system_clock::now();
-					elapsed_time = cur_time - start;
+
+					//std::thread nmea_thread(nmeaHandler, rtk_uart_conn, &rtk_uart); // Run the thread to handle reading NMEA data from device
+
+					auto start = std::chrono::system_clock::now();
+					auto cur_time = start;
+					std::chrono::duration<double> elapsed_time = std::chrono::duration<double>(10.0f); // Initially send message to caster
+					while(true) { // Read Caster data on socket continuously. Send GPGGA message every 5s.
+						if(elapsed_time.count() >= 5.0f) { // 5 second passed, send caster most recent GPGGA message
+							gpgga_mu.lock();
+							if(NMEAData::gpgga_msg.size() < 36 || (NMEAData::gpgga_msg.substr(17, 4) == "0000" && NMEAData::gpgga_msg.substr(30, 5) == "00000")) { // Lost signal 
+								std::cout << "Lost signal" << std::endl;
+								gpgga_mu.unlock();
+								break;
+							}
+							if(send(sockfd, NMEAData::gpgga_msg.c_str(), NMEAData::gpgga_msg.size(), 0) != NMEAData::gpgga_msg.size()) {
+								printf("Issue writing on socket");
+							}
+							gpgga_mu.unlock();
+							start = std::chrono::system_clock::now();
+						}
+
+						numbytes = recv(sockfd, input_buf, MAXDATASIZE-1, 0); // Receive any RTCM data from caster
+						if(numbytes > 0) { // This should be the full blown RTCM3 message
+							alarm(ALARMTIME); // Data has been received, reset the alarm
+							SerialWrite(&rtk_uart, input_buf, numbytes);	
+						}
+
+						memset(read_buf, '\0', sizeof(read_buf)); // Clear the buffer
+						readBytes = SerialRead(&rtk_uart, read_buf, MAXDATASIZE); // Receive any data from the UART hardware buffer
+						parseNMEA(read_buf, readBytes, gpgga_pub); // Check the buffer for the relevant data
+
+						cur_time = std::chrono::system_clock::now();
+						elapsed_time = cur_time - start;
+					}
+					//nmea_thread.join();
 				}
-				nmea_thread.join();
-			}
-			printf("Done\n");
-			//
-			sleep(1);
-		} while(1);
-		bt_thread.join();
+				printf("Done\n");
+				//
+				sleep(1);
+			} while(1);
+			//bt_thread.join();
+		}
+		return 0;
 	}
-	return 0;
 }

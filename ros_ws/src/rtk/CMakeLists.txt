@@ -6,6 +6,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
 	roscpp
+	std_msgs
 )
 
 catkin_package(
@@ -13,6 +14,7 @@ catkin_package(
 	include
 	CATKIN_DEPENDS
 	roscpp
+	std_msgs
 )
 
 
