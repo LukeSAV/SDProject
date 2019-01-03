@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+	<name>rtk</name>
+	<version>0.0.1</version>
+	<description>RTK GPS package</description>
+	
+	<maintainer email="larmbru@purdue.edu">Luke Armbruster</maintainer>
+
+	<license>SDProject</license>
+
+	<buildtool_depend>catkin</buildtool_depend>
+	<build_depend>roscpp</build_depend>
+	<build_depend>Threads</build_depend>
+
+	<run_depend>roscpp</run_depend>
+	<run_depend>Threads</run_depend>
+</package>
