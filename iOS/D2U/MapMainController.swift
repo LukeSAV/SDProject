@@ -104,7 +104,7 @@ class MapMainController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         switch MapMainSettings.mapMainSettings.mapCenter {
         case .user:
             centerCoord = userLocation.coordinate
-            centerOnUserBtn.setBackgroundImage(UIImage(named: "WalkingMan_blue.png"), for: UIControl.State.normal)
+            centerOnUserBtn.setBackgroundImage(UIImage(named: "WalkingMan_gold.png"), for: UIControl.State.normal)
             centerOnRobotBtn.setBackgroundImage(UIImage(named: "Robot_gray.png"), for: UIControl.State.normal)
             centerOnDestinationBtn.setBackgroundImage(UIImage(named: "Destination_gray.png"), for: UIControl.State.normal)
             freeFloatBtn.setBackgroundImage(UIImage(named: "Earth_gray.png"), for: UIControl.State.normal)
@@ -112,7 +112,7 @@ class MapMainController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         case .robot:
             centerCoord = DeliveryInformation.deliveryInformation.curCoord ?? defaultCoord
             centerOnUserBtn.setBackgroundImage(UIImage(named: "WalkingMan_gray.png"), for: UIControl.State.normal)
-            centerOnRobotBtn.setBackgroundImage(UIImage(named: "Robot_blue.png"), for: UIControl.State.normal)
+            centerOnRobotBtn.setBackgroundImage(UIImage(named: "Robot_gold.png"), for: UIControl.State.normal)
             centerOnDestinationBtn.setBackgroundImage(UIImage(named: "Destination_gray.png"), for: UIControl.State.normal)
             freeFloatBtn.setBackgroundImage(UIImage(named: "Earth_gray.png"), for: UIControl.State.normal)
             print("Centering on robot")
@@ -120,14 +120,14 @@ class MapMainController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             centerCoord = DeliveryInformation.deliveryInformation.endCoord ?? defaultCoord
             centerOnUserBtn.setBackgroundImage(UIImage(named: "WalkingMan_gray.png"), for: UIControl.State.normal)
             centerOnRobotBtn.setBackgroundImage(UIImage(named: "Robot_gray.png"), for: UIControl.State.normal)
-            centerOnDestinationBtn.setBackgroundImage(UIImage(named: "Destination_blue.png"), for: UIControl.State.normal)
+            centerOnDestinationBtn.setBackgroundImage(UIImage(named: "Destination_gold.png"), for: UIControl.State.normal)
             freeFloatBtn.setBackgroundImage(UIImage(named: "Earth_gray.png"), for: UIControl.State.normal)
             print("Centering on destination")
         case .free:
             centerOnUserBtn.setBackgroundImage(UIImage(named: "WalkingMan_gray.png"), for: UIControl.State.normal)
             centerOnRobotBtn.setBackgroundImage(UIImage(named: "Robot_gray.png"), for: UIControl.State.normal)
             centerOnDestinationBtn.setBackgroundImage(UIImage(named: "Destination_gray.png"), for: UIControl.State.normal)
-            freeFloatBtn.setBackgroundImage(UIImage(named: "Earth_blue.png"), for: UIControl.State.normal)
+            freeFloatBtn.setBackgroundImage(UIImage(named: "Earth_gold.png"), for: UIControl.State.normal)
             print("Free roam")
             return
         }
