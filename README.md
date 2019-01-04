@@ -52,7 +52,7 @@ Nodes:
 
 - fb_node: 
   - Publishes - None
-  - Subscribes - rtk_gpgga (Type: String)
+  - Subscribes - rtk_gpgga 
 
 ##### rtk
 
@@ -61,6 +61,6 @@ This package contains the rtk_gps_node that runs code to support RTK corrections
 Nodes:
 
 - rtk_gps_node
-  - Publishes - rtk_gpgga
+  - Publishes - rtk_gpgga (Type: String)
   - Subscribes - None
 
