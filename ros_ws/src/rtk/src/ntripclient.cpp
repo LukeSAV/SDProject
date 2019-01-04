@@ -537,34 +537,29 @@ int main(int argc, char **argv)
 					printf("Connected on socket\n");
 				}
 				//
-				if(!args.data) { // No specific stream supplied. Showing entire source table.
-					out_i = snprintf(output_buf, MAXDATASIZE, "GET %s%s%s%s/ HTTP/1.1\r\n" "Host: %s\r\n%s" "User-Agent: %s/%s\r\n" "Connection: close\r\n" "\r\n", "", "", args.server, "", AGENTSTRING, revisionstr); // Write this to the sized input buffer
-				}	
-				else { // Supplying a specific stream
-					const char *nmeahead = (args.nmea && args.mode == HTTP) ? args.nmea : 0;
-					printf("Arg data: %s\n", args.data);
-					out_i=snprintf(output_buf, MAXDATASIZE-40, /* leave some space for login */
-							"GET %s%s%s%s/%s HTTP/1.1\r\n"
-							"Host: %s\r\n%s"
-							"User-Agent: %s/%s\r\n"
-							"%s%s%s"
-							"Connection: close%s"
-							, "", "",
-							"", "",
-							args.data, args.server,
-							args.mode == NTRIP1 ? "" : "Ntrip-Version: Ntrip/2.0\r\n",
-							AGENTSTRING, revisionstr,
-							nmeahead ? "Ntrip-GGA: " : "", nmeahead ? nmeahead : "",
-							nmeahead ? "\r\n" : "",
-							//"Ntrip-GGA: ", "\r\n",
-							(*args.user || *args.password) ? "\r\nAuthorization: Basic " : "");
-					printf("%s\n", output_buf);
-					out_i += encode(output_buf + out_i, MAXDATASIZE - out_i - 4, args.user, args.password); // -4 is to save room for carriage returns and line feeds
-					output_buf[out_i++] = '\r';
-					output_buf[out_i++] = '\n';
-					output_buf[out_i++] = '\r';
-					output_buf[out_i++] = '\n';
-				}
+				const char *nmeahead = (args.nmea && args.mode == HTTP) ? args.nmea : 0;
+				printf("Arg data: %s\n", args.data);
+				out_i=snprintf(output_buf, MAXDATASIZE-40, /* leave some space for login */
+						"GET %s%s%s%s/%s HTTP/1.1\r\n"
+						"Host: %s\r\n%s"
+						"User-Agent: %s/%s\r\n"
+						"%s%s%s"
+						"Connection: close%s"
+						, "", "",
+						"", "",
+						args.data, args.server,
+						args.mode == NTRIP1 ? "" : "Ntrip-Version: Ntrip/2.0\r\n",
+						AGENTSTRING, revisionstr,
+						nmeahead ? "Ntrip-GGA: " : "", nmeahead ? nmeahead : "",
+						nmeahead ? "\r\n" : "",
+						//"Ntrip-GGA: ", "\r\n",
+						(*args.user || *args.password) ? "\r\nAuthorization: Basic " : "");
+				printf("%s\n", output_buf);
+				out_i += encode(output_buf + out_i, MAXDATASIZE - out_i - 4, args.user, args.password); // -4 is to save room for carriage returns and line feeds
+				output_buf[out_i++] = '\r';
+				output_buf[out_i++] = '\n';
+				output_buf[out_i++] = '\r';
+				output_buf[out_i++] = '\n';
 				//
 				if(send(sockfd, output_buf, (size_t)out_i, 0) != out_i) {
 					printf("Issue writing on socket\n");

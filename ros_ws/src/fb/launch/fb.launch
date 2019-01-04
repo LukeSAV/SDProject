@@ -1,0 +1,3 @@
+<launch>
+	<node name="fb_listener" pkg="fb" type="fb_manager.py" output="screen"/>
+</launch>
