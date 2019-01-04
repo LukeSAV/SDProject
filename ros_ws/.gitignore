@@ -3,6 +3,7 @@
 .pydevproject
 cmake_install.cmake
 build/
+devel/
 bin/
 lib/
 msg_gen/
