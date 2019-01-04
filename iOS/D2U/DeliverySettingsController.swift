@@ -55,7 +55,7 @@ class DeliverySettingsController: UIViewController {
                 let longitudeStr = gpggaArray[4]
                 let lonIndex = longitudeStr.index(longitudeStr.startIndex, offsetBy: 3) // First three digits are degrees, rest are minutes
                 let longitude = ((Double(longitudeStr[..<lonIndex]) ?? 86.0) + (Double(longitudeStr[lonIndex...]) ?? 54.400) / 60.0) * (gpggaArray[5].prefix(1) == "W" ? -1.0 : 1.0) // Multiply by -1 if west
-                
+                DeliveryInformation.deliveryInformation.setCurrentLocation(lat: latitude, lon: longitude)
                 self.currentLocationLbl.text = String(format: "%.4f, %.4f", latitude, longitude)
             }
         })

@@ -26,7 +26,7 @@
             </objects>
             <point key="canvasLocation" x="823" y="58"/>
         </scene>
-        <!--D2U Map-->
+        <!--No Delivery-->
         <scene sceneID="TmZ-Mj-poT">
             <objects>
                 <viewController id="DDm-jn-0oq" customClass="MapMainController" customModule="D2U" customModuleProvider="target" sceneMemberID="viewController">
@@ -35,20 +35,75 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="5qb-Jp-dXm">
-                                <rect key="frame" x="0.0" y="64" width="375" height="619"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </mapView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dx1-Qb-OZ3">
+                                <rect key="frame" x="0.0" y="596" width="375" height="71"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.85996297690000001" green="0.85996297690000001" blue="0.85996297690000001" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fCe-px-Xwl">
+                                <rect key="frame" x="180" y="608" width="58" height="57"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" backgroundImage="Earth_blue"/>
+                                <connections>
+                                    <action selector="freeFloatBtn:" destination="DDm-jn-0oq" eventType="touchUpInside" id="4e3-hV-cKh"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RLD-JU-que">
+                                <rect key="frame" x="121" y="608" width="58" height="57"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" backgroundImage="Destination_gray"/>
+                                <connections>
+                                    <action selector="centerOnDestinationBtn:" destination="DDm-jn-0oq" eventType="touchUpInside" id="zhq-1Y-djX"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aeX-no-Jwq">
+                                <rect key="frame" x="16" y="606" width="343" height="1"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.039562779839999999" green="0.2056726143" blue="0.35349645730000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xOU-VB-EBU">
+                                <rect key="frame" x="62" y="608" width="58" height="57"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" backgroundImage="Robot_gray"/>
+                                <connections>
+                                    <action selector="centerOnRobotBtn:" destination="DDm-jn-0oq" eventType="touchUpInside" id="73Y-4X-yK6"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IFQ-Ov-7Us">
+                                <rect key="frame" x="3" y="608" width="58" height="57"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" backgroundImage="WalkingMan_gray"/>
+                                <connections>
+                                    <action selector="centerOnUserBtn:" destination="DDm-jn-0oq" eventType="touchUpInside" id="glF-G9-hrL"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="MgN-ya-K69"/>
                     </view>
-                    <navigationItem key="navigationItem" title="D2U Map" id="egt-sC-b8E">
+                    <navigationItem key="navigationItem" title="No Delivery" id="egt-sC-b8E">
                         <barButtonItem key="rightBarButtonItem" title="Options" id="jgq-kh-PEh">
                             <connections>
                                 <segue destination="Dey-Ot-ip4" kind="show" id="tfK-dC-xTc"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="centerOnDestinationBtn" destination="RLD-JU-que" id="EgU-2P-kbq"/>
+                        <outlet property="centerOnRobotBtn" destination="xOU-VB-EBU" id="g53-pN-lr7"/>
+                        <outlet property="centerOnUserBtn" destination="IFQ-Ov-7Us" id="Hv3-gn-8S0"/>
+                        <outlet property="freeFloatBtn" destination="fCe-px-Xwl" id="Th6-0g-v13"/>
+                        <outlet property="mapView" destination="5qb-Jp-dXm" id="esZ-6Q-m0K"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1xb-4o-FKi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -264,4 +319,10 @@
             <point key="canvasLocation" x="2574" y="57"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Destination_gray" width="240" height="240"/>
+        <image name="Earth_blue" width="240" height="240"/>
+        <image name="Robot_gray" width="240" height="240"/>
+        <image name="WalkingMan_gray" width="240" height="240"/>
+    </resources>
 </document>
