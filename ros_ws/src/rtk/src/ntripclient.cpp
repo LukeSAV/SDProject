@@ -416,7 +416,7 @@ int main(int argc, char **argv)
 
 	ros::init(argc, argv, "rtk_gps_node");
 	ros::NodeHandle nh;
-	ros::Publisher gpgga_pub = nh.advertise<std_msgs::String>("rtk_gps_node", 1000);
+	ros::Publisher gpgga_pub = nh.advertise<std_msgs::String>("rtk_gpgga", 1000);
 
 	while(ros::ok()) {
 		struct Args args;
@@ -488,6 +488,7 @@ int main(int argc, char **argv)
 					while(1) { // Wait until a message is received from the GPS
 						gpgga_mu.lock();
 						if(NMEAData::gpgga_msg != "") {
+							std::cout << "**" << NMEAData::gpgga_msg << "**" << std::endl;
 							gpgga_mu.unlock();
 							break;
 						}

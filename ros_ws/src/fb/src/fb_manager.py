@@ -11,7 +11,7 @@ def gpsCallback(data):
 
 def listener():
 	rospy.init_node('fb_listener', anonymous=True)
-	rospy.Subscriber("rtk_gps_node", String, gpsCallback)
+	rospy.Subscriber("rtk_gpgga", String, gpsCallback)
 	rospy.spin()
 
 if __name__ == '__main__':
