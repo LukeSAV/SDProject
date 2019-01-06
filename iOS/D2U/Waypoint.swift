@@ -8,11 +8,11 @@
 //  This class is derived from MKPointAnnotation to apply color to dropped pins.
 
 import MapKit
-
+import UIKit
 class Waypoint: MKPointAnnotation {
     
     var color:UIColor = UIColor(red: 255.0/255.0, green: 100.0/255.0, blue: 115.0/255.0, alpha: 1.0)
-    
+    var image:UIImage!
     init(coordinate:CLLocationCoordinate2D) {
         super.init()
         self.coordinate = coordinate
@@ -22,5 +22,10 @@ class Waypoint: MKPointAnnotation {
         super.init()
         self.coordinate = coordinate
         self.color = color
+    }
+    init(coordinate:CLLocationCoordinate2D, image:UIImage) {
+        super.init()
+        self.coordinate = coordinate
+        self.image = image
     }
 }

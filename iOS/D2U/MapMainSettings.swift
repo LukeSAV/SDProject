@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import UIKit
 class MapMainSettings {
     
     enum MapCenter {
@@ -18,6 +18,10 @@ class MapMainSettings {
     }
     
     static let mapMainSettings = MapMainSettings()
+    
+    let destinationPin = UIImage(named: "Destination_pin.png")
+    let robotPin = UIImage(named: "Robot_pin.png")
+    let userPin = UIImage(named: "WalkingMan_pin.png")
     var mapCenter = MapCenter.free
     
     private init() {

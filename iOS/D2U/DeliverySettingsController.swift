@@ -36,41 +36,13 @@ class DeliverySettingsController: UIViewController {
     }
     
     private func handleViewingEvents() {
-        ref.child("Delivery Requested").observeSingleEvent(of: .value, with: { (snapshot) in
-            let value = snapshot.value as! Bool
-            if value == false {
-                self.enableDeliveryBtn()
-            }
-            else {
-                self.disableDeliveryBtn()
-            }
-        })
-        ref.child("Current Position").observeSingleEvent(of: .value, with: { (snapshot) in
-            let value = snapshot.value as! String // GPGGA string to convert to lat/lon
-            let gpggaArray = value.split(separator: ",")
-            if gpggaArray.count >= 8  { // At least has all of the things I care about
-                let latitudeStr = gpggaArray[2]
-                let latIndex = latitudeStr.index(latitudeStr.startIndex, offsetBy: 2) // First two digits are degrees, rest are minutes
-                let latitude = (Double(latitudeStr[..<latIndex]) ?? 40.0) + (Double(latitudeStr[latIndex...]) ?? 25.160) / 60.0
-                let longitudeStr = gpggaArray[4]
-                let lonIndex = longitudeStr.index(longitudeStr.startIndex, offsetBy: 3) // First three digits are degrees, rest are minutes
-                let longitude = ((Double(longitudeStr[..<lonIndex]) ?? 86.0) + (Double(longitudeStr[lonIndex...]) ?? 54.400) / 60.0) * (gpggaArray[5].prefix(1) == "W" ? -1.0 : 1.0) // Multiply by -1 if west
-                DeliveryInformation.deliveryInformation.setCurrentLocation(lat: latitude, lon: longitude)
-                self.currentLocationLbl.text = String(format: "%.4f, %.4f", latitude, longitude)
-            }
-        })
-        ref.child("Nearest Landmark").observeSingleEvent(of: .value, with: { (snapshot) in
-            let value = snapshot.value as! String
-            self.currentLandmarkLbl.text = value
-        })
-        ref.child("Distance To Destination").observeSingleEvent(of: .value, with: { (snapshot) in
-            let value = snapshot.value as! String
-            self.currentDistanceLbl.text = value
-        })
-        ref.child("ETA").observeSingleEvent(of: .value, with: { (snapshot) in
-            let value = snapshot.value as! String
-            self.etaLabel.text = value
-        })
+        if DeliveryInformation.deliveryInformation.delivering {
+            self.disableDeliveryBtn()
+        }
+        self.currentLocationLbl.text = String(format: "%.4f, %.4f", DeliveryInformation.deliveryInformation.curCoord?.latitude ?? 0.0, DeliveryInformation.deliveryInformation.curCoord?.longitude ?? 0.0)
+        self.currentLandmarkLbl.text = DeliveryInformation.deliveryInformation.nearestLandmark
+        self.currentDistanceLbl.text = DeliveryInformation.deliveryInformation.distanceRemaining
+        self.etaLabel.text = DeliveryInformation.deliveryInformation.eta
     }
     
     @objc func sync() {
