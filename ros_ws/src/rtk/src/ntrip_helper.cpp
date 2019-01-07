@@ -13,31 +13,22 @@
 #include <sys/reboot.h>
 #include "ros/ros.h"
 #include "std_msgs/String.h"
-#include "../include/xml_reader.h"
 #include "../include/Node.h"
 #include "../include/NMEAData.h"
 #include "../include/ntrip_helper.h"
+#include "../include/Landmark.h"
 #define BUFFER_SIZE 3000
 
-static std::map<std::string, Node> node_map;
-static std::map<std::string, std::pair<std::vector<std::string>, std::string>> way_map;
-
-static std::string closest_landmark;
-
-std::mutex gpgga_mu;
-std::atomic<bool> gpgga_ready;
-std::mutex gpvtg_mu;
-std::atomic<bool> gpvtg_ready;
-
 std::string broken_gpgga = ""; // GPGGA that got split between two successive reads in the hardware buffer
+std::string broken_gpvtg = ""; // GPVTG that got split between two successive reads in the hardware buffer
 
 std::pair<double, double> getLatLon() { // Get latitude and longitude from live gpgga message
 	double cur_lat = 0.0;
 	double cur_lon = 0.0;
 	std::vector<std::string> gpgga_delineated;
-	gpgga_mu.lock();
+	NMEAData::gpgga_mu.lock();
 	std::stringstream ss(NMEAData::gpgga_msg);
-	gpgga_mu.unlock();
+	NMEAData::gpgga_mu.unlock();
 	while(ss.good()) {
 		std::string substr;
 		std::getline(ss, substr, ',');
@@ -57,37 +48,6 @@ std::pair<double, double> getLatLon() { // Get latitude and longitude from live 
 		cur_lon = -1.0 * (lon_degrees + lon_minutes / 60.0); // Cheating and assuming always west
 	}
 	return std::pair<double, double>(cur_lat, cur_lon);
-
-}
-
-void setClosestLandmark() { // Set the closest landmark to the user position based on the current gpgga string
-	std::map<std::string, std::pair<std::vector<std::string>, std::string>>::iterator ways_it;
-	std::pair<double, double> latlon = getLatLon();
-	double cur_lat = latlon.first;
-	double cur_lon = latlon.second;
-	if(cur_lat == cur_lon == 0.0) {
-		return;
-	}
-
-	double shortest_distance = -1; // Closest distance between a node and the current coordinate
-	for(ways_it = way_map.begin(); ways_it != way_map.end(); ways_it++) { // Check each of the landmarks
-		for(std::string node_id : ways_it->second.first) { // Check each point that constitutes a landmark
-			Node cur_node = node_map[node_id];
-			double distance = sqrt((cur_node.lat - cur_lat) * (cur_node.lat - cur_lat) + (cur_node.lon - cur_lon) * (cur_node.lon - cur_lon));
-			if(shortest_distance == -1) {
-				closest_landmark = ways_it->second.second; // Name of landmark
-				shortest_distance = distance;
-			}
-			else {
-				if(distance < shortest_distance) {
-					shortest_distance = distance;
-					closest_landmark = ways_it->second.second;
-				}
-			}
-		}	
-	}
-	closest_landmark.append("\n\n");
-	closest_landmark.insert(0, "LM:");
 }
 
 void parseNMEA(char* read_buf, int readBytes, ros::Publisher gpgga_pub) { // Make sense of what's in the read buffer and pull out the GPGGA string if there is one
@@ -95,8 +55,6 @@ void parseNMEA(char* read_buf, int readBytes, ros::Publisher gpgga_pub) { // Mak
 		fprintf(fp, read_buf);
 		fclose(fp);
 	}*/
-	int index = 0;
-	int gpgga_index = 0;
 	std::string new_gpgga = "";
 	std::string incoming_data = std::string(read_buf);
 	std::size_t start_loc = incoming_data.find("$GPGGA");
@@ -108,7 +66,6 @@ void parseNMEA(char* read_buf, int readBytes, ros::Publisher gpgga_pub) { // Mak
 			new_gpgga = start_of_new_string.substr(0, end_loc + 1);
 		}
 		else {
-			//std::cout << "Broken GPGGA" << std::endl;
 			broken_gpgga = start_of_new_string;
 		}
 	}
@@ -121,14 +78,46 @@ void parseNMEA(char* read_buf, int readBytes, ros::Publisher gpgga_pub) { // Mak
 			broken_gpgga = "";
 		}
 	}
-	if(new_gpgga != "" && new_gpgga.substr(17, 4) != "0000" && new_gpgga.substr(30, 5) != "00000") { // Check that the message is at least feasible
-		gpgga_mu.lock();
+
+	std::string new_gpvtg = "";
+	start_loc = incoming_data.find("$GPVTG");
+	if(start_loc != std::string::npos) {
+		std::string start_of_new_string = incoming_data.substr(start_loc);
+		std::size_t end_loc = start_of_new_string.find_first_of('\n'); 
+		broken_gpvtg = ""; // Reset and ignore any currently tracked broken string
+		if(end_loc != std::string::npos) {
+			new_gpvtg = start_of_new_string.substr(0, end_loc + 1);
+		}
+		else {
+			broken_gpvtg = start_of_new_string;
+		}
+	}
+	else if(broken_gpvtg != "") { // Grab remainder of last started string
+		std::size_t next_msg_loc = incoming_data.find_first_of("$");
+		std::size_t end_loc = incoming_data.find_first_of('\n'); 
+		if(end_loc != std::string::npos && next_msg_loc > end_loc) {
+			broken_gpvtg.append(incoming_data.substr(0, end_loc + 1));
+			new_gpvtg = broken_gpvtg;
+			broken_gpvtg = "";
+		}
+	}
+
+	if(new_gpgga != "" && new_gpgga.size() == 88 && new_gpgga.substr(17, 4) != "0000" && new_gpgga.substr(30, 5) != "00000") { // Check that the message is at least feasible
+		NMEAData::gpgga_mu.lock();
 		NMEAData::gpgga_msg = new_gpgga;
 		std_msgs::String msg;
 		msg.data = new_gpgga;
 		gpgga_pub.publish(msg);
-		gpgga_ready.store(true);
-		gpgga_mu.unlock();
+		NMEAData::gpgga_ready.store(true); // Signal that a new GPGGA string was added
+		NMEAData::gpgga_mu.unlock();
+		std::pair<double,double> latlon = getLatLon();
+	}
+	if(new_gpvtg != "") { // Check that the message is at least feasible
+		NMEAData::gpvtg_mu.lock();
+		NMEAData::gpvtg_msg = new_gpvtg;
+		std_msgs::String msg;
+		NMEAData::gpvtg_ready.store(true); // Signal that a new GPVTG string was added
+		NMEAData::gpvtg_mu.unlock();
 	}
 }
 
@@ -183,11 +172,11 @@ void btHandler(const char* bt_conn, struct serial* bt_serial) { // Handles readi
 			}
 		}
 		if(gpgga_ready.load()) {
-			gpgga_mu.lock();
+			NMEAData::gpgga_mu.lock();
 			std::cout << "New GPGGA" << std::endl;
 			std::cout << NMEAData::gpgga_msg << std::endl;
 			SerialWrite(bt_serial, NMEAData::gpgga_msg.c_str(), NMEAData::gpgga_msg.size());
-			gpgga_mu.unlock();
+			NMEAData::gpgga_mu.unlock();
 			gpgga_ready.store(false);
 		}
 		if(counter == 20) { // Poll for closest landmark about every 2 seconds

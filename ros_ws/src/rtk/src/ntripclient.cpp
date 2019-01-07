@@ -47,6 +47,7 @@
 #include <iostream>
 #include <thread>
 #include "ros/ros.h"
+#include "../include/xml_reader.h"
 #include "std_msgs/String.h"
 #include "../include/NMEAData.h"
 #include "../include/ntrip_helper.h"
@@ -408,8 +409,6 @@ static int encode(char *buf, int size, const char *user, const char *pwd)
 }
 
 static int isReading = 1;
-static int isWriting = 1;
-static int btConnected = 1;
 
 int main(int argc, char **argv)
 {
@@ -438,28 +437,19 @@ int main(int argc, char **argv)
 #endif
 		if(getargs(argc, argv, &args))
 		{
-			//struct serial rtcm_out; // RTCM data out of Pi (write at 57600)
-			//struct serial nmea_in; // NMEA data into Pi (read at 115200)
-			//struct serial bt_serial; // Bluetooth connection (read/write at 115200)
-			struct serial rtk_uart;
+			struct serial rtk_uart; // Serial connection (read/write at 57600)
 			FILE *ser = 0;
-			char nmeabuffer[200] = "$GPGGA,"; /* our start string */
+			char nmeabuffer[200] = "$GPGGA,"; // Start string
 			size_t nmeabufpos = 0;
 			size_t nmeastarpos = 0;
 			int sleeptime = 0;
 			const char *rtk_uart_conn = SerialInit(&rtk_uart, "/dev/ttyUSB0", SPABAUD_57600,
 					args.stopbits, args.protocol, args.parity, args.databits, 1);
+			xml_reader("/home/luke/SDProject/ros_ws/src/rtk/purdue_mapv1.0.xml");
 
-			//const char *rtk_nmea_conn = SerialInit(&nmea_in, args.nmea_usb, SPABAUD_115200,
-			//args.stopbits, args.protocol, args.parity, args.databits, 1);
-
-			//const char *bt_conn = SerialInit(&bt_serial, "/dev/serial0", SPABAUD_115200,
-			//args.stopbits, args.protocol, args.parity, args.databits, 1);
-			//std::thread bt_thread(btHandler, bt_conn, &bt_serial);
 			if(rtk_uart_conn)
 			{
-				printf("Not writing data to RTK device\n");
-				isWriting = 0;
+				printf("Not connected to RTK device\n");
 			}
 			do {
 				sockettype sockfd = 0;
@@ -486,13 +476,13 @@ int main(int argc, char **argv)
 				if(isReading) { // Connected to GPS
 					printf("Waiting for data...\n");
 					while(1) { // Wait until a message is received from the GPS
-						gpgga_mu.lock();
+						NMEAData::gpgga_mu.lock();
 						if(NMEAData::gpgga_msg != "") {
 							std::cout << "**" << NMEAData::gpgga_msg << "**" << std::endl;
-							gpgga_mu.unlock();
+							NMEAData::gpgga_mu.unlock();
 							break;
 						}
-						gpgga_mu.unlock();
+						NMEAData::gpgga_mu.unlock();
 
 						read_buf[0] = 0;
 						readBytes = SerialRead(&rtk_uart, read_buf, MAXDATASIZE);	
@@ -501,7 +491,7 @@ int main(int argc, char **argv)
 							alarm(ALARMTIME); // Data has been received, reset the alarm
 							parseNMEA(read_buf, readBytes, gpgga_pub);
 						}
-						gpgga_mu.lock();
+						NMEAData::gpgga_mu.lock();
 						std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 						if(NMEAData::gpgga_msg.size() < 36 || (NMEAData::gpgga_msg.substr(17, 4) == "0000" && NMEAData::gpgga_msg.substr(30, 5) == "00000")) { // No good yet (latitude and longitude are both 0)
 							std::cout << NMEAData::gpgga_msg << std::endl;
@@ -509,10 +499,9 @@ int main(int argc, char **argv)
 							NMEAData::gpgga_msg = "";
 							readBytes = 0;
 						}
-						gpgga_mu.unlock();
+						NMEAData::gpgga_mu.unlock();
 
 					}
-					gpgga_ready.store(true);
 					std::cout << "Obtained valid first GPGGA message to send to caster" << std::endl;
 				}
 				//	
@@ -570,20 +559,20 @@ int main(int argc, char **argv)
 
 					numbytes = recv(sockfd, input_buf, MAXDATASIZE-1, 0);
 
-					if(numbytes > 17 && strstr(input_buf, "ICY 200 OK")) {
+					if(numbytes > 17 && strstr(input_buf, "ICY 200 OK")) { // Caster responded properly
 						printf("Proper stream connected. Caster expects data.\n");
 						numbytes = 0;	
-						gpgga_mu.lock();
+						NMEAData::gpgga_mu.lock();
 						if(send(sockfd, NMEAData::gpgga_msg.c_str(), NMEAData::gpgga_msg.size(), 0) != NMEAData::gpgga_msg.size()) {
 							printf("Issue writing on socket");
-							gpgga_mu.unlock();
+							NMEAData::gpgga_mu.unlock();
 							break;
 						}
 						else {
 							std::cout << NMEAData::gpgga_msg << std::endl;
 							printf("GPGGA message written on socket\n");
 						}
-						gpgga_mu.unlock();
+						NMEAData::gpgga_mu.unlock();
 					}
 					else {
 						printf("Could not connect to caster source table");
@@ -591,23 +580,16 @@ int main(int argc, char **argv)
 					}
 
 
-					//std::thread nmea_thread(nmeaHandler, rtk_uart_conn, &rtk_uart); // Run the thread to handle reading NMEA data from device
-
 					auto start = std::chrono::system_clock::now();
 					auto cur_time = start;
 					std::chrono::duration<double> elapsed_time = std::chrono::duration<double>(10.0f); // Initially send message to caster
 					while(true) { // Read Caster data on socket continuously. Send GPGGA message every 5s.
 						if(elapsed_time.count() >= 5.0f) { // 5 second passed, send caster most recent GPGGA message
-							gpgga_mu.lock();
-							if(NMEAData::gpgga_msg.size() < 36 || (NMEAData::gpgga_msg.substr(17, 4) == "0000" && NMEAData::gpgga_msg.substr(30, 5) == "00000")) { // Lost signal 
-								std::cout << "Lost signal" << std::endl;
-								gpgga_mu.unlock();
-								break;
-							}
+							NMEAData::gpgga_mu.lock();
 							if(send(sockfd, NMEAData::gpgga_msg.c_str(), NMEAData::gpgga_msg.size(), 0) != NMEAData::gpgga_msg.size()) {
 								printf("Issue writing on socket");
 							}
-							gpgga_mu.unlock();
+							NMEAData::gpgga_mu.unlock();
 							start = std::chrono::system_clock::now();
 						}
 
@@ -624,13 +606,11 @@ int main(int argc, char **argv)
 						cur_time = std::chrono::system_clock::now();
 						elapsed_time = cur_time - start;
 					}
-					//nmea_thread.join();
 				}
 				printf("Done\n");
 				//
 				sleep(1);
 			} while(1);
-			//bt_thread.join();
 		}
 		return 0;
 	}
