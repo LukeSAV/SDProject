@@ -7,7 +7,7 @@
 #include "../include/XMLParser/rapidxml_print.hpp"
 #include "../include/xml_reader.h"
 #include "../include/Node.h"
-#include "../include/Landmark.h"
+#include "../include/MapData.h"
 
 void xml_reader(const char* filename) { // , std::map<std::string, Node> &node_map, std::map<std::string, std::pair<std::vector<std::string>, std::string>> &way_map
 	rapidxml::file<> xmlFile(filename); 
@@ -18,7 +18,7 @@ void xml_reader(const char* filename) { // , std::map<std::string, Node> &node_m
 	for(rapidxml::xml_node<>* coord_node = root_node->first_node("node"); coord_node; coord_node = coord_node->next_sibling()) {
 		std::string node_name = std::string(coord_node->name());
 		if(node_name == "node") {
-			Landmark::node_map.insert(std::pair<std::string, Node>(coord_node->first_attribute("id")->value(), Node(coord_node->first_attribute("lat")->value(), coord_node->first_attribute("lon")->value())));	
+			MapData::node_map.insert(std::pair<std::string, Node>(coord_node->first_attribute("id")->value(), Node(coord_node->first_attribute("lat")->value(), coord_node->first_attribute("lon")->value())));	
 		}
 		else if(node_name == "way") {
 			std::vector<std::string> node_vec; // Vector contains ids corresponding to each node of the landmark
@@ -38,7 +38,7 @@ void xml_reader(const char* filename) { // , std::map<std::string, Node> &node_m
 				}
 			}
 			auto map_element = std::pair<std::vector<std::string>, std::string>(node_vec, landmark_name);
-			Landmark::way_map.insert(std::pair<std::string, std::pair<std::vector<std::string>, std::string>>(way_uid, map_element));
+			MapData::way_map.insert(std::pair<std::string, std::pair<std::vector<std::string>, std::string>>(way_uid, map_element));
 		}
 	}
 }

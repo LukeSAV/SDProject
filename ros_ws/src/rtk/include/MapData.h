@@ -3,12 +3,11 @@
 #include <string>
 #include <vector>
 #include "Node.h"
-class Landmark {
+class MapData {
 public: 
-	Landmark();
-	virtual ~Landmark();
+	MapData();
+	virtual ~MapData();
 	static std::string nearestLandmarkKey; // String key using unique identifier to the nearest landmark
-	static std::string nearestLandmarkName;
 	static std::map<std::string, Node> node_map;
 	static std::map<std::string, std::pair<std::vector<std::string>, std::string>> way_map;
 	

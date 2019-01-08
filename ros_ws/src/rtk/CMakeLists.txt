@@ -24,10 +24,9 @@ include_directories(
 )
 
 add_executable(${PROJECT_NAME}_gps_node
-	src/Landmark.cpp
-	src/NMEAData.cpp
-	src/ntrip_helper.cpp
 	src/serial.cpp
+	src/MapData.cpp
+	src/NMEAData.cpp
 	src/ntripclient.cpp
 	src/Node.cpp
 	src/xml_reader.cpp
