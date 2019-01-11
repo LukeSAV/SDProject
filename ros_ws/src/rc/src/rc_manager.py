@@ -1,5 +1,6 @@
 #!/usr/bin/env python2.7
 import rospy
+import serial
 from sensor_msgs import msg
 
 def gpsCallback(joyMsg):
@@ -13,5 +14,8 @@ def listener():
 	rospy.spin()
 
 if __name__ == '__main__':
+  ser = serial.Serial("ttyTHS2", 57600, timeout=1)
+  while True:
+	  ser.write("test")
+	  time.sleep(1)
   listener()
-
