@@ -402,6 +402,7 @@ int main(int argc, char **argv)
 						NMEAData::gpgga_mu.lock();
 						if(send(sockfd, NMEAData::gpgga_msg.c_str(), NMEAData::gpgga_msg.size(), 0) != NMEAData::gpgga_msg.size()) {
 							printf("Issue writing on socket");
+							break; // Reconnect to caster 
 						}
 						NMEAData::gpgga_mu.unlock();
 						start = std::chrono::system_clock::now();
