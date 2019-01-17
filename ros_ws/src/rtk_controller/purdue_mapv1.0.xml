@@ -22329,83 +22329,83 @@
  <!-- BEGIN MSEE to Hovde by fountain, Range 1111111115-1111111300 -->
  
  <!-- MSEE to Hovde by fountain (Right Bounds) -->
- <node id="1111111115" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429182" lon="-86.912969"/>
- <node id="1111111116" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429166" lon="-86.912995"/>
- <node id="1111111117" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429072" lon="-86.913144"/>
- <node id="1111111118" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429028" lon="-86.913214"/>
- <node id="1111111119" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428984" lon="-86.913290"/>
- <node id="1111111120" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428941" lon="-86.913357"/>
- <node id="1111111121" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428898" lon="-86.913427"/>
- <node id="1111111122" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428859" lon="-86.913494"/>
- <node id="1111111123" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428776" lon="-86.913632"/>
- <node id="1111111124" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428769" lon="-86.913650"/>
- <node id="1111111125" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428764" lon="-86.913672"/>
- <node id="1111111126" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428766" lon="-86.913700"/>
- <node id="1111111127" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428782" lon="-86.913783"/>
- <node id="1111111127" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428774" lon="-86.913847"/>
- <node id="1111111128" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428752" lon="-86.913903"/>
- <node id="1111111129" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428715" lon="-86.913940"/>
- <node id="1111111130" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428673" lon="-86.913971"/>
- <node id="1111111131" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428615" lon="-86.913962"/>
- <node id="1111111132" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428594" lon="-86.913960"/>
- <node id="1111111133" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428578" lon="-86.913965"/>
- <node id="1111111134" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428565" lon="-86.913977"/>
- <node id="1111111135" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428530" lon="-86.914029"/>
- <node id="1111111136" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428467" lon="-86.914114"/>
- <node id="1111111137" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428440" lon="-86.914155"/>
- <node id="1111111138" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428388" lon="-86.914241"/>
+ <!-- path id="1111111115" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429182" lon="-86.912969"-->
+ <!-- path id="1111111116" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429166" lon="-86.912995"-->
+ <!-- path id="1111111117" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429072" lon="-86.913144"-->
+ <!-- path id="1111111118" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429028" lon="-86.913214"-->
+ <!-- path id="1111111119" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428984" lon="-86.913290"-->
+ <!-- path id="1111111120" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428941" lon="-86.913357"-->
+ <!-- path id="1111111121" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428898" lon="-86.913427"-->
+ <!-- path id="1111111122" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428859" lon="-86.913494"-->
+ <!-- path id="1111111123" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428776" lon="-86.913632"-->
+ <!-- path id="1111111124" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428769" lon="-86.913650"-->
+ <!-- path id="1111111125" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428764" lon="-86.913672"-->
+ <!-- path id="1111111126" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428766" lon="-86.913700"-->
+ <!-- path id="1111111127" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428782" lon="-86.913783"-->
+ <!-- path id="1111111127" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428774" lon="-86.913847"-->
+ <!-- path id="1111111128" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428752" lon="-86.913903"-->
+ <!-- path id="1111111129" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428715" lon="-86.913940"-->
+ <!-- path id="1111111130" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428673" lon="-86.913971"-->
+ <!-- path id="1111111131" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428615" lon="-86.913962"-->
+ <!-- path id="1111111132" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428594" lon="-86.913960"-->
+ <!-- path id="1111111133" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428578" lon="-86.913965"-->
+ <!-- path id="1111111134" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428565" lon="-86.913977"-->
+ <!-- path id="1111111135" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428530" lon="-86.914029"-->
+ <!-- path id="1111111136" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428467" lon="-86.914114"-->
+ <!-- path id="1111111137" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428440" lon="-86.914155"-->
+ <!-- path id="1111111138" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428388" lon="-86.914241"-->
 
  <!-- MSEE to Hovde by fountain (Left Bounds) -->
- <node id="1111111139" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429148" lon="-86.912932"/>
- <node id="1111111140" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429137" lon="-86.912955"/>
- <node id="1111111141" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429137" lon="-86.912955"/>
- <node id="1111111142" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429040" lon="-86.913111"/>
- <node id="1111111143" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428993" lon="-86.913184"/>
- <node id="1111111144" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428950" lon="-86.913252"/>
- <node id="1111111145" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428908" lon="-86.913322"/>
- <node id="1111111146" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428864" lon="-86.913392"/>
- <node id="1111111147" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428820" lon="-86.913460"/>
- <node id="1111111148" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428765" lon="-86.913536"/>
- <node id="1111111149" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428715" lon="-86.913629"/>
- <node id="1111111150" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428717" lon="-86.913695"/>
- <node id="1111111151" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428737" lon="-86.913755"/>
- <node id="1111111152" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428736" lon="-86.913814"/>
- <node id="1111111153" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428727" lon="-86.913864"/>
- <node id="1111111154" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428718" lon="-86.913880"/>
- <node id="1111111155" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428667" lon="-86.913909"/>
- <node id="1111111156" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428627" lon="-86.913908"/>
- <node id="1111111157" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428582" lon="-86.913900"/>
- <node id="1111111158" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428525" lon="-86.913923"/>
- <node id="1111111159" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428477" lon="-86.913998"/>
- <node id="1111111160" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428443" lon="-86.914067"/>
- <node id="1111111161" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428406" lon="-86.914122"/>
- <node id="1111111162" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428354" lon="-86.914214"/>
+ <!--path id="1111111139" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429148" lon="-86.912932"-->
+ <!--path id="1111111140" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429137" lon="-86.912955"-->
+ <!--path id="1111111141" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429137" lon="-86.912955"-->
+ <!--path id="1111111142" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429040" lon="-86.913111"-->
+ <!--path id="1111111143" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428993" lon="-86.913184"-->
+ <!--path id="1111111144" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428950" lon="-86.913252"-->
+ <!--path id="1111111145" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428908" lon="-86.913322"-->
+ <!--path id="1111111146" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428864" lon="-86.913392"-->
+ <!--path id="1111111147" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428820" lon="-86.913460"-->
+ <!--path id="1111111148" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428765" lon="-86.913536"-->
+ <!--path id="1111111149" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428715" lon="-86.913629"-->
+ <!--path id="1111111150" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428717" lon="-86.913695"-->
+ <!--path id="1111111151" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428737" lon="-86.913755"-->
+ <!--path id="1111111152" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428736" lon="-86.913814"-->
+ <!--path id="1111111153" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428727" lon="-86.913864"-->
+ <!--path id="1111111154" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428718" lon="-86.913880"-->
+ <!--path id="1111111155" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428667" lon="-86.913909"-->
+ <!--path id="1111111156" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428627" lon="-86.913908"-->
+ <!--path id="1111111157" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428582" lon="-86.913900"-->
+ <!--path id="1111111158" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428525" lon="-86.913923"-->
+ <!--path id="1111111159" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428477" lon="-86.913998"-->
+ <!--path id="1111111160" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428443" lon="-86.914067"-->
+ <!--path id="1111111161" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428406" lon="-86.914122"-->
+ <!--path id="1111111162" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428354" lon="-86.914214"-->
 
  <!-- MSEE to Hovde by fountain (Center Path) -->
- <node id="1111111163" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429167" lon="-86.912957"/>
- <node id="1111111164" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429155" lon="-86.912977"/>
- <node id="1111111165" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429053" lon="-86.913130"/>
- <node id="1111111166" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429010" lon="-86.913205"/>
- <node id="1111111167" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428967" lon="-86.913274"/>
- <node id="1111111168" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428924" lon="-86.913344"/>
- <node id="1111111169" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428883" lon="-86.913413"/>
- <node id="1111111170" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428836" lon="-86.913482"/>
- <node id="1111111171" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428786" lon="-86.913561"/>
- <node id="1111111172" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428750" lon="-86.913634"/> 
- <node id="1111111173" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428746" lon="-86.913710"/>
- <node id="1111111174" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428757" lon="-86.913770"/>
- <node id="1111111175" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428756" lon="-86.913834"/>
- <node id="1111111176" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428738" lon="-86.913881"/>
- <node id="1111111177" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428708" lon="-86.913910"/>
- <node id="1111111178" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428677" lon="-86.913928"/>
- <node id="1111111179" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428646" lon="-86.913936"/>
- <node id="1111111180" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428607" lon="-86.913932"/>
- <node id="1111111181" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428586" lon="-86.913938"/>
- <node id="1111111182" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428555" lon="-86.913951"/>
- <node id="1111111183" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428514" lon="-86.913999"/>
- <node id="1111111184" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428492" lon="-86.914032"/>
- <node id="1111111185" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428456" lon="-86.914090"/>
- <node id="1111111186" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428397" lon="-86.914182"/>
+ <path id="1111111163" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429167" lon="-86.912957"/>
+ <path id="1111111164" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429155" lon="-86.912977"/>
+ <path id="1111111165" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429053" lon="-86.913130"/>
+ <path id="1111111166" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429010" lon="-86.913205"/>
+ <path id="1111111167" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428967" lon="-86.913274"/>
+ <path id="1111111168" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428924" lon="-86.913344"/>
+ <path id="1111111169" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428883" lon="-86.913413"/>
+ <path id="1111111170" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428836" lon="-86.913482"/>
+ <path id="1111111171" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428786" lon="-86.913561"/>
+ <path id="1111111172" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428750" lon="-86.913634"/> 
+ <path id="1111111173" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428746" lon="-86.913710"/>
+ <path id="1111111174" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428757" lon="-86.913770"/>
+ <path id="1111111175" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428756" lon="-86.913834"/>
+ <path id="1111111176" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428738" lon="-86.913881"/>
+ <path id="1111111177" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428708" lon="-86.913910"/>
+ <path id="1111111178" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428677" lon="-86.913928"/>
+ <path id="1111111179" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428646" lon="-86.913936"/>
+ <path id="1111111180" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428607" lon="-86.913932"/>
+ <path id="1111111181" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428586" lon="-86.913938"/>
+ <path id="1111111182" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428555" lon="-86.913951"/>
+ <path id="1111111183" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428514" lon="-86.913999"/>
+ <path id="1111111184" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428492" lon="-86.914032"/>
+ <path id="1111111185" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428456" lon="-86.914090"/>
+ <path id="1111111186" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428397" lon="-86.914182"/>
 
  <!-- END MSEE to Hovde by fountain -->
 

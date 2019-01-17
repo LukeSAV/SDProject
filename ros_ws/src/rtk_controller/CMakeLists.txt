@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(rtk_controller)
-
-## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+set(CMAKE_CXX_FLAGS "-std=c++11")
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -16,9 +14,9 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_python_setup()
 
 catkin_package(
-#  INCLUDE_DIRS include
+  INCLUDE_DIRS include
 #  LIBRARIES rtk_controller
-#  CATKIN_DEPENDS roscpp rospy std_msgs
+  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
 include(CheckIncludeFiles)
@@ -35,6 +33,22 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+add_executable(${PROJECT_NAME}_node
+  src/main.cpp
+  src/Node.cpp
+  src/MapData.cpp
+	src/xml_reader.cpp
+)
+
+add_dependencies(${PROJECT_NAME}_node
+	${catkin_EXPORTED_TARGETS}
+)
+
+target_link_libraries(${PROJECT_NAME}_node ${catkin_LIBRARIES})
+
+install(TARGETS ${PROJECT_NAME}_node
+	RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 install(DIRECTORY migration_rules scripts config launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   USE_SOURCE_PERMISSIONS)

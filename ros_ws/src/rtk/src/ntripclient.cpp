@@ -47,10 +47,8 @@
 #include <iostream>
 #include <thread>
 #include "ros/ros.h"
-#include "../include/xml_reader.h"
 #include "std_msgs/String.h"
 #include "../include/NMEAData.h"
-#include "../include/MapData.h"
 #include "../include/serial.h"
 
 typedef int sockettype;
@@ -243,6 +241,7 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "rtk_gps_node");
 	ros::NodeHandle nh;
 	ros::Publisher gpgga_pub = nh.advertise<std_msgs::String>("rtk_gpgga", 1000);
+	ros::Publisher gpvtg_pub = nh.advertise<std_msgs::String>("rtk_gpvtg", 1000);
 
 	while(ros::ok()) {
 		struct Args args;
@@ -263,8 +262,7 @@ int main(int argc, char **argv)
 		int sleeptime = 0;
 		const char *rtk_uart_conn = SerialInit(&rtk_uart, "/dev/ttyUSB0", SPABAUD_57600,
 				args.stopbits, args.protocol, args.parity, args.databits, 1);
-		xml_reader("/home/luke/SDProject/ros_ws/src/rtk/purdue_mapv1.0.xml");
-
+		
 		if(rtk_uart_conn)
 		{
 			printf("Not connected to RTK device\n");
@@ -304,7 +302,7 @@ int main(int argc, char **argv)
 				readBytes = SerialRead(&rtk_uart, read_buf, MAXDATASIZE);	
 				if(readBytes) { // Read some data. Check to see if it contains the GPGGA message
 					alarm(ALARMTIME); // Data has been received, reset the alarm
-					NMEAData::parseNMEA(read_buf, readBytes, gpgga_pub);
+					NMEAData::parseNMEA(read_buf, readBytes, gpgga_pub, gpvtg_pub);
 				}
 				NMEAData::gpgga_mu.lock();
 				std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -406,9 +404,6 @@ int main(int argc, char **argv)
 						}
 						NMEAData::gpgga_mu.unlock();
 						start = std::chrono::system_clock::now();
-						MapData::setClosestLandmark();
-						std::cout << MapData::way_map[MapData::nearestLandmarkKey].second << std::endl;
-						//std::cout << Landmark::nearestLandmarkName << std::endl;
 					}
 
 					numbytes = recv(sockfd, input_buf, MAXDATASIZE-1, 0); // Receive any RTCM data from caster
@@ -419,7 +414,7 @@ int main(int argc, char **argv)
 
 					memset(read_buf, '\0', sizeof(read_buf)); // Clear the buffer
 					readBytes = SerialRead(&rtk_uart, read_buf, MAXDATASIZE); // Receive any data from the UART hardware buffer
-					NMEAData::parseNMEA(read_buf, readBytes, gpgga_pub); // Check the buffer for the relevant data
+					NMEAData::parseNMEA(read_buf, readBytes, gpgga_pub, gpvtg_pub); // Check the buffer for the relevant data
 
 					cur_time = std::chrono::system_clock::now();
 					elapsed_time = cur_time - start;

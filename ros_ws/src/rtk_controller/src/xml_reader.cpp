@@ -20,6 +20,9 @@ void xml_reader(const char* filename) { // , std::map<std::string, Node> &node_m
 		if(node_name == "node") {
 			MapData::node_map.insert(std::pair<std::string, Node>(coord_node->first_attribute("id")->value(), Node(coord_node->first_attribute("lat")->value(), coord_node->first_attribute("lon")->value())));	
 		}
+		else if(node_name == "path") {
+			MapData::path_map.insert(std::pair<std::string, Node>(coord_node->first_attribute("id")->value(), Node(coord_node->first_attribute("lat")->value(), coord_node->first_attribute("lon")->value())));	
+		}
 		else if(node_name == "way") {
 			std::vector<std::string> node_vec; // Vector contains ids corresponding to each node of the landmark
 			std::string way_uid = coord_node->first_attribute("id")->value();
@@ -38,7 +41,7 @@ void xml_reader(const char* filename) { // , std::map<std::string, Node> &node_m
 				}
 			}
 			auto map_element = std::pair<std::vector<std::string>, std::string>(node_vec, landmark_name);
-			MapData::way_map.insert(std::pair<std::string, std::pair<std::vector<std::string>, std::string>>(way_uid, map_element));
+			MapData::landmark_map.insert(std::pair<std::string, std::pair<std::vector<std::string>, std::string>>(way_uid, map_element));
 		}
 	}
 }
