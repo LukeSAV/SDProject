@@ -16,6 +16,9 @@ static double cur_speed;
 
 std::chrono::time_point<std::chrono::system_clock> last_gpgga_received_time;
 
+static std::string next_waypoint_key = "";
+static std::string prev_waypoint_key = "";
+
 void gpggaCallback(const std_msgs::String::ConstPtr& msg) {
     ROS_INFO("%s", msg->data.c_str());
     cur_coord = MapData::getLatLon(msg->data); // Update the current coordinate when a new one is received
@@ -25,6 +28,9 @@ void gpggaCallback(const std_msgs::String::ConstPtr& msg) {
     ROS_INFO("%s", closestWaypointKey.c_str());
     ROS_INFO("Num Satellites: %d, Position Status: %d", num_satellites, position_status);
     last_gpgga_received_time = std::chrono::system_clock::now();
+    if(position_status == MapData::positionStatus::RTKFix) {
+        
+    }
 }
 
 void gpvtgCallback(const std_msgs::String::ConstPtr& msg) {
