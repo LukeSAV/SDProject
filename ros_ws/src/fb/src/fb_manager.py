@@ -9,6 +9,9 @@ def controllerCallback(data):
 	data_list = data.data.split(',')
 	if(data_list[0] == 'NEXT_WPT'):
 		ref.put('', 'Next Waypoint', data.data)
+	if(data_list[0] == 'Left' or data_list[0] == 'Right'):
+		ref.put('', 'Side of Line', data.data)
+
 
 
 def gpsCallback(data):

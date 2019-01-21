@@ -37,7 +37,7 @@ void gpggaCallback(const std_msgs::String::ConstPtr& msg) {
     ROS_INFO("Num Satellites: %d, Position Status: %d", num_satellites, position_status);
     last_gpgga_received_time = std::chrono::system_clock::now();
     std_msgs::String pub_msg;
-    if(position_status == MapData::positionStatus::RTKFix || position_status == MapData::positionStatus::RTKFloat || position_status == MapData::positionStatus::DiffGPSFix) { // RTKFix/RTKFloat assuming robot position accurate to about 10cm
+    if(position_status == MapData::positionStatus::RTKFix || position_status == MapData::positionStatus::RTKFloat) { // RTKFix/RTKFloat assuming robot position accurate to about 10cm
         // Move to next waypoint 
         if(prev_waypoint_key == "") { // Check if robot is within 0.5m of starting waypoint
             double distance = MapData::getDistance(cur_coord, MapData::path_map.begin()->second);
@@ -71,9 +71,13 @@ void gpggaCallback(const std_msgs::String::ConstPtr& msg) {
                 std::string out_msg = "Side of line: ";
                 if(line_pos == MapData::linePos::Left) {
                     out_msg += "left";
+                    pub_msg.data = "Left," + std::to_string(line_distance);
+                    cmd_pub.publish(pub_msg);
                 }
                 else {
                     out_msg += "right";
+                    pub_msg.data = "Right," + std::to_string(line_distance);
+                    cmd_pub.publish(pub_msg);
                 }
                 ROS_INFO("%s", out_msg.c_str());
             } catch(std::out_of_range& eor) {
