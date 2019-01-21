@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iomanip>
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -6,6 +7,8 @@
 #include <vector>
 #include "../include/MapData.h"
 #include "../include/Node.h"
+
+#define DEGREE_MULTI_FACTOR 111139 // Factor by which to multiple a difference in lat/lon degrees to get distance in meters
 
 std::map<std::string, Node> MapData::node_map; // Key: Unique identifier for node, Value: Node type with relevant data for a single point on the Map
 std::map<std::string, Node> MapData::path_map; // Key: Unique identifier for path node, Value: Node type with relevant data for a single point on the Map
@@ -137,4 +140,43 @@ double MapData::getHeading(std::string gpvtg_msg) {
 	if(gpvtg_delineated.size() > 1) {
 		return std::stod(gpvtg_delineated[1]);
 	}
+}
+
+/*std::pair<std::string, std::string> MapData::getPrevAndNextWaypoints(std::pair<double, double> cur_coord) {
+	std::map<std::string, Node>::iterator path_map_it; 
+	for(path_map_it = std::next(path_map.begin()); path_map_it != path_map.end(); path_map_it++) { // Iterate through each node to find the 
+		std::pair<double, double> prev_waypoint_coord = std::pair<double, double>(std::prev(path_map_it)->second.lat, std::prev(path_map_it)->second.lon);
+		std::pair<double, double> next_waypoint_coord = std::pair<double, double>(path_map_it->second.lat, path_map_it->second.lon);
+		std::pair<double, double> waypoint_connective = std::pair<double, double>(next_waypoint_coord.first - prev_waypoint_coord.first, next_waypoint_coord.second - prev_waypoint_coord.first);
+		double distance = sqrt(waypoint_connective.first * waypoint_connective.first + waypoint_connective.second * waypoint_connective.second);
+		std::pair<double, double> waypoint_connective_direction = std::pair<double, double> (waypoint_connective.first / distance, waypoint_connective.second / distance);	
+
+	}
+	return std::pair<std::string, std::string>("", "");
+}*/
+
+double MapData::getDistance(std::pair<double, double> cur_pos, Node waypoint) {
+	return DEGREE_MULTI_FACTOR * sqrt((cur_pos.first - waypoint.lat) * (cur_pos.first - waypoint.lat) + (cur_pos.second - waypoint.lon) * (cur_pos.second - waypoint.lon));
+}
+
+MapData::linePos MapData::getSideOfLine(Node prev_waypoint, Node next_waypoint, std::pair<double, double> cur_pos) {
+	double line_val = (cur_pos.first - prev_waypoint.lat) * (next_waypoint.lon - prev_waypoint.lon) - (cur_pos.second - prev_waypoint.lon) * (next_waypoint.lat - prev_waypoint.lat); // Use outer product
+	if(line_val > 0) { 
+		return MapData::linePos::Left;
+	}
+	else {
+		return MapData::linePos::Right;
+	}
+}
+double MapData::getDistanceFromLine(Node prev_waypoint, Node next_waypoint, std::pair<double, double> cur_pos) {
+	// Do vector projection of current point onto line
+	std::pair<double, double> line_vec = std::pair<double, double>(next_waypoint.lat - prev_waypoint.lat, next_waypoint.lon - prev_waypoint.lon);
+	std::pair<double, double> point_vec = std::pair<double, double>(cur_pos.first - prev_waypoint.lat, cur_pos.second - prev_waypoint.lon);
+	double line_distance = sqrt(line_vec.first * line_vec.first + line_vec.second * line_vec.second);
+	std::pair<double, double> line_unit_vec = std::pair<double, double>(line_vec.first / line_distance, line_vec.second / line_distance);
+
+	double proj_distance = point_vec.first * line_unit_vec.first + point_vec.second * line_unit_vec.second;
+	std::pair<double, double> proj_vec = std::pair<double, double>(proj_distance * line_unit_vec.first + prev_waypoint.lat, proj_distance * line_unit_vec.second + prev_waypoint.lon);
+
+	return DEGREE_MULTI_FACTOR * sqrt((proj_vec.first - cur_pos.first) * (proj_vec.first - cur_pos.first) + (proj_vec.second - cur_pos.second) * (proj_vec.second - cur_pos.second));
 }
