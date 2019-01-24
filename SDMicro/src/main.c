@@ -54,6 +54,7 @@ int main(void)
 *	Increments counter indicating that the IR receiver transitioned between receiving a reflection and not and vice versa. Multiply adcx_slots by resolution to get distance traveled.
 *
 **************************************************************************/
+
 void TIM2_IRQHandler() {
 	TIM2->SR &= 0x00;	// Clear the IRQ flag
 
