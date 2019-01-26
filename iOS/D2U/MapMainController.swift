@@ -20,9 +20,13 @@ class MapMainController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     @IBOutlet weak var centerOnDestinationBtn: UIButton!
     @IBOutlet weak var freeFloatBtn: UIButton!
     
+    @IBOutlet weak var sideOfLineTxt: UITextField!
+    @IBOutlet weak var distanceFromLineTxt: UITextField!
+    
+    
     var syncTimer: Timer!
     let locationManager:CLLocationManager = CLLocationManager() // Create the location manager when the VC gets loaded
-    var userLocation:Waypoint = Waypoint(coordinate: defaultCoord)// Used to show current user location (all calculations for the robot are done relative to the destination) - initially same as approximate center of Purdue campus
+    var userLocation:Waypoint = Waypoint(coordinate: defaultCoord, image: MapMainSettings.mapMainSettings.userPin!)// Used to show current user location (all calculations for the robot are done relative to the destination) - initially same as approximate center of Purdue campus
     
     @IBAction func centerOnUserBtn(_ sender: UIButton) {
         MapMainSettings.mapMainSettings.mapCenter = MapMainSettings.MapCenter.user
@@ -135,17 +139,28 @@ class MapMainController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "userPin")
                 }
             }
-            if annotation.image == MapMainSettings.mapMainSettings.robotPin {
+            else if annotation.image == MapMainSettings.mapMainSettings.robotPin {
                 annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "robotPin")
                 if annotationView == nil {
                     annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "robotPin")
                 }
             }
-            if annotation.image == MapMainSettings.mapMainSettings.destinationPin {
+            else if annotation.image == MapMainSettings.mapMainSettings.destinationPin {
                 annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "destinationPin")
                 if annotationView == nil {
                     annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "destinationPin")
                 }
+            }
+            else if annotation.image == MapMainSettings.mapMainSettings.nextWaypointPin {
+                annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "nextWaypointPin")
+                if annotationView == nil {
+                    annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "nextWaypointPin")
+                }
+            }
+            else {
+                let pinAnnotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "None")
+                pinAnnotationView.pinTintColor = UIColor.black
+                return pinAnnotationView
             }
             annotationView!.annotation = annotation
             annotationView!.canShowCallout = true
@@ -163,8 +178,8 @@ class MapMainController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         /* dequeueReusableAnnotation view seems to be broken and this is fairly cheap */
         self.mapView.annotations.forEach {
             if $0 is Waypoint {
-                let waypoint = $0 as? Waypoint
-                if waypoint?.image == pinType { // This is a user pin
+                let testWaypoint = $0 as? Waypoint
+                if testWaypoint?.image == pinType { // Pin type matches. Remove old one.
                     self.mapView.removeAnnotation($0)
                 }
             }
@@ -178,7 +193,14 @@ class MapMainController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         self.drawPin(pinType: MapMainSettings.mapMainSettings.robotPin!, waypoint: robotLoc)
         let destinationLoc = Waypoint(coordinate: DeliveryInformation.deliveryInformation.endCoord ?? defaultCoord, image: MapMainSettings.mapMainSettings.destinationPin!)
         self.drawPin(pinType: MapMainSettings.mapMainSettings.destinationPin!, waypoint: destinationLoc)
+        
+        let nextWaypointLoc = Waypoint(coordinate: DeliveryInformation.deliveryInformation.nextWaypointCoord ?? defaultCoord, image: MapMainSettings.mapMainSettings.nextWaypointPin!)
+        self.drawPin(pinType: MapMainSettings.mapMainSettings.nextWaypointPin!, waypoint: nextWaypointLoc)
+        
         centerMap()
+        
+        sideOfLineTxt.text = DeliveryInformation.deliveryInformation.sideOfLine
+        distanceFromLineTxt.text = String(DeliveryInformation.deliveryInformation.distanceFromLine)
     }
 }
 

@@ -8,7 +8,7 @@
 
 import UIKit
 import Firebase
-
+import MapKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -74,6 +74,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         })
         ref.child("ETA").observeSingleEvent(of: .value, with: { (snapshot) in
             DeliveryInformation.deliveryInformation.eta = snapshot.value as! String
+        })
+        ref.child("Next Waypoint").observeSingleEvent(of: .value, with: { (snapshot) in
+            let value = snapshot.value as! String
+            let waypointArray = value.split(separator: ",")
+            if waypointArray.count > 2 {
+                DeliveryInformation.deliveryInformation.nextWaypointCoord = CLLocationCoordinate2D(latitude: Double(waypointArray[1])!, longitude: Double(waypointArray[2])!)
+            }
+            
+        })
+        ref.child("Side of Line").observeSingleEvent(of: .value, with: { (snapshot) in
+            let value = snapshot.value as? String
+            if value != nil {
+                let lineArray = value!.split(separator: ",")
+                if lineArray.count > 1 {
+                    DeliveryInformation.deliveryInformation.sideOfLine = String(lineArray[0])
+                    DeliveryInformation.deliveryInformation.distanceFromLine = Double(lineArray[1])!
+                }
+            }
         })
     }
     
