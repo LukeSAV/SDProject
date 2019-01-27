@@ -18,7 +18,7 @@ Repo for senior design app code
 
 ## <u>Sabertooth_Driver</u>
 
-Modified example of interfacing with the Sabertooth motor controller.
+## Modified example of interfacing with the Sabertooth motor controller.
 
 ## <u>boards</u>
 
@@ -52,7 +52,7 @@ Nodes:
 
 - fb_node: 
   - Publishes - None
-  - Subscribes - rtk_gpgga 
+  - Subscribes - rtk_gpgga (Type: String)
 
 ##### rtk
 
@@ -64,3 +64,40 @@ Nodes:
   - Publishes - rtk_gpgga (Type: String)
   - Subscribes - None
 
+##### rtk_controller
+
+Nodes:
+
+- rtk_controller_node
+  - Publishes - None
+  - Subscribes - rtk_gpgga(Type: String)
+
+##### joystick_drivers
+
+This package contains the joy_node that interfaces the PS4 controller to ROS.
+
+Nodes:
+
+- joy_node: 
+  - Publishes - joy (Type: Joy)
+  - Subscribes - None 
+
+##### rc
+
+This package contains the rc_listener node that listens for RC inputs and converts that to requests sent to the microcontroller
+
+Nodes:
+
+- rc_listener:
+  - Publishes - None
+  - Subscribes - joy (Type: Joy)
+
+##### serial_int
+
+This package will interface with the UART pins on the Jetson. 
+
+Nodes:
+
+- serial_node:
+  - Publishes - None
+  - Subscribes - TBD

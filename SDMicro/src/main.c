@@ -11,9 +11,13 @@
 
 #include "stm32f0xx.h"
 #include "stm32f0_discovery.h"
+#include <stdio.h>
+#include <string.h>
 
 #define IR_RECEIVE_MAX 750
 #define IR_NO_RECEIVE_MIN 900
+#define RX_BUFFER_MAX 1500
+#define TX_BUFFER_MAX 500
 
 enum encoders{RECEIVE, NO_RECEIVE};
 
@@ -25,8 +29,13 @@ static uint32_t adc0_val = 0; // Current ADC channel 0 reading
 static uint32_t adc1_val = 0; // Current ADC channel 1 reading
 static uint32_t adc0_slots = 0; // Number of times a reading on ADC channel 0 has crossed the threshold
 static uint32_t adc1_slots = 0; // Number of times a reading on ADC channel 1 has crossed the threshold
-static char receive_buffer[1500];
-static uint16_t receive_buffer_index = 0;
+static char last_message[RX_BUFFER_MAX]; // Contains last full JSON string
+
+static char rx_buffer[RX_BUFFER_MAX]; // Buffer of received UART data
+static uint16_t rx_buffer_index = 0;
+
+static char tx_buffer[TX_BUFFER_MAX]; // Buffer of UART data to transmit
+static uint16_t tx_buffer_index = 0;
 
 static void ADCInit();
 static void USART1Init();
@@ -34,10 +43,18 @@ int main(void)
 {
 	ADCInit();
 	USART1Init();
+
+	// Test UART transfer
+	char* t = "test";
+	memcpy(tx_buffer, t, 4 * sizeof(char));
+	//USART1->TDR = tx_buffer[tx_buffer_index++];
+	USART_ITConfig(USART1, USART_IT_TXE, ENABLE);   // Enable USART1 Transmit interrupt
+
 	for(;;) {
 
 	}
 }
+
 
 /*************************************************************************
 *	IR Encoder Interrupt
@@ -49,7 +66,7 @@ int main(void)
 void TIM2_IRQHandler() {
 	TIM2->SR &= 0x00;	// Clear the IRQ flag
 
-	ADC1->CHSELR = 0;                 		// Unselect ADC Channels
+	ADC1->CHSELR = 0;                 		// Deselect ADC Channels
 	ADC1->CHSELR |= 1 << 8;           		// Select Channel 8 (PB0)
 	while(!(ADC1->ISR & ADC_ISR_ADRDY)); 	// Wait for ADC to be ready
 	ADC1->CR |= ADC_CR_ADSTART;       		// Start the ADC
@@ -61,7 +78,7 @@ void TIM2_IRQHandler() {
 	while(!(ADC1->ISR & ADC_ISR_ADRDY));  	// Wait for ADC to be ready
 	ADC1->CR |= ADC_CR_ADSTART;       		// Start the ADC
 	while(!(ADC1->ISR & ADC_ISR_EOC));		// Wait for end of conversion
-	adc1_val = ADC1->DR;
+	adc1_val = ADC1->DR;					// Store value in file var
 
 
 	// Update slot counters
@@ -91,9 +108,40 @@ void TIM2_IRQHandler() {
 }
 
 
+/*************************************************************************
+*	UART TX/RX Interrupt
+*
+*	Received UART data goes into the rx_buffer
+*	To transmit UART data, set tx_buffer_index to 0, copy the data to send into the tx_buffer, and enable TXE interrupts.
+*
+**************************************************************************/
+
 void USART1_IRQHandler() {
-	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET) {
-		receive_buffer[receive_buffer_index++] = (char) USART_ReceiveData(USART1);
+	if(USART1->ISR & USART_ISR_RXNE) { // Check if RXNE flag is set
+		if(rx_buffer_index < RX_BUFFER_MAX) {
+			char in_char = (char) USART_ReceiveData(USART1);
+			if(rx_buffer_index == 0 && in_char != '{') {
+				return; // Ignoring data that is not contained within braces
+			}
+			rx_buffer[rx_buffer_index++] = in_char;
+			if(in_char == '}') {
+				memcpy(last_message, rx_buffer, rx_buffer_index * sizeof(char)); // Copy completed message to memory
+				memset(rx_buffer, '\0', RX_BUFFER_MAX); // Clear buffer
+				rx_buffer_index = 0; // Reset buffer index
+			}
+		} else {
+			// Error. Overran buffer without terminating JSON message.
+			memset(rx_buffer, '\0', RX_BUFFER_MAX); // Clear buffer
+			rx_buffer_index = 0; // Reset buffer index
+		}
+	}
+	if(USART1->ISR & USART_ISR_TXE) { // Check if TXE flag is set
+		if(tx_buffer[tx_buffer_index] != '\0') {
+			USART1->TDR = tx_buffer[tx_buffer_index++]; // Load next character into data register
+		} else {
+			USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
+			memset(tx_buffer, '\0', TX_BUFFER_MAX);
+		}
 	}
 }
 
@@ -143,7 +191,7 @@ static void USART1Init() {
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 				// Push pull
 	GPIO_Init(GPIOA, &GPIO_InitStructure);						// Initialize GPIOA with above settings
 
-	USART_InitStructure.USART_BaudRate = 9600; 											// Set baud rate to 57600 b/s
+	USART_InitStructure.USART_BaudRate = 57600; 											// Set baud rate to 57600 b/s
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b; 						// 8b word length
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;								// 1 stop bit
 	USART_InitStructure.USART_Parity = USART_Parity_No;									// No parity
@@ -154,5 +202,6 @@ static void USART1Init() {
 	USART_Cmd(USART1, ENABLE);					// Enable USART1
 
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);  // Enable USART1 Receive interrupt
+
 	NVIC_EnableIRQ(USART1_IRQn);					// Enable USART1 NVIC interrupt
 }
