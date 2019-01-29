@@ -172,7 +172,7 @@ g_pfnVectors:
   .word TIM1_BRK_UP_TRG_COM_IRQHandler
   .word TIM1_CC_IRQHandler
   .word TIM2_IRQHandler // Used for IR encoders
-  .word TIM3_IRQHandler
+  .word TIM3_IRQHandler // Used for Ultrasonics
   .word TIM6_DAC_IRQHandler
   .word 0  
   .word TIM14_IRQHandler
@@ -183,7 +183,7 @@ g_pfnVectors:
   .word I2C2_IRQHandler
   .word SPI1_IRQHandler
   .word SPI2_IRQHandler
-  .word USART1_IRQHandler
+  .word USART1_IRQHandler // Used for communication with the Jetson
   .word USART2_IRQHandler
   .word 0
   .word CEC_IRQHandler

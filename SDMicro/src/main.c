@@ -14,8 +14,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#define IR_RECEIVE_MAX 750
-#define IR_NO_RECEIVE_MIN 900
+#define IR_RECEIVE_MAX 300
+#define IR_NO_RECEIVE_MIN 1500
 #define RX_BUFFER_MAX 1500
 #define TX_BUFFER_MAX 500
 
@@ -29,7 +29,8 @@ static uint32_t adc0_val = 0; // Current ADC channel 0 reading
 static uint32_t adc1_val = 0; // Current ADC channel 1 reading
 static uint32_t adc0_slots = 0; // Number of times a reading on ADC channel 0 has crossed the threshold
 static uint32_t adc1_slots = 0; // Number of times a reading on ADC channel 1 has crossed the threshold
-static char last_message[RX_BUFFER_MAX]; // Contains last full JSON string
+
+static char last_message[RX_BUFFER_MAX]; // Contains last full string enclosed in curly braces
 
 static char rx_buffer[RX_BUFFER_MAX]; // Buffer of received UART data
 static uint16_t rx_buffer_index = 0;
@@ -39,15 +40,13 @@ static uint16_t tx_buffer_index = 0;
 
 static void ADCInit();
 static void USART1Init();
-int main(void)
-{
+int main(void) {
 	ADCInit();
 	USART1Init();
 
 	// Test UART transfer
-	char* t = "test";
-	memcpy(tx_buffer, t, 4 * sizeof(char));
-	//USART1->TDR = tx_buffer[tx_buffer_index++];
+	char* t = "Connected";
+	memcpy(tx_buffer, t, 9 * sizeof(char));
 	USART_ITConfig(USART1, USART_IT_TXE, ENABLE);   // Enable USART1 Transmit interrupt
 
 	for(;;) {
@@ -62,7 +61,6 @@ int main(void)
 *	Increments counter indicating that the IR receiver transitioned between receiving a reflection and not and vice versa. Multiply adcx_slots by resolution to get distance traveled.
 *
 **************************************************************************/
-
 void TIM2_IRQHandler() {
 	TIM2->SR &= 0x00;	// Clear the IRQ flag
 
@@ -115,7 +113,6 @@ void TIM2_IRQHandler() {
 *	To transmit UART data, set tx_buffer_index to 0, copy the data to send into the tx_buffer, and enable TXE interrupts.
 *
 **************************************************************************/
-
 void USART1_IRQHandler() {
 	if(USART1->ISR & USART_ISR_RXNE) { // Check if RXNE flag is set
 		if(rx_buffer_index < RX_BUFFER_MAX) {
@@ -147,6 +144,16 @@ void USART1_IRQHandler() {
 
 
 /*************************************************************************
+*	Ultrasonic Pulse Interrupt
+*
+*	Hold the trigger pin high for 10us every 100ms and enable timer to count response time before echo pin goes high.
+*
+**************************************************************************/
+void TIM3_IRQHandler() {
+
+}
+
+/*************************************************************************
 *	ADC Initialization Routine
 *
 *	Initialize the ADC and its timer interrupt
@@ -163,11 +170,13 @@ static void ADCInit() {
 	while((ADC1->CR & ADC_CR_ADSTART));   	// Wait for ADCstart to be 0.
 
 	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; // Enable clock for timer 2
-	NVIC_EnableIRQ(TIM2_IRQn); 			// Enable IRQ for TIM2 in NVIC
 	TIM2->ARR = 48000; 					// Enable interrupt at 2ms
 	TIM2->DIER |= 0x01; 				// Update interrupt enable
 	TIM2->CR1 |= 0x01; 					// Enable counter
+	NVIC_SetPriority(TIM2_IRQn, 1); 	// Set ADC interrupt priority
+	NVIC_EnableIRQ(TIM2_IRQn); 			// Enable IRQ for TIM2 in NVIC
 }
+
 
 /*************************************************************************
 *	USART Initialization Routine
@@ -191,7 +200,7 @@ static void USART1Init() {
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 				// Push pull
 	GPIO_Init(GPIOA, &GPIO_InitStructure);						// Initialize GPIOA with above settings
 
-	USART_InitStructure.USART_BaudRate = 57600; 											// Set baud rate to 57600 b/s
+	USART_InitStructure.USART_BaudRate = 57600; 										// Set baud rate to 57600 b/s
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b; 						// 8b word length
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;								// 1 stop bit
 	USART_InitStructure.USART_Parity = USART_Parity_No;									// No parity
@@ -202,6 +211,26 @@ static void USART1Init() {
 	USART_Cmd(USART1, ENABLE);					// Enable USART1
 
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);  // Enable USART1 Receive interrupt
-
+	NVIC_SetPriority(USART1_IRQn, 2); 				// Set USART1 interrupt priority
 	NVIC_EnableIRQ(USART1_IRQn);					// Enable USART1 NVIC interrupt
 }
+
+
+/*************************************************************************
+*	Ultrasonic GPIO Initialization Routine
+*
+*	Initialize the GPIOs for the ultrasonics and their interrupt.
+*	Ultrasonics will be pulsed in 100ms intervals on a timer. A timer will then be enabled to count until the echo pin goes high on all ultrasonics or 23 ms has passed (4m range exceeded).
+*
+**************************************************************************/
+static void UltrasonicInit() {
+
+
+	//NVIC_SetPriority(TIM3_IRQn, 0); // Set highest priority on ultrasonics
+
+}
+
+
+
+
+

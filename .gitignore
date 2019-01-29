@@ -60,7 +60,9 @@ cmake-build-debug/
 cmake-build-release/
 
 
-# Genera
+# General
 
 **/.DS_STORE
 **/Thumbs.db
+
+.metadata/*
