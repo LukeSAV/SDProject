@@ -172,11 +172,11 @@ g_pfnVectors:
   .word TIM1_BRK_UP_TRG_COM_IRQHandler
   .word TIM1_CC_IRQHandler
   .word TIM2_IRQHandler // Used for IR encoders
-  .word TIM3_IRQHandler // Used for Ultrasonics
+  .word TIM3_IRQHandler
   .word TIM6_DAC_IRQHandler
   .word 0  
-  .word TIM14_IRQHandler
-  .word TIM15_IRQHandler
+  .word TIM14_IRQHandler // Used to send trigger to ultrasonics
+  .word TIM15_IRQHandler // Used to measure response echo from ultrasonics
   .word TIM16_IRQHandler
   .word TIM17_IRQHandler
   .word I2C1_IRQHandler

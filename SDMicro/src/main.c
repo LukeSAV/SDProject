@@ -18,6 +18,7 @@
 #define IR_NO_RECEIVE_MIN 1500
 #define RX_BUFFER_MAX 1500
 #define TX_BUFFER_MAX 500
+#define ULTRASONIC_POLL_RATE_MS 200
 
 enum encoders{RECEIVE, NO_RECEIVE};
 
@@ -38,11 +39,31 @@ static uint16_t rx_buffer_index = 0;
 static char tx_buffer[TX_BUFFER_MAX]; // Buffer of UART data to transmit
 static uint16_t tx_buffer_index = 0;
 
+static uint32_t interrupt_counter = 0; // Test variable to measure interrupt rate
+
+static uint16_t elapsed_response_time = 0; // Response time since trigger was set high
+static uint8_t trig_high = 0; // 0 or 1 indicating trigger pin high or low
+
+static uint16_t us1_distance = 0; // Distance in centimeters of ultrasonic 1 to object
+static uint8_t us1_started = 0;
+static uint16_t us1_elapsed_echo_time = 0; // Elapsed ultrasonic echo time in us
+
+static uint16_t us2_distance = 0; // Distance in centimeters of utlrasonic 2 to object
+static uint8_t us2_started = 0;
+static uint16_t us2_elapsed_echo_time = 0; // Elapsed ultrasonic echo time in us
+
+static uint16_t us3_distance = 0; // Distance in centimeters of ultrasonic 3 to object
+static uint8_t us3_started = 0;
+static uint16_t us3_elapsed_echo_time = 0; // Elapsed ultrasonic echo time in us
+
 static void ADCInit();
 static void USART1Init();
+static void UltrasonicInit();
+
 int main(void) {
 	ADCInit();
 	USART1Init();
+	//UltrasonicInit();
 
 	// Test UART transfer
 	char* t = "Connected";
@@ -149,8 +170,72 @@ void USART1_IRQHandler() {
 *	Hold the trigger pin high for 10us every 100ms and enable timer to count response time before echo pin goes high.
 *
 **************************************************************************/
-void TIM3_IRQHandler() {
+void TIM14_IRQHandler() {
+	TIM14->SR &= 0x00; // Clear the IRQ flag
+	NVIC_EnableIRQ(TIM15_IRQn); 			// Enable IRQ for TIM15 in NVIC
+	GPIO_SetBits(GPIOA, GPIO_Pin_0);
+	GPIO_SetBits(GPIOA, GPIO_Pin_2);
+	GPIO_SetBits(GPIOA, GPIO_Pin_4);
+	for(int i = 0; i < 120; i++) {
 
+	}
+	GPIO_ResetBits(GPIOA, GPIO_Pin_0);
+	GPIO_ResetBits(GPIOA, GPIO_Pin_2);
+	GPIO_ResetBits(GPIOA, GPIO_Pin_4);
+	us1_elapsed_echo_time = 0;
+	us2_elapsed_echo_time = 0;
+	us3_elapsed_echo_time = 0;
+	elapsed_response_time = 0;
+}
+
+
+/*************************************************************************
+*	Ultrasonic Echo Response Interrupt
+*
+*	Measure response time before echo pin goes high for each ultrasonic.
+*
+**************************************************************************/
+void TIM15_IRQHandler() {
+	TIM15->SR &= 0x00; // Clear the IRQ flag
+	uint8_t us1_return = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_1);
+	uint8_t us2_return = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_3);
+	uint8_t us3_return = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5);
+	if(elapsed_response_time > 25000) { // More than 4 meters away
+		NVIC_DisableIRQ(TIM15_IRQn);
+	}
+
+	if(!us1_started && us1_return) { // Pulse went high
+		us1_started = 1;
+	}
+	else if(us1_started && us1_return) { // Pulse stayed high
+		us1_elapsed_echo_time += 30; // Increment by 30 us
+	}
+	else if(us1_started && !us1_return) { // Pulse went low
+		us1_started = 0;
+		us1_distance = us1_elapsed_echo_time * 0.0343 / 2; // Using speed of sound in cm/us to get distance
+	}
+
+	if(!us2_started && us2_return) { // Pulse went high
+		us2_started = 1;
+	}
+	else if(us2_started && us2_return) { // Pulse stayed high
+		us2_elapsed_echo_time += 30; // Increment by 30 us
+	}
+	else if(us2_started && !us2_return) { // Pulse went low
+		us2_started = 0;
+		us2_distance = us2_elapsed_echo_time * 0.0343 / 2; // Using speed of sound in cm/us to get distance
+	}
+
+	if(!us3_started && us3_return) { // Pulse went high
+		us3_started = 1;
+	}
+	else if(us3_started && us3_return) { // Pulse stayed high
+		us3_elapsed_echo_time += 30; // Increment by 30 us
+	}
+	else if(us3_started && !us3_return) { // Pulse went low
+		us3_started = 0;
+		us3_distance = us2_elapsed_echo_time * 0.0343 / 2; // Using speed of sound in cm/us to get distance
+	}
 }
 
 /*************************************************************************
@@ -170,7 +255,7 @@ static void ADCInit() {
 	while((ADC1->CR & ADC_CR_ADSTART));   	// Wait for ADCstart to be 0.
 
 	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; // Enable clock for timer 2
-	TIM2->ARR = 48000; 					// Enable interrupt at 2ms
+	TIM2->ARR = 96000; 					// Enable interrupt at 2ms
 	TIM2->DIER |= 0x01; 				// Update interrupt enable
 	TIM2->CR1 |= 0x01; 					// Enable counter
 	NVIC_SetPriority(TIM2_IRQn, 1); 	// Set ADC interrupt priority
@@ -224,13 +309,33 @@ static void USART1Init() {
 *
 **************************************************************************/
 static void UltrasonicInit() {
+	RCC->APB1ENR |= RCC_APB1ENR_TIM14EN; 	// Enable clock to timer
+	TIM14->PSC = 47999; 					// Prescale clock to 1kHz
+	TIM14->ARR = 200; 						// Trigger every 200 clock cycles (200 ms)
+	TIM14->DIER |= 0x01; 					// Update interrupt enable
+	TIM14->CR1 |= 0x01; 					// Enable counter
 
+	RCC->APB2ENR |= RCC_APB2ENR_TIM15EN; 	// Enable clock to timer
+	TIM15->PSC = 47; 						// Prescale clock to 1MHz
+	TIM15->ARR = 30; 						// Trigger every 30 clock cycles (30 us)
+	TIM15->DIER |= 0x01; 					// Update interrupt enable
+	TIM15->CR1 |= 0x01; 					// Enable counter
 
-	//NVIC_SetPriority(TIM3_IRQn, 0); // Set highest priority on ultrasonics
+	GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_2 | GPIO_Pin_4;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT; 				// Output mode
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; 				// No pull
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 			// 50MHz GPIO speed
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 				// Push pull
+	GPIO_Init(GPIOA, &GPIO_InitStructure);						// Initialize GPIOA with above settings
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_3 | GPIO_Pin_5;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN; // Input mode
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);						// Initialize GPIOA with above settings
+
+	NVIC_SetPriority(TIM15_IRQn, 0); 		// Set highest priority on ultrasonics
+	NVIC_SetPriority(TIM14_IRQn, 0); 		// Set highest priority on ultrasonics
+	NVIC_EnableIRQ(TIM14_IRQn); 			// Enable IRQ for TIM14 in NVIC
 
 }
-
-
-
-
-
