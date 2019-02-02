@@ -1,0 +1,3 @@
+<launch>
+	<node name="rtk_gps_node" pkg="rtk" type="rtk_gps_node" output="screen"/>
+</launch>

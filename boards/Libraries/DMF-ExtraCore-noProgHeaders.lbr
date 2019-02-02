@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE eagle SYSTEM "eagle.dtd">
+<eagle version="7.7.0">
+<drawing>
+<settings>
+<setting alwaysvectorfont="no"/>
+<setting verticaltext="up"/>
+</settings>
+<grid distance="0.0999999999" unitdist="mm" unit="mm" style="lines" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+<layers>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="29" name="tStop" color="7" fill="3" visible="yes" active="yes"/>
+<layer number="30" name="bStop" color="7" fill="6" visible="yes" active="yes"/>
+<layer number="31" name="tCream" color="7" fill="4" visible="yes" active="yes"/>
+<layer number="32" name="bCream" color="7" fill="5" visible="yes" active="yes"/>
+<layer number="33" name="tFinish" color="6" fill="3" visible="yes" active="yes"/>
+<layer number="34" name="bFinish" color="6" fill="6" visible="yes" active="yes"/>
+<layer number="35" name="tGlue" color="7" fill="4" visible="yes" active="yes"/>
+<layer number="36" name="bGlue" color="7" fill="5" visible="yes" active="yes"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
+<layer number="44" name="Drills" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="yes" active="yes"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="51" name="tDocu" color="14" fill="1" visible="yes" active="yes"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="93" name="Pins" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="94" name="Symbols" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="95" name="Names" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+</layers>
+<library>
+<description>Arduino-compatible board designed by Dustin Andrews.</description>
+<packages>
+<package name="EXTRACORE">
+<description>Extracore Package modified to eliminate programming headers (which are at 90° to PCB outline).</description>
+<wire x1="-10.033" y1="-11.303" x2="10.033" y2="-11.303" width="0.127" layer="21"/>
+<wire x1="10.033" y1="-11.303" x2="10.033" y2="11.303" width="0.127" layer="21"/>
+<wire x1="10.033" y1="11.303" x2="-10.033" y2="11.303" width="0.127" layer="21"/>
+<wire x1="-10.033" y1="11.303" x2="-10.033" y2="-11.303" width="0.127" layer="21"/>
+<pad name="RST" x="8.89" y="10.16" drill="0.8"/>
+<pad name="D13" x="8.89" y="7.62" drill="0.8"/>
+<pad name="D12" x="8.89" y="5.08" drill="0.8"/>
+<pad name="D11" x="8.89" y="2.54" drill="0.8"/>
+<pad name="D10" x="8.89" y="0" drill="0.8"/>
+<pad name="D9" x="8.89" y="-2.54" drill="0.8"/>
+<pad name="D8" x="8.89" y="-5.08" drill="0.8"/>
+<pad name="D7" x="8.89" y="-7.62" drill="0.8"/>
+<pad name="D6" x="8.89" y="-10.16" drill="0.8"/>
+<pad name="D5" x="6.35" y="-10.16" drill="0.8"/>
+<pad name="D4" x="3.81" y="-10.16" drill="0.8"/>
+<pad name="D3" x="1.27" y="-10.16" drill="0.8"/>
+<pad name="D2" x="-1.27" y="-10.16" drill="0.8"/>
+<pad name="A7" x="-3.81" y="-10.16" drill="0.8"/>
+<pad name="A6" x="-6.35" y="-10.16" drill="0.8"/>
+<pad name="A5" x="-8.89" y="-10.16" drill="0.8"/>
+<pad name="A4" x="-8.89" y="-7.62" drill="0.8"/>
+<pad name="A3" x="-8.89" y="-5.08" drill="0.8"/>
+<pad name="A2" x="-8.89" y="-2.54" drill="0.8"/>
+<pad name="A1" x="-8.89" y="0" drill="0.8"/>
+<pad name="A0" x="-8.89" y="2.54" drill="0.8"/>
+<pad name="VCC" x="-8.89" y="5.08" drill="0.8"/>
+<pad name="GND@3" x="-8.89" y="7.62" drill="0.8"/>
+<text x="-9.144" y="9.525" size="1.016" layer="21" font="vector" ratio="10">ExtraCore Footprint</text>
+<text x="6.085" y="8.663" size="0.762" layer="21" font="vector" ratio="15">RST</text>
+<text x="5.896" y="7.366" size="0.762" layer="21" font="vector" ratio="15">D13</text>
+<text x="5.923" y="4.826" size="0.762" layer="21" font="vector" ratio="15">D12</text>
+<text x="5.923" y="2.286" size="0.762" layer="21" font="vector" ratio="15">D11</text>
+<text x="5.896" y="-0.254" size="0.762" layer="21" font="vector" ratio="15">D10</text>
+<text x="6.404" y="-2.794" size="0.762" layer="21" font="vector" ratio="15">D9</text>
+<text x="6.431" y="-5.434" size="0.762" layer="21" font="vector" ratio="15">D8</text>
+<text x="6.431" y="-7.32" size="0.762" layer="21" font="vector" ratio="15">D7</text>
+<text x="7.193" y="-9.271" size="0.762" layer="21" font="vector" ratio="15">D6</text>
+<text x="5.215" y="-9.017" size="0.762" layer="21" font="vector" ratio="15">D5</text>
+<text x="3.302" y="-9.017" size="0.762" layer="21" font="vector" ratio="15">D4</text>
+<text x="0.762" y="-9.017" size="0.762" layer="21" font="vector" ratio="15">D3</text>
+<text x="-1.905" y="-9.017" size="0.762" layer="21" font="vector" ratio="15">D2</text>
+<text x="-4.318" y="-9.017" size="0.762" layer="21" font="vector" ratio="15">A7</text>
+<text x="-6.658" y="-9.017" size="0.762" layer="21" font="vector" ratio="15">A6</text>
+<text x="-8.282" y="-9.198" size="0.762" layer="21" font="vector" ratio="15">A5</text>
+<text x="-7.62" y="-7.239" size="0.762" layer="21" font="vector" ratio="15">A4</text>
+<text x="-7.62" y="-5.207" size="0.762" layer="21" font="vector" ratio="15">A3</text>
+<text x="-7.62" y="-2.667" size="0.762" layer="21" font="vector" ratio="15">A2</text>
+<text x="-7.62" y="-0.127" size="0.762" layer="21" font="vector" ratio="15">A1</text>
+<text x="-7.62" y="2.413" size="0.762" layer="21" font="vector" ratio="15">A0</text>
+<text x="-7.0358" y="4.2672" size="0.762" layer="21" font="vector" ratio="15" rot="R90">VCC</text>
+<text x="-6.9596" y="6.858" size="0.762" layer="21" font="vector" ratio="15" rot="R90">GND</text>
+</package>
+<package name="ADDICORE_NRF24">
+<wire x1="-14.5" y1="7.75" x2="14.5" y2="7.75" width="0.127" layer="51"/>
+<wire x1="14.5" y1="7.75" x2="14.5" y2="-7.75" width="0.127" layer="51"/>
+<wire x1="14.5" y1="-7.75" x2="-14.5" y2="-7.75" width="0.127" layer="51"/>
+<wire x1="-14.5" y1="-7.75" x2="-14.5" y2="7.75" width="0.127" layer="51"/>
+<text x="-11.2" y="-6.5" size="1" layer="51">ADDICORE NRF24 PLACEHOLDER</text>
+<rectangle x1="-13.97" y1="5.715" x2="-12.7" y2="6.985" layer="51"/>
+<rectangle x1="-11.43" y1="5.715" x2="-10.16" y2="6.985" layer="51"/>
+<rectangle x1="-13.97" y1="3.175" x2="-12.7" y2="4.445" layer="51"/>
+<rectangle x1="-11.43" y1="3.175" x2="-10.16" y2="4.445" layer="51"/>
+<rectangle x1="-13.97" y1="0.635" x2="-12.7" y2="1.905" layer="51"/>
+<rectangle x1="-11.43" y1="0.635" x2="-10.16" y2="1.905" layer="51"/>
+<rectangle x1="-13.97" y1="-1.905" x2="-12.7" y2="-0.635" layer="51"/>
+<rectangle x1="-11.43" y1="-1.905" x2="-10.16" y2="-0.635" layer="51"/>
+</package>
+<package name="JALDILABS_NRF24">
+<wire x1="0" y1="18.288" x2="32.4612" y2="18.288" width="0.127" layer="51"/>
+<wire x1="32.4612" y1="18.288" x2="32.4612" y2="0" width="0.127" layer="51"/>
+<wire x1="32.4612" y1="0" x2="0" y2="0" width="0.127" layer="51"/>
+<wire x1="0" y1="0" x2="0" y2="18.288" width="0.127" layer="51"/>
+<text x="4.675" y="15.09" size="1" layer="51">JALDILABS NRF24 PLACEHOLDER</text>
+<rectangle x1="1.0668" y1="1.5875" x2="2.3368" y2="2.8575" layer="51"/>
+<rectangle x1="3.6068" y1="1.5875" x2="4.8768" y2="2.8575" layer="51"/>
+<rectangle x1="3.6068" y1="4.1275" x2="4.8768" y2="5.3975" layer="51"/>
+<rectangle x1="1.0668" y1="4.1275" x2="2.3368" y2="5.3975" layer="51"/>
+<rectangle x1="1.0668" y1="6.6675" x2="2.3368" y2="7.9375" layer="51"/>
+<rectangle x1="3.6068" y1="6.6675" x2="4.8768" y2="7.9375" layer="51"/>
+<rectangle x1="3.6068" y1="9.2075" x2="4.8768" y2="10.4775" layer="51"/>
+<rectangle x1="1.0668" y1="9.2075" x2="2.3368" y2="10.4775" layer="51"/>
+</package>
+<package name="EXTRACORE_WEAVETIMERCONFIG">
+<wire x1="-10.033" y1="-11.303" x2="10.033" y2="-11.303" width="0.127" layer="21"/>
+<wire x1="10.033" y1="-11.303" x2="10.033" y2="11.303" width="0.127" layer="21"/>
+<wire x1="10.033" y1="11.303" x2="-10.033" y2="11.303" width="0.127" layer="21"/>
+<wire x1="-10.033" y1="11.303" x2="-10.033" y2="-11.303" width="0.127" layer="21"/>
+<pad name="D13" x="8.89" y="7.62" drill="0.8"/>
+<pad name="D12" x="8.89" y="5.08" drill="0.8"/>
+<pad name="D11" x="8.89" y="2.54" drill="0.8"/>
+<pad name="D10" x="8.89" y="0" drill="0.8"/>
+<pad name="D9" x="8.89" y="-2.54" drill="0.8"/>
+<pad name="D3" x="1.27" y="-10.16" drill="0.8"/>
+<pad name="D2" x="-1.27" y="-10.16" drill="0.8"/>
+<pad name="A1" x="-8.89" y="0" drill="0.8"/>
+<pad name="A0" x="-8.89" y="2.54" drill="0.8"/>
+<pad name="VCC" x="-8.89" y="5.08" drill="0.8"/>
+<pad name="GND@3" x="-8.89" y="7.62" drill="0.8"/>
+<text x="-9.144" y="8.255" size="1.016" layer="21" font="vector" ratio="10">ExtraCore Footprint
+     Weave Timer</text>
+<text x="5.796" y="7.366" size="0.762" layer="21" font="vector" ratio="15">D13</text>
+<text x="5.823" y="4.826" size="0.762" layer="21" font="vector" ratio="15">D12</text>
+<text x="5.823" y="2.286" size="0.762" layer="21" font="vector" ratio="15">D11</text>
+<text x="5.796" y="-0.254" size="0.762" layer="21" font="vector" ratio="15">D10</text>
+<text x="6.304" y="-2.794" size="0.762" layer="21" font="vector" ratio="15">D9</text>
+<text x="0.762" y="-9.017" size="0.762" layer="21" font="vector" ratio="15">D3</text>
+<text x="-1.905" y="-9.017" size="0.762" layer="21" font="vector" ratio="15">D2</text>
+<text x="-7.62" y="-0.427" size="0.762" layer="21" font="vector" ratio="15">A1</text>
+<text x="-7.62" y="2.113" size="0.762" layer="21" font="vector" ratio="15">A0</text>
+<text x="-6.8358" y="4.1672" size="0.762" layer="21" font="vector" ratio="15" rot="R90">VCC</text>
+<text x="-6.8596" y="6.858" size="0.762" layer="21" font="vector" ratio="15" rot="R90">GND</text>
+</package>
+</packages>
+<symbols>
+<symbol name="EXTRACORE">
+<wire x1="-17.78" y1="12.7" x2="15.24" y2="12.7" width="0.254" layer="94"/>
+<wire x1="15.24" y1="12.7" x2="15.24" y2="-15.24" width="0.254" layer="94"/>
+<wire x1="15.24" y1="-15.24" x2="-17.78" y2="-15.24" width="0.254" layer="94"/>
+<wire x1="-17.78" y1="-15.24" x2="-17.78" y2="12.7" width="0.254" layer="94"/>
+<pin name="RST" x="7.62" y="17.78" length="middle" rot="R270"/>
+<pin name="GND@3" x="-22.86" y="7.62" length="middle" direction="pwr"/>
+<pin name="VCC" x="-22.86" y="5.08" length="middle" direction="pwr"/>
+<pin name="A0" x="-22.86" y="2.54" length="middle"/>
+<pin name="A1" x="-22.86" y="0" length="middle"/>
+<pin name="A2" x="-22.86" y="-2.54" length="middle"/>
+<pin name="A3" x="-22.86" y="-5.08" length="middle"/>
+<pin name="A4" x="-22.86" y="-7.62" length="middle"/>
+<pin name="D13" x="20.32" y="7.62" length="middle" rot="R180"/>
+<pin name="D12" x="20.32" y="5.08" length="middle" rot="R180"/>
+<pin name="D10" x="20.32" y="0" length="middle" rot="R180"/>
+<pin name="D9" x="20.32" y="-2.54" length="middle" rot="R180"/>
+<pin name="D8" x="20.32" y="-5.08" length="middle" rot="R180"/>
+<pin name="D7" x="20.32" y="-7.62" length="middle" rot="R180"/>
+<pin name="D6" x="7.62" y="-20.32" length="middle" rot="R90"/>
+<pin name="D5" x="5.08" y="-20.32" length="middle" rot="R90"/>
+<pin name="D4" x="2.54" y="-20.32" length="middle" rot="R90"/>
+<pin name="D3" x="0" y="-20.32" length="middle" rot="R90"/>
+<pin name="D2" x="-2.54" y="-20.32" length="middle" rot="R90"/>
+<pin name="A7" x="-5.08" y="-20.32" length="middle" rot="R90"/>
+<pin name="A6" x="-7.62" y="-20.32" length="middle" rot="R90"/>
+<pin name="A5" x="-10.16" y="-20.32" length="middle" rot="R90"/>
+<pin name="D11" x="20.32" y="2.54" length="middle" rot="R180"/>
+<text x="-7.366" y="-1.524" size="1.778" layer="95">&gt;NAME</text>
+<text x="-7.62" y="-4.318" size="1.778" layer="96">&gt;VALUE</text>
+</symbol>
+<symbol name="ADDICORE_NRF24">
+<text x="-7.62" y="2.54" size="1.27" layer="97">ADDICORE NRF24
+INFO PLACEHOLDER</text>
+</symbol>
+<symbol name="JALDILABS_NRF24">
+<text x="-7.62" y="2.54" size="1.27" layer="97">JALDILABS NRF24
+INFO PLACEHOLDER</text>
+</symbol>
+<symbol name="EXTRACORE_WEAVETIMERCONFIG">
+<wire x1="-15.24" y1="15.24" x2="17.78" y2="15.24" width="0.254" layer="94"/>
+<wire x1="17.78" y1="15.24" x2="17.78" y2="-12.7" width="0.254" layer="94"/>
+<wire x1="17.78" y1="-12.7" x2="-15.24" y2="-12.7" width="0.254" layer="94"/>
+<wire x1="-15.24" y1="-12.7" x2="-15.24" y2="15.24" width="0.254" layer="94"/>
+<pin name="GND@3" x="-20.32" y="10.16" length="middle" direction="pwr"/>
+<pin name="VCC" x="-20.32" y="7.62" length="middle" direction="pwr"/>
+<pin name="A0" x="-20.32" y="5.08" length="middle"/>
+<pin name="A1" x="-20.32" y="2.54" length="middle"/>
+<pin name="D13" x="22.86" y="10.16" length="middle" rot="R180"/>
+<pin name="D12" x="22.86" y="7.62" length="middle" rot="R180"/>
+<pin name="D10" x="22.86" y="2.54" length="middle" rot="R180"/>
+<pin name="D9" x="22.86" y="0" length="middle" rot="R180"/>
+<pin name="D3" x="2.54" y="-17.78" length="middle" rot="R90"/>
+<pin name="D2" x="0" y="-17.78" length="middle" rot="R90"/>
+<pin name="D11" x="22.86" y="5.08" length="middle" rot="R180"/>
+<text x="-4.826" y="1.016" size="1.778" layer="95">&gt;NAME</text>
+<text x="-5.08" y="-1.778" size="1.778" layer="96">&gt;VALUE</text>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="EXTRACORE" prefix="A">
+<description>This version modified to eliminate programming headers that are not directly connected to the underlying PCB.</description>
+<gates>
+<gate name="G$1" symbol="EXTRACORE" x="17.78" y="5.08"/>
+</gates>
+<devices>
+<device name="" package="EXTRACORE">
+<connects>
+<connect gate="G$1" pin="A0" pad="A0"/>
+<connect gate="G$1" pin="A1" pad="A1"/>
+<connect gate="G$1" pin="A2" pad="A2"/>
+<connect gate="G$1" pin="A3" pad="A3"/>
+<connect gate="G$1" pin="A4" pad="A4"/>
+<connect gate="G$1" pin="A5" pad="A5"/>
+<connect gate="G$1" pin="A6" pad="A6"/>
+<connect gate="G$1" pin="A7" pad="A7"/>
+<connect gate="G$1" pin="D10" pad="D10"/>
+<connect gate="G$1" pin="D11" pad="D11"/>
+<connect gate="G$1" pin="D12" pad="D12"/>
+<connect gate="G$1" pin="D13" pad="D13"/>
+<connect gate="G$1" pin="D2" pad="D2"/>
+<connect gate="G$1" pin="D3" pad="D3"/>
+<connect gate="G$1" pin="D4" pad="D4"/>
+<connect gate="G$1" pin="D5" pad="D5"/>
+<connect gate="G$1" pin="D6" pad="D6"/>
+<connect gate="G$1" pin="D7" pad="D7"/>
+<connect gate="G$1" pin="D8" pad="D8"/>
+<connect gate="G$1" pin="D9" pad="D9"/>
+<connect gate="G$1" pin="GND@3" pad="GND@3"/>
+<connect gate="G$1" pin="RST" pad="RST"/>
+<connect gate="G$1" pin="VCC" pad="VCC"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="ADDICORE_NRF24">
+<gates>
+<gate name="G$1" symbol="ADDICORE_NRF24" x="7.62" y="7.62"/>
+</gates>
+<devices>
+<device name="" package="ADDICORE_NRF24">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="JALDILABS_NRF24">
+<gates>
+<gate name="G$1" symbol="JALDILABS_NRF24" x="0" y="-2.54"/>
+</gates>
+<devices>
+<device name="" package="JALDILABS_NRF24">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="EXTRACORE_WEAVETIMER">
+<gates>
+<gate name="G$1" symbol="EXTRACORE_WEAVETIMERCONFIG" x="0" y="-2.54"/>
+</gates>
+<devices>
+<device name="" package="EXTRACORE_WEAVETIMERCONFIG">
+<connects>
+<connect gate="G$1" pin="A0" pad="A0"/>
+<connect gate="G$1" pin="A1" pad="A1"/>
+<connect gate="G$1" pin="D10" pad="D10"/>
+<connect gate="G$1" pin="D11" pad="D11"/>
+<connect gate="G$1" pin="D12" pad="D12"/>
+<connect gate="G$1" pin="D13" pad="D13"/>
+<connect gate="G$1" pin="D2" pad="D2"/>
+<connect gate="G$1" pin="D3" pad="D3"/>
+<connect gate="G$1" pin="D9" pad="D9"/>
+<connect gate="G$1" pin="GND@3" pad="GND@3"/>
+<connect gate="G$1" pin="VCC" pad="VCC"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
+</drawing>
+<compatibility>
+<note version="6.3" minversion="6.2.2" severity="warning">
+Since Version 6.2.2 text objects can contain more than one line,
+which will not be processed correctly with this version.
+</note>
+</compatibility>
+</eagle>

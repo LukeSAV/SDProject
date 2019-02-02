@@ -51,11 +51,7 @@ std::pair<double, double> NMEAData::getLatLon() { // Get latitude and longitude 
 	return std::pair<double, double>(cur_lat, cur_lon);
 }
 
-void NMEAData::parseNMEA(char* read_buf, int readBytes, ros::Publisher gpgga_pub) { // Make sense of what's in the read buffer and pull out the GPGGA string if there is one
-	/*if(FILE* fp = fopen("DataLog.txt", "w+")) { // Writing to data log
-		fprintf(fp, read_buf);
-		fclose(fp);
-	}*/
+void NMEAData::parseNMEA(char* read_buf, int readBytes, ros::Publisher gpgga_pub, ros::Publisher gpvtg_pub) { // Make sense of what's in the read buffer and pull out the GPGGA string if there is one
 	std::string new_gpgga = "";
 	std::string incoming_data = std::string(read_buf);
 	std::size_t start_loc = incoming_data.find("$GPGGA");
@@ -111,12 +107,13 @@ void NMEAData::parseNMEA(char* read_buf, int readBytes, ros::Publisher gpgga_pub
 		gpgga_pub.publish(msg);
 		gpgga_ready.store(true); // Signal that a new GPGGA string was added
 		gpgga_mu.unlock();
-		std::pair<double,double> latlon = getLatLon();
 	}
 	if(new_gpvtg != "") { // Check that the message is at least feasible
 		gpvtg_mu.lock();
 		gpvtg_msg = new_gpvtg;
 		std_msgs::String msg;
+		msg.data = new_gpvtg;
+		gpvtg_pub.publish(msg);
 		gpvtg_ready.store(true); // Signal that a new GPVTG string was added
 		gpvtg_mu.unlock();
 	}

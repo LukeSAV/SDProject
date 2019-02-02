@@ -1,0 +1,15 @@
+<osm>
+    <node id="1111111114" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.4195490" lon="-86.9066980"/>
+
+    <path id="1111111163" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.419708" lon="-86.906722"/>
+    <path id="1111111164" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.419727" lon="-86.906759"/>
+    <path id="1111111165" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.419746" lon="-86.906796"/>
+    <path id="1111111166" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.419766" lon="-86.906836"/>
+    <path id="1111111167" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.419788" lon="-86.906931"/>
+
+
+    <way id="1000000000" visible="true" version="7" changeset="00000000" timestamp="2017-06-16T02:09:28Z" user="luke" uid="1111111">
+        <nd ref="1111111114"/>
+        <tag k="name" v="Luke's Really Awesome Apartment"/>
+    </way>
+ </osm>
