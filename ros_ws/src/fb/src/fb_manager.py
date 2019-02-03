@@ -12,8 +12,6 @@ def controllerCallback(data):
 	if(data_list[0] == 'Left' or data_list[0] == 'Right'):
 		ref.put('', 'Side of Line', data.data)
 
-
-
 def gpsCallback(data):
 	ref.put('', 'Current Position', data.data)
 	rospy.loginfo("Received string: %s", data.data)
