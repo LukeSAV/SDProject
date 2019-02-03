@@ -13,10 +13,13 @@ class DeliveryInformation {
     
     var endCoord:CLLocationCoordinate2D? // Destination coordinate
     var curCoord:CLLocationCoordinate2D? // Current coordinate of the robot
+    var nextWaypointCoord:CLLocationCoordinate2D? // Coordinate of the next waypoint for the robot
     var delivering = false
     var nearestLandmark = ""
     var distanceRemaining = ""
     var eta = ""
+    var sideOfLine = ""
+    var distanceFromLine = 0.0
     
     let deliverLocColor:UIColor = UIColor(red: 255.0/255.0, green: 100.0/255.0, blue: 115.0/255.0, alpha: 1.0) // Color used to show location to be delivered to
     let userLocColor:UIColor = UIColor(red: 0.0/255.0, green: 100.0/255.0, blue: 115.0/255.0, alpha: 1.0)
