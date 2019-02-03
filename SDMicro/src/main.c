@@ -15,7 +15,7 @@
 #include <string.h>
 
 #define IR_RECEIVE_MAX 300
-#define IR_NO_RECEIVE_MIN 1500
+#define IR_NO_RECEIVE_MIN 800
 #define RX_BUFFER_MAX 1500
 #define TX_BUFFER_MAX 500
 
