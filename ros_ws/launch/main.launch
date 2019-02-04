@@ -4,4 +4,5 @@
 	<node name="fb_manager" pkg="fb" type="fb_manager.py" output="screen"/>
 	<node name="joy_node" pkg="joy" type="joy_node" output="screen"/>
 	<node name="rc_manager" pkg="rc" type="rc_manager.py" output="screen"/>
+	<include file="../src/rplidar_ros/launch/rplidar.launch"/>
 </launch>
