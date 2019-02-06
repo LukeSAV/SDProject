@@ -110,7 +110,7 @@ int main(int argc, char **argv)
     auto cur_time = start_landmark;
     std::chrono::duration<double> elapsed_time;
     //xml_reader("/home/luke/SDProject/ros_ws/src/rtk_controller/purdue_mapv1.0.xml");
-    xml_reader("/home/luke/SDProject/ros_ws/src/rtk_controller/lukes_test_path.xml");
+    xml_reader("/home/ubuntu/SDProject/ros_ws/src/rtk_controller/lukes_test_path.xml");
     ros::Rate r(10);
     while(ros::ok()) {
         cur_time = std::chrono::system_clock::now();
