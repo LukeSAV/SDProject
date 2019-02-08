@@ -14,8 +14,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#define IR_RECEIVE_MAX 300
-#define IR_NO_RECEIVE_MIN 800
+#define IR_RECEIVE_MAX 500
+#define IR_NO_RECEIVE_MIN 2000
 #define RX_BUFFER_MAX 1500
 #define TX_BUFFER_MAX 500
 #define ULTRASONIC_POLL_RATE_MS 200
@@ -63,7 +63,7 @@ static void UltrasonicInit();
 int main(void) {
 	ADCInit();
 	USART1Init();
-	//UltrasonicInit();
+	UltrasonicInit();
 
 	// Test UART transfer
 	char* t = "Connected";
