@@ -184,7 +184,7 @@ g_pfnVectors:
   .word SPI1_IRQHandler
   .word SPI2_IRQHandler
   .word USART1_IRQHandler // Used for communication with the Jetson
-  .word USART2_IRQHandler
+  .word USART2_IRQHandler // Used for communication to the motor controller
   .word 0
   .word CEC_IRQHandler
   .word 0

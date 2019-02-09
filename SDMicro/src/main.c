@@ -18,31 +18,44 @@
 #define IR_NO_RECEIVE_MIN 2000
 #define RX_BUFFER_MAX 1500
 #define TX_BUFFER_MAX 500
-#define ULTRASONIC_POLL_RATE_MS 200
+#define MC_ADDRESS 130
 
-enum encoders{RECEIVE, NO_RECEIVE};
+enum Encoders{RECEIVE, NO_RECEIVE};
+enum Direction{FORWARD, REVERSE};
+enum LastMotorSent{LEFT, RIGHT};
+typedef struct {
+	char address;
+	char command;
+	char data;
+	char checksum;
+} Packet;
 
-enum encoders prev_adc0_state = NO_RECEIVE; // Previous ADC channel 0 state
-enum encoders prev_adc1_state = NO_RECEIVE; // Previous ADC channel 1 state
-enum encoders adc0_state = NO_RECEIVE; // Current ADC channel 0 state
-enum encoders adc1_state = NO_RECEIVE; // Current ADC channel 1 state
+/* Encoder state vars */
+enum Encoders prev_adc0_state = NO_RECEIVE; // Previous ADC channel 0 state
+enum Encoders prev_adc1_state = NO_RECEIVE; // Previous ADC channel 1 state
+enum Encoders adc0_state = NO_RECEIVE; // Current ADC channel 0 state
+enum Encoders adc1_state = NO_RECEIVE; // Current ADC channel 1 state
 static uint32_t adc0_val = 0; // Current ADC channel 0 reading
 static uint32_t adc1_val = 0; // Current ADC channel 1 reading
 static uint32_t adc0_slots = 0; // Number of times a reading on ADC channel 0 has crossed the threshold
 static uint32_t adc1_slots = 0; // Number of times a reading on ADC channel 1 has crossed the threshold
 
+/* UART vars */
 static char last_message[RX_BUFFER_MAX]; // Contains last full string enclosed in curly braces
 
 static char rx_buffer[RX_BUFFER_MAX]; // Buffer of received UART data
 static uint16_t rx_buffer_index = 0;
 
-static char tx_buffer[TX_BUFFER_MAX]; // Buffer of UART data to transmit
-static uint16_t tx_buffer_index = 0;
+static char jetson_tx_buffer[TX_BUFFER_MAX]; // Buffer of UART data to transmit
+static uint16_t jetson_tx_buffer_index = 0;
 
-static uint32_t interrupt_counter = 0; // Test variable to measure interrupt rate
+static char mc_tx_buffer[9]; // Buffer of UART data to transmit, place 255 in position 4 if only sending one packet
+static uint8_t mc_tx_buffer_index = 0;
 
+
+
+/* Ultrasonic vars */
 static uint16_t elapsed_response_time = 0; // Response time since trigger was set high
-static uint8_t trig_high = 0; // 0 or 1 indicating trigger pin high or low
 
 static uint16_t us1_distance = 0; // Distance in centimeters of ultrasonic 1 to object
 static uint8_t us1_started = 0;
@@ -56,23 +69,80 @@ static uint16_t us3_distance = 0; // Distance in centimeters of ultrasonic 3 to 
 static uint8_t us3_started = 0;
 static uint16_t us3_elapsed_echo_time = 0; // Elapsed ultrasonic echo time in us
 
+/* Motor state vars */
+Packet left_packet;
+Packet right_packet;
+
 static void ADCInit();
-static void USART1Init();
+static void USARTInit();
 static void UltrasonicInit();
+static void SPIInit();
+static int Drive(enum Direction left_direction, char left_speed, enum Direction right_direction, char right_speed); // Return 1 if unable to send, 0 if commands sent
 
 int main(void) {
 	ADCInit();
-	USART1Init();
+	USARTInit();
 	UltrasonicInit();
+	SPIInit();
+
+	mc_tx_buffer[8] = 255; // Set end character in buffer
+
+	left_packet.address = MC_ADDRESS; // Only one motor controller, so use this address
+	right_packet.address = MC_ADDRESS;
+
+	mc_tx_buffer[0] = MC_ADDRESS;
+	mc_tx_buffer[1] = 'a';//14; // Serial timeout command
+	mc_tx_buffer[2] = 'b';//10; // 1000ms timeout
+	mc_tx_buffer[3] = (MC_ADDRESS + 10 + 14) & 127; // Checksum
+	mc_tx_buffer[4] = 255; // Stop byte
+	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
 
 	// Test UART transfer
 	char* t = "Connected";
-	memcpy(tx_buffer, t, 9 * sizeof(char));
+	memcpy(jetson_tx_buffer, t, 9 * sizeof(char));
 	USART_ITConfig(USART1, USART_IT_TXE, ENABLE);   // Enable USART1 Transmit interrupt
 
-	for(;;) {
 
+	//Drive(FORWARD, 20, FORWARD, 20);
+	for(;;) {
 	}
+}
+
+
+static int Drive(enum Direction left_direction, char left_speed, enum Direction right_direction, char right_speed) {
+	if(mc_tx_buffer_index != 0) {
+		return 1; // Haven't finished sending the last message
+	}
+	if(left_direction == FORWARD) {
+		left_packet.command = 0;
+	}
+	else if(left_direction == REVERSE) {
+		left_packet.command = 1;
+	}
+	if(right_direction == FORWARD) {
+		right_packet.command = 4;
+	}
+	else if(right_direction == REVERSE) {
+		right_packet.command = 5;
+	}
+	left_packet.data = left_speed;
+	right_packet.data = left_speed;
+
+	left_packet.checksum = (left_packet.address + left_packet.command + left_packet.data) & 127;
+	right_packet.checksum = (right_packet.address + right_packet.command + right_packet.data) & 127;
+
+	mc_tx_buffer[0] = left_packet.address;
+	mc_tx_buffer[1] = left_packet.command;
+	mc_tx_buffer[2] = left_packet.data;
+	mc_tx_buffer[3] = left_packet.checksum;
+
+	mc_tx_buffer[4] = right_packet.address;
+	mc_tx_buffer[5] = right_packet.command;
+	mc_tx_buffer[6] = right_packet.data;
+	mc_tx_buffer[7] = right_packet.checksum;
+	USART_ITConfig(USART2, USART_IT_TXE, ENABLE);
+
+	return 0;
 }
 
 
@@ -131,7 +201,7 @@ void TIM2_IRQHandler() {
 *	UART TX/RX Interrupt
 *
 *	Received UART data goes into the rx_buffer
-*	To transmit UART data, set tx_buffer_index to 0, copy the data to send into the tx_buffer, and enable TXE interrupts.
+*	To transmit UART data, set jetson_tx_buffer_index to 0, copy the data to send into the jetson_tx_buffer, and enable TXE interrupts.
 *
 **************************************************************************/
 void USART1_IRQHandler() {
@@ -154,38 +224,62 @@ void USART1_IRQHandler() {
 		}
 	}
 	if(USART1->ISR & USART_ISR_TXE) { // Check if TXE flag is set
-		if(tx_buffer[tx_buffer_index] != '\0') {
-			USART1->TDR = tx_buffer[tx_buffer_index++]; // Load next character into data register
+		if(jetson_tx_buffer[jetson_tx_buffer_index] != '\0') {
+			USART1->TDR = jetson_tx_buffer[jetson_tx_buffer_index++]; // Load next character into data register
 		} else {
 			USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
-			memset(tx_buffer, '\0', TX_BUFFER_MAX);
+			memset(jetson_tx_buffer, '\0', TX_BUFFER_MAX);
+			jetson_tx_buffer_index = 0;
 		}
+	}
+}
+
+/*************************************************************************
+*	UART TX Interrupt
+*
+*	To transmit UART data, set mc_tx_buffer_index to 0, copy the data to send into the mc_tx_buffer, and enable TXE interrupts.
+*
+**************************************************************************/
+void USART2_IRQHandler() {
+	if(USART2->ISR & USART_ISR_TXE) { // Check if TXE flag is set
+		if(mc_tx_buffer[mc_tx_buffer_index] != 255) {
+			USART2->TDR = mc_tx_buffer[mc_tx_buffer_index++]; // Load next character into data register
+		} else {
+			USART_ITConfig(USART2, USART_IT_TXE, DISABLE);
+			memset(jetson_tx_buffer, 255, 9);
+			mc_tx_buffer_index = 0;
+		}
+
 	}
 }
 
 
 /*************************************************************************
-*	Ultrasonic Pulse Interrupt
+*	100 ms Interrupt
 *
 *	Hold the trigger pin high for 10us every 100ms and enable timer to count response time before echo pin goes high.
 *
 **************************************************************************/
 void TIM14_IRQHandler() {
-	TIM14->SR &= 0x00; // Clear the IRQ flag
-	NVIC_EnableIRQ(TIM15_IRQn); 			// Enable IRQ for TIM15 in NVIC
+	/* Run ultrasonic pulse */
+	TIM14->SR &= 0x00; 					// Clear the IRQ flag
+	NVIC_EnableIRQ(TIM15_IRQn); 		// Enable IRQ for TIM15 in NVIC
+	// Set the trigger pins high
 	GPIO_SetBits(GPIOA, GPIO_Pin_0);
-	GPIO_SetBits(GPIOA, GPIO_Pin_2);
 	GPIO_SetBits(GPIOA, GPIO_Pin_4);
-	for(int i = 0; i < 120; i++) {
-
-	}
+	GPIO_SetBits(GPIOA, GPIO_Pin_6);
+	for(int i = 0; i < 120; i++) {} 	// Idle while trigger set high ~ 10us
+	// Set the trigger pins low
 	GPIO_ResetBits(GPIOA, GPIO_Pin_0);
-	GPIO_ResetBits(GPIOA, GPIO_Pin_2);
 	GPIO_ResetBits(GPIOA, GPIO_Pin_4);
+	GPIO_ResetBits(GPIOA, GPIO_Pin_6);
+	// Reset elapsed echo time for each US
 	us1_elapsed_echo_time = 0;
 	us2_elapsed_echo_time = 0;
 	us3_elapsed_echo_time = 0;
+	// Reset elapsed response time
 	elapsed_response_time = 0;
+
 }
 
 
@@ -198,8 +292,8 @@ void TIM14_IRQHandler() {
 void TIM15_IRQHandler() {
 	TIM15->SR &= 0x00; // Clear the IRQ flag
 	uint8_t us1_return = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_1);
-	uint8_t us2_return = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_3);
-	uint8_t us3_return = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5);
+	uint8_t us2_return = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5);
+	uint8_t us3_return = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7);
 	if(elapsed_response_time > 25000) { // More than 4 meters away
 		NVIC_DisableIRQ(TIM15_IRQn);
 	}
@@ -248,7 +342,7 @@ static void ADCInit() {
 	RCC->AHBENR |= RCC_AHBENR_GPIOBEN;    	// Enable clock to Port B
 	GPIOB->MODER &= 0x0F;		          	// Set Pin 0 and Pin 1 for analog input
 	RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;   	// Enable clock to ADC unit
-	RCC->CR2 |= RCC_CR2_HSI14ON;         	// Turn on Hi-spd internal 14MHz clock
+	RCC->CR2 |= RCC_CR2_HSI14ON;         	// Turn on high speed internal 14MHz clock
 	while(!(RCC->CR2 & RCC_CR2_HSI14RDY));  // Wait for 14MHz clock to be ready
 	ADC1->CR |= ADC_CR_ADEN;              	// Enable ADC
 	while(!(ADC1->ISR & ADC_ISR_ADRDY));  	// Wait for ADC to be ready
@@ -269,7 +363,7 @@ static void ADCInit() {
 *	Initialize the UART and its interrupt
 *
 **************************************************************************/
-static void USART1Init() {
+static void USARTInit() {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
 
@@ -278,7 +372,7 @@ static void USART1Init() {
 
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_1);		// Set up alternate function on Pin 9
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_1);		// Set up alternate function on Pin 10
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9  | GPIO_Pin_10; 	// Enable Pins 9 and 10
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_9  | GPIO_Pin_10; 	// Enable Pins 2, 9, and 10 (USART2 TX, USART1 TX, USART1 RX)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; 				// Alternate function mode
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; 				// No pull
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 			// 50 MHz GPIO speed -- Reduce if noisy***
@@ -291,13 +385,20 @@ static void USART1Init() {
 	USART_InitStructure.USART_Parity = USART_Parity_No;									// No parity
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;						// Enable TX and RX on pins 9 and 10 respectively of port A
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;		// No flow control
+	USART_Init(USART1, &USART_InitStructure);		// Initialize USART1 with above settings
 
-	USART_Init(USART1, &USART_InitStructure);	// Initialize USART1 with above settings
-	USART_Cmd(USART1, ENABLE);					// Enable USART1
+	USART_InitStructure.USART_BaudRate = 9600; 		// Set baud rate to 9600 b/s
+	USART_Init(USART2, &USART_InitStructure);		// Initialize USART2 with above settings
+
+	USART_Cmd(USART1, ENABLE);						// Enable USART1
+	USART_Cmd(USART2, ENABLE);						// Enable USART2
 
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);  // Enable USART1 Receive interrupt
+
 	NVIC_SetPriority(USART1_IRQn, 2); 				// Set USART1 interrupt priority
+	NVIC_SetPriority(USART2_IRQn, 0); 				// Set USART2 interrupt priority (higher for MC)
 	NVIC_EnableIRQ(USART1_IRQn);					// Enable USART1 NVIC interrupt
+	NVIC_EnableIRQ(USART2_IRQn);					// Enable USART2 NVIC interrupt
 }
 
 
@@ -322,20 +423,29 @@ static void UltrasonicInit() {
 	TIM15->CR1 |= 0x01; 					// Enable counter
 
 	GPIO_InitTypeDef GPIO_InitStructure;
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_2 | GPIO_Pin_4;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_4 | GPIO_Pin_6;	// Trigger pins
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT; 				// Output mode
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; 				// No pull
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; 				// Pull up
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 			// 50MHz GPIO speed
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 				// Push pull
 	GPIO_Init(GPIOA, &GPIO_InitStructure);						// Initialize GPIOA with above settings
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_3 | GPIO_Pin_5;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN; // Input mode
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_5 | GPIO_Pin_7;	// Echo pins
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN; 				// Input mode
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;				// Pull down
 	GPIO_Init(GPIOA, &GPIO_InitStructure);						// Initialize GPIOA with above settings
 
 	NVIC_SetPriority(TIM15_IRQn, 0); 		// Set highest priority on ultrasonics
 	NVIC_SetPriority(TIM14_IRQn, 0); 		// Set highest priority on ultrasonics
 	NVIC_EnableIRQ(TIM14_IRQn); 			// Enable IRQ for TIM14 in NVIC
+
+}
+
+/*************************************************************************
+*	SPI Initialization Routine
+*
+*
+**************************************************************************/
+static void SPIInit() {
 
 }
