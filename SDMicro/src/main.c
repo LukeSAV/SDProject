@@ -91,8 +91,8 @@ int main(void) {
 	right_packet.address = MC_ADDRESS;
 
 	mc_tx_buffer[0] = MC_ADDRESS;
-	mc_tx_buffer[1] = 'a';//14; // Serial timeout command
-	mc_tx_buffer[2] = 'b';//10; // 1000ms timeout
+	mc_tx_buffer[1] = 14; // Serial timeout command
+	mc_tx_buffer[2] = 100; // 10000ms timeout
 	mc_tx_buffer[3] = (MC_ADDRESS + 10 + 14) & 127; // Checksum
 	mc_tx_buffer[4] = 255; // Stop byte
 	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
@@ -369,9 +369,11 @@ static void USARTInit() {
 
 	RCC->AHBENR |= RCC_AHBENR_GPIOAEN; 		// Enable clock to Port A
 	RCC->APB2ENR |= RCC_APB2ENR_USART1EN; 	// Enable USART1 clock
+	RCC->APB1ENR |= RCC_APB1ENR_USART2EN; 	// Enable USART2 clock
 
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_1);		// Set up alternate function on Pin 9
 	GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_1);		// Set up alternate function on Pin 10
+	GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_1);		// Set up alternate function on Pin 2
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_9  | GPIO_Pin_10; 	// Enable Pins 2, 9, and 10 (USART2 TX, USART1 TX, USART1 RX)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; 				// Alternate function mode
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; 				// No pull
@@ -388,6 +390,7 @@ static void USARTInit() {
 	USART_Init(USART1, &USART_InitStructure);		// Initialize USART1 with above settings
 
 	USART_InitStructure.USART_BaudRate = 9600; 		// Set baud rate to 9600 b/s
+	USART_InitStructure.USART_Mode = USART_Mode_Tx; // Enable TX on pin 2
 	USART_Init(USART2, &USART_InitStructure);		// Initialize USART2 with above settings
 
 	USART_Cmd(USART1, ENABLE);						// Enable USART1
