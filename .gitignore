@@ -66,3 +66,6 @@ cmake-build-release/
 **/Thumbs.db
 
 .metadata/*
+
+#EAGLE temp Library Files
+*.l#*
