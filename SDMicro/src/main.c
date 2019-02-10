@@ -109,6 +109,12 @@ int main(void) {
 }
 
 
+/*************************************************************************
+*	Function to send commands to the motor controllers
+*
+*	Returns 1 if still sending the previous command, 0 otherwise.
+*
+**************************************************************************/
 static int Drive(enum Direction left_direction, char left_speed, enum Direction right_direction, char right_speed) {
 	if(mc_tx_buffer_index != 0) {
 		return 1; // Haven't finished sending the last message
