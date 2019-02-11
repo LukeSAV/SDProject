@@ -450,11 +450,53 @@ static void UltrasonicInit() {
 
 }
 
+void nano_wait(int t) {
+    asm("       mov r0,%0\n"
+        "repeat:\n"
+        "       sub r0,#83\n"
+        "       bgt repeat\n"
+        : : "r"(t) : "r0", "cc");
+}
+
+void cmd(char b) {
+    while((SPI2->SR & SPI_SR_TXE) != SPI_SR_TXE);
+    SPI2->DR = b;
+}
+
+void data(char b) {
+    while((SPI2->SR & SPI_SR_TXE) != SPI_SR_TXE);
+    SPI2->DR = 0x200 | b;
+}
 /*************************************************************************
 *	SPI Initialization Routine
 *
 *
 **************************************************************************/
 static void SPIInit() {
+	RCC->AHBENR |= RCC_AHBENR_GPIOBEN; // Ensure clock to port B is enabled
+	GPIOB->MODER &= 0x30ffffff;
+	GPIOB->MODER |= 0x8A000000;
+	GPIOB->AFR[1] &= 0x0f00ffff;
 
+	RCC->APB1ENR |= RCC_APB1ENR_SPI2EN;
+	SPI2->CR1 |= SPI_CR1_MSTR;
+	SPI2->CR1 &= ~SPI_CR1_BR;
+	SPI2->CR1 |= SPI_CR1_BR_0;
+	SPI2->CR1 |= SPI_CR1_BR_1;
+	SPI2->CR1 |= SPI_CR1_BR_2;
+	SPI2->CR1 |= SPI_CR1_BIDIMODE | SPI_CR1_BIDIOE;
+	SPI2->CR2 = SPI_CR2_SSOE | SPI_CR2_NSSP | SPI_CR2_DS_3 | SPI_CR2_DS_0;
+	SPI2->CR1 |= SPI_CR1_SPE;
+
+	nano_wait(100000000); // Give it 100ms to initialize
+	cmd(0x38); // 0011 NF00 N=1, F=0: two lines
+	cmd(0x0c); // 0000 1DCB: display on, no cursor, no blink
+	cmd(0x01); // clear entire display
+	nano_wait(6200000); // clear takes 6.2ms to complete
+	cmd(0x02); // put the cursor in the home position
+	cmd(0x06); // 0000 01IS: set display to increment
+	data('t');
+	data('i');
+	data('t');
+	data('s');
 }
