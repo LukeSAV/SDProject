@@ -22,7 +22,7 @@ catkin_package(
 include(CheckIncludeFiles)
 
 catkin_install_python(PROGRAMS
-	src/rtk_manager.py
+	#src/rtk_manager.py
 	DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/src
 )
 

@@ -32,16 +32,16 @@ void gpggaCallback(const std_msgs::String::ConstPtr& msg) {
     num_satellites = MapData::getNumSatellites(msg->data);
     position_status = MapData::getPositionStatus(msg->data);
     std::string closestWaypointKey = MapData::getClosestWaypoint(cur_coord);
-    ROS_INFO("Current lat/lon: %lf %lf", cur_coord.first, cur_coord.second);
-    ROS_INFO("%s", closestWaypointKey.c_str());
-    ROS_INFO("Num Satellites: %d, Position Status: %d", num_satellites, position_status);
+    //ROS_INFO("Current lat/lon: %lf %lf", cur_coord.first, cur_coord.second);
+    //ROS_INFO("%s", closestWaypointKey.c_str());
+    //ROS_INFO("Num Satellites: %d, Position Status: %d", num_satellites, position_status);
     last_gpgga_received_time = std::chrono::system_clock::now();
     std_msgs::String pub_msg;
     if(position_status == MapData::positionStatus::RTKFix || position_status == MapData::positionStatus::RTKFloat) { // RTKFix/RTKFloat assuming robot position accurate to about 10cm
         // Move to next waypoint 
         if(prev_waypoint_key == "") { // Check if robot is within 0.5m of starting waypoint
             double distance = MapData::getDistance(cur_coord, MapData::path_map.begin()->second);
-            ROS_INFO("Distance from starting point: %lf", distance);
+            //ROS_INFO("Distance from starting point: %lf", distance);
             prev_waypoint_key = MapData::path_map.begin()->first;
             next_waypoint_key = std::next(MapData::path_map.begin())->first;
             pub_msg.data = "NEXT_WPT," + std::to_string(MapData::path_map.at(next_waypoint_key).lat) + "," + std::to_string(MapData::path_map.at(next_waypoint_key).lon);
@@ -55,7 +55,7 @@ void gpggaCallback(const std_msgs::String::ConstPtr& msg) {
                     auto next_waypoint_it = MapData::path_map.find(next_waypoint_key);
                     if(next_waypoint_it != MapData::path_map.end()) {
                         next_waypoint_key = std::next(next_waypoint_it)->first;
-                        ROS_INFO("Next waypoint key: %s", next_waypoint_key.c_str());
+                        //ROS_INFO("Next waypoint key: %s", next_waypoint_key.c_str());
                         // Write the waypoint lat/lon to the UART pins
                         pub_msg.data = "NEXT_WPT," + std::to_string(MapData::path_map.at(next_waypoint_key).lat) + "," + std::to_string(MapData::path_map.at(next_waypoint_key).lon);
                         cmd_pub.publish(pub_msg);
@@ -67,7 +67,7 @@ void gpggaCallback(const std_msgs::String::ConstPtr& msg) {
                 }
                 MapData::linePos line_pos = MapData::getSideOfLine(MapData::path_map.at(prev_waypoint_key), MapData::path_map.at(next_waypoint_key), cur_coord);
                 double line_distance = MapData::getDistanceFromLine(MapData::path_map.at(prev_waypoint_key), MapData::path_map.at(next_waypoint_key), cur_coord);
-                ROS_INFO("Distance from waypoint line: %lf", line_distance);
+                //ROS_INFO("Distance from waypoint line: %lf", line_distance);
                 std::string out_msg = "Side of line: ";
                 if(line_pos == MapData::linePos::Left) {
                     out_msg += "left";
@@ -79,9 +79,9 @@ void gpggaCallback(const std_msgs::String::ConstPtr& msg) {
                     pub_msg.data = "Right," + std::to_string(line_distance);
                     cmd_pub.publish(pub_msg);
                 }
-                ROS_INFO("%s", out_msg.c_str());
+                //ROS_INFO("%s", out_msg.c_str());
             } catch(std::out_of_range& eor) {
-                ROS_ERROR("Waypoint out of range");
+                //ROS_ERROR("Waypoint out of range");
             }
         }
     }
@@ -96,7 +96,7 @@ void gpggaCallback(const std_msgs::String::ConstPtr& msg) {
 void gpvtgCallback(const std_msgs::String::ConstPtr& msg) {
     cur_speed = MapData::getSpeed(msg->data);
     cur_heading = MapData::getHeading(msg->data);
-    ROS_INFO("Current speed: %lf, Current Heading: %lf", cur_speed, cur_heading);
+    //ROS_INFO("Current speed: %lf, Current Heading: %lf", cur_speed, cur_heading);
 }
 
 int main(int argc, char **argv)
@@ -109,8 +109,8 @@ int main(int argc, char **argv)
     auto start_landmark = std::chrono::system_clock::now();
     auto cur_time = start_landmark;
     std::chrono::duration<double> elapsed_time;
-    //xml_reader("/home/luke/SDProject/ros_ws/src/rtk_controller/purdue_mapv1.0.xml");
-    xml_reader("/home/ubuntu/SDProject/ros_ws/src/rtk_controller/lukes_test_path.xml");
+    xml_reader("/home/luke/SDProject/ros_ws/src/rtk_controller/purdue_mapv1.0.xml");
+    //xml_reader("/home/ubuntu/SDProject/ros_ws/src/rtk_controller/lukes_test_path.xml");
     ros::Rate r(10);
     while(ros::ok()) {
         cur_time = std::chrono::system_clock::now();
@@ -123,11 +123,11 @@ int main(int argc, char **argv)
         }
         elapsed_time = cur_time - start_landmark;
         if(elapsed_time.count() > 5.0f) { // Check the nearest landmark every 5 seconds
-            ROS_INFO("%lf, %lf", cur_coord.first, cur_coord.second);
+            //ROS_INFO("%lf, %lf", cur_coord.first, cur_coord.second);
             std::string closestLandmarkKey = MapData::getClosestLandmark(cur_coord);
             if(closestLandmarkKey != "") {
                 try {
-                    ROS_INFO("Nearest landmark: %s", MapData::landmark_map.at(closestLandmarkKey).second.c_str());
+                    //ROS_INFO("Nearest landmark: %s", MapData::landmark_map.at(closestLandmarkKey).second.c_str());
                 } catch(std::out_of_range& oor) {
                     ROS_ERROR("Failed to get nearest landmark");
                 }
