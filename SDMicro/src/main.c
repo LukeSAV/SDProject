@@ -52,8 +52,6 @@ static uint16_t jetson_tx_buffer_index = 0;
 static char mc_tx_buffer[9]; // Buffer of UART data to transmit, place 255 in position 4 if only sending one packet
 static uint8_t mc_tx_buffer_index = 0;
 
-
-
 /* Ultrasonic vars */
 static uint16_t elapsed_response_time = 0; // Response time since trigger was set high
 
@@ -69,6 +67,8 @@ static uint16_t us3_distance = 0; // Distance in centimeters of ultrasonic 3 to 
 static uint8_t us3_started = 0;
 static uint16_t us3_elapsed_echo_time = 0; // Elapsed ultrasonic echo time in us
 
+static uint8_t disp_count = 0;
+
 /* Motor state vars */
 Packet left_packet;
 Packet right_packet;
@@ -78,12 +78,15 @@ static void USARTInit();
 static void UltrasonicInit();
 static void SPIInit();
 static int Drive(enum Direction left_direction, char left_speed, enum Direction right_direction, char right_speed); // Return 1 if unable to send, 0 if commands sent
+static void Cmd(char b);
+static void Data(char b);
+static void DispString(char* data);
 
 int main(void) {
 	ADCInit();
 	USARTInit();
-	UltrasonicInit();
 	SPIInit();
+	UltrasonicInit();
 
 	mc_tx_buffer[8] = 255; // Set end character in buffer
 
@@ -93,7 +96,7 @@ int main(void) {
 	mc_tx_buffer[0] = MC_ADDRESS;
 	mc_tx_buffer[1] = 14; // Serial timeout command
 	mc_tx_buffer[2] = 100; // 10000ms timeout
-	mc_tx_buffer[3] = (MC_ADDRESS + 10 + 14) & 127; // Checksum
+	mc_tx_buffer[3] = (MC_ADDRESS + 100 + 14) & 127; // Checksum
 	mc_tx_buffer[4] = 255; // Stop byte
 	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
 
@@ -101,11 +104,24 @@ int main(void) {
 	char* t = "Connected";
 	memcpy(jetson_tx_buffer, t, 9 * sizeof(char));
 	USART_ITConfig(USART1, USART_IT_TXE, ENABLE);   // Enable USART1 Transmit interrupt
-
+	DispString(t);
 
 	//Drive(FORWARD, 20, FORWARD, 20);
 	for(;;) {
 	}
+}
+
+
+/*************************************************************************
+*	Wait specified number of microseconds
+*
+**************************************************************************/
+void usWait(int t) {
+    asm("       mov r0,%0\n"
+        "repeat:\n"
+        "       sub r0,#83\n"
+        "       bgt repeat\n"
+        : : "r"(t) : "r0", "cc");
 }
 
 
@@ -263,7 +279,7 @@ void USART2_IRQHandler() {
 /*************************************************************************
 *	100 ms Interrupt
 *
-*	Hold the trigger pin high for 10us every 100ms and enable timer to count response time before echo pin goes high.
+*	Hold the trigger pin high for 10us every 200ms and enable timer to count response time before echo pin goes high.
 *
 **************************************************************************/
 void TIM14_IRQHandler() {
@@ -274,7 +290,7 @@ void TIM14_IRQHandler() {
 	GPIO_SetBits(GPIOA, GPIO_Pin_0);
 	GPIO_SetBits(GPIOA, GPIO_Pin_4);
 	GPIO_SetBits(GPIOA, GPIO_Pin_6);
-	for(int i = 0; i < 120; i++) {} 	// Idle while trigger set high ~ 10us
+	usWait(10000); // Idle while trigger is high (~10 us)
 	// Set the trigger pins low
 	GPIO_ResetBits(GPIOA, GPIO_Pin_0);
 	GPIO_ResetBits(GPIOA, GPIO_Pin_4);
@@ -286,6 +302,25 @@ void TIM14_IRQHandler() {
 	// Reset elapsed response time
 	elapsed_response_time = 0;
 
+	/* Update Display */
+	if(disp_count >= 5 && us1_distance < 500) { // Update the display every second
+		Cmd(0x01); // clear entire display
+		usWait(6200000); // clear takes 6.2ms to complete
+		Cmd(0x02); // put the cursor in the home position
+		Cmd(0x06); // 0000 01IS: set display to increment
+		int distance = us1_distance;
+		char out_data[4] = {48, 48, 48, 0};
+		int data_loc = 2;
+		while(distance > 0) {
+			int num_to_disp = distance % 10;
+			out_data[data_loc] = num_to_disp + 48;
+			data_loc--;
+			distance = distance / 10;
+		}
+		DispString(out_data);
+		disp_count = 0;
+	}
+	disp_count++;
 }
 
 
@@ -450,26 +485,37 @@ static void UltrasonicInit() {
 
 }
 
-void nano_wait(int t) {
-    asm("       mov r0,%0\n"
-        "repeat:\n"
-        "       sub r0,#83\n"
-        "       bgt repeat\n"
-        : : "r"(t) : "r0", "cc");
+/*************************************************************************
+*	Send string to display
+*
+**************************************************************************/
+static void DispString(char* data) {
+	size_t data_length = strlen(data);
+	for(unsigned int i = 0; i < data_length; i++) {
+		Data(data[i]);
+	}
 }
 
-void cmd(char b) {
+/*************************************************************************
+*	Send command to display
+*
+**************************************************************************/
+static void Cmd(char b) {
     while((SPI2->SR & SPI_SR_TXE) != SPI_SR_TXE);
     SPI2->DR = b;
 }
 
-void data(char b) {
+/*************************************************************************
+*	Send character to display
+*
+**************************************************************************/
+static void Data(char b) {
     while((SPI2->SR & SPI_SR_TXE) != SPI_SR_TXE);
     SPI2->DR = 0x200 | b;
 }
+
 /*************************************************************************
 *	SPI Initialization Routine
-*
 *
 **************************************************************************/
 static void SPIInit() {
@@ -479,24 +525,15 @@ static void SPIInit() {
 	GPIOB->AFR[1] &= 0x0f00ffff;
 
 	RCC->APB1ENR |= RCC_APB1ENR_SPI2EN;
-	SPI2->CR1 |= SPI_CR1_MSTR;
-	SPI2->CR1 &= ~SPI_CR1_BR;
-	SPI2->CR1 |= SPI_CR1_BR_0;
-	SPI2->CR1 |= SPI_CR1_BR_1;
-	SPI2->CR1 |= SPI_CR1_BR_2;
-	SPI2->CR1 |= SPI_CR1_BIDIMODE | SPI_CR1_BIDIOE;
-	SPI2->CR2 = SPI_CR2_SSOE | SPI_CR2_NSSP | SPI_CR2_DS_3 | SPI_CR2_DS_0;
+	SPI2->CR1 |= (SPI_CR1_MSTR | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 | SPI_CR1_BIDIMODE | SPI_CR1_BIDIOE);
+	SPI2->CR2 = (SPI_CR2_SSOE | SPI_CR2_NSSP | SPI_CR2_DS_3 | SPI_CR2_DS_0);
 	SPI2->CR1 |= SPI_CR1_SPE;
 
-	nano_wait(100000000); // Give it 100ms to initialize
-	cmd(0x38); // 0011 NF00 N=1, F=0: two lines
-	cmd(0x0c); // 0000 1DCB: display on, no cursor, no blink
-	cmd(0x01); // clear entire display
-	nano_wait(6200000); // clear takes 6.2ms to complete
-	cmd(0x02); // put the cursor in the home position
-	cmd(0x06); // 0000 01IS: set display to increment
-	data('t');
-	data('i');
-	data('t');
-	data('s');
+	usWait(100000000); // Give it 100ms to initialize
+	Cmd(0x38); // 0011 NF00 N=1, F=0: two lines
+	Cmd(0x0c); // 0000 1DCB: display on, no cursor, no blink
+	Cmd(0x01); // clear entire display
+	usWait(6200000); // clear takes 6.2ms to complete
+	Cmd(0x02); // put the cursor in the home position
+	Cmd(0x06); // 0000 01IS: set display to increment
 }
