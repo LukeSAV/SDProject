@@ -13,10 +13,10 @@ public:
     virtual ~Map();
 
     std::shared_ptr<Node> AStarSearch();
+    void ApplyObstacles();
+    void DrawMap();
 
-    boost::numeric::ublas::matrix<std::shared_ptr<Node>> grid; // Grid of nodes 
-
-    std::set<std::shared_ptr<Node>> closedSet; // Nodes already passed 
-    std::set<std::shared_ptr<Node>> openSet; // Nodes not yet passed
-    std::set<std::shared_ptr<Node>> pathSet; // Nodes in the final path
+    boost::numeric::ublas::matrix<std::shared_ptr<Node>> grid; // Grid of nodes
+    boost::numeric::ublas::matrix<int> obstacle_grid; // Grid of obstacle weights (0-128)
+    std::shared_ptr<Node> end; // End node in route
 };
