@@ -15411,6 +15411,404 @@ Operating Temp:</text>
 </deviceset>
 </devicesets>
 </library>
+<library name="Rembrandt Electronics - JST XH Connectors v1-0">
+<packages>
+<package name="JST-XH-06-PACKAGE-LONG-PAD">
+<description>&lt;b&gt;JST XH Connector Long Pads (Package)&lt;/b&gt;&lt;p&gt;
+
+Wire to board connector.
+
+Pitch: 2,50 mm, (0.098")&lt;p&gt;
+Number of pins: &lt;b&gt;6&lt;/b&gt;&lt;b&gt;&lt;P&gt;
+
+&lt;b&gt;Created by Rembrandt Electronics&lt;/b&gt;&lt;p&gt;
+&lt;b&gt;www.rembrandtelectronics.com&lt;/b&gt;&lt;p&gt;
+&lt;b&gt;Edited by Michael Karrs&lt;/b&gt;&lt;p&gt;</description>
+<wire x1="8.7" y1="-2.3575" x2="8.7" y2="3.3925" width="0.254" layer="21"/>
+<wire x1="8.7" y1="3.3925" x2="-8.7" y2="3.3925" width="0.254" layer="21"/>
+<wire x1="-8.7" y1="3.3925" x2="-8.7" y2="-2.3575" width="0.254" layer="21"/>
+<wire x1="-8.7" y1="-2.3575" x2="8.7" y2="-2.3575" width="0.254" layer="21"/>
+<pad name="3" x="-1.2446" y="0" drill="1.016" shape="long" rot="R90"/>
+<pad name="2" x="-3.7338" y="0" drill="1.016" shape="long" rot="R90"/>
+<pad name="1" x="-6.223" y="0" drill="1.016" shape="long" rot="R90"/>
+<pad name="4" x="1.2446" y="0" drill="1.016" shape="long" rot="R90"/>
+<pad name="5" x="3.7338" y="0" drill="1.016" shape="long" rot="R90"/>
+<text x="-9.255" y="-2.14" size="1.016" layer="25" ratio="10" rot="R90">&gt;NAME</text>
+<text x="-8.3025" y="3.8925" size="0.8128" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-7.9675" y="-1.5875" size="1.016" layer="51" ratio="10">1</text>
+<wire x1="-6.223" y1="-2.3" x2="-6.223" y2="-1.8" width="0.254" layer="21"/>
+<wire x1="6.223" y1="-2.3" x2="6.223" y2="-1.8" width="0.254" layer="21"/>
+<pad name="6" x="6.223" y="0" drill="1.016" shape="long" rot="R90"/>
+</package>
+<package name="JST-XH-04-PACKAGE-LONG-PAD">
+<description>&lt;b&gt;JST XH Connector Long Pads (Package)&lt;/b&gt;&lt;p&gt;
+Wire to board connector.
+
+Pitch: 2,50 mm, (0.098")&lt;p&gt;
+Number of pins: &lt;b&gt;4&lt;/b&gt;&lt;b&gt;&lt;P&gt;
+
+&lt;b&gt;Created by Rembrandt Electronics&lt;/b&gt;&lt;p&gt;
+&lt;b&gt;www.rembrandtelectronics.com&lt;/b&gt;&lt;p&gt;
+&lt;b&gt;Edited by Michael Karrs&lt;/b&gt;&lt;p&gt;</description>
+<wire x1="6.2" y1="-2.3575" x2="6.2" y2="3.3925" width="0.254" layer="21"/>
+<wire x1="6.2" y1="3.3925" x2="-6.2" y2="3.3925" width="0.254" layer="21"/>
+<wire x1="-6.2" y1="3.3925" x2="-6.2" y2="-2.3575" width="0.254" layer="21"/>
+<wire x1="-6.2" y1="-2.3575" x2="6.2" y2="-2.3575" width="0.254" layer="21"/>
+<pad name="3" x="1.2446" y="0" drill="1.016" shape="long" rot="R90"/>
+<pad name="2" x="-1.2446" y="0" drill="1.016" shape="long" rot="R90"/>
+<pad name="1" x="-3.7338" y="0" drill="1.016" shape="long" rot="R90"/>
+<pad name="4" x="3.7338" y="0" drill="1.016" shape="long" rot="R90"/>
+<text x="-6.655" y="-2.04" size="1.016" layer="25" ratio="10" rot="R90">&gt;NAME</text>
+<text x="-6.0025" y="3.8925" size="1.016" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-5.4675" y="-1.4875" size="1.016" layer="51" ratio="10">1</text>
+<wire x1="-3.7338" y1="-2.3" x2="-3.7338" y2="-1.8" width="0.254" layer="21"/>
+<wire x1="3.7338" y1="-2.3" x2="3.7338" y2="-1.8" width="0.254" layer="21"/>
+</package>
+<package name="JST-XH-03-PACKAGE-LONG-PAD">
+<description>&lt;b&gt;JST XH Connector Long Pads (Package)&lt;/b&gt;&lt;p&gt;
+
+Wire to board connector.
+
+Pitch: 2,50 mm, (0.098")&lt;p&gt;
+Number of pins: &lt;b&gt;3&lt;/b&gt;&lt;b&gt;&lt;P&gt;
+
+&lt;b&gt;Created by Rembrandt Electronics&lt;/b&gt;&lt;p&gt;
+&lt;b&gt;www.rembrandtelectronics.com&lt;/b&gt;&lt;p&gt;
+
+&lt;b&gt;Edited by Michael Karrs&lt;/b&gt;&lt;p&gt;</description>
+<wire x1="4.95" y1="-2.3575" x2="4.95" y2="3.3925" width="0.254" layer="21"/>
+<wire x1="4.95" y1="3.3925" x2="-4.95" y2="3.3925" width="0.254" layer="21"/>
+<wire x1="-4.95" y1="3.3925" x2="-4.95" y2="-2.3575" width="0.254" layer="21"/>
+<wire x1="-4.95" y1="-2.3575" x2="4.95" y2="-2.3575" width="0.254" layer="21"/>
+<pad name="3" x="2.4892" y="0" drill="1.016" shape="long" rot="R90"/>
+<pad name="2" x="0" y="0" drill="1.016" shape="long" rot="R90"/>
+<pad name="1" x="-2.4892" y="0" drill="1.016" shape="long" rot="R90"/>
+<text x="-5.555" y="-2.04" size="1.016" layer="25" ratio="10" rot="R90">&gt;NAME</text>
+<text x="-4.6025" y="3.8925" size="1.016" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-4.1675" y="-1.4875" size="1.016" layer="51" ratio="10">1</text>
+<wire x1="-2.4892" y1="-2.3" x2="-2.4892" y2="-1.8" width="0.254" layer="21"/>
+<wire x1="2.4892" y1="-2.3" x2="2.4892" y2="-1.8" width="0.254" layer="21"/>
+</package>
+</packages>
+<symbols>
+<symbol name="MV">
+<wire x1="1.27" y1="0" x2="0" y2="0" width="0.6096" layer="94"/>
+<text x="2.54" y="-0.762" size="1.524" layer="95">&gt;NAME</text>
+<text x="-0.762" y="1.397" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="S" x="-2.54" y="0" visible="off" length="short" direction="pas"/>
+</symbol>
+<symbol name="M">
+<wire x1="1.27" y1="0" x2="0" y2="0" width="0.6096" layer="94"/>
+<text x="2.54" y="-0.762" size="1.524" layer="95">&gt;NAME</text>
+<pin name="S" x="-2.54" y="0" visible="off" length="short" direction="pas"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="JST-XH-06-PIN" prefix="X">
+<description>&lt;b&gt;JST XH Connector 2 Pin&lt;/b&gt;&lt;p&gt;
+
+Wire to board connector.
+
+Pitch: 2,54 mm, (0.100")&lt;p&gt;
+Number of pins: &lt;b&gt;6&lt;/b&gt;&lt;b&gt;&lt;P&gt;
+
+&lt;b&gt;Created by Rembrandt Electronics&lt;/b&gt;&lt;p&gt;
+&lt;b&gt;www.rembrandtelectronics.com&lt;/b&gt;&lt;p&gt;</description>
+<gates>
+<gate name="-1" symbol="MV" x="2.54" y="0" addlevel="always" swaplevel="1"/>
+<gate name="-2" symbol="M" x="2.54" y="-2.54" addlevel="always" swaplevel="1"/>
+<gate name="-3" symbol="M" x="2.54" y="-5.08" addlevel="always" swaplevel="1"/>
+<gate name="-4" symbol="M" x="2.54" y="-7.62" addlevel="always" swaplevel="1"/>
+<gate name="-5" symbol="M" x="2.54" y="-10.16" addlevel="always" swaplevel="1"/>
+<gate name="-6" symbol="M" x="2.54" y="-12.7" addlevel="always" swaplevel="1"/>
+</gates>
+<devices>
+<device name="-LONG-PAD" package="JST-XH-06-PACKAGE-LONG-PAD">
+<connects>
+<connect gate="-1" pin="S" pad="1"/>
+<connect gate="-2" pin="S" pad="2"/>
+<connect gate="-3" pin="S" pad="3"/>
+<connect gate="-4" pin="S" pad="4"/>
+<connect gate="-5" pin="S" pad="5"/>
+<connect gate="-6" pin="S" pad="6"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="JST-XH-04-PIN" prefix="X">
+<description>&lt;b&gt;JST XH Connector 2 Pin&lt;/b&gt;&lt;p&gt;
+
+Wire to board connector.
+
+Pitch: 2,54 mm, (0.100")&lt;p&gt;
+Number of pins: &lt;b&gt;4&lt;/b&gt;&lt;b&gt;&lt;P&gt;
+
+&lt;b&gt;Created by Rembrandt Electronics&lt;/b&gt;&lt;p&gt;
+&lt;b&gt;www.rembrandtelectronics.com&lt;/b&gt;&lt;p&gt;</description>
+<gates>
+<gate name="-1" symbol="MV" x="2.54" y="0" addlevel="always" swaplevel="1"/>
+<gate name="-2" symbol="M" x="2.54" y="-2.54" addlevel="always" swaplevel="1"/>
+<gate name="-3" symbol="M" x="2.54" y="-5.08" addlevel="always" swaplevel="1"/>
+<gate name="-4" symbol="M" x="2.54" y="-7.62" addlevel="always" swaplevel="1"/>
+</gates>
+<devices>
+<device name="-LONG-PAD" package="JST-XH-04-PACKAGE-LONG-PAD">
+<connects>
+<connect gate="-1" pin="S" pad="1"/>
+<connect gate="-2" pin="S" pad="2"/>
+<connect gate="-3" pin="S" pad="3"/>
+<connect gate="-4" pin="S" pad="4"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="JST-XH-03-PIN" prefix="X">
+<description>&lt;b&gt;JST XH Connector 2 Pin&lt;/b&gt;&lt;p&gt;
+
+Wire to board connector.
+
+Pitch: 2,54 mm, (0.100")&lt;p&gt;
+Number of pins: &lt;b&gt;3&lt;/b&gt;&lt;b&gt;&lt;P&gt;
+
+&lt;b&gt;Created by Rembrandt Electronics&lt;/b&gt;&lt;p&gt;
+&lt;b&gt;www.rembrandtelectronics.com&lt;/b&gt;&lt;p&gt;</description>
+<gates>
+<gate name="-1" symbol="MV" x="2.54" y="7.62" addlevel="always" swaplevel="1"/>
+<gate name="-2" symbol="M" x="2.54" y="5.08" addlevel="always" swaplevel="1"/>
+<gate name="-3" symbol="M" x="2.54" y="2.54" addlevel="always" swaplevel="1"/>
+</gates>
+<devices>
+<device name="-LONG-PAD" package="JST-XH-03-PACKAGE-LONG-PAD">
+<connects>
+<connect gate="-1" pin="S" pad="1"/>
+<connect gate="-2" pin="S" pad="2"/>
+<connect gate="-3" pin="S" pad="3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
+<library name="STM32F070CBT6">
+<packages>
+<package name="QFP50P900X900X160-48N">
+<wire x1="-3.07" y1="3.6" x2="-3.6" y2="3.6" width="0.127" layer="21"/>
+<wire x1="3.6" y1="3.07" x2="3.6" y2="3.6" width="0.127" layer="21"/>
+<wire x1="3.07" y1="-3.6" x2="3.6" y2="-3.6" width="0.127" layer="21"/>
+<wire x1="-3.6" y1="-3.6" x2="-3.07" y2="-3.6" width="0.127" layer="21"/>
+<wire x1="3.6" y1="-3.6" x2="3.6" y2="-3.07" width="0.127" layer="21"/>
+<wire x1="3.6" y1="3.6" x2="3.07" y2="3.6" width="0.127" layer="21"/>
+<wire x1="-3.6" y1="3.6" x2="-3.6" y2="3.07" width="0.127" layer="21"/>
+<wire x1="-3.6" y1="-3.07" x2="-3.6" y2="-3.6" width="0.127" layer="21"/>
+<wire x1="-3.5052" y1="0.635" x2="-3.5052" y2="0.8636" width="0" layer="51"/>
+<wire x1="-3.6" y1="-3.6" x2="3.6" y2="-3.6" width="0.127" layer="51"/>
+<wire x1="3.6" y1="-3.6" x2="3.6" y2="3.6" width="0.127" layer="51"/>
+<wire x1="3.6" y1="3.6" x2="-3.6" y2="3.6" width="0.127" layer="51"/>
+<wire x1="-3.6" y1="3.6" x2="-3.6" y2="-3.6" width="0.127" layer="51"/>
+<text x="-4.28565" y="6.016840625" size="1.27433125" layer="25" ratio="10" rot="SR0">&gt;NAME</text>
+<text x="-3.89356875" y="-6.868809375" size="1.277940625" layer="27" ratio="10" rot="SR0">&gt;VALUE</text>
+<wire x1="-3.14" y1="3.85" x2="-3.85" y2="3.85" width="0.05" layer="39"/>
+<wire x1="-3.85" y1="3.85" x2="-3.85" y2="3.14" width="0.05" layer="39"/>
+<wire x1="-3.85" y1="3.14" x2="-5.21" y2="3.14" width="0.05" layer="39"/>
+<wire x1="-5.21" y1="3.14" x2="-5.21" y2="-3.14" width="0.05" layer="39"/>
+<wire x1="-5.21" y1="-3.14" x2="-3.85" y2="-3.14" width="0.05" layer="39"/>
+<wire x1="-3.85" y1="-3.14" x2="-3.85" y2="-3.85" width="0.05" layer="39"/>
+<wire x1="-3.85" y1="-3.85" x2="-3.14" y2="-3.85" width="0.05" layer="39"/>
+<wire x1="-3.14" y1="-3.85" x2="-3.14" y2="-5.21" width="0.05" layer="39"/>
+<wire x1="-3.14" y1="-5.21" x2="3.14" y2="-5.21" width="0.05" layer="39"/>
+<wire x1="3.14" y1="-5.21" x2="3.14" y2="-3.85" width="0.05" layer="39"/>
+<wire x1="3.14" y1="-3.85" x2="3.85" y2="-3.85" width="0.05" layer="39"/>
+<wire x1="3.85" y1="-3.85" x2="3.85" y2="-3.14" width="0.05" layer="39"/>
+<wire x1="3.85" y1="-3.14" x2="5.21" y2="-3.14" width="0.05" layer="39"/>
+<wire x1="5.21" y1="-3.14" x2="5.21" y2="3.14" width="0.05" layer="39"/>
+<wire x1="5.21" y1="3.14" x2="3.85" y2="3.14" width="0.05" layer="39"/>
+<wire x1="3.85" y1="3.14" x2="3.85" y2="3.85" width="0.05" layer="39"/>
+<wire x1="3.85" y1="3.85" x2="3.14" y2="3.85" width="0.05" layer="39"/>
+<wire x1="3.14" y1="3.85" x2="3.14" y2="5.21" width="0.05" layer="39"/>
+<wire x1="3.14" y1="5.21" x2="-3.14" y2="5.21" width="0.05" layer="39"/>
+<wire x1="-3.14" y1="5.21" x2="-3.14" y2="3.85" width="0.05" layer="39"/>
+<circle x="-5.6" y="3.2" radius="0.1" width="0.2" layer="21"/>
+<circle x="-5.6" y="3.2" radius="0.1" width="0.2" layer="51"/>
+<smd name="1" x="-4.18" y="2.75" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="2" x="-4.18" y="2.25" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="3" x="-4.18" y="1.75" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="4" x="-4.18" y="1.25" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="5" x="-4.18" y="0.75" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="6" x="-4.18" y="0.25" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="7" x="-4.18" y="-0.25" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="8" x="-4.18" y="-0.75" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="9" x="-4.18" y="-1.25" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="10" x="-4.18" y="-1.75" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="11" x="-4.18" y="-2.25" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="12" x="-4.18" y="-2.75" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="13" x="-2.75" y="-4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="14" x="-2.25" y="-4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="15" x="-1.75" y="-4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="16" x="-1.25" y="-4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="17" x="-0.75" y="-4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="18" x="-0.25" y="-4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="19" x="0.25" y="-4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="20" x="0.75" y="-4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="21" x="1.25" y="-4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="22" x="1.75" y="-4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="23" x="2.25" y="-4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="24" x="2.75" y="-4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="25" x="4.18" y="-2.75" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="26" x="4.18" y="-2.25" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="27" x="4.18" y="-1.75" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="28" x="4.18" y="-1.25" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="29" x="4.18" y="-0.75" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="30" x="4.18" y="-0.25" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="31" x="4.18" y="0.25" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="32" x="4.18" y="0.75" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="33" x="4.18" y="1.25" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="34" x="4.18" y="1.75" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="35" x="4.18" y="2.25" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="36" x="4.18" y="2.75" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R270"/>
+<smd name="37" x="2.75" y="4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="38" x="2.25" y="4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="39" x="1.75" y="4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="40" x="1.25" y="4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="41" x="0.75" y="4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="42" x="0.25" y="4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="43" x="-0.25" y="4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="44" x="-0.75" y="4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="45" x="-1.25" y="4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="46" x="-1.75" y="4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="47" x="-2.25" y="4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+<smd name="48" x="-2.75" y="4.18" dx="0.28" dy="1.56" layer="1" roundness="7" rot="R180"/>
+</package>
+</packages>
+<symbols>
+<symbol name="STM32F070CBT6">
+<wire x1="-83.82" y1="38.1" x2="83.82" y2="38.1" width="0.41" layer="94"/>
+<wire x1="83.82" y1="38.1" x2="83.82" y2="-38.1" width="0.41" layer="94"/>
+<wire x1="83.82" y1="-38.1" x2="-83.82" y2="-38.1" width="0.41" layer="94"/>
+<wire x1="-83.82" y1="-38.1" x2="-83.82" y2="38.1" width="0.41" layer="94"/>
+<text x="-84.1176" y="38.9376" size="2.091640625" layer="95" ratio="10" rot="SR0">&gt;NAME</text>
+<text x="-83.9935" y="-40.7586" size="2.091990625" layer="96" ratio="10" rot="SR0">&gt;VALUE</text>
+<pin name="BOOT0" x="-88.9" y="27.94" length="middle" direction="in"/>
+<pin name="!NRST" x="-88.9" y="25.4" length="middle"/>
+<pin name="PA0/USART2_CTS/USART4_TX/RTC_TAMP2/WKUP1/ADC_IN0" x="-88.9" y="20.32" length="middle"/>
+<pin name="PA1/USART2_RTS/TIM15_CH1N/USART4_RX/EVENTOUT/ADC_IN1" x="-88.9" y="17.78" length="middle"/>
+<pin name="PA10/USART1_RX/TIM1_CH3/TIM17_BKIN/I2C1_SDA" x="-88.9" y="-5.08" length="middle"/>
+<pin name="PA11/USART1_CTS/TIM1_CH4/EVENTOUT/USB_DM" x="-88.9" y="-7.62" length="middle"/>
+<pin name="PA12/USART1_RTS/TIM1_ETR/EVENTOUT/USB_DP" x="-88.9" y="-10.16" length="middle"/>
+<pin name="PA13/IR_OUT/SWDIO/USB_NOE" x="-88.9" y="-12.7" length="middle"/>
+<pin name="PA14/USART2_TX/SWCLK" x="-88.9" y="-15.24" length="middle"/>
+<pin name="PA15/SPI1_NSS/USART2_RX/USART4_RTS/EVENTOUT" x="-88.9" y="-17.78" length="middle"/>
+<pin name="PA2/USART2_TX/TIM15_CH1/ADC_IN2/WKUP4" x="-88.9" y="15.24" length="middle"/>
+<pin name="PA3/USART2_RX/TIM15_CH2/ADC_IN3" x="-88.9" y="12.7" length="middle"/>
+<pin name="PA4/SPI1_NSS/TIM14_CH1/USART2_CK/USB_NOE/ADC_IN4" x="-88.9" y="10.16" length="middle"/>
+<pin name="PA5/SPI1_SCK/ADC_IN5" x="-88.9" y="7.62" length="middle"/>
+<pin name="PA6/SPI1_MISO/TIM3_CH1/TIM1_BKIN/TIM16_CH1/EVENTOUT/USART3_CTS/ADC_IN6" x="-88.9" y="5.08" length="middle"/>
+<pin name="PA7/SPI1_MOSI/TIM3_CH2/TIM14_CH1/TIM1_CH1N/TIM17_CH1/EVENTOUT/ADC_IN7" x="-88.9" y="2.54" length="middle"/>
+<pin name="PA8/USART1_CK/TIM1_CH1/EVENTOUT/MCO" x="-88.9" y="0" length="middle"/>
+<pin name="PA9/USART1_TX/TIM1_CH2/TIM15_BKIN/I2C1_SCL" x="-88.9" y="-2.54" length="middle"/>
+<pin name="PB0/TIM3_CH3/TIM1_CH2N/EVENTOUT/USART3_CK/ADC_IN8" x="88.9" y="20.32" length="middle" rot="R180"/>
+<pin name="VDD" x="88.9" y="35.56" length="middle" direction="pwr" rot="R180"/>
+<pin name="VDDA" x="88.9" y="33.02" length="middle" direction="pwr" rot="R180"/>
+<pin name="PB1/TIM3_CH4/USART3_RTS/TIM14_CH1/TIM1_CH3N/ADC_IN9" x="88.9" y="17.78" length="middle" rot="R180"/>
+<pin name="PB10/SPI2_SCK/USART3_TX" x="88.9" y="-5.08" length="middle" rot="R180"/>
+<pin name="PB11/USART3_RX/EVENTOUT/I2C2_SDA" x="88.9" y="-7.62" length="middle" rot="R180"/>
+<pin name="PB12/TIM1_BKIN/TIM15_BKIN/SPI2_NSS/EVENTOUT/USART3_CK" x="88.9" y="-10.16" length="middle" rot="R180"/>
+<pin name="PB13/SPI2_SCK/I2C2_SCL/TIM1_CH1N/USART3_CTS" x="88.9" y="-12.7" length="middle" rot="R180"/>
+<pin name="PB14/SPI2_MISO/I2C2_SDA/TIM1_CH2N/TIM15_CH1/USART3_RTS" x="88.9" y="-15.24" length="middle" rot="R180"/>
+<pin name="PB15/SPI2_MOSI/TIM1_CH3N/TIM15_CH1N/TIM15_CH2/WKUP7/RTC_REFIN" x="88.9" y="-17.78" length="middle" rot="R180"/>
+<pin name="PB2" x="88.9" y="15.24" length="middle" rot="R180"/>
+<pin name="PB3/SPI1_SCK/EVENTOUT" x="88.9" y="12.7" length="middle" rot="R180"/>
+<pin name="PB4/SPI1_MISO/TIM17_BKIN/TIM3_CH1/EVENTOUT" x="88.9" y="10.16" length="middle" rot="R180"/>
+<pin name="PB5/SPI1_MOSI/I2C1_SMBA/TIM16_BKIN/TIM3_CH2/WKUP6" x="88.9" y="7.62" length="middle" rot="R180"/>
+<pin name="PB6/I2C1_SCL/USART1_TX/TIM16_CH1N" x="88.9" y="5.08" length="middle" rot="R180"/>
+<pin name="PB7/I2C1_SDA/USART1_RX/USART4_CTS/TIM17_CH1N" x="88.9" y="2.54" length="middle" rot="R180"/>
+<pin name="PB8/I2C1_SCL/TIM16_CH1" x="88.9" y="0" length="middle" rot="R180"/>
+<pin name="PB9/SPI2_NSS/I2C1_SDA/IR_OUT/TIM17_CH1/EVENTOUT" x="88.9" y="-2.54" length="middle" rot="R180"/>
+<pin name="PC13/WKUP2/RTC_TAMP1/RTC_TS/RTC_OUT" x="-88.9" y="-22.86" length="middle"/>
+<pin name="PC14-OSC32_IN" x="-88.9" y="-25.4" length="middle"/>
+<pin name="PC15-OSC32_OUT" x="-88.9" y="-27.94" length="middle"/>
+<pin name="PF0-OSC_IN/I2C1_SDA" x="88.9" y="-25.4" length="middle" rot="R180"/>
+<pin name="PF1-OSC_OUT/I2C1_SCL" x="88.9" y="-27.94" length="middle" rot="R180"/>
+<pin name="VSS" x="88.9" y="-33.02" length="middle" direction="pwr" rot="R180"/>
+<pin name="VSSA" x="88.9" y="-35.56" length="middle" direction="pwr" rot="R180"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="STM32F070CBT6" prefix="U">
+<description>Entry-level ARM Cortex-M0 Value line MCU with up to 128 Kbytes Flash, 48 MHz CPU</description>
+<gates>
+<gate name="G$1" symbol="STM32F070CBT6" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="QFP50P900X900X160-48N">
+<connects>
+<connect gate="G$1" pin="!NRST" pad="7"/>
+<connect gate="G$1" pin="BOOT0" pad="44"/>
+<connect gate="G$1" pin="PA0/USART2_CTS/USART4_TX/RTC_TAMP2/WKUP1/ADC_IN0" pad="10"/>
+<connect gate="G$1" pin="PA1/USART2_RTS/TIM15_CH1N/USART4_RX/EVENTOUT/ADC_IN1" pad="11"/>
+<connect gate="G$1" pin="PA10/USART1_RX/TIM1_CH3/TIM17_BKIN/I2C1_SDA" pad="31"/>
+<connect gate="G$1" pin="PA11/USART1_CTS/TIM1_CH4/EVENTOUT/USB_DM" pad="32"/>
+<connect gate="G$1" pin="PA12/USART1_RTS/TIM1_ETR/EVENTOUT/USB_DP" pad="33"/>
+<connect gate="G$1" pin="PA13/IR_OUT/SWDIO/USB_NOE" pad="34"/>
+<connect gate="G$1" pin="PA14/USART2_TX/SWCLK" pad="37"/>
+<connect gate="G$1" pin="PA15/SPI1_NSS/USART2_RX/USART4_RTS/EVENTOUT" pad="38"/>
+<connect gate="G$1" pin="PA2/USART2_TX/TIM15_CH1/ADC_IN2/WKUP4" pad="12"/>
+<connect gate="G$1" pin="PA3/USART2_RX/TIM15_CH2/ADC_IN3" pad="13"/>
+<connect gate="G$1" pin="PA4/SPI1_NSS/TIM14_CH1/USART2_CK/USB_NOE/ADC_IN4" pad="14"/>
+<connect gate="G$1" pin="PA5/SPI1_SCK/ADC_IN5" pad="15"/>
+<connect gate="G$1" pin="PA6/SPI1_MISO/TIM3_CH1/TIM1_BKIN/TIM16_CH1/EVENTOUT/USART3_CTS/ADC_IN6" pad="16"/>
+<connect gate="G$1" pin="PA7/SPI1_MOSI/TIM3_CH2/TIM14_CH1/TIM1_CH1N/TIM17_CH1/EVENTOUT/ADC_IN7" pad="17"/>
+<connect gate="G$1" pin="PA8/USART1_CK/TIM1_CH1/EVENTOUT/MCO" pad="29"/>
+<connect gate="G$1" pin="PA9/USART1_TX/TIM1_CH2/TIM15_BKIN/I2C1_SCL" pad="30"/>
+<connect gate="G$1" pin="PB0/TIM3_CH3/TIM1_CH2N/EVENTOUT/USART3_CK/ADC_IN8" pad="18"/>
+<connect gate="G$1" pin="PB1/TIM3_CH4/USART3_RTS/TIM14_CH1/TIM1_CH3N/ADC_IN9" pad="19"/>
+<connect gate="G$1" pin="PB10/SPI2_SCK/USART3_TX" pad="21"/>
+<connect gate="G$1" pin="PB11/USART3_RX/EVENTOUT/I2C2_SDA" pad="22"/>
+<connect gate="G$1" pin="PB12/TIM1_BKIN/TIM15_BKIN/SPI2_NSS/EVENTOUT/USART3_CK" pad="25"/>
+<connect gate="G$1" pin="PB13/SPI2_SCK/I2C2_SCL/TIM1_CH1N/USART3_CTS" pad="26"/>
+<connect gate="G$1" pin="PB14/SPI2_MISO/I2C2_SDA/TIM1_CH2N/TIM15_CH1/USART3_RTS" pad="27"/>
+<connect gate="G$1" pin="PB15/SPI2_MOSI/TIM1_CH3N/TIM15_CH1N/TIM15_CH2/WKUP7/RTC_REFIN" pad="28"/>
+<connect gate="G$1" pin="PB2" pad="20"/>
+<connect gate="G$1" pin="PB3/SPI1_SCK/EVENTOUT" pad="39"/>
+<connect gate="G$1" pin="PB4/SPI1_MISO/TIM17_BKIN/TIM3_CH1/EVENTOUT" pad="40"/>
+<connect gate="G$1" pin="PB5/SPI1_MOSI/I2C1_SMBA/TIM16_BKIN/TIM3_CH2/WKUP6" pad="41"/>
+<connect gate="G$1" pin="PB6/I2C1_SCL/USART1_TX/TIM16_CH1N" pad="42"/>
+<connect gate="G$1" pin="PB7/I2C1_SDA/USART1_RX/USART4_CTS/TIM17_CH1N" pad="43"/>
+<connect gate="G$1" pin="PB8/I2C1_SCL/TIM16_CH1" pad="45"/>
+<connect gate="G$1" pin="PB9/SPI2_NSS/I2C1_SDA/IR_OUT/TIM17_CH1/EVENTOUT" pad="46"/>
+<connect gate="G$1" pin="PC13/WKUP2/RTC_TAMP1/RTC_TS/RTC_OUT" pad="2"/>
+<connect gate="G$1" pin="PC14-OSC32_IN" pad="3"/>
+<connect gate="G$1" pin="PC15-OSC32_OUT" pad="4"/>
+<connect gate="G$1" pin="PF0-OSC_IN/I2C1_SDA" pad="5"/>
+<connect gate="G$1" pin="PF1-OSC_OUT/I2C1_SCL" pad="6"/>
+<connect gate="G$1" pin="VDD" pad="1 24 36 48"/>
+<connect gate="G$1" pin="VDDA" pad="9"/>
+<connect gate="G$1" pin="VSS" pad="23 35 47"/>
+<connect gate="G$1" pin="VSSA" pad="8"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="DESCRIPTION" value=" Entry-level ARM Cortex-M0 Value line MCU with up to 128 Kbytes Flash, 48 MHz CPU "/>
+<attribute name="DIGI-KEY_PART_NUMBER" value="497-15099-ND"/>
+<attribute name="DIGI-KEY_PURCHASE_URL" value="https://www.digikey.com/product-detail/en/stmicroelectronics/STM32F070CBT6/497-15099-ND/5051734?utm_source=snapeda&amp;utm_medium=aggregator&amp;utm_campaign=symbol"/>
+<attribute name="MF" value="STMicroelectronics"/>
+<attribute name="MP" value="STM32F070CBT6"/>
+<attribute name="PACKAGE" value="LQFP-48 STMicroelectronics"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -15526,6 +15924,14 @@ Operating Temp:</text>
 <part name="R16" library="adafruit" deviceset="R-US_" device="R0805" value="10"/>
 <part name="P+6" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="+3V4" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
+<part name="X1" library="Rembrandt Electronics - JST XH Connectors v1-0" deviceset="JST-XH-06-PIN" device="-LONG-PAD"/>
+<part name="X2" library="Rembrandt Electronics - JST XH Connectors v1-0" deviceset="JST-XH-06-PIN" device="-LONG-PAD"/>
+<part name="X3" library="Rembrandt Electronics - JST XH Connectors v1-0" deviceset="JST-XH-04-PIN" device="-LONG-PAD"/>
+<part name="X4" library="Rembrandt Electronics - JST XH Connectors v1-0" deviceset="JST-XH-04-PIN" device="-LONG-PAD"/>
+<part name="X5" library="Rembrandt Electronics - JST XH Connectors v1-0" deviceset="JST-XH-04-PIN" device="-LONG-PAD"/>
+<part name="X6" library="Rembrandt Electronics - JST XH Connectors v1-0" deviceset="JST-XH-03-PIN" device="-LONG-PAD"/>
+<part name="X7" library="Rembrandt Electronics - JST XH Connectors v1-0" deviceset="JST-XH-03-PIN" device="-LONG-PAD"/>
+<part name="U2" library="STM32F070CBT6" deviceset="STM32F070CBT6" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -16873,6 +17279,129 @@ Operating Temp:</text>
 <wire x1="114.3" y1="27.94" x2="134.62" y2="27.94" width="0.1524" layer="91"/>
 <label x="114.3" y="27.94" size="1.778" layer="95"/>
 <pinref part="JP1" gate="A" pin="6"/>
+</segment>
+</net>
+</nets>
+</sheet>
+<sheet>
+<plain>
+</plain>
+<instances>
+<instance part="X1" gate="-1" x="50.8" y="81.28" smashed="yes">
+<attribute name="NAME" x="53.34" y="80.518" size="1.524" layer="95"/>
+<attribute name="VALUE" x="50.038" y="82.677" size="1.778" layer="96"/>
+</instance>
+<instance part="X1" gate="-2" x="50.8" y="78.74" smashed="yes">
+<attribute name="NAME" x="53.34" y="77.978" size="1.524" layer="95"/>
+</instance>
+<instance part="X1" gate="-3" x="50.8" y="76.2" smashed="yes">
+<attribute name="NAME" x="53.34" y="75.438" size="1.524" layer="95"/>
+</instance>
+<instance part="X1" gate="-4" x="50.8" y="73.66" smashed="yes">
+<attribute name="NAME" x="53.34" y="72.898" size="1.524" layer="95"/>
+</instance>
+<instance part="X1" gate="-5" x="50.8" y="71.12" smashed="yes">
+<attribute name="NAME" x="53.34" y="70.358" size="1.524" layer="95"/>
+</instance>
+<instance part="X1" gate="-6" x="50.8" y="68.58" smashed="yes">
+<attribute name="NAME" x="53.34" y="67.818" size="1.524" layer="95"/>
+</instance>
+<instance part="X2" gate="-1" x="50.8" y="58.42" smashed="yes">
+<attribute name="NAME" x="53.34" y="57.658" size="1.524" layer="95"/>
+<attribute name="VALUE" x="50.038" y="59.817" size="1.778" layer="96"/>
+</instance>
+<instance part="X2" gate="-2" x="50.8" y="55.88" smashed="yes">
+<attribute name="NAME" x="53.34" y="55.118" size="1.524" layer="95"/>
+</instance>
+<instance part="X2" gate="-3" x="50.8" y="53.34" smashed="yes">
+<attribute name="NAME" x="53.34" y="52.578" size="1.524" layer="95"/>
+</instance>
+<instance part="X2" gate="-4" x="50.8" y="50.8" smashed="yes">
+<attribute name="NAME" x="53.34" y="50.038" size="1.524" layer="95"/>
+</instance>
+<instance part="X2" gate="-5" x="50.8" y="48.26" smashed="yes">
+<attribute name="NAME" x="53.34" y="47.498" size="1.524" layer="95"/>
+</instance>
+<instance part="X2" gate="-6" x="50.8" y="45.72" smashed="yes">
+<attribute name="NAME" x="53.34" y="44.958" size="1.524" layer="95"/>
+</instance>
+<instance part="X3" gate="-1" x="96.52" y="81.28" smashed="yes">
+<attribute name="NAME" x="99.06" y="80.518" size="1.524" layer="95"/>
+<attribute name="VALUE" x="95.758" y="82.677" size="1.778" layer="96"/>
+</instance>
+<instance part="X3" gate="-2" x="96.52" y="78.74" smashed="yes">
+<attribute name="NAME" x="99.06" y="77.978" size="1.524" layer="95"/>
+</instance>
+<instance part="X3" gate="-3" x="96.52" y="76.2" smashed="yes">
+<attribute name="NAME" x="99.06" y="75.438" size="1.524" layer="95"/>
+</instance>
+<instance part="X3" gate="-4" x="96.52" y="73.66" smashed="yes">
+<attribute name="NAME" x="99.06" y="72.898" size="1.524" layer="95"/>
+</instance>
+<instance part="X4" gate="-1" x="96.52" y="66.04" smashed="yes">
+<attribute name="NAME" x="99.06" y="65.278" size="1.524" layer="95"/>
+<attribute name="VALUE" x="95.758" y="67.437" size="1.778" layer="96"/>
+</instance>
+<instance part="X4" gate="-2" x="96.52" y="63.5" smashed="yes">
+<attribute name="NAME" x="99.06" y="62.738" size="1.524" layer="95"/>
+</instance>
+<instance part="X4" gate="-3" x="96.52" y="60.96" smashed="yes">
+<attribute name="NAME" x="99.06" y="60.198" size="1.524" layer="95"/>
+</instance>
+<instance part="X4" gate="-4" x="96.52" y="58.42" smashed="yes">
+<attribute name="NAME" x="99.06" y="57.658" size="1.524" layer="95"/>
+</instance>
+<instance part="X5" gate="-1" x="96.52" y="50.8" smashed="yes">
+<attribute name="NAME" x="99.06" y="50.038" size="1.524" layer="95"/>
+<attribute name="VALUE" x="95.758" y="52.197" size="1.778" layer="96"/>
+</instance>
+<instance part="X5" gate="-2" x="96.52" y="48.26" smashed="yes">
+<attribute name="NAME" x="99.06" y="47.498" size="1.524" layer="95"/>
+</instance>
+<instance part="X5" gate="-3" x="96.52" y="45.72" smashed="yes">
+<attribute name="NAME" x="99.06" y="44.958" size="1.524" layer="95"/>
+</instance>
+<instance part="X5" gate="-4" x="96.52" y="43.18" smashed="yes">
+<attribute name="NAME" x="99.06" y="42.418" size="1.524" layer="95"/>
+</instance>
+<instance part="X6" gate="-1" x="15.24" y="78.74" smashed="yes">
+<attribute name="NAME" x="17.78" y="77.978" size="1.524" layer="95"/>
+<attribute name="VALUE" x="14.478" y="80.137" size="1.778" layer="96"/>
+</instance>
+<instance part="X6" gate="-2" x="15.24" y="76.2" smashed="yes">
+<attribute name="NAME" x="17.78" y="75.438" size="1.524" layer="95"/>
+</instance>
+<instance part="X6" gate="-3" x="15.24" y="73.66" smashed="yes">
+<attribute name="NAME" x="17.78" y="72.898" size="1.524" layer="95"/>
+</instance>
+<instance part="X7" gate="-1" x="15.24" y="55.88" smashed="yes">
+<attribute name="NAME" x="17.78" y="55.118" size="1.524" layer="95"/>
+<attribute name="VALUE" x="14.478" y="57.277" size="1.778" layer="96"/>
+</instance>
+<instance part="X7" gate="-2" x="15.24" y="53.34" smashed="yes">
+<attribute name="NAME" x="17.78" y="52.578" size="1.524" layer="95"/>
+</instance>
+<instance part="X7" gate="-3" x="15.24" y="50.8" smashed="yes">
+<attribute name="NAME" x="17.78" y="50.038" size="1.524" layer="95"/>
+</instance>
+<instance part="U2" gate="G$1" x="261.62" y="127" smashed="yes">
+<attribute name="NAME" x="177.5024" y="165.9376" size="2.091640625" layer="95" ratio="10" rot="SR0"/>
+<attribute name="VALUE" x="177.6265" y="86.2414" size="2.091990625" layer="96" ratio="10" rot="SR0"/>
+</instance>
+</instances>
+<busses>
+</busses>
+<nets>
+<net name="N$20" class="0">
+<segment>
+<pinref part="U2" gate="G$1" pin="PB0/TIM3_CH3/TIM1_CH2N/EVENTOUT/USART3_CK/ADC_IN8"/>
+<wire x1="350.52" y1="147.32" x2="368.3" y2="147.32" width="0.1524" layer="91"/>
+<wire x1="368.3" y1="147.32" x2="368.3" y2="177.8" width="0.1524" layer="91"/>
+<wire x1="368.3" y1="177.8" x2="-5.08" y2="177.8" width="0.1524" layer="91"/>
+<wire x1="-5.08" y1="177.8" x2="-5.08" y2="180.34" width="0.1524" layer="91"/>
+<pinref part="X6" gate="-2" pin="S"/>
+<wire x1="-5.08" y1="177.8" x2="-5.08" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="-5.08" y1="76.2" x2="12.7" y2="76.2" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
