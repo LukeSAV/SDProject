@@ -1680,33 +1680,33 @@ design rules under a new name.</description>
 <attribute name="NAME" x="27.766" y="41.762" size="1.27" layer="25" rot="R270"/>
 <attribute name="VALUE" x="24.464" y="41.762" size="1.27" layer="27" rot="R270"/>
 </element>
-<element name="X1" library="Rembrandt Electronics - JST XH Connectors v1-0" package="JST-XH-06-PACKAGE-LONG-PAD" value="JST-XH-06-PIN-LONG-PAD" x="8.75" y="-5.25" smashed="yes">
-<attribute name="NAME" x="-0.505" y="-7.39" size="1.016" layer="25" ratio="10" rot="R90"/>
-<attribute name="VALUE" x="0.4475" y="-1.3575" size="0.8128" layer="27" ratio="10"/>
+<element name="X1" library="Rembrandt Electronics - JST XH Connectors v1-0" package="JST-XH-06-PACKAGE-LONG-PAD" value="JST-XH-06-PIN-LONG-PAD" x="84.75" y="38" smashed="yes" rot="R90">
+<attribute name="NAME" x="86.89" y="28.745" size="1.016" layer="25" ratio="10" rot="R180"/>
+<attribute name="VALUE" x="80.8575" y="29.6975" size="0.8128" layer="27" ratio="10" rot="R90"/>
 </element>
-<element name="X2" library="Rembrandt Electronics - JST XH Connectors v1-0" package="JST-XH-06-PACKAGE-LONG-PAD" value="JST-XH-06-PIN-LONG-PAD" x="8.75" y="-13" smashed="yes">
-<attribute name="NAME" x="-0.505" y="-15.14" size="1.016" layer="25" ratio="10" rot="R90"/>
-<attribute name="VALUE" x="0.4475" y="-9.1075" size="0.8128" layer="27" ratio="10"/>
+<element name="X2" library="Rembrandt Electronics - JST XH Connectors v1-0" package="JST-XH-06-PACKAGE-LONG-PAD" value="JST-XH-06-PIN-LONG-PAD" x="94.25" y="38" smashed="yes" rot="R90">
+<attribute name="NAME" x="96.39" y="28.745" size="1.016" layer="25" ratio="10" rot="R180"/>
+<attribute name="VALUE" x="90.3575" y="29.6975" size="0.8128" layer="27" ratio="10" rot="R90"/>
 </element>
-<element name="X3" library="Rembrandt Electronics - JST XH Connectors v1-0" package="JST-XH-04-PACKAGE-LONG-PAD" value="JST-XH-04-PIN-LONG-PAD" x="6" y="-21.25" smashed="yes">
-<attribute name="NAME" x="-0.655" y="-23.29" size="1.016" layer="25" ratio="10" rot="R90"/>
-<attribute name="VALUE" x="-0.0025" y="-17.3575" size="1.016" layer="27" ratio="10"/>
+<element name="X3" library="Rembrandt Electronics - JST XH Connectors v1-0" package="JST-XH-04-PACKAGE-LONG-PAD" value="JST-XH-04-PIN-LONG-PAD" x="82.25" y="54.75" smashed="yes">
+<attribute name="NAME" x="75.595" y="52.71" size="1.016" layer="25" ratio="10" rot="R90"/>
+<attribute name="VALUE" x="76.2475" y="58.6425" size="1.016" layer="27" ratio="10"/>
 </element>
-<element name="X4" library="Rembrandt Electronics - JST XH Connectors v1-0" package="JST-XH-04-PACKAGE-LONG-PAD" value="JST-XH-04-PIN-LONG-PAD" x="6" y="-29.25" smashed="yes">
-<attribute name="NAME" x="-0.655" y="-31.29" size="1.016" layer="25" ratio="10" rot="R90"/>
-<attribute name="VALUE" x="-0.0025" y="-25.3575" size="1.016" layer="27" ratio="10"/>
+<element name="X4" library="Rembrandt Electronics - JST XH Connectors v1-0" package="JST-XH-04-PACKAGE-LONG-PAD" value="JST-XH-04-PIN-LONG-PAD" x="63.25" y="54.75" smashed="yes">
+<attribute name="NAME" x="56.595" y="52.71" size="1.016" layer="25" ratio="10" rot="R90"/>
+<attribute name="VALUE" x="57.2475" y="58.6425" size="1.016" layer="27" ratio="10"/>
 </element>
-<element name="X5" library="Rembrandt Electronics - JST XH Connectors v1-0" package="JST-XH-04-PACKAGE-LONG-PAD" value="JST-XH-04-PIN-LONG-PAD" x="6" y="-37.25" smashed="yes">
-<attribute name="NAME" x="-0.655" y="-39.29" size="1.016" layer="25" ratio="10" rot="R90"/>
-<attribute name="VALUE" x="-0.0025" y="-33.3575" size="1.016" layer="27" ratio="10"/>
+<element name="X5" library="Rembrandt Electronics - JST XH Connectors v1-0" package="JST-XH-04-PACKAGE-LONG-PAD" value="JST-XH-04-PIN-LONG-PAD" x="44.5" y="54.75" smashed="yes">
+<attribute name="NAME" x="37.845" y="52.71" size="1.016" layer="25" ratio="10" rot="R90"/>
+<attribute name="VALUE" x="38.4975" y="58.6425" size="1.016" layer="27" ratio="10"/>
 </element>
-<element name="X6" library="Rembrandt Electronics - JST XH Connectors v1-0" package="JST-XH-03-PACKAGE-LONG-PAD" value="JST-XH-03-PIN-LONG-PAD" x="5" y="-45.25" smashed="yes">
-<attribute name="NAME" x="-0.555" y="-47.29" size="1.016" layer="25" ratio="10" rot="R90"/>
-<attribute name="VALUE" x="0.3975" y="-41.3575" size="1.016" layer="27" ratio="10"/>
+<element name="X6" library="Rembrandt Electronics - JST XH Connectors v1-0" package="JST-XH-03-PACKAGE-LONG-PAD" value="JST-XH-03-PIN-LONG-PAD" x="84.75" y="15.75" smashed="yes" rot="R90">
+<attribute name="NAME" x="86.79" y="10.195" size="1.016" layer="25" ratio="10" rot="R180"/>
+<attribute name="VALUE" x="80.8575" y="11.1475" size="1.016" layer="27" ratio="10" rot="R90"/>
 </element>
-<element name="X7" library="Rembrandt Electronics - JST XH Connectors v1-0" package="JST-XH-03-PACKAGE-LONG-PAD" value="JST-XH-03-PIN-LONG-PAD" x="5" y="-53.25" smashed="yes">
-<attribute name="NAME" x="-0.555" y="-55.29" size="1.016" layer="25" ratio="10" rot="R90"/>
-<attribute name="VALUE" x="0.3975" y="-49.3575" size="1.016" layer="27" ratio="10"/>
+<element name="X7" library="Rembrandt Electronics - JST XH Connectors v1-0" package="JST-XH-03-PACKAGE-LONG-PAD" value="JST-XH-03-PIN-LONG-PAD" x="94.25" y="15.75" smashed="yes" rot="R90">
+<attribute name="NAME" x="96.29" y="10.195" size="1.016" layer="25" ratio="10" rot="R180"/>
+<attribute name="VALUE" x="90.3575" y="11.1475" size="1.016" layer="27" ratio="10" rot="R90"/>
 </element>
 <element name="U2" library="STM32F070CBT6" package="QFP50P900X900X160-48N" value="STM32F070CBT6" x="58.25" y="29.25" smashed="yes">
 <attribute name="DESCRIPTION" value=" Entry-level ARM Cortex-M0 Value line MCU with up to 128 Kbytes Flash, 48 MHz CPU " x="58.25" y="29.25" size="1.778" layer="27" display="off"/>
@@ -2504,10 +2504,75 @@ design rules under a new name.</description>
 <signal name="VSSA">
 <contactref element="U2" pad="8"/>
 </signal>
+<signal name="N$22">
+<contactref element="U2" pad="14"/>
+<contactref element="X4" pad="3"/>
+<wire x1="56" y1="25.07" x2="64.4946" y2="54.75" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$23">
+<contactref element="X4" pad="2"/>
+<contactref element="U2" pad="15"/>
+<wire x1="56.5" y1="25.07" x2="62.0054" y2="54.75" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$24">
+<contactref element="U2" pad="10"/>
+<contactref element="X3" pad="3"/>
+<wire x1="54.07" y1="27.5" x2="83.4946" y2="54.75" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$25">
+<contactref element="U2" pad="11"/>
+<contactref element="X3" pad="2"/>
+<wire x1="54.07" y1="27" x2="81.0054" y2="54.75" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$26">
+<contactref element="U2" pad="16"/>
+<contactref element="X5" pad="3"/>
+<wire x1="57" y1="25.07" x2="45.7446" y2="54.75" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$27">
+<contactref element="U2" pad="17"/>
+<contactref element="X5" pad="2"/>
+<wire x1="57.5" y1="25.07" x2="43.2554" y2="54.75" width="0" layer="19" extent="1-1"/>
+</signal>
 <signal name="N$20">
 <contactref element="U2" pad="18"/>
 <contactref element="X6" pad="2"/>
-<wire x1="5" y1="-45.25" x2="58" y2="25.07" width="0" layer="19" extent="1-1"/>
+<wire x1="58" y1="25.07" x2="84.75" y2="15.75" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$21">
+<contactref element="U2" pad="19"/>
+<contactref element="X7" pad="2"/>
+<wire x1="58.5" y1="25.07" x2="94.25" y2="15.75" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$28">
+<contactref element="U2" pad="12"/>
+<contactref element="X2" pad="6"/>
+<wire x1="54.07" y1="26.5" x2="94.25" y2="44.223" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$29">
+<contactref element="U2" pad="13"/>
+<contactref element="X2" pad="5"/>
+<wire x1="55.5" y1="25.07" x2="94.25" y2="41.7338" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$30">
+<contactref element="U2" pad="25"/>
+<contactref element="X1" pad="1"/>
+<wire x1="62.43" y1="26.5" x2="84.75" y2="31.777" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$31">
+<contactref element="U2" pad="26"/>
+<contactref element="X1" pad="2"/>
+<wire x1="62.43" y1="27" x2="84.75" y2="34.2662" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$32">
+<contactref element="U2" pad="27"/>
+<contactref element="X1" pad="3"/>
+<wire x1="62.43" y1="27.5" x2="84.75" y2="36.7554" width="0" layer="19" extent="1-1"/>
+</signal>
+<signal name="N$33">
+<contactref element="U2" pad="28"/>
+<contactref element="X1" pad="4"/>
+<wire x1="62.43" y1="28" x2="84.75" y2="39.2446" width="0" layer="19" extent="1-1"/>
 </signal>
 </signals>
 <mfgpreviewcolors>
