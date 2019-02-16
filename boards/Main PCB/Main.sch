@@ -32061,7 +32061,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <part name="R18" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="10K"/>
 <part name="GND13" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND14" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
-<part name="C13" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-US" device="C0805" package3d_urn="urn:adsk.eagle:package:23617/2"/>
+<part name="C13" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-US" device="C0805" package3d_urn="urn:adsk.eagle:package:23617/2" value=".1uF"/>
 <part name="Q3" library="crystal" library_urn="urn:adsk.eagle:library:204" deviceset="CRYSTAL" device="HC49S" package3d_urn="urn:adsk.eagle:package:12071/1"/>
 <part name="C14" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-US" device="C0805" package3d_urn="urn:adsk.eagle:package:23617/2" value="30pF"/>
 <part name="C15" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-US" device="C0805" package3d_urn="urn:adsk.eagle:package:23617/2" value="30pF"/>
@@ -32291,6 +32291,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <junction x="243.84" y="63.5"/>
 <wire x1="248.92" y1="63.5" x2="246.38" y2="63.5" width="0.1524" layer="91"/>
 <junction x="246.38" y="63.5"/>
+<label x="223.52" y="78.74" size="1.778" layer="95"/>
 </segment>
 <segment>
 <pinref part="GND5" gate="1" pin="GND"/>
@@ -32339,6 +32340,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <pinref part="U$1" gate="G$1" pin="10"/>
 <wire x1="241.3" y1="88.9" x2="241.3" y2="83.82" width="0.1524" layer="91"/>
 <junction x="241.3" y="83.82"/>
+<label x="210.82" y="78.74" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$6" class="0">
@@ -33065,9 +33067,9 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <attribute name="NAME" x="14.605" y="104.14" size="1.27" layer="95" rot="MR270"/>
 <attribute name="VALUE" x="16.51" y="104.14" size="1.27" layer="96" rot="MR270"/>
 </instance>
-<instance part="Q5" gate="G$1" x="25.4" y="104.648" smashed="yes" rot="MR270">
-<attribute name="NAME" x="24.765" y="99.568" size="1.27" layer="95" rot="MR270"/>
-<attribute name="VALUE" x="26.67" y="99.568" size="1.27" layer="96" rot="MR270"/>
+<instance part="Q5" gate="G$1" x="25.4" y="102.108" smashed="yes" rot="MR270">
+<attribute name="NAME" x="24.765" y="97.028" size="1.27" layer="95" rot="MR270"/>
+<attribute name="VALUE" x="26.67" y="97.028" size="1.27" layer="96" rot="MR270"/>
 </instance>
 <instance part="R22" gate="G$1" x="35.56" y="111.76" smashed="yes" rot="R90">
 <attribute name="NAME" x="33.02" y="111.76" size="1.27" layer="95" font="vector" rot="R90" align="center"/>
@@ -33095,9 +33097,9 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <attribute name="NAME" x="14.605" y="152.4" size="1.27" layer="95" rot="MR270"/>
 <attribute name="VALUE" x="16.51" y="152.4" size="1.27" layer="96" rot="MR270"/>
 </instance>
-<instance part="Q7" gate="G$1" x="25.4" y="152.908" smashed="yes" rot="MR270">
-<attribute name="NAME" x="24.765" y="147.828" size="1.27" layer="95" rot="MR270"/>
-<attribute name="VALUE" x="26.67" y="147.828" size="1.27" layer="96" rot="MR270"/>
+<instance part="Q7" gate="G$1" x="25.4" y="150.368" smashed="yes" rot="MR270">
+<attribute name="NAME" x="24.765" y="145.288" size="1.27" layer="95" rot="MR270"/>
+<attribute name="VALUE" x="26.67" y="145.288" size="1.27" layer="96" rot="MR270"/>
 </instance>
 <instance part="R26" gate="G$1" x="35.56" y="160.02" smashed="yes" rot="R90">
 <attribute name="NAME" x="33.02" y="160.02" size="1.27" layer="95" font="vector" rot="R90" align="center"/>
@@ -33138,9 +33140,9 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <attribute name="NAME" x="14.605" y="200.66" size="1.27" layer="95" rot="MR270"/>
 <attribute name="VALUE" x="16.51" y="200.66" size="1.27" layer="96" rot="MR270"/>
 </instance>
-<instance part="Q9" gate="G$1" x="25.4" y="201.168" smashed="yes" rot="MR270">
-<attribute name="NAME" x="24.765" y="196.088" size="1.27" layer="95" rot="MR270"/>
-<attribute name="VALUE" x="26.67" y="196.088" size="1.27" layer="96" rot="MR270"/>
+<instance part="Q9" gate="G$1" x="25.4" y="198.628" smashed="yes" rot="MR270">
+<attribute name="NAME" x="24.765" y="193.548" size="1.27" layer="95" rot="MR270"/>
+<attribute name="VALUE" x="26.67" y="193.548" size="1.27" layer="96" rot="MR270"/>
 </instance>
 <instance part="R30" gate="G$1" x="35.56" y="208.28" smashed="yes" rot="R90">
 <attribute name="NAME" x="33.02" y="208.28" size="1.27" layer="95" font="vector" rot="R90" align="center"/>
@@ -33186,7 +33188,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="116.84" y1="144.78" x2="116.84" y2="198.12" width="0.1524" layer="91"/>
 <pinref part="Q9" gate="G$1" pin="S"/>
 <pinref part="R31" gate="G$1" pin="1"/>
-<wire x1="30.48" y1="198.628" x2="40.894" y2="198.628" width="0.1524" layer="91"/>
+<wire x1="30.48" y1="196.088" x2="40.894" y2="198.628" width="0.1524" layer="91"/>
 <junction x="40.894" y="198.628"/>
 <wire x1="116.84" y1="198.12" x2="116.332" y2="198.628" width="0.1524" layer="91"/>
 <wire x1="116.332" y1="198.628" x2="40.894" y2="198.628" width="0.1524" layer="91"/>
@@ -33298,7 +33300,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <pinref part="R23" gate="G$1" pin="2"/>
 <wire x1="40.894" y1="116.84" x2="40.894" y2="112.268" width="0.1524" layer="91"/>
 <pinref part="Q5" gate="G$1" pin="G"/>
-<wire x1="27.94" y1="116.84" x2="27.94" y2="107.188" width="0.1524" layer="91"/>
+<wire x1="27.94" y1="116.84" x2="27.94" y2="104.648" width="0.1524" layer="91"/>
 <junction x="27.94" y="116.84"/>
 <wire x1="27.94" y1="116.84" x2="17.78" y2="116.84" width="0.1524" layer="91"/>
 <pinref part="Q4" gate="G$1" pin="G"/>
@@ -33314,7 +33316,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <pinref part="R27" gate="G$1" pin="2"/>
 <wire x1="40.894" y1="165.1" x2="40.894" y2="160.528" width="0.1524" layer="91"/>
 <pinref part="Q7" gate="G$1" pin="G"/>
-<wire x1="27.94" y1="165.1" x2="27.94" y2="155.448" width="0.1524" layer="91"/>
+<wire x1="27.94" y1="165.1" x2="27.94" y2="152.908" width="0.1524" layer="91"/>
 <junction x="27.94" y="165.1"/>
 <wire x1="27.94" y1="165.1" x2="17.78" y2="165.1" width="0.1524" layer="91"/>
 <pinref part="Q6" gate="G$1" pin="G"/>
@@ -33330,7 +33332,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <pinref part="R31" gate="G$1" pin="2"/>
 <wire x1="40.894" y1="213.36" x2="40.894" y2="208.788" width="0.1524" layer="91"/>
 <pinref part="Q9" gate="G$1" pin="G"/>
-<wire x1="27.94" y1="213.36" x2="27.94" y2="203.708" width="0.1524" layer="91"/>
+<wire x1="27.94" y1="213.36" x2="27.94" y2="201.168" width="0.1524" layer="91"/>
 <junction x="27.94" y="213.36"/>
 <wire x1="27.94" y1="213.36" x2="17.78" y2="213.36" width="0.1524" layer="91"/>
 <pinref part="Q8" gate="G$1" pin="G"/>
@@ -33774,7 +33776,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="20.32" y1="104.14" x2="5.08" y2="104.14" width="0.1524" layer="91"/>
 <pinref part="Q5" gate="G$1" pin="D"/>
 <wire x1="5.08" y1="104.14" x2="-10.16" y2="104.14" width="0.1524" layer="91"/>
-<wire x1="20.32" y1="104.14" x2="20.32" y2="102.108" width="0.1524" layer="91"/>
+<wire x1="20.32" y1="104.14" x2="20.32" y2="99.568" width="0.1524" layer="91"/>
 <pinref part="R12" gate="G$1" pin="1"/>
 <wire x1="5.08" y1="109.22" x2="5.08" y2="104.14" width="0.1524" layer="91"/>
 <junction x="5.08" y="104.14"/>
@@ -33796,7 +33798,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <segment>
 <pinref part="Q5" gate="G$1" pin="S"/>
 <pinref part="R23" gate="G$1" pin="1"/>
-<wire x1="30.48" y1="102.108" x2="40.894" y2="102.108" width="0.1524" layer="91"/>
+<wire x1="30.48" y1="99.568" x2="40.894" y2="102.108" width="0.1524" layer="91"/>
 <wire x1="40.894" y1="102.108" x2="99.06" y2="102.108" width="0.1524" layer="91"/>
 <wire x1="99.06" y1="102.108" x2="99.06" y2="129.54" width="0.1524" layer="91"/>
 <junction x="40.894" y="102.108"/>
@@ -33820,7 +33822,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="20.32" y1="152.4" x2="5.08" y2="152.4" width="0.1524" layer="91"/>
 <pinref part="Q7" gate="G$1" pin="D"/>
 <wire x1="5.08" y1="152.4" x2="-10.16" y2="152.4" width="0.1524" layer="91"/>
-<wire x1="20.32" y1="152.4" x2="20.32" y2="150.368" width="0.1524" layer="91"/>
+<wire x1="20.32" y1="152.4" x2="20.32" y2="147.828" width="0.1524" layer="91"/>
 <pinref part="R24" gate="G$1" pin="1"/>
 <wire x1="5.08" y1="157.48" x2="5.08" y2="152.4" width="0.1524" layer="91"/>
 <junction x="5.08" y="152.4"/>
@@ -33843,7 +33845,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <segment>
 <pinref part="Q7" gate="G$1" pin="S"/>
 <pinref part="R27" gate="G$1" pin="1"/>
-<wire x1="30.48" y1="150.368" x2="40.894" y2="150.368" width="0.1524" layer="91"/>
+<wire x1="30.48" y1="147.828" x2="40.894" y2="150.368" width="0.1524" layer="91"/>
 <wire x1="40.894" y1="150.368" x2="111.252" y2="150.368" width="0.1524" layer="91"/>
 <wire x1="111.252" y1="150.368" x2="111.76" y2="149.86" width="0.1524" layer="91"/>
 <junction x="40.894" y="150.368"/>
@@ -33880,7 +33882,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="20.32" y1="200.66" x2="5.08" y2="200.66" width="0.1524" layer="91"/>
 <pinref part="Q9" gate="G$1" pin="D"/>
 <wire x1="5.08" y1="200.66" x2="-10.16" y2="200.66" width="0.1524" layer="91"/>
-<wire x1="20.32" y1="200.66" x2="20.32" y2="198.628" width="0.1524" layer="91"/>
+<wire x1="20.32" y1="200.66" x2="20.32" y2="196.088" width="0.1524" layer="91"/>
 <pinref part="R28" gate="G$1" pin="1"/>
 <wire x1="5.08" y1="205.74" x2="5.08" y2="200.66" width="0.1524" layer="91"/>
 <junction x="5.08" y="200.66"/>
@@ -34239,7 +34241,10 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <approved hash="202,1,111.76,83.82,IC1,!DSR,,,,"/>
 <approved hash="202,1,111.76,81.28,IC1,!DCD,,,,"/>
 <approved hash="202,1,111.76,78.74,IC1,!RI,,,,"/>
+<approved hash="104,1,83.82,93.98,IC1,VCCIO,+3V3_UART_GPS,,,"/>
 <approved hash="202,1,83.82,88.9,IC1,!RESET,,,,"/>
+<approved hash="104,4,-71.12,5.08,U$3,VDD,3.3V,,,"/>
+<approved hash="104,4,-71.12,2.54,U$3,VDDIO,3.3V,,,"/>
 <approved hash="104,2,43.18,88.9,CN2,VBUS,+5V_LIDAR,,,"/>
 <approved hash="104,2,88.9,88.9,IC2,VCC,+5V_LIDAR,,,"/>
 <approved hash="202,2,88.9,76.2,IC2,OSCI,,,,"/>
@@ -34254,16 +34259,27 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <approved hash="104,3,350.52,91.44,U2,VSSA,GND,,,"/>
 <approved hash="208,3,134.62,190.5,+3V3,sup,,,,"/>
 <approved hash="208,3,350.52,203.2,+3V3,sup,,,,"/>
-<approved hash="208,3,76.2,190.5,+3V3,out,,,,"/>
-<approved hash="208,3,86.36,198.12,+3V3,sup,,,,"/>
+<approved hash="208,3,71.12,259.08,+3V3,out,,,,"/>
+<approved hash="208,3,81.28,266.7,+3V3,sup,,,,"/>
+<approved hash="208,3,403.86,165.1,+3V3,sup,,,,"/>
+<approved hash="208,3,403.86,144.78,+3V3,sup,,,,"/>
+<approved hash="208,3,27.94,119.38,+3V3,sup,,,,"/>
+<approved hash="208,3,27.94,167.64,+3V3,sup,,,,"/>
+<approved hash="208,3,27.94,215.9,+3V3,sup,,,,"/>
 <approved hash="106,1,111.76,86.36,DTR,,,,,"/>
 <approved hash="106,2,116.84,78.74,DTR_LIDAR,,,,,"/>
-<approved hash="106,1,83.82,93.98,VCCIO,,,,,"/>
-<approved hash="113,3,213.597,259.306,JP1,,,,,"/>
-<approved hash="113,3,213.597,236.446,JP2,,,,,"/>
+<approved hash="106,4,-30.48,-12.7,NRESET_3V,,,,,"/>
+<approved hash="113,1,147.557,48.4861,FTDI,,,,,"/>
+<approved hash="113,4,53.5771,-37.8739,JP2,,,,,"/>
 <approved hash="113,2,152.637,40.8661,FTDI1,,,,,"/>
 <approved hash="113,3,375.084,96.52,Q3,,,,,"/>
-<approved hash="113,3,17.78,185.903,IC3,,,,,"/>
+<approved hash="113,3,12.7,254.483,IC3,,,,,"/>
+<approved hash="113,4,53.5771,-18.8239,JP3,,,,,"/>
+<approved hash="113,4,12.596,-16.614,FRAME1,,,,,"/>
+<approved hash="113,3,231.036,124.356,FRAME2,,,,,"/>
+<approved hash="113,2,142.136,79.906,FRAME3,,,,,"/>
+<approved hash="113,1,147.216,41.806,FRAME4,,,,,"/>
+<approved hash="113,3,154.703,83.5939,JP1,,,,,"/>
 </errors>
 </schematic>
 </drawing>
