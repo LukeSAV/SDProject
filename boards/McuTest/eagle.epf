@@ -1,5 +1,5 @@
 [Eagle]
-Version="08 05 02"
+Version="09 03 00"
 Platform="Windows"
 Globals="Globals"
 Desktop="Desktop"
@@ -267,7 +267,7 @@ UsedLibraryUrn="urn:adsk.eagle:library:174"
 UsedLibraryUrn="urn:adsk.eagle:library:175"
 UsedLibraryUrn="urn:adsk.eagle:library:176"
 UsedLibraryUrn="urn:adsk.eagle:library:177"
-UsedLibrary="C:/Users/keith/Documents/Workspace/SDProject/boards/Main Library/main_library.lbr"
+UsedLibrary="C:/users/keith/Documents/workspace/SDProject/boards/Main Library/main_library.lbr"
 UsedLibraryUrn="urn:adsk.eagle:library:490197"
 
 [Win_1]
