@@ -32008,8 +32008,6 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <part name="GND31" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="+3V9" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
 <part name="U4" library="TXS0104EDR" deviceset="TXS0104EDR" device=""/>
-<part name="+3V10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
-<part name="P+6" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="GND32" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 </parts>
 <sheets>
@@ -33015,12 +33013,6 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <attribute name="NAME" x="431.35583125" y="94.6727" size="2.08746875" layer="95" ratio="10" rot="SMR180"/>
 <attribute name="VALUE" x="434.13266875" y="143.4777" size="2.08593125" layer="96" ratio="10" rot="SMR180"/>
 </instance>
-<instance part="+3V10" gate="G$1" x="411.48" y="104.14" smashed="yes">
-<attribute name="VALUE" x="408.94" y="99.06" size="1.778" layer="96" rot="R90"/>
-</instance>
-<instance part="P+6" gate="1" x="406.4" y="106.68" smashed="yes">
-<attribute name="VALUE" x="403.86" y="101.6" size="1.778" layer="96" rot="R90"/>
-</instance>
 <instance part="GND32" gate="1" x="414.02" y="132.08" smashed="yes">
 <attribute name="VALUE" x="411.48" y="129.54" size="1.778" layer="96"/>
 </instance>
@@ -33163,8 +33155,8 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 </segment>
 <segment>
 <pinref part="U4" gate="A" pin="VCCA"/>
-<pinref part="+3V10" gate="G$1" pin="+3V3"/>
-<wire x1="419.1" y1="101.6" x2="411.48" y2="101.6" width="0.1524" layer="91"/>
+<wire x1="419.1" y1="101.6" x2="406.4" y2="101.6" width="0.1524" layer="91"/>
+<label x="406.4" y="101.6" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
 <net name="N$34" class="0">
@@ -33420,19 +33412,19 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <pinref part="P+5" gate="1" pin="+5V"/>
 </segment>
 <segment>
-<pinref part="U4" gate="A" pin="VCCB"/>
-<pinref part="P+6" gate="1" pin="+5V"/>
-<wire x1="419.1" y1="104.14" x2="416.56" y2="104.14" width="0.1524" layer="91"/>
-<pinref part="U4" gate="A" pin="OE"/>
-<wire x1="416.56" y1="104.14" x2="406.4" y2="104.14" width="0.1524" layer="91"/>
-<wire x1="419.1" y1="121.92" x2="416.56" y2="121.92" width="0.1524" layer="91"/>
-<wire x1="416.56" y1="121.92" x2="416.56" y2="104.14" width="0.1524" layer="91"/>
-<junction x="416.56" y="104.14"/>
-</segment>
-<segment>
 <pinref part="X1" gate="-5" pin="S"/>
 <label x="472.44" y="111.76" size="1.778" layer="95" rot="R90" xref="yes"/>
 <wire x1="472.44" y1="101.6" x2="472.44" y2="111.76" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="U4" gate="A" pin="VCCB"/>
+<wire x1="419.1" y1="104.14" x2="416.56" y2="104.14" width="0.1524" layer="91"/>
+<pinref part="U4" gate="A" pin="OE"/>
+<wire x1="416.56" y1="104.14" x2="414.02" y2="104.14" width="0.1524" layer="91"/>
+<wire x1="419.1" y1="121.92" x2="416.56" y2="121.92" width="0.1524" layer="91"/>
+<wire x1="416.56" y1="121.92" x2="416.56" y2="104.14" width="0.1524" layer="91"/>
+<junction x="416.56" y="104.14"/>
+<label x="414.02" y="104.14" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
 <net name="N$40" class="0">
@@ -33585,14 +33577,14 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 </net>
 <net name="N$46" class="0">
 <segment>
-<wire x1="114.3" y1="152.4" x2="114.3" y2="137.16" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="144.78" x2="114.3" y2="137.16" width="0.1524" layer="91"/>
 <pinref part="U2" gate="G$1" pin="PA4/SPI1_NSS/TIM14_CH1/USART2_CK/USB_NOE/ADC_IN4"/>
 <wire x1="114.3" y1="137.16" x2="172.72" y2="137.16" width="0.1524" layer="91"/>
 <pinref part="R22" gate="G$1" pin="1"/>
 <pinref part="Q4" gate="G$1" pin="S"/>
 <wire x1="20.32" y1="154.94" x2="35.56" y2="154.94" width="0.1524" layer="91"/>
-<wire x1="114.3" y1="152.4" x2="35.56" y2="152.4" width="0.1524" layer="91"/>
-<wire x1="35.56" y1="152.4" x2="35.56" y2="154.94" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="144.78" x2="35.56" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="35.56" y1="144.78" x2="35.56" y2="154.94" width="0.1524" layer="91"/>
 <junction x="35.56" y="154.94"/>
 </segment>
 </net>
@@ -33633,14 +33625,15 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 </net>
 <net name="N$50" class="0">
 <segment>
-<pinref part="Q8" gate="G$1" pin="S"/>
-<pinref part="R30" gate="G$1" pin="1"/>
-<wire x1="20.32" y1="203.2" x2="35.56" y2="203.2" width="0.1524" layer="91"/>
-<junction x="35.56" y="203.2"/>
-<wire x1="35.56" y1="203.2" x2="119.38" y2="203.2" width="0.1524" layer="91"/>
-<wire x1="119.38" y1="203.2" x2="119.38" y2="147.32" width="0.1524" layer="91"/>
+<wire x1="119.38" y1="182.88" x2="119.38" y2="147.32" width="0.1524" layer="91"/>
 <pinref part="U2" gate="G$1" pin="PA0/USART2_CTS/USART4_TX/RTC_TAMP2/WKUP1/ADC_IN0"/>
 <wire x1="119.38" y1="147.32" x2="172.72" y2="147.32" width="0.1524" layer="91"/>
+<pinref part="R30" gate="G$1" pin="1"/>
+<pinref part="Q8" gate="G$1" pin="S"/>
+<wire x1="20.32" y1="203.2" x2="35.56" y2="203.2" width="0.1524" layer="91"/>
+<wire x1="119.38" y1="182.88" x2="35.56" y2="182.88" width="0.1524" layer="91"/>
+<wire x1="35.56" y1="182.88" x2="35.56" y2="203.2" width="0.1524" layer="91"/>
+<junction x="35.56" y="203.2"/>
 </segment>
 </net>
 <net name="N$24" class="0">
@@ -34027,6 +34020,8 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 </sheet>
 </sheets>
 <errors>
+<approved hash="102,4,-73.66,7.62,3.3V,+3V3,,,,"/>
+<approved hash="102,4,-27.94,-25.4,3.3V,+3V3,,,,"/>
 <approved hash="104,1,38.1,96.52,CN1,VBUS,+5V_JETSON,,,"/>
 <approved hash="104,1,83.82,96.52,IC1,VCC,+5V_JETSON,,,"/>
 <approved hash="202,1,83.82,83.82,IC1,OSCI,,,,"/>
@@ -34035,8 +34030,8 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <approved hash="202,1,111.76,78.74,IC1,!RI,,,,"/>
 <approved hash="104,1,83.82,93.98,IC1,VCCIO,+3V3_UART_GPS,,,"/>
 <approved hash="202,1,83.82,88.9,IC1,!RESET,,,,"/>
-<approved hash="104,4,-71.12,5.08,U$3,VDD,3.3V,,,"/>
-<approved hash="104,4,-71.12,2.54,U$3,VDDIO,3.3V,,,"/>
+<approved hash="104,4,-71.12,5.08,U$3,VDD,+3V3,,,"/>
+<approved hash="104,4,-71.12,2.54,U$3,VDDIO,+3V3,,,"/>
 <approved hash="104,2,43.18,88.9,CN2,VBUS,+5V_LIDAR,,,"/>
 <approved hash="104,2,88.9,88.9,IC2,VCC,+5V_LIDAR,,,"/>
 <approved hash="202,2,88.9,76.2,IC2,OSCI,,,,"/>
@@ -34049,24 +34044,27 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <approved hash="104,3,350.52,160.02,U2,VDDA,+3V3,,,"/>
 <approved hash="104,3,350.52,93.98,U2,VSS,GND,,,"/>
 <approved hash="104,3,350.52,91.44,U2,VSSA,GND,,,"/>
+<approved hash="104,3,419.1,101.6,U4,VCCA,+3V3,,,"/>
+<approved hash="104,3,419.1,104.14,U4,VCCB,+5V,,,"/>
 <approved hash="208,3,134.62,190.5,+3V3,sup,,,,"/>
 <approved hash="208,3,350.52,203.2,+3V3,sup,,,,"/>
 <approved hash="208,3,71.12,259.08,+3V3,out,,,,"/>
 <approved hash="208,3,81.28,266.7,+3V3,sup,,,,"/>
 <approved hash="208,3,403.86,165.1,+3V3,sup,,,,"/>
 <approved hash="208,3,403.86,144.78,+3V3,sup,,,,"/>
-<approved hash="208,3,27.94,119.38,+3V3,sup,,,,"/>
 <approved hash="208,3,27.94,167.64,+3V3,sup,,,,"/>
+<approved hash="208,3,27.94,121.92,+3V3,sup,,,,"/>
 <approved hash="208,3,27.94,215.9,+3V3,sup,,,,"/>
+<approved hash="208,3,170.18,86.36,+3V3,sup,,,,"/>
+<approved hash="208,4,-27.94,-25.4,+3V3,sup,,,,"/>
+<approved hash="208,4,-73.66,7.62,+3V3,sup,,,,"/>
 <approved hash="106,1,111.76,86.36,DTR,,,,,"/>
 <approved hash="106,2,116.84,78.74,DTR_LIDAR,,,,,"/>
-<approved hash="106,4,-30.48,-12.7,NRESET_3V,,,,,"/>
 <approved hash="113,1,147.557,48.4861,FTDI,,,,,"/>
 <approved hash="113,4,53.5771,-37.8739,JP2,,,,,"/>
 <approved hash="113,2,152.637,40.8661,FTDI1,,,,,"/>
 <approved hash="113,3,375.084,96.52,Q3,,,,,"/>
 <approved hash="113,3,12.7,254.483,IC3,,,,,"/>
-<approved hash="113,4,53.5771,-18.8239,JP3,,,,,"/>
 <approved hash="113,4,12.596,-16.614,FRAME1,,,,,"/>
 <approved hash="113,3,231.036,124.356,FRAME2,,,,,"/>
 <approved hash="113,2,142.136,79.906,FRAME3,,,,,"/>
