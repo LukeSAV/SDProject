@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.2.2">
+<eagle version="9.3.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -33737,6 +33737,34 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <pinref part="X1" gate="-4" pin="S"/>
 <wire x1="454.66" y1="109.22" x2="469.9" y2="109.22" width="0.1524" layer="91"/>
 <wire x1="469.9" y1="109.22" x2="469.9" y2="101.6" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="TEST_GPIO1" class="0">
+<segment>
+<pinref part="U2" gate="G$1" pin="PB7/I2C1_SDA/USART1_RX/USART4_CTS/TIM17_CH1N"/>
+<wire x1="350.52" y1="129.54" x2="358.14" y2="129.54" width="0.1524" layer="91"/>
+<label x="358.14" y="129.54" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="TEST_GPIO2" class="0">
+<segment>
+<pinref part="U2" gate="G$1" pin="PB6/I2C1_SCL/USART1_TX/TIM16_CH1N"/>
+<wire x1="350.52" y1="132.08" x2="365.76" y2="132.08" width="0.1524" layer="91"/>
+<label x="365.76" y="132.08" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="TEST_GPIO3" class="0">
+<segment>
+<pinref part="U2" gate="G$1" pin="PB5/SPI1_MOSI/I2C1_SMBA/TIM16_BKIN/TIM3_CH2/WKUP6"/>
+<wire x1="350.52" y1="134.62" x2="373.38" y2="134.62" width="0.1524" layer="91"/>
+<label x="373.38" y="134.62" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="TEST_GPIO4" class="0">
+<segment>
+<pinref part="U2" gate="G$1" pin="PB4/SPI1_MISO/TIM17_BKIN/TIM3_CH1/EVENTOUT"/>
+<wire x1="350.52" y1="137.16" x2="358.14" y2="137.16" width="0.1524" layer="91"/>
+<label x="358.14" y="137.16" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
