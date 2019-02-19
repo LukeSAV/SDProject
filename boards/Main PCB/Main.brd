@@ -4493,9 +4493,9 @@ Please make sure your boards conform to these design rules.
 <signal name="TEST_GPIO1">
 <contactref element="U2" pad="43"/>
 <via x="42.164" y="55.626" extent="1-16" drill="0.35"/>
-<wire x1="44.264" y1="50.948" x2="44.264" y2="52.256" width="0.2032" layer="1"/>
-<wire x1="44.264" y1="52.256" x2="41.91" y2="54.61" width="0.2032" layer="1"/>
-<wire x1="41.91" y1="54.61" x2="41.91" y2="55.372" width="0.2032" layer="1"/>
+<wire x1="44.264" y1="50.948" x2="44.264" y2="52.129" width="0.2032" layer="1"/>
+<wire x1="44.264" y1="52.129" x2="41.91" y2="54.483" width="0.2032" layer="1"/>
+<wire x1="41.91" y1="54.483" x2="41.91" y2="55.372" width="0.2032" layer="1"/>
 <wire x1="41.91" y1="55.372" x2="42.164" y2="55.626" width="0.2032" layer="1"/>
 </signal>
 <signal name="TEST_GPIO2">
