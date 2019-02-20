@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(rc)
+project(serial)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -16,7 +16,7 @@ catkin_python_setup()
 
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES rc
+#  LIBRARIES serial
 #  CATKIN_DEPENDS roscpp rospy
 #  DEPENDS system_lib
 )
@@ -27,7 +27,7 @@ check_include_files(linux/joystick.h HAVE_LINUX_JOYSTICK_H)
 
 
 catkin_install_python(PROGRAMS
-	src/rc_manager.py
+	src/serial_manager.py
 	DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/src
 )
 

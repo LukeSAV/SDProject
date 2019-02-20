@@ -1,0 +1,129 @@
+<!--This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with Design Exception 1.0-->
+<eagle version="7.1.0">
+<drawing>
+<settings>
+<setting alwaysvectorfont="no"/>
+<setting verticaltext="up"/>
+</settings>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<layers>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="29" name="tStop" color="7" fill="3" visible="yes" active="yes"/>
+<layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
+<layer number="31" name="tCream" color="7" fill="4" visible="yes" active="yes"/>
+<layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
+<layer number="33" name="tFinish" color="6" fill="3" visible="no" active="yes"/>
+<layer number="34" name="bFinish" color="6" fill="6" visible="no" active="yes"/>
+<layer number="35" name="tGlue" color="7" fill="4" visible="no" active="yes"/>
+<layer number="36" name="bGlue" color="7" fill="5" visible="no" active="yes"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="no" active="yes"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="no" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
+<layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
+<layer number="45" name="Holes" color="7" fill="1" visible="no" active="yes"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="no" active="yes"/>
+<layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="51" name="tDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="90" name="Modules" color="5" fill="1" visible="yes" active="yes"/>
+<layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
+<layer number="93" name="Pins" color="2" fill="1" visible="yes" active="yes"/>
+<layer number="94" name="Symbols" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="95" name="Names" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="96" name="Values" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="97" name="Info" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="98" name="Guide" color="6" fill="1" visible="yes" active="yes"/>
+</layers>
+<library>
+<packages>
+<package name="SOT223">
+<wire x1="1.778" y1="-3.2766" x2="-1.778" y2="-3.2766" width="0.2032" layer="21"/>
+<wire x1="-1.778" y1="-3.2766" x2="-1.778" y2="3.2766" width="0.2032" layer="21"/>
+<wire x1="-1.778" y1="3.2766" x2="1.778" y2="3.2766" width="0.2032" layer="21"/>
+<wire x1="1.778" y1="3.2766" x2="1.778" y2="-3.2766" width="0.2032" layer="21"/>
+<text x="-4.3302" y="-1.02369" size="0.815097" layer="21" ratio="12" rot="R270">3</text>
+<text x="2.5429" y="-1.90717" size="0.813729" layer="21" ratio="12" rot="R270">4</text>
+<text x="-4.32865" y="3.46111" size="0.814804" layer="21" ratio="12" rot="R270">1</text>
+<text x="-4.32894" y="1.29106" size="0.81309" layer="21" ratio="12" rot="R270">2</text>
+<text x="0.0509275" y="2.54638" size="1.27319" layer="25" rot="R270">&gt;NAME</text>
+<text x="-1.32435" y="2.54682" size="1.27341" layer="27" rot="R270">&gt;VALUE</text>
+<rectangle x1="1.13148" y1="-0.928066" x2="4.3307" y2="0.9271" layer="51" rot="R270"/>
+<rectangle x1="-3.16499" y1="-0.927891" x2="-2.2987" y2="0.9271" layer="51" rot="R270"/>
+<rectangle x1="-3.16743" y1="1.38655" x2="-2.2987" y2="3.2385" layer="51" rot="R270"/>
+<rectangle x1="-3.16511" y1="-3.24138" x2="-2.2987" y2="-1.3843" layer="51" rot="R270"/>
+<rectangle x1="1.1318" y1="-0.928326" x2="4.3307" y2="0.9271" layer="51" rot="R270"/>
+<rectangle x1="-3.16965" y1="-0.929255" x2="-2.2987" y2="0.9271" layer="51" rot="R270"/>
+<rectangle x1="-3.16635" y1="1.38607" x2="-2.2987" y2="3.2385" layer="51" rot="R270"/>
+<rectangle x1="-3.17326" y1="-3.24973" x2="-2.2987" y2="-1.3843" layer="51" rot="R270"/>
+<circle x="-3.175" y="3.683" radius="0.127" width="0.127" layer="21"/>
+<smd name="1" x="-3.0988" y="2.3114" dx="1.2192" dy="2.2352" layer="1" rot="R270"/>
+<smd name="2" x="-3.0988" y="0" dx="1.2192" dy="2.2352" layer="1" rot="R270"/>
+<smd name="3" x="-3.0988" y="-2.3114" dx="1.2192" dy="2.2352" layer="1" rot="R270"/>
+<smd name="4" x="3.099" y="0" dx="3.6" dy="2.2" layer="1" rot="R270"/>
+</package>
+</packages>
+<symbols>
+<symbol name="LD1117S33CTR">
+<wire x1="12.7" y1="5.08" x2="12.7" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="12.7" y1="-5.08" x2="-12.7" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-12.7" y1="-5.08" x2="-12.7" y2="5.08" width="0.254" layer="94"/>
+<wire x1="-12.7" y1="5.08" x2="12.7" y2="5.08" width="0.254" layer="94"/>
+<text x="-17.8166" y="-15.2714" size="1.78166" layer="95">&gt;NAME</text>
+<text x="-17.8147" y="-17.8147" size="1.78147" layer="96">&gt;VALUE</text>
+<pin name="IN" x="-17.78" y="0" length="middle" direction="in"/>
+<pin name="OUT" x="17.78" y="0" length="middle" direction="out" rot="R180"/>
+<pin name="GND" x="0" y="-10.16" length="middle" direction="pas" rot="R90"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="LD1117S33CTR" prefix="U">
+<description>http://octopart.com/ld1117s33tr-stmicroelectronics-526708</description>
+<gates>
+<gate name="G$1" symbol="LD1117S33CTR" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SOT223">
+<connects>
+<connect gate="G$1" pin="GND" pad="1"/>
+<connect gate="G$1" pin="IN" pad="3"/>
+<connect gate="G$1" pin="OUT" pad="2 4"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="MF" value="STMicroelectronics"/>
+<attribute name="Digi-Key_Part_Number" value="497-1241-1-ND"/>
+<attribute name="Description" value="
+LD1117 Series 1300 mA 3.3 V Fixed Output Positive Voltage LDO Regulator- SOT-223
+"/>
+<attribute name="Package" value="SOT-223 STMicroelectronics"/>
+<attribute name="Digi-Key_Purchase_URL" value="https://www.digikey.com/product-detail/en/stmicroelectronics/LD1117S33CTR/497-1241-1-ND/586241?utm_source=snapeda&amp;utm_medium=aggregator&amp;utm_campaign=symbol"/>
+<attribute name="MP" value="LD1117S33CTR"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
+</drawing>
+</eagle>
