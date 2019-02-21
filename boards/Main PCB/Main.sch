@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.2.2">
+<eagle version="9.3.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -33834,14 +33834,14 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <label x="414.02" y="104.14" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
-<net name="N$40" class="0">
+<net name="SABERTOOTH_S1" class="0">
 <segment>
 <pinref part="J1" gate="G$1" pin="P$1"/>
 <pinref part="R20" gate="G$1" pin="2"/>
 <wire x1="30.48" y1="76.2" x2="38.1" y2="76.2" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$41" class="0">
+<net name="SABERTOOTH_5V" class="0">
 <segment>
 <pinref part="R20" gate="G$1" pin="1"/>
 <pinref part="U3" gate="G$1" pin="C_T"/>
@@ -33852,7 +33852,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="30.48" y1="78.74" x2="48.26" y2="78.74" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$42" class="0">
+<net name="SABERTOOTH_GND" class="0">
 <segment>
 <pinref part="J1" gate="G$1" pin="P$3"/>
 <pinref part="U3" gate="G$1" pin="E_T"/>
