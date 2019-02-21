@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.3.0">
+<eagle version="9.2.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -32286,7 +32286,6 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <part name="U$6" library="microbuilder" deviceset="GND" device=""/>
 <part name="U$21" library="microbuilder" deviceset="3.3V" device=""/>
 <part name="U$15" library="microbuilder" deviceset="3.3V" device=""/>
-<part name="JP2" library="microbuilder" deviceset="HEADER-1X4" device="76MIL"/>
 <part name="U$1" library="NS-HP-GL" deviceset="GPS" device=""/>
 <part name="CN2" library="adafruit" deviceset="USB" device="MINIB" value="MINIB"/>
 <part name="IC2" library="ftdichip" library_urn="urn:adsk.eagle:library:231" deviceset="FT232R" device="L" package3d_urn="urn:adsk.eagle:package:14013/1"/>
@@ -32568,22 +32567,24 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="78.74" y1="55.88" x2="83.82" y2="55.88" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$3" class="0">
+<net name="D+_GPS" class="0">
 <segment>
 <wire x1="38.1" y1="93.98" x2="45.72" y2="93.98" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="93.98" x2="45.72" y2="63.5" width="0.1524" layer="91"/>
 <wire x1="45.72" y1="63.5" x2="83.82" y2="63.5" width="0.1524" layer="91"/>
 <pinref part="CN1" gate="G$1" pin="D+"/>
 <pinref part="IC1" gate="1" pin="USBDP"/>
+<label x="38.1" y="93.98" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="N$4" class="0">
+<net name="D-_GPS" class="0">
 <segment>
 <wire x1="83.82" y1="60.96" x2="43.18" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="43.18" y1="60.96" x2="43.18" y2="91.44" width="0.1524" layer="91"/>
 <wire x1="43.18" y1="91.44" x2="38.1" y2="91.44" width="0.1524" layer="91"/>
 <pinref part="IC1" gate="1" pin="USBDM"/>
 <pinref part="CN1" gate="G$1" pin="D-"/>
+<label x="38.1" y="91.44" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$6" class="0">
@@ -32885,22 +32886,24 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <pinref part="IC2" gate="1" pin="TEST"/>
 </segment>
 </net>
-<net name="N$12" class="0">
+<net name="D+_LIDAR" class="0">
 <segment>
 <wire x1="43.18" y1="86.36" x2="50.8" y2="86.36" width="0.1524" layer="91"/>
 <wire x1="50.8" y1="86.36" x2="50.8" y2="55.88" width="0.1524" layer="91"/>
 <wire x1="50.8" y1="55.88" x2="88.9" y2="55.88" width="0.1524" layer="91"/>
 <pinref part="CN2" gate="G$1" pin="D+"/>
 <pinref part="IC2" gate="1" pin="USBDP"/>
+<label x="43.18" y="86.36" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="N$13" class="0">
+<net name="D-_LIDAR" class="0">
 <segment>
 <wire x1="88.9" y1="53.34" x2="48.26" y2="53.34" width="0.1524" layer="91"/>
 <wire x1="48.26" y1="53.34" x2="48.26" y2="83.82" width="0.1524" layer="91"/>
 <wire x1="48.26" y1="83.82" x2="43.18" y2="83.82" width="0.1524" layer="91"/>
 <pinref part="IC2" gate="1" pin="USBDM"/>
 <pinref part="CN2" gate="G$1" pin="D-"/>
+<label x="43.18" y="83.82" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="+3V3_LIDAR" class="0">
@@ -33422,7 +33425,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <busses>
 </busses>
 <nets>
-<net name="N$25" class="0">
+<net name="US1_ECHO" class="0">
 <segment>
 <pinref part="U2" gate="G$1" pin="PA1/USART2_RTS/TIM15_CH1N/USART4_RX/EVENTOUT/ADC_IN1"/>
 <wire x1="172.72" y1="144.78" x2="116.84" y2="144.78" width="0.1524" layer="91"/>
@@ -33434,15 +33437,17 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="30.48" y1="196.088" x2="40.894" y2="196.088" width="0.1524" layer="91"/>
 <wire x1="40.894" y1="196.088" x2="40.894" y2="198.628" width="0.1524" layer="91"/>
 <junction x="40.894" y="198.628"/>
+<label x="160.02" y="144.78" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="N$21" class="0">
+<net name="ENCODER2" class="0">
 <segment>
 <pinref part="U2" gate="G$1" pin="PB1/TIM3_CH4/USART3_RTS/TIM14_CH1/TIM1_CH3N/ADC_IN9"/>
 <wire x1="350.52" y1="144.78" x2="386.08" y2="144.78" width="0.1524" layer="91"/>
 <wire x1="386.08" y1="144.78" x2="386.08" y2="139.7" width="0.1524" layer="91"/>
 <pinref part="X7" gate="-2" pin="S"/>
 <wire x1="386.08" y1="139.7" x2="408.94" y2="139.7" width="0.1524" layer="91"/>
+<label x="350.52" y="144.78" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="+3V3" class="0">
@@ -33854,13 +33859,14 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="30.48" y1="81.28" x2="50.8" y2="81.28" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$20" class="0">
+<net name="ENCODER1" class="0">
 <segment>
 <pinref part="U2" gate="G$1" pin="PB0/TIM3_CH3/TIM1_CH2N/EVENTOUT/USART3_CK/ADC_IN8"/>
 <wire x1="350.52" y1="147.32" x2="401.32" y2="147.32" width="0.1524" layer="91"/>
 <wire x1="401.32" y1="147.32" x2="401.32" y2="160.02" width="0.1524" layer="91"/>
 <pinref part="X6" gate="-2" pin="S"/>
 <wire x1="401.32" y1="160.02" x2="408.94" y2="160.02" width="0.1524" layer="91"/>
+<label x="350.52" y="147.32" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$43" class="0">
@@ -33899,7 +33905,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <label x="132.08" y="101.6" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
-<net name="N$38" class="0">
+<net name="12V_IN" class="0">
 <segment>
 <pinref part="J2" gate="G$1" pin="P$2"/>
 <pinref part="IC3" gate="1" pin="IN"/>
@@ -33907,6 +33913,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <pinref part="C17" gate="G$1" pin="+"/>
 <wire x1="0" y1="259.08" x2="5.08" y2="259.08" width="0.1524" layer="91"/>
 <junction x="0" y="259.08"/>
+<label x="-10.16" y="259.08" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$29" class="0">
@@ -33946,7 +33953,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <junction x="5.08" y="152.4"/>
 </segment>
 </net>
-<net name="N$44" class="0">
+<net name="US3_TRIG" class="0">
 <segment>
 <wire x1="96.52" y1="109.22" x2="96.52" y2="132.08" width="0.1524" layer="91"/>
 <pinref part="U2" gate="G$1" pin="PA6/SPI1_MISO/TIM3_CH1/TIM1_BKIN/TIM16_CH1/EVENTOUT/USART3_CTS/ADC_IN6"/>
@@ -33956,6 +33963,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="20.32" y1="109.22" x2="35.56" y2="109.22" width="0.1524" layer="91"/>
 <wire x1="96.52" y1="109.22" x2="35.56" y2="109.22" width="0.1524" layer="91"/>
 <junction x="35.56" y="109.22"/>
+<label x="160.02" y="132.08" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$26" class="0">
@@ -33981,7 +33989,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <pinref part="X4" gate="-2" pin="S"/>
 </segment>
 </net>
-<net name="N$46" class="0">
+<net name="US2_TRIG" class="0">
 <segment>
 <wire x1="114.3" y1="144.78" x2="114.3" y2="137.16" width="0.1524" layer="91"/>
 <pinref part="U2" gate="G$1" pin="PA4/SPI1_NSS/TIM14_CH1/USART2_CK/USB_NOE/ADC_IN4"/>
@@ -33992,6 +34000,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="114.3" y1="144.78" x2="35.56" y2="144.78" width="0.1524" layer="91"/>
 <wire x1="35.56" y1="144.78" x2="35.56" y2="154.94" width="0.1524" layer="91"/>
 <junction x="35.56" y="154.94"/>
+<label x="160.02" y="137.16" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="M1_TX" class="0">
@@ -34029,7 +34038,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <pinref part="X3" gate="-2" pin="S"/>
 </segment>
 </net>
-<net name="N$50" class="0">
+<net name="US1_TRIG" class="0">
 <segment>
 <wire x1="119.38" y1="182.88" x2="119.38" y2="147.32" width="0.1524" layer="91"/>
 <pinref part="U2" gate="G$1" pin="PA0/USART2_CTS/USART4_TX/RTC_TAMP2/WKUP1/ADC_IN0"/>
@@ -34040,6 +34049,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="119.38" y1="182.88" x2="35.56" y2="182.88" width="0.1524" layer="91"/>
 <wire x1="35.56" y1="182.88" x2="35.56" y2="203.2" width="0.1524" layer="91"/>
 <junction x="35.56" y="203.2"/>
+<label x="160.02" y="147.32" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$24" class="0">
@@ -34060,7 +34070,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="165.1" y1="86.36" x2="154.94" y2="86.36" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$54" class="0">
+<net name="US2_ECHO" class="0">
 <segment>
 <pinref part="Q5" gate="G$1" pin="S"/>
 <pinref part="R23" gate="G$1" pin="1"/>
@@ -34071,9 +34081,10 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="40.894" y1="150.368" x2="111.76" y2="150.368" width="0.1524" layer="91"/>
 <wire x1="111.76" y1="150.368" x2="111.76" y2="134.62" width="0.1524" layer="91"/>
 <junction x="40.894" y="150.368"/>
+<label x="160.02" y="134.62" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="N$45" class="0">
+<net name="US3_ECHO" class="0">
 <segment>
 <pinref part="R27" gate="G$1" pin="1"/>
 <wire x1="40.894" y1="102.108" x2="40.894" y2="104.648" width="0.1524" layer="91"/>
@@ -34084,6 +34095,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="40.894" y1="104.648" x2="99.06" y2="104.648" width="0.1524" layer="91"/>
 <wire x1="99.06" y1="104.648" x2="99.06" y2="129.54" width="0.1524" layer="91"/>
 <junction x="40.894" y="104.648"/>
+<label x="160.02" y="129.54" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$47" class="0">
@@ -34248,10 +34260,6 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <instance part="U$15" gate="G$1" x="-25.4" y="-25.4" smashed="yes" rot="R270">
 <attribute name="VALUE" x="-24.384" y="-23.876" size="1.27" layer="96" rot="R270"/>
 </instance>
-<instance part="JP2" gate="A" x="55.88" y="-40.64" smashed="yes">
-<attribute name="NAME" x="49.53" y="-32.385" size="1.778" layer="95"/>
-<attribute name="VALUE" x="49.53" y="-48.26" size="1.778" layer="96"/>
-</instance>
 <instance part="FRAME1" gate="G$1" x="-127" y="-124.46" smashed="yes"/>
 <instance part="FRAME1" gate="G$2" x="45.72" y="-124.46" smashed="yes">
 <attribute name="LAST_DATE_TIME" x="58.42" y="-123.19" size="2.54" layer="94"/>
@@ -34371,11 +34379,6 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <pinref part="R6" gate="G$1" pin="1"/>
 </segment>
 <segment>
-<wire x1="33.02" y1="-38.1" x2="53.34" y2="-38.1" width="0.1524" layer="91"/>
-<label x="33.02" y="-38.1" size="1.778" layer="95"/>
-<pinref part="JP2" gate="A" pin="2"/>
-</segment>
-<segment>
 <pinref part="JP4" gate="A" pin="3"/>
 <wire x1="-5.08" y1="-58.42" x2="20.32" y2="-58.42" width="0.1524" layer="91"/>
 <label x="2.54" y="-58.42" size="1.778" layer="95"/>
@@ -34387,11 +34390,6 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="-30.48" y1="-17.78" x2="-12.7" y2="-17.78" width="0.1524" layer="91"/>
 <label x="-27.94" y="-17.78" size="1.778" layer="95"/>
 <pinref part="R4" gate="G$1" pin="1"/>
-</segment>
-<segment>
-<wire x1="33.02" y1="-35.56" x2="53.34" y2="-35.56" width="0.1524" layer="91"/>
-<label x="33.02" y="-35.56" size="1.778" layer="95"/>
-<pinref part="JP2" gate="A" pin="1"/>
 </segment>
 <segment>
 <pinref part="JP4" gate="A" pin="4"/>
@@ -34418,11 +34416,6 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <label x="-27.94" y="-7.62" size="1.778" layer="95"/>
 </segment>
 <segment>
-<wire x1="33.02" y1="-40.64" x2="53.34" y2="-40.64" width="0.1524" layer="91"/>
-<label x="33.02" y="-40.64" size="1.778" layer="95"/>
-<pinref part="JP2" gate="A" pin="3"/>
-</segment>
-<segment>
 <pinref part="JP4" gate="A" pin="2"/>
 <wire x1="-5.08" y1="-60.96" x2="20.32" y2="-60.96" width="0.1524" layer="91"/>
 <label x="2.54" y="-60.96" size="1.778" layer="95"/>
@@ -34434,11 +34427,6 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <pinref part="R7" gate="G$1" pin="1"/>
 <wire x1="-30.48" y1="-2.54" x2="-12.7" y2="-2.54" width="0.1524" layer="91"/>
 <label x="-27.94" y="-2.54" size="1.778" layer="95"/>
-</segment>
-<segment>
-<wire x1="33.02" y1="-43.18" x2="53.34" y2="-43.18" width="0.1524" layer="91"/>
-<label x="33.02" y="-43.18" size="1.778" layer="95"/>
-<pinref part="JP2" gate="A" pin="4"/>
 </segment>
 <segment>
 <pinref part="JP4" gate="A" pin="1"/>
@@ -34554,7 +34542,6 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <approved hash="106,1,111.76,86.36,DTR,,,,,"/>
 <approved hash="106,2,116.84,78.74,DTR_LIDAR,,,,,"/>
 <approved hash="113,1,147.557,48.4861,FTDI,,,,,"/>
-<approved hash="113,4,53.5771,-37.8739,JP2,,,,,"/>
 <approved hash="113,2,152.637,40.8661,FTDI1,,,,,"/>
 <approved hash="113,3,375.084,96.52,Q3,,,,,"/>
 <approved hash="113,3,12.7,254.483,IC3,,,,,"/>
