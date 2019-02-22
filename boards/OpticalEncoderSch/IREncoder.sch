@@ -4777,9 +4777,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <attribute name="NAME" x="-9.1186" y="41.91" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="-4.318" y="41.91" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="P+1" gate="1" x="10.16" y="66.04" smashed="yes">
-<attribute name="VALUE" x="7.62" y="60.96" size="1.778" layer="96" rot="R90"/>
-</instance>
+<instance part="P+1" gate="1" x="10.16" y="66.04" smashed="yes"/>
 <instance part="R5" gate="G$1" x="48.26" y="53.34" smashed="yes" rot="R90">
 <attribute name="NAME" x="46.7614" y="49.53" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="51.562" y="49.53" size="1.778" layer="96" rot="R90"/>
@@ -4794,9 +4792,7 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <instance part="GND2" gate="1" x="48.26" y="12.7" smashed="yes">
 <attribute name="VALUE" x="45.72" y="10.16" size="1.778" layer="96"/>
 </instance>
-<instance part="P+2" gate="1" x="48.26" y="76.2" smashed="yes">
-<attribute name="VALUE" x="45.72" y="71.12" size="1.778" layer="96" rot="R90"/>
-</instance>
+<instance part="P+2" gate="1" x="48.26" y="76.2" smashed="yes"/>
 <instance part="D5" gate="1" x="48.26" y="43.18" smashed="yes">
 <attribute name="NAME" x="51.816" y="38.608" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="53.975" y="38.608" size="1.778" layer="96" rot="R90"/>
@@ -4805,46 +4801,11 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <instance part="GND3" gate="1" x="66.04" y="38.1" smashed="yes">
 <attribute name="VALUE" x="63.5" y="35.56" size="1.778" layer="96"/>
 </instance>
-<instance part="P+3" gate="1" x="66.04" y="60.96" smashed="yes">
-<attribute name="VALUE" x="63.5" y="55.88" size="1.778" layer="96" rot="R90"/>
-</instance>
+<instance part="P+3" gate="1" x="66.04" y="60.96" smashed="yes"/>
 </instances>
 <busses>
 </busses>
 <nets>
-<net name="+5V" class="0">
-<segment>
-<pinref part="R4" gate="G$1" pin="2"/>
-<wire x1="-7.62" y1="50.8" x2="-7.62" y2="53.34" width="0.1524" layer="91"/>
-<wire x1="-7.62" y1="53.34" x2="5.08" y2="53.34" width="0.1524" layer="91"/>
-<pinref part="R3" gate="G$1" pin="2"/>
-<wire x1="5.08" y1="53.34" x2="5.08" y2="50.8" width="0.1524" layer="91"/>
-<wire x1="5.08" y1="53.34" x2="10.16" y2="53.34" width="0.1524" layer="91"/>
-<junction x="5.08" y="53.34"/>
-<pinref part="R2" gate="G$1" pin="2"/>
-<wire x1="10.16" y1="53.34" x2="17.78" y2="53.34" width="0.1524" layer="91"/>
-<wire x1="17.78" y1="53.34" x2="17.78" y2="50.8" width="0.1524" layer="91"/>
-<wire x1="17.78" y1="53.34" x2="30.48" y2="53.34" width="0.1524" layer="91"/>
-<junction x="17.78" y="53.34"/>
-<pinref part="R1" gate="G$1" pin="2"/>
-<wire x1="30.48" y1="53.34" x2="30.48" y2="50.8" width="0.1524" layer="91"/>
-<pinref part="P+1" gate="1" pin="+5V"/>
-<wire x1="10.16" y1="63.5" x2="10.16" y2="55.88" width="0.1524" layer="91"/>
-<wire x1="10.16" y1="55.88" x2="10.16" y2="53.34" width="0.1524" layer="91"/>
-<junction x="10.16" y="53.34"/>
-</segment>
-<segment>
-<pinref part="R6" gate="G$1" pin="2"/>
-<wire x1="48.26" y1="71.12" x2="48.26" y2="73.66" width="0.1524" layer="91"/>
-<pinref part="P+2" gate="1" pin="+5V"/>
-</segment>
-<segment>
-<pinref part="P+3" gate="1" pin="+5V"/>
-<wire x1="66.04" y1="58.42" x2="66.04" y2="50.8" width="0.1524" layer="91"/>
-<pinref part="J1" gate="G$1" pin="P$1"/>
-<wire x1="66.04" y1="50.8" x2="68.58" y2="50.8" width="0.1524" layer="91"/>
-</segment>
-</net>
 <net name="N$5" class="0">
 <segment>
 <pinref part="R5" gate="G$1" pin="1"/>
@@ -4920,6 +4881,42 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <pinref part="R1" gate="G$1" pin="1"/>
 <pinref part="D1" gate="1" pin="A"/>
 <wire x1="30.48" y1="40.64" x2="30.48" y2="35.56" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="+3V3" class="0">
+<segment>
+<pinref part="R4" gate="G$1" pin="2"/>
+<wire x1="-7.62" y1="50.8" x2="-7.62" y2="53.34" width="0.1524" layer="91"/>
+<wire x1="-7.62" y1="53.34" x2="5.08" y2="53.34" width="0.1524" layer="91"/>
+<pinref part="R3" gate="G$1" pin="2"/>
+<wire x1="5.08" y1="53.34" x2="5.08" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="5.08" y1="53.34" x2="10.16" y2="53.34" width="0.1524" layer="91"/>
+<junction x="5.08" y="53.34"/>
+<pinref part="R2" gate="G$1" pin="2"/>
+<wire x1="10.16" y1="53.34" x2="17.78" y2="53.34" width="0.1524" layer="91"/>
+<wire x1="17.78" y1="53.34" x2="17.78" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="17.78" y1="53.34" x2="30.48" y2="53.34" width="0.1524" layer="91"/>
+<junction x="17.78" y="53.34"/>
+<pinref part="R1" gate="G$1" pin="2"/>
+<wire x1="30.48" y1="53.34" x2="30.48" y2="50.8" width="0.1524" layer="91"/>
+<pinref part="P+1" gate="1" pin="+5V"/>
+<wire x1="10.16" y1="63.5" x2="10.16" y2="55.88" width="0.1524" layer="91"/>
+<wire x1="10.16" y1="55.88" x2="10.16" y2="53.34" width="0.1524" layer="91"/>
+<junction x="10.16" y="53.34"/>
+<label x="10.16" y="58.42" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="R6" gate="G$1" pin="2"/>
+<wire x1="48.26" y1="71.12" x2="48.26" y2="73.66" width="0.1524" layer="91"/>
+<pinref part="P+2" gate="1" pin="+5V"/>
+<label x="48.26" y="71.12" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="P+3" gate="1" pin="+5V"/>
+<wire x1="66.04" y1="58.42" x2="66.04" y2="50.8" width="0.1524" layer="91"/>
+<pinref part="J1" gate="G$1" pin="P$1"/>
+<wire x1="66.04" y1="50.8" x2="68.58" y2="50.8" width="0.1524" layer="91"/>
+<label x="66.04" y="55.88" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
