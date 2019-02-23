@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.3.1">
+<eagle version="9.3.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -36691,6 +36691,15 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <part name="R9" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-EU_" device="R0805" package3d_urn="urn:adsk.eagle:package:26059/1" value="3.3K"/>
 <part name="U$2" library="microbuilder" deviceset="3.3V" device=""/>
 <part name="U$4" library="microbuilder" deviceset="3.3V" device=""/>
+<part name="R10" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="1K"/>
+<part name="RX2" library="adafruit" deviceset="LED" device="CHIP-LED0805" value="Green"/>
+<part name="+3V10" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
+<part name="RX3" library="adafruit" deviceset="LED" device="CHIP-LED0805" value="Green"/>
+<part name="R11" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="1K"/>
+<part name="+3V11" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
+<part name="RX4" library="adafruit" deviceset="LED" device="CHIP-LED0805" value="Green"/>
+<part name="R32" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="1K"/>
+<part name="GND33" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -37706,6 +37715,36 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <attribute name="NAME" x="149.225" y="176.53" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="157.48" y="176.53" size="1.778" layer="96" rot="R90"/>
 </instance>
+<instance part="R10" gate="G$1" x="370.84" y="137.16" smashed="yes">
+<attribute name="VALUE" x="367.03" y="138.938" size="1.778" layer="96"/>
+</instance>
+<instance part="RX2" gate="G$1" x="360.68" y="137.16" smashed="yes" rot="R270">
+<attribute name="NAME" x="358.648" y="138.684" size="1.778" layer="95"/>
+<attribute name="VALUE" x="354.33" y="135.255" size="1.778" layer="96"/>
+</instance>
+<instance part="+3V10" gate="G$1" x="381" y="142.24" smashed="yes">
+<attribute name="VALUE" x="378.46" y="137.16" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="RX3" gate="G$1" x="370.84" y="198.12" smashed="yes">
+<attribute name="NAME" x="369.316" y="196.088" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="372.745" y="191.77" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="R11" gate="G$1" x="370.84" y="185.42" smashed="yes" rot="R90">
+<attribute name="VALUE" x="369.062" y="181.61" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="+3V11" gate="G$1" x="370.84" y="208.28" smashed="yes">
+<attribute name="VALUE" x="368.3" y="203.2" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="RX4" gate="G$1" x="22.86" y="254" smashed="yes">
+<attribute name="NAME" x="21.336" y="251.968" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="24.765" y="247.65" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="R32" gate="G$1" x="22.86" y="241.3" smashed="yes" rot="R90">
+<attribute name="VALUE" x="21.082" y="237.49" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="GND33" gate="1" x="22.86" y="231.14" smashed="yes">
+<attribute name="VALUE" x="20.32" y="228.6" size="1.778" layer="96"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -37850,6 +37889,17 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <wire x1="419.1" y1="101.6" x2="406.4" y2="101.6" width="0.1524" layer="91"/>
 <label x="406.4" y="101.6" size="1.778" layer="95" rot="R180"/>
 </segment>
+<segment>
+<pinref part="+3V10" gate="G$1" pin="+3V3"/>
+<wire x1="381" y1="137.16" x2="381" y2="139.7" width="0.1524" layer="91"/>
+<pinref part="R10" gate="G$1" pin="2"/>
+<wire x1="375.92" y1="137.16" x2="381" y2="137.16" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="RX3" gate="G$1" pin="A"/>
+<pinref part="+3V11" gate="G$1" pin="+3V3"/>
+<wire x1="370.84" y1="200.66" x2="370.84" y2="205.74" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="N$34" class="0">
 <segment>
@@ -37899,6 +37949,10 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <pinref part="C16" gate="G$1" pin="2"/>
 <pinref part="GND18" gate="1" pin="GND"/>
 <wire x1="365.76" y1="177.8" x2="368.3" y2="177.8" width="0.1524" layer="91"/>
+<pinref part="R11" gate="G$1" pin="1"/>
+<wire x1="370.84" y1="180.34" x2="370.84" y2="177.8" width="0.1524" layer="91"/>
+<wire x1="370.84" y1="177.8" x2="368.3" y2="177.8" width="0.1524" layer="91"/>
+<junction x="368.3" y="177.8"/>
 </segment>
 <segment>
 <pinref part="RESET" gate="G$1" pin="4"/>
@@ -37999,6 +38053,11 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <pinref part="GND32" gate="1" pin="GND"/>
 <wire x1="419.1" y1="134.62" x2="414.02" y2="134.62" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="R32" gate="G$1" pin="1"/>
+<pinref part="GND33" gate="1" pin="GND"/>
+<wire x1="22.86" y1="236.22" x2="22.86" y2="233.68" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="N$36" class="0">
 <segment>
@@ -38046,7 +38105,8 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <segment>
 <pinref part="IC3" gate="1" pin="OUT"/>
 <pinref part="P+1" gate="1" pin="+5V"/>
-<wire x1="20.32" y1="259.08" x2="25.4" y2="259.08" width="0.1524" layer="91"/>
+<wire x1="20.32" y1="259.08" x2="22.86" y2="259.08" width="0.1524" layer="91"/>
+<wire x1="22.86" y1="259.08" x2="25.4" y2="259.08" width="0.1524" layer="91"/>
 <wire x1="25.4" y1="259.08" x2="25.4" y2="266.7" width="0.1524" layer="91"/>
 <pinref part="C8" gate="G$1" pin="1"/>
 <wire x1="25.4" y1="259.08" x2="27.94" y2="259.08" width="0.1524" layer="91"/>
@@ -38054,6 +38114,9 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <pinref part="U1" gate="G$1" pin="IN"/>
 <wire x1="27.94" y1="259.08" x2="35.56" y2="259.08" width="0.1524" layer="91"/>
 <junction x="27.94" y="259.08"/>
+<pinref part="RX4" gate="G$1" pin="A"/>
+<wire x1="22.86" y1="256.54" x2="22.86" y2="259.08" width="0.1524" layer="91"/>
+<junction x="22.86" y="259.08"/>
 </segment>
 <segment>
 <pinref part="R19" gate="G$1" pin="2"/>
@@ -38463,11 +38526,32 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <label x="373.38" y="134.62" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="TEST_GPIO4" class="0">
+<net name="N$4" class="0">
 <segment>
+<pinref part="RX3" gate="G$1" pin="C"/>
+<pinref part="R11" gate="G$1" pin="2"/>
+<wire x1="370.84" y1="193.04" x2="370.84" y2="190.5" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$12" class="0">
+<segment>
+<pinref part="R32" gate="G$1" pin="2"/>
+<pinref part="RX4" gate="G$1" pin="C"/>
+<wire x1="22.86" y1="246.38" x2="22.86" y2="248.92" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$3" class="0">
+<segment>
+<pinref part="R10" gate="G$1" pin="1"/>
+<pinref part="RX2" gate="G$1" pin="A"/>
+<wire x1="365.76" y1="137.16" x2="363.22" y2="137.16" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$13" class="0">
+<segment>
+<pinref part="RX2" gate="G$1" pin="C"/>
 <pinref part="U2" gate="G$1" pin="PB4/SPI1_MISO/TIM17_BKIN/TIM3_CH1/EVENTOUT"/>
-<wire x1="350.52" y1="137.16" x2="358.14" y2="137.16" width="0.1524" layer="91"/>
-<label x="358.14" y="137.16" size="1.778" layer="95"/>
+<wire x1="355.6" y1="137.16" x2="350.52" y2="137.16" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
