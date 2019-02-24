@@ -189,6 +189,7 @@
 <text x="2.54" y="22.352" size="0.8128" layer="25">12V IN</text>
 <text x="1.524" y="9.652" size="0.8128" layer="25" rot="R90">12V TO 5V SWR</text>
 <text x="11.43" y="3.556" size="0.8128" layer="25">MC S1</text>
+<text x="12.446" y="19.304" size="0.6096" layer="25" rot="R48.8">RST FUSE</text>
 </plain>
 <libraries>
 <library name="adafruit">
