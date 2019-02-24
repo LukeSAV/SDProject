@@ -36502,6 +36502,69 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="RESET_FUSE">
+<packages>
+<package name="RESC3216X125N">
+<wire x1="-1.75" y1="0.9" x2="1.75" y2="0.9" width="0.127" layer="51"/>
+<wire x1="1.75" y1="0.9" x2="1.75" y2="-0.9" width="0.127" layer="51"/>
+<wire x1="1.75" y1="-0.9" x2="-1.75" y2="-0.9" width="0.127" layer="51"/>
+<wire x1="-1.75" y1="-0.9" x2="-1.75" y2="0.9" width="0.127" layer="51"/>
+<wire x1="-1.63" y1="1.09" x2="1.63" y2="1.09" width="0.127" layer="21"/>
+<wire x1="-1.63" y1="-1.09" x2="1.63" y2="-1.09" width="0.127" layer="21"/>
+<wire x1="-2.36" y1="1.16" x2="2.36" y2="1.16" width="0.05" layer="39"/>
+<wire x1="2.36" y1="1.16" x2="2.36" y2="-1.16" width="0.05" layer="39"/>
+<wire x1="2.36" y1="-1.16" x2="-2.36" y2="-1.16" width="0.05" layer="39"/>
+<wire x1="-2.36" y1="-1.16" x2="-2.36" y2="1.16" width="0.05" layer="39"/>
+<text x="-3.1373" y="2.00146875" size="1.27093125" layer="25">&gt;NAME</text>
+<text x="-3.13731875" y="-2.00148125" size="1.270940625" layer="27" align="top-left">&gt;VALUE</text>
+<smd name="1" x="-1.505" y="0" dx="1.2" dy="1.82" layer="1" roundness="25"/>
+<smd name="2" x="1.505" y="0" dx="1.2" dy="1.82" layer="1" roundness="25"/>
+</package>
+</packages>
+<symbols>
+<symbol name="0ZCJ0050FF2G">
+<wire x1="-2.54" y1="0" x2="-2.159" y2="1.016" width="0.2032" layer="94"/>
+<wire x1="-2.159" y1="1.016" x2="-1.524" y2="-1.016" width="0.2032" layer="94"/>
+<wire x1="-1.524" y1="-1.016" x2="-0.889" y2="1.016" width="0.2032" layer="94"/>
+<wire x1="-0.889" y1="1.016" x2="-0.254" y2="-1.016" width="0.2032" layer="94"/>
+<wire x1="-0.254" y1="-1.016" x2="0.381" y2="1.016" width="0.2032" layer="94"/>
+<wire x1="0.381" y1="1.016" x2="1.016" y2="-1.016" width="0.2032" layer="94"/>
+<wire x1="1.016" y1="-1.016" x2="1.651" y2="1.016" width="0.2032" layer="94"/>
+<wire x1="1.651" y1="1.016" x2="2.286" y2="-1.016" width="0.2032" layer="94"/>
+<wire x1="2.286" y1="-1.016" x2="2.54" y2="0" width="0.2032" layer="94"/>
+<text x="-3.81" y="1.4986" size="1.778" layer="95">&gt;NAME</text>
+<text x="-3.81" y="-3.302" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="2" x="7.62" y="0" visible="pad" length="middle" direction="pas" rot="R180"/>
+<pin name="1" x="-7.62" y="0" visible="pad" length="middle" direction="pas"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="0ZCJ0050FF2G" prefix="R">
+<description>PTC Resettable Fuse100A 8VDC T/R</description>
+<gates>
+<gate name="G$1" symbol="0ZCJ0050FF2G" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="RESC3216X125N">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="DESCRIPTION" value=" PTC Resettable Fuse 0.5A_hold_ 1A_trip_ 8VDC 100A 0.4W 0.1s 0.15Ohm SMD Solder Pad 3.5 X 1.8 X 0.55mm T/R "/>
+<attribute name="DIGI-KEY_PART_NUMBER" value="507-1802-1-ND"/>
+<attribute name="DIGI-KEY_PURCHASE_URL" value="https://www.digikey.com/product-detail/en/bel-fuse-inc/0ZCJ0050FF2G/507-1802-1-ND/4156236?utm_source=snapeda&amp;utm_medium=aggregator&amp;utm_campaign=symbol"/>
+<attribute name="MF" value="Bel Fuse"/>
+<attribute name="MP" value="0ZCJ0050FF2G"/>
+<attribute name="PACKAGE" value="1206 Bel Fuse"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -36682,6 +36745,7 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <part name="R32" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="100"/>
 <part name="GND33" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="U$6" library="microbuilder" deviceset="GND" device=""/>
+<part name="R33" library="RESET_FUSE" deviceset="0ZCJ0050FF2G" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -36888,30 +36952,30 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <instance part="GND23" gate="1" x="279.4" y="375.92" smashed="yes">
 <attribute name="VALUE" x="276.86" y="373.38" size="1.778" layer="96"/>
 </instance>
-<instance part="P+1" gate="1" x="312.42" y="393.7" smashed="yes">
-<attribute name="VALUE" x="309.88" y="388.62" size="1.778" layer="96" rot="R90"/>
+<instance part="P+1" gate="1" x="330.2" y="393.7" smashed="yes">
+<attribute name="VALUE" x="327.66" y="388.62" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="U1" gate="G$1" x="340.36" y="383.54" smashed="yes">
-<attribute name="NAME" x="322.5434" y="368.2686" size="1.781659375" layer="95"/>
-<attribute name="VALUE" x="322.5453" y="365.7253" size="1.78146875" layer="96"/>
+<instance part="U1" gate="G$1" x="358.14" y="383.54" smashed="yes">
+<attribute name="NAME" x="340.3234" y="368.2686" size="1.781659375" layer="95"/>
+<attribute name="VALUE" x="340.3253" y="365.7253" size="1.78146875" layer="96"/>
 </instance>
-<instance part="C8" gate="G$1" x="314.96" y="381" smashed="yes">
-<attribute name="VALUE" x="315.976" y="376.809" size="1.778" layer="96"/>
+<instance part="C8" gate="G$1" x="332.74" y="381" smashed="yes">
+<attribute name="VALUE" x="333.756" y="376.809" size="1.778" layer="96"/>
 </instance>
-<instance part="C9" gate="G$1" x="363.22" y="381" smashed="yes">
-<attribute name="VALUE" x="364.236" y="376.809" size="1.778" layer="96"/>
+<instance part="C9" gate="G$1" x="381" y="381" smashed="yes">
+<attribute name="VALUE" x="382.016" y="376.809" size="1.778" layer="96"/>
 </instance>
-<instance part="GND24" gate="1" x="314.96" y="370.84" smashed="yes">
-<attribute name="VALUE" x="312.42" y="368.3" size="1.778" layer="96"/>
+<instance part="GND24" gate="1" x="332.74" y="370.84" smashed="yes">
+<attribute name="VALUE" x="330.2" y="368.3" size="1.778" layer="96"/>
 </instance>
-<instance part="GND25" gate="1" x="363.22" y="370.84" smashed="yes">
-<attribute name="VALUE" x="360.68" y="368.3" size="1.778" layer="96"/>
+<instance part="GND25" gate="1" x="381" y="370.84" smashed="yes">
+<attribute name="VALUE" x="378.46" y="368.3" size="1.778" layer="96"/>
 </instance>
-<instance part="GND26" gate="1" x="340.36" y="368.3" smashed="yes">
-<attribute name="VALUE" x="337.82" y="365.76" size="1.778" layer="96"/>
+<instance part="GND26" gate="1" x="358.14" y="368.3" smashed="yes">
+<attribute name="VALUE" x="355.6" y="365.76" size="1.778" layer="96"/>
 </instance>
-<instance part="+3V3" gate="G$1" x="368.3" y="393.7" smashed="yes">
-<attribute name="VALUE" x="365.76" y="388.62" size="1.778" layer="96" rot="R90"/>
+<instance part="+3V3" gate="G$1" x="386.08" y="393.7" smashed="yes">
+<attribute name="VALUE" x="383.54" y="388.62" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="C17" gate="G$1" x="287.02" y="381" smashed="yes">
 <attribute name="NAME" x="288.036" y="381.635" size="1.778" layer="95"/>
@@ -37311,6 +37375,10 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <instance part="U$6" gate="G$1" x="132.08" y="111.76" smashed="yes">
 <attribute name="VALUE" x="130.556" y="109.22" size="1.27" layer="96"/>
 </instance>
+<instance part="R33" gate="G$1" x="320.04" y="383.54" smashed="yes">
+<attribute name="NAME" x="316.23" y="385.0386" size="1.778" layer="95"/>
+<attribute name="VALUE" x="316.23" y="380.238" size="1.778" layer="96"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -37379,11 +37447,11 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <segment>
 <pinref part="U1" gate="G$1" pin="OUT"/>
 <pinref part="C9" gate="G$1" pin="1"/>
-<wire x1="358.14" y1="383.54" x2="363.22" y2="383.54" width="0.1524" layer="91"/>
-<wire x1="363.22" y1="383.54" x2="368.3" y2="383.54" width="0.1524" layer="91"/>
-<junction x="363.22" y="383.54"/>
+<wire x1="375.92" y1="383.54" x2="381" y2="383.54" width="0.1524" layer="91"/>
+<wire x1="381" y1="383.54" x2="386.08" y2="383.54" width="0.1524" layer="91"/>
+<junction x="381" y="383.54"/>
 <pinref part="+3V3" gate="G$1" pin="+3V3"/>
-<wire x1="368.3" y1="383.54" x2="368.3" y2="391.16" width="0.1524" layer="91"/>
+<wire x1="386.08" y1="383.54" x2="386.08" y2="391.16" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="+3V4" gate="G$1" pin="+3V3"/>
@@ -37603,17 +37671,17 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <segment>
 <pinref part="C8" gate="G$1" pin="2"/>
 <pinref part="GND24" gate="1" pin="GND"/>
-<wire x1="314.96" y1="375.92" x2="314.96" y2="373.38" width="0.1524" layer="91"/>
+<wire x1="332.74" y1="375.92" x2="332.74" y2="373.38" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="C9" gate="G$1" pin="2"/>
 <pinref part="GND25" gate="1" pin="GND"/>
-<wire x1="363.22" y1="375.92" x2="363.22" y2="373.38" width="0.1524" layer="91"/>
+<wire x1="381" y1="375.92" x2="381" y2="373.38" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="U1" gate="G$1" pin="GND"/>
 <pinref part="GND26" gate="1" pin="GND"/>
-<wire x1="340.36" y1="373.38" x2="340.36" y2="370.84" width="0.1524" layer="91"/>
+<wire x1="358.14" y1="373.38" x2="358.14" y2="370.84" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="C17" gate="G$1" pin="-"/>
@@ -37880,22 +37948,6 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 </net>
 <net name="+5V" class="0">
 <segment>
-<pinref part="IC3" gate="1" pin="OUT"/>
-<pinref part="P+1" gate="1" pin="+5V"/>
-<wire x1="307.34" y1="383.54" x2="309.88" y2="383.54" width="0.1524" layer="91"/>
-<wire x1="309.88" y1="383.54" x2="312.42" y2="383.54" width="0.1524" layer="91"/>
-<wire x1="312.42" y1="383.54" x2="312.42" y2="391.16" width="0.1524" layer="91"/>
-<pinref part="C8" gate="G$1" pin="1"/>
-<wire x1="312.42" y1="383.54" x2="314.96" y2="383.54" width="0.1524" layer="91"/>
-<junction x="312.42" y="383.54"/>
-<pinref part="U1" gate="G$1" pin="IN"/>
-<wire x1="314.96" y1="383.54" x2="322.58" y2="383.54" width="0.1524" layer="91"/>
-<junction x="314.96" y="383.54"/>
-<pinref part="RX4" gate="G$1" pin="A"/>
-<wire x1="309.88" y1="381" x2="309.88" y2="383.54" width="0.1524" layer="91"/>
-<junction x="309.88" y="383.54"/>
-</segment>
-<segment>
 <pinref part="R19" gate="G$1" pin="2"/>
 <pinref part="P+2" gate="1" pin="+5V"/>
 <wire x1="106.68" y1="187.96" x2="109.22" y2="187.96" width="0.1524" layer="91"/>
@@ -37957,6 +38009,18 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <wire x1="477.52" y1="266.7" x2="477.52" y2="248.92" width="0.1524" layer="91"/>
 <junction x="477.52" y="248.92"/>
 <label x="474.98" y="248.92" size="1.778" layer="95" rot="R180"/>
+</segment>
+<segment>
+<pinref part="R33" gate="G$1" pin="2"/>
+<pinref part="C8" gate="G$1" pin="1"/>
+<wire x1="327.66" y1="383.54" x2="330.2" y2="383.54" width="0.1524" layer="91"/>
+<pinref part="U1" gate="G$1" pin="IN"/>
+<wire x1="330.2" y1="383.54" x2="332.74" y2="383.54" width="0.1524" layer="91"/>
+<wire x1="332.74" y1="383.54" x2="340.36" y2="383.54" width="0.1524" layer="91"/>
+<junction x="332.74" y="383.54"/>
+<pinref part="P+1" gate="1" pin="+5V"/>
+<wire x1="330.2" y1="391.16" x2="330.2" y2="383.54" width="0.1524" layer="91"/>
+<junction x="330.2" y="383.54"/>
 </segment>
 </net>
 <net name="SABERTOOTH_5V" class="0">
@@ -38817,30 +38881,47 @@ Source: http://www.mouser.com/ds/2/392/products_18-2245.pdf</description>
 <label x="386.08" y="63.5" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
+<net name="N$21" class="0">
+<segment>
+<pinref part="IC3" gate="1" pin="OUT"/>
+<wire x1="307.34" y1="383.54" x2="309.88" y2="383.54" width="0.1524" layer="91"/>
+<wire x1="309.88" y1="383.54" x2="312.42" y2="383.54" width="0.1524" layer="91"/>
+<pinref part="RX4" gate="G$1" pin="A"/>
+<wire x1="309.88" y1="381" x2="309.88" y2="383.54" width="0.1524" layer="91"/>
+<junction x="309.88" y="383.54"/>
+<pinref part="R33" gate="G$1" pin="1"/>
+</segment>
+</net>
 </nets>
 </sheet>
 </sheets>
 <errors>
-<approved hash="104,1,350.52,162.56,U2,VDD,+3V3,,,"/>
-<approved hash="104,1,350.52,160.02,U2,VDDA,+3V3,,,"/>
-<approved hash="104,1,350.52,93.98,U2,VSS,GND,,,"/>
-<approved hash="104,1,350.52,91.44,U2,VSSA,GND,,,"/>
-<approved hash="104,1,419.1,101.6,U4,VCCA,+3V3,,,"/>
-<approved hash="104,1,419.1,104.14,U4,VCCB,+5V,,,"/>
-<approved hash="208,1,134.62,190.5,+3V3,sup,,,,"/>
-<approved hash="208,1,350.52,203.2,+3V3,sup,,,,"/>
-<approved hash="208,1,71.12,259.08,+3V3,out,,,,"/>
-<approved hash="208,1,81.28,266.7,+3V3,sup,,,,"/>
-<approved hash="208,1,403.86,165.1,+3V3,sup,,,,"/>
-<approved hash="208,1,403.86,144.78,+3V3,sup,,,,"/>
-<approved hash="208,1,27.94,167.64,+3V3,sup,,,,"/>
-<approved hash="208,1,27.94,121.92,+3V3,sup,,,,"/>
-<approved hash="208,1,27.94,215.9,+3V3,sup,,,,"/>
-<approved hash="208,1,170.18,86.36,+3V3,sup,,,,"/>
-<approved hash="113,1,375.084,96.52,Q3,,,,,"/>
-<approved hash="113,1,12.7,254.483,IC3,,,,,"/>
-<approved hash="113,1,231.036,124.356,FRAME2,,,,,"/>
-<approved hash="113,1,154.703,83.5939,JP1,,,,,"/>
+<approved hash="202,1,393.7,121.92,IC1,OSCI,,,,"/>
+<approved hash="202,1,421.64,121.92,IC1,!DSR,,,,"/>
+<approved hash="202,1,421.64,119.38,IC1,!DCD,,,,"/>
+<approved hash="202,1,421.64,116.84,IC1,!RI,,,,"/>
+<approved hash="202,1,393.7,127,IC1,!RESET,,,,"/>
+<approved hash="202,1,226.06,121.92,IC2,OSCI,,,,"/>
+<approved hash="202,1,254,121.92,IC2,!DSR,,,,"/>
+<approved hash="202,1,254,119.38,IC2,!DCD,,,,"/>
+<approved hash="202,1,254,116.84,IC2,!RI,,,,"/>
+<approved hash="202,1,226.06,127,IC2,!RESET,,,,"/>
+<approved hash="208,1,195.58,342.9,+3V3,sup,,,,"/>
+<approved hash="208,1,411.48,347.98,+3V3,sup,,,,"/>
+<approved hash="208,1,375.92,383.54,+3V3,out,,,,"/>
+<approved hash="208,1,386.08,391.16,+3V3,sup,,,,"/>
+<approved hash="208,1,462.28,332.74,+3V3,sup,,,,"/>
+<approved hash="208,1,462.28,309.88,+3V3,sup,,,,"/>
+<approved hash="208,1,88.9,312.42,+3V3,sup,,,,"/>
+<approved hash="208,1,88.9,266.7,+3V3,sup,,,,"/>
+<approved hash="208,1,88.9,360.68,+3V3,sup,,,,"/>
+<approved hash="208,1,231.14,231.14,+3V3,sup,,,,"/>
+<approved hash="208,1,441.96,284.48,+3V3,sup,,,,"/>
+<approved hash="208,1,431.8,350.52,+3V3,sup,,,,"/>
+<approved hash="208,1,93.98,109.22,+3V3,sup,,,,"/>
+<approved hash="208,1,48.26,142.24,+3V3,sup,,,,"/>
+<approved hash="208,1,104.14,152.4,+3V3,sup,,,,"/>
+<approved hash="208,1,109.22,149.86,+3V3,sup,,,,"/>
 </errors>
 </schematic>
 </drawing>
