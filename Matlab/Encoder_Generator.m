@@ -61,8 +61,8 @@ H = [1, 0, 0, 0, 0, 0;
      0, 0, 0, 0, 1, 0;
      0, 0, 0, 0, 0, 1;];
 
-for i = 0:1:100
-    newTheta = [pi()/6, pi()/6 - i*pi()/10000];
+for i = 0:1:5
+    newTheta = [-pi()/24, -pi()/24];
     thetas = [thetas; newTheta];
     phi = phis(end) + (newTheta(1)-newTheta(2))*(25.5/(27*2));
     phis = [phis; phi];
@@ -96,17 +96,17 @@ for i = 0:1:100
     states = [states, state];
     T1 = 1;
     T2 = 0;
-    T3 = state(3)*cos(state(1)) - state(3)*cos(state(2))*cos(state(1)) + state(3)*sin(state(2))*sin(state(1));
-    T4 = state(3)*sin(state(1))*sin(state(2)) - state(3)*cos(state(1))*cos(state(2));
-    T5 = sin(state(1)) - sin(state(1))*cos(state(2)) - cos(state(1))*sin(state(2));
-    T6 = state(3)*sin(state(1)) - state(3)*sin(state(2))*cos(state(1)) - state(3)*cos(state(2))*sin(state(1));
-    T7 = -1*state(3)*sin(state(1))*cos(state(2)) - state(3)*cos(state(1))*sin(state(2));
-    T8 = -1*cos(state(1)) - sin(state(1))*sin(state(2)) + cos(state(1))*cos(state(2));
-    J = [1, T1, T2,  0,  0;
+    T3 = R*cos(phi) - R*cos(a)*cos(phi) + R*sin(a)*sin(phi);
+    T4 = R*sin(phi)*sin(a) - R*cos(phi)*cos(a);
+    T5 = sin(phi) - sin(phi)*cos(a) - cos(phi)*sin(a);
+    T6 = R*sin(phi) - R*sin(a)*cos(phi) - R*cos(a)*sin(phi);
+    T7 = -R*sin(phi)*cos(a) - R*cos(phi)*sin(a);
+    T8 = -cos(phi) - sin(phi)*sin(a) + cos(phi)*cos(a);
+    J = [1,  1,  0,  0,  0;
          0,  1,  0,  0,  0;
          0,  0,  1,  0,  0;
-         T3, T4, T5, 1,  0;
-         T6, T7, T8, 0,  1;];
+         T3, 0, T5, 1,  0;
+         T6, 0, T8, 0,  1;];
     pred = J*state;
     preds = [preds, pred];
     points = [points; newPoint]; %newVel, newAccel];
@@ -155,7 +155,9 @@ end
 
 est = transpose(est);
 close all;
-plot(points(:,1), points(:,2), 'kx')
+plot(states(4,:), states(5,:), 'kx')
+hold on
+plot(preds(4,:), preds(5,:), 'bx')
 % hold on;
 % plot(samples(:,1), samples(:,2), 'rx')
 % hold on
