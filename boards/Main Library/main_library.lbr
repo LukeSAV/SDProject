@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="8.5.2">
+<eagle version="9.2.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -7885,6 +7885,30 @@ Number of rows: &lt;b&gt;2&lt;/b&gt;&lt;b&gt;&lt;P&gt;
 <attribute name="MP" value="1825910-6"/>
 <attribute name="PACKAGE" value="None"/>
 <attribute name="TE_PURCHASE_URL" value="https://www.te.com/usa-en/product-1825910-6.html?te_bu=Cor&amp;te_type=disp&amp;te_campaign=seda_glo_cor-seda-global-disp-prtnr-fy19-seda-model-bom-cta_sma-317_1&amp;elqCampaignId=32493"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="0ZCJ0050FF2G" prefix="R">
+<description>PTC Resettable Fuse100A 8VDC T/R</description>
+<gates>
+<gate name="G$1" symbol="0ZCJ0050FF2G" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="RESC3216X125N">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="DESCRIPTION" value=" PTC Resettable Fuse 0.5A_hold_ 1A_trip_ 8VDC 100A 0.4W 0.1s 0.15Ohm SMD Solder Pad 3.5 X 1.8 X 0.55mm T/R "/>
+<attribute name="DIGI-KEY_PART_NUMBER" value="507-1802-1-ND"/>
+<attribute name="DIGI-KEY_PURCHASE_URL" value="https://www.digikey.com/product-detail/en/bel-fuse-inc/0ZCJ0050FF2G/507-1802-1-ND/4156236?utm_source=snapeda&amp;utm_medium=aggregator&amp;utm_campaign=symbol"/>
+<attribute name="MF" value="Bel Fuse"/>
+<attribute name="MP" value="0ZCJ0050FF2G"/>
+<attribute name="PACKAGE" value="1206 Bel Fuse"/>
 </technology>
 </technologies>
 </device>

@@ -1,10 +1,10 @@
 /**
   ******************************************************************************
   * @file    main.c
-  * @author  Ac6
+  * @author  Luke Armbruster
   * @version V1.0
-  * @date    01-December-2013
-  * @brief   Default main function.
+  * @date    11-January-2019
+  * @brief   Main file for D2U microcontroller source.
   ******************************************************************************
 */
 
