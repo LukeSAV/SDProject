@@ -4550,6 +4550,22 @@ Please make sure your boards conform to these design rules.
 <contactref element="R6" pad="2"/>
 <wire x1="18.034" y1="45.529" x2="16.095" y2="47.468" width="0.2032" layer="16"/>
 <wire x1="13.876" y1="47.468" x2="16.095" y2="47.468" width="0.2032" layer="16"/>
+<polygon width="0.254" layer="1">
+<vertex x="0.254" y="0.254"/>
+<vertex x="101.346" y="0.254"/>
+<vertex x="101.346" y="0.762"/>
+<vertex x="101.346" y="75.946"/>
+<vertex x="99.822" y="75.946"/>
+<vertex x="0.254" y="75.946"/>
+<vertex x="0.254" y="75.692"/>
+</polygon>
+<polygon width="0.254" layer="16">
+<vertex x="0.254" y="0.254"/>
+<vertex x="101.346" y="0.254"/>
+<vertex x="101.346" y="75.946"/>
+<vertex x="0.254" y="75.946"/>
+<vertex x="0.254" y="75.692"/>
+</polygon>
 </signal>
 <signal name="D+_GPS">
 <contactref element="CN1" pad="D+"/>
