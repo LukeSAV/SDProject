@@ -175,9 +175,9 @@
 <text x="55.118" y="53.086" size="0.8128" layer="25">+3V3</text>
 <text x="73.914" y="50.292" size="0.8128" layer="25">LEFT ENCODER</text>
 <text x="73.66" y="42.418" size="0.8128" layer="25">RIGHT ENCODER</text>
-<text x="30.988" y="4.318" size="0.8128" layer="26">US1</text>
-<text x="39.37" y="4.318" size="0.8128" layer="26">US2</text>
-<text x="48.006" y="4.318" size="0.8128" layer="26">US3</text>
+<text x="30.988" y="4.318" size="0.8128" layer="25">US1</text>
+<text x="39.37" y="4.318" size="0.8128" layer="25">US2</text>
+<text x="48.006" y="4.318" size="0.8128" layer="25">US3</text>
 <text x="75.184" y="71.882" size="0.6096" layer="25">Tantalum</text>
 <text x="75.438" y="27.686" size="0.6096" layer="25" rot="R90">Tantalum</text>
 <text x="8.128" y="1.27" size="1.016" layer="25">Luke Armbruster</text>
@@ -190,6 +190,20 @@
 <text x="1.524" y="9.652" size="0.8128" layer="25" rot="R90">12V TO 5V SWR</text>
 <text x="11.43" y="3.556" size="0.8128" layer="25">MC S1</text>
 <text x="12.446" y="19.304" size="0.6096" layer="25" rot="R48.8">RST FUSE</text>
+<text x="47.752" y="74.168" size="0.8128" layer="25">Display</text>
+<text x="28.194" y="74.168" size="0.8128" layer="25">Jetson</text>
+<text x="64.77" y="69.088" size="0.6096" layer="25">CTS</text>
+<text x="64.77" y="71.628" size="0.6096" layer="25">GND</text>
+<text x="64.77" y="66.802" size="0.6096" layer="25">+3V3J</text>
+<text x="64.77" y="64.262" size="0.6096" layer="25">TX</text>
+<text x="64.77" y="61.722" size="0.6096" layer="25">RX</text>
+<text x="64.77" y="59.182" size="0.6096" layer="25">RTS</text>
+<text x="84.582" y="15.24" size="0.6096" layer="25" rot="R90">+3V3J</text>
+<text x="89.662" y="15.24" size="0.6096" layer="25" rot="R90">TX</text>
+<text x="92.202" y="15.24" size="0.6096" layer="25" rot="R90">RTS</text>
+<text x="87.122" y="15.24" size="0.6096" layer="25" rot="R90">RX</text>
+<text x="82.042" y="15.24" size="0.6096" layer="25" rot="R90">CTS</text>
+<text x="79.248" y="15.24" size="0.6096" layer="25" rot="R90">GND</text>
 </plain>
 <libraries>
 <library name="adafruit">
