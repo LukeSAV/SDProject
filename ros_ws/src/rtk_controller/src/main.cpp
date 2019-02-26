@@ -121,7 +121,7 @@ int main(int argc, char **argv)
             cmd_pub.publish(pub_msg);
             left_speed = right_speed = 90;
         }
-        elapsed_time = cur_time - start_landmark;
+        /*elapsed_time = cur_time - start_landmark;
         if(elapsed_time.count() > 5.0f) { // Check the nearest landmark every 5 seconds
             //ROS_INFO("%lf, %lf", cur_coord.first, cur_coord.second);
             std::string closestLandmarkKey = MapData::getClosestLandmark(cur_coord);
@@ -133,7 +133,7 @@ int main(int argc, char **argv)
                 }
             }
             start_landmark = std::chrono::system_clock::now();
-        }
+        }*/
 
         ros::spinOnce();
         r.sleep();
