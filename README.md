@@ -80,7 +80,7 @@ Nodes:
 
 - joy_node: 
   - Publishes - joy (Type: Joy)
-  - Subscribes - None 
+    - Subscribes - None 
 
 ##### rc
 
@@ -92,7 +92,7 @@ Nodes:
   - Publishes - None
   - Subscribes - joy (Type: Joy)
 
-##### serial_int
+##### serial
 
 This package will interface with the UART pins on the Jetson. 
 
@@ -100,4 +100,14 @@ Nodes:
 
 - serial_node:
   - Publishes - None
+  - Subscribes - packet (Type: String)
+
+##### path_planning
+
+This package contains the path_planning_node that uses the adjusted robot position and map provided by the perception layer to plan a local path that targets global waypoints.
+
+Nodes:
+
+- path_planning_node:
+  - Publishes - packet (Type: String)
   - Subscribes - TBD
