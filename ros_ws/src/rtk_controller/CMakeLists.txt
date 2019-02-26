@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  rtk
 )
 
 catkin_python_setup()
@@ -16,7 +17,7 @@ catkin_python_setup()
 catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES rtk_controller
-  CATKIN_DEPENDS roscpp rospy std_msgs
+  CATKIN_DEPENDS roscpp rospy std_msgs rtk
 #  DEPENDS system_lib
 )
 include(CheckIncludeFiles)

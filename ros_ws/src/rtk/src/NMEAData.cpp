@@ -4,8 +4,11 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <exception>
 #include "std_msgs/String.h"
+#include "sensor_msgs/NavSatFix.h"
 #include "../include/NMEAData.h"
+#include "rtk/HeadingSpeed.h"
 
 std::string NMEAData::gpgga_msg;
 std::string NMEAData::gpvtg_msg;
@@ -23,7 +26,7 @@ NMEAData::NMEAData() {
 NMEAData::~NMEAData() {
 }
 
-std::pair<double, double> NMEAData::getLatLon() { // Get latitude and longitude from live gpgga message
+void NMEAData::popMsg(sensor_msgs::NavSatFix &msg) { // Populate NavSatFix message from GPGGA
 	double cur_lat = 0.0;
 	double cur_lon = 0.0;
 	std::vector<std::string> gpgga_delineated;
@@ -35,9 +38,10 @@ std::pair<double, double> NMEAData::getLatLon() { // Get latitude and longitude 
 		std::getline(ss, substr, ',');
 		gpgga_delineated.push_back(substr);
 	}
-	if(gpgga_delineated.size() > 6) {
+	if(gpgga_delineated.size() >= 10) {
 		std::string lat_gpgga = gpgga_delineated[2];
 		std::string lon_gpgga = gpgga_delineated[4];
+		std::string alt_gpgga = gpgga_delineated[9];
 		
 		double lat_degrees = std::stod(lat_gpgga.substr(0,2));
 		double lat_minutes = std::stod(lat_gpgga.substr(2));
@@ -45,10 +49,38 @@ std::pair<double, double> NMEAData::getLatLon() { // Get latitude and longitude 
 		double lon_degrees = std::stod(lon_gpgga.substr(0,3));
 		double lon_minutes = std::stod(lon_gpgga.substr(3));
 		
-		cur_lat = lat_degrees + lat_minutes / 60.0; // Assuming always north
-		cur_lon = -1.0 * (lon_degrees + lon_minutes / 60.0); // Cheating and assuming always west
+		msg.latitude = lat_degrees + lat_minutes / 60.0; // Cheating and assuming always northern hemisphere
+		msg.longitude = -1.0 * (lon_degrees + lon_minutes / 60.0); // Cheating and assuming always western hemisphere
+		msg.altitude = std::stod(alt_gpgga); 
+		msg.status.status = std::stoi(gpgga_delineated[6]); // Position fix status
+		msg.status.service = std::stoi(gpgga_delineated[7]); // Number of satellites in view
 	}
-	return std::pair<double, double>(cur_lat, cur_lon);
+}
+
+void NMEAData::popHSMessage(rtk::HeadingSpeed &msg) {
+	double heading = 0.0;
+	double speed = 0.0;
+	std::vector<std::string> gpvtg_delineated;
+	gpvtg_mu.lock();
+	std::stringstream ss(gpvtg_msg);
+	gpvtg_mu.unlock();
+	while(ss.good()) {
+		std::string substr;
+		std::getline(ss, substr, ',');
+		gpvtg_delineated.push_back(substr);
+	}
+	if(gpvtg_delineated.size() >= 8) {
+		if(gpvtg_delineated[1] != "" && gpvtg_delineated[7] != "") {
+			try {
+				double heading = std::stod(gpvtg_delineated[1]);
+				double speed = std::stod(gpvtg_delineated[7]);
+				msg.heading = heading;
+				msg.speed = speed;
+			} catch(const std::invalid_argument &ia) {
+				ROS_ERROR("Invalid argument for GPVTG message");
+			}
+		}
+	}
 }
 
 void NMEAData::parseNMEA(char* read_buf, int readBytes, ros::Publisher gpgga_pub, ros::Publisher gpvtg_pub) { // Make sense of what's in the read buffer and pull out the GPGGA string if there is one
@@ -102,8 +134,10 @@ void NMEAData::parseNMEA(char* read_buf, int readBytes, ros::Publisher gpgga_pub
 	if(new_gpgga != "" && new_gpgga.size() == 88 && new_gpgga.substr(17, 4) != "0000" && new_gpgga.substr(30, 5) != "00000") { // Check that the message is at least feasible
 		gpgga_mu.lock();
 		gpgga_msg = new_gpgga;
-		std_msgs::String msg;
-		msg.data = new_gpgga;
+		gpgga_mu.unlock();
+		sensor_msgs::NavSatFix msg;
+		popMsg(msg);
+		gpgga_mu.lock();
 		gpgga_pub.publish(msg);
 		gpgga_ready.store(true); // Signal that a new GPGGA string was added
 		gpgga_mu.unlock();
@@ -111,8 +145,9 @@ void NMEAData::parseNMEA(char* read_buf, int readBytes, ros::Publisher gpgga_pub
 	if(new_gpvtg != "") { // Check that the message is at least feasible
 		gpvtg_mu.lock();
 		gpvtg_msg = new_gpvtg;
-		std_msgs::String msg;
-		msg.data = new_gpvtg;
+		gpvtg_mu.unlock();
+		rtk::HeadingSpeed msg;
+		popHSMessage(msg);
 		gpvtg_pub.publish(msg);
 		gpvtg_ready.store(true); // Signal that a new GPVTG string was added
 		gpvtg_mu.unlock();

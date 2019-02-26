@@ -48,7 +48,9 @@
 #include <thread>
 #include "ros/ros.h"
 #include "std_msgs/String.h"
+#include "sensor_msgs/NavSatFix.h"
 #include "../include/NMEAData.h"
+#include "rtk/HeadingSpeed.h"
 #include "../include/serial.h"
 
 typedef int sockettype;
@@ -240,8 +242,8 @@ int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "rtk_gps_node");
 	ros::NodeHandle nh;
-	ros::Publisher gpgga_pub = nh.advertise<std_msgs::String>("rtk_gpgga", 1000);
-	ros::Publisher gpvtg_pub = nh.advertise<std_msgs::String>("rtk_gpvtg", 1000);
+	ros::Publisher gpgga_pub = nh.advertise<sensor_msgs::NavSatFix>("rtk_gpgga", 1000);
+	ros::Publisher gpvtg_pub = nh.advertise<rtk::HeadingSpeed>("rtk_gpvtg", 1000);
 
 	while(ros::ok()) {
 		struct Args args;
