@@ -3,7 +3,7 @@
 <eagle version="9.2.2">
 <drawing>
 <settings>
-<setting alwaysvectorfont="no"/>
+<setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
 <grid distance="10" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
@@ -155,7 +155,7 @@
 <layer number="255" name="routoute" color="7" fill="1" visible="yes" active="yes"/>
 </layers>
 <board>
-<fusionsync huburn="a.cGVyc29uYWw6dWUyYTZiNjY2" projecturn="a.cGVyc29uYWw6dWUyYTZiNjY2I0QyMDE4MDEyNjExNDM0NjI1Ng" f3durn="urn:adsk.wipprod:dm.lineage:n0fbRr_KT-25qyjz7S21eg" pcbguid="6d30f37e-4e16-49f5-a01d-9dac6a8f2f00" lastpulledtime="" lastsyncedchangeguid="b89508fb-dbec-dd2d-4bc5-ea25bebb0203"/>
+<fusionsync huburn="a.cGVyc29uYWw6dWUyYTZiNjY2" projecturn="a.cGVyc29uYWw6dWUyYTZiNjY2I0QyMDE4MDEyNjExNDM0NjI1Ng" f3durn="urn:adsk.wipprod:dm.lineage:n0fbRr_KT-25qyjz7S21eg" pcbguid="6d30f37e-4e16-49f5-a01d-9dac6a8f2f00" lastpulledtime="" lastsyncedchangeguid="ef3b70f1-9224-e6b0-8260-5063a8435d01"/>
 <plain>
 <wire x1="0" y1="0" x2="101.6" y2="0" width="0" layer="20"/>
 <wire x1="101.6" y1="0" x2="101.6" y2="76.2" width="0" layer="20"/>
@@ -4791,9 +4791,7 @@ Please make sure your boards conform to these design rules.
 <via x="50.546" y="37.084" extent="1-16" drill="0.35"/>
 <wire x1="49.596" y1="38.034" x2="49.596" y2="40.188" width="0.3048" layer="16"/>
 <wire x1="50.546" y1="37.084" x2="49.596" y2="38.034" width="0.3048" layer="16"/>
-<wire x1="58.42" y1="33.02" x2="55.118" y2="29.718" width="0.2032" layer="1"/>
-<wire x1="58.42" y1="33.02" x2="58.42" y2="39.116" width="0.2032" layer="1"/>
-<wire x1="58.42" y1="39.116" x2="59.944" y2="40.64" width="0.2032" layer="1"/>
+<wire x1="59.944" y1="40.64" x2="58.42" y2="39.116" width="0.2032" layer="1"/>
 <via x="59.944" y="40.64" extent="1-16" drill="0.35"/>
 <wire x1="59.944" y1="40.64" x2="68.453" y2="40.64" width="0.2032" layer="16"/>
 <wire x1="68.453" y1="40.64" x2="70.739" y2="42.926" width="0.2032" layer="16"/>
@@ -4818,7 +4816,6 @@ Please make sure your boards conform to these design rules.
 <wire x1="22.66" y1="29.772" x2="22.606" y2="29.718" width="0.2032" layer="1"/>
 <wire x1="22.66" y1="26.4692" x2="22.66" y2="29.664" width="0.4064" layer="1"/>
 <wire x1="22.66" y1="29.664" x2="22.606" y2="29.718" width="0.2032" layer="1"/>
-<wire x1="55.118" y1="29.718" x2="53.594" y2="29.718" width="0.2032" layer="1"/>
 <contactref element="U4" pad="1"/>
 <wire x1="18.49" y1="60.0335" x2="18.99" y2="60.0335" width="0.2032" layer="1"/>
 <wire x1="18.99" y1="60.0335" x2="18.99" y2="60.385" width="0.2032" layer="1"/>
@@ -4871,6 +4868,8 @@ Please make sure your boards conform to these design rules.
 <wire x1="57.658" y1="62.484" x2="56.6166" y2="62.484" width="0.254" layer="1"/>
 <wire x1="58.166" y1="54.356" x2="58.166" y2="61.976" width="0.254" layer="1"/>
 <wire x1="51.463" y1="53.876" x2="53.032" y2="53.876" width="0.2032" layer="1"/>
+<wire x1="58.42" y1="30.006" x2="58.166" y2="29.752" width="0.2032" layer="1"/>
+<wire x1="58.42" y1="39.116" x2="58.42" y2="30.006" width="0.2032" layer="1"/>
 </signal>
 <signal name="N$6">
 <contactref element="IC1" pad="23"/>
