@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.3.0">
+<eagle version="9.2.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -37767,7 +37767,7 @@ high speed (Philips)</description>
 <wire x1="109.22" y1="149.86" x2="109.22" y2="147.32" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$34" class="0">
+<net name="BOOT0" class="0">
 <segment>
 <pinref part="U2" gate="G$1" pin="BOOT0"/>
 <pinref part="R18" gate="G$1" pin="1"/>
@@ -38270,7 +38270,7 @@ high speed (Philips)</description>
 <label x="439.42" y="292.1" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="N$43" class="0">
+<net name="RESET" class="0">
 <segment>
 <wire x1="220.98" y1="297.18" x2="220.98" y2="325.12" width="0.1524" layer="91"/>
 <pinref part="C13" gate="G$1" pin="1"/>
@@ -38644,7 +38644,7 @@ high speed (Philips)</description>
 <wire x1="426.72" y1="281.94" x2="424.18" y2="281.94" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$13" class="0">
+<net name="LED" class="0">
 <segment>
 <pinref part="RX2" gate="G$1" pin="C"/>
 <pinref part="U2" gate="G$1" pin="PB4/SPI1_MISO/TIM17_BKIN/TIM3_CH1/EVENTOUT"/>
@@ -38726,7 +38726,7 @@ high speed (Philips)</description>
 <junction x="38.1" y="93.98"/>
 </segment>
 </net>
-<net name="N$11" class="0">
+<net name="CAP" class="0">
 <segment>
 <pinref part="U$3" gate="G$1" pin="CAP"/>
 <pinref part="C6" gate="G$1" pin="2"/>
