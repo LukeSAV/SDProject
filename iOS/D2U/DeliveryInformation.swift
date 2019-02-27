@@ -25,6 +25,7 @@ class DeliveryInformation {
     let userLocColor:UIColor = UIColor(red: 0.0/255.0, green: 100.0/255.0, blue: 115.0/255.0, alpha: 1.0)
     let robotLocColor:UIColor = UIColor(red: 77.0/255.0, green: 64.0/255.0, blue: 56.0/255.0, alpha: 1.0)
     
+    let defaultCoord = CLLocationCoordinate2D(latitude: 40.425021, longitude: -86.914325) // Default to a special location
     
     let PMUFrontLawnLat = 40.424449
     let PMUFrontLawnLon = -86.911106
