@@ -108,6 +108,11 @@ int main(void) {
 
 	//Drive(FORWARD, 20, FORWARD, 20);
 	for(;;) {
+		if(mc_tx_buffer_index == 0) {
+			mc_tx_buffer[0] = 'A';
+			USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
+
+		}
 	}
 }
 
