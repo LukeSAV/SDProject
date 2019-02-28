@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.3.0">
+<eagle version="9.3.1">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -31155,32 +31155,6 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="9.35" y1="3.95" x2="9.85" y2="3.95" width="0.127" layer="21"/>
 <text x="0.486" y="0.447" size="0.762" layer="51" font="vector" ratio="15">XH</text>
 </package>
-<package name="MURATA_SWITCHING_REG">
-<description>&lt;b&gt;VOLTAGE REGULATOR&lt;/b&gt;</description>
-<circle x="-4.6228" y="-4.4704" radius="0.254" width="0" layer="21"/>
-<pad name="IN" x="-2.54" y="-1.27" drill="1.016" shape="long" rot="R90"/>
-<pad name="GND" x="0" y="-1.27" drill="1.016" shape="long" rot="R90"/>
-<pad name="OUT" x="2.54" y="-1.27" drill="1.016" shape="long" rot="R90"/>
-<text x="-5.08" y="-7.3152" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-<text x="-5.08" y="-10.16" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
-<text x="-0.381" y="-4.445" size="1.27" layer="51" ratio="10">-</text>
-<text x="-3.175" y="-4.699" size="1.27" layer="51" ratio="10">I</text>
-<text x="2.413" y="-4.445" size="1.27" layer="51" ratio="10">O</text>
-<rectangle x1="-5.334" y1="0.762" x2="-3.429" y2="2.032" layer="21"/>
-<rectangle x1="-3.429" y1="1.27" x2="-1.651" y2="2.032" layer="21"/>
-<rectangle x1="-1.651" y1="0.762" x2="-0.889" y2="2.032" layer="21"/>
-<rectangle x1="-0.889" y1="1.27" x2="0.889" y2="2.032" layer="21"/>
-<rectangle x1="0.889" y1="0.762" x2="1.651" y2="2.032" layer="21"/>
-<rectangle x1="1.651" y1="1.27" x2="3.429" y2="2.032" layer="21"/>
-<rectangle x1="3.429" y1="0.762" x2="5.334" y2="2.032" layer="21"/>
-<rectangle x1="-3.429" y1="0.762" x2="-1.651" y2="1.27" layer="51"/>
-<rectangle x1="-0.889" y1="0.762" x2="0.889" y2="1.27" layer="51"/>
-<rectangle x1="1.651" y1="0.762" x2="3.429" y2="1.27" layer="51"/>
-<wire x1="-5.588" y1="4.318" x2="-5.588" y2="-5.334" width="0.127" layer="21"/>
-<wire x1="-5.588" y1="-5.334" x2="5.588" y2="-5.334" width="0.127" layer="21"/>
-<wire x1="5.588" y1="-5.334" x2="5.588" y2="4.318" width="0.127" layer="21"/>
-<wire x1="5.588" y1="4.318" x2="-5.588" y2="4.318" width="0.127" layer="21"/>
-</package>
 <package name="2_PIN_JST-XH">
 <description>Corrected for XH 2 pin &lt;br&gt;
 dmf 4.10.15 &lt;br&gt;
@@ -31564,20 +31538,6 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <pin name="P$2" x="5.08" y="0" length="middle" rot="R90"/>
 <pin name="P$3" x="7.62" y="0" length="middle" rot="R90"/>
 </symbol>
-<symbol name="78XX">
-<wire x1="-5.08" y1="-5.08" x2="5.08" y2="-5.08" width="0.4064" layer="94"/>
-<wire x1="5.08" y1="-5.08" x2="5.08" y2="2.54" width="0.4064" layer="94"/>
-<wire x1="5.08" y1="2.54" x2="-5.08" y2="2.54" width="0.4064" layer="94"/>
-<wire x1="-5.08" y1="2.54" x2="-5.08" y2="-5.08" width="0.4064" layer="94"/>
-<text x="2.54" y="-7.62" size="1.778" layer="95">&gt;NAME</text>
-<text x="2.54" y="-10.16" size="1.778" layer="96">&gt;VALUE</text>
-<text x="-2.032" y="-4.318" size="1.524" layer="95">GND</text>
-<text x="-4.445" y="-0.635" size="1.524" layer="95">IN</text>
-<text x="0.635" y="-0.635" size="1.524" layer="95">OUT</text>
-<pin name="IN" x="-7.62" y="0" visible="off" length="short" direction="in"/>
-<pin name="GND" x="0" y="-7.62" visible="off" length="short" direction="in" rot="R90"/>
-<pin name="OUT" x="7.62" y="0" visible="off" length="short" direction="pas" rot="R180"/>
-</symbol>
 <symbol name="2_PIN_JST-XH">
 <wire x1="-2.54" y1="-2.62" x2="-0.04" y2="-2.62" width="0.254" layer="94"/>
 <wire x1="-0.04" y1="-2.62" x2="4.92" y2="-2.62" width="0.254" layer="94"/>
@@ -31704,24 +31664,6 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <connect gate="G$1" pin="P$1" pad="P$1"/>
 <connect gate="G$1" pin="P$2" pad="P$2"/>
 <connect gate="G$1" pin="P$3" pad="P$3"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-<deviceset name="MURATA_SWITCHING_REG" prefix="IC" uservalue="yes">
-<description>&lt;b&gt;VOLTAGE REGULATOR&lt;/b&gt;</description>
-<gates>
-<gate name="1" symbol="78XX" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="MURATA_SWITCHING_REG">
-<connects>
-<connect gate="1" pin="GND" pad="GND"/>
-<connect gate="1" pin="IN" pad="IN"/>
-<connect gate="1" pin="OUT" pad="OUT"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -36749,6 +36691,77 @@ high speed (Philips)</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="SamacSys_Parts">
+<description>&lt;b&gt;https://componentsearchengine.com&lt;/b&gt;&lt;p&gt;
+&lt;author&gt;Created by SamacSys&lt;/author&gt;</description>
+<packages>
+<package name="MURATACASEC72">
+<description>&lt;b&gt;MurataCaseC72&lt;/b&gt;&lt;br&gt;
+</description>
+<pad name="1" x="6.8" y="0" drill="1.01" diameter="1.51"/>
+<pad name="2" x="5.1" y="0" drill="1.01" diameter="1.51"/>
+<pad name="3" x="3.4" y="0" drill="1.01" diameter="1.51"/>
+<pad name="4" x="1.7" y="0" drill="1.01" diameter="1.51"/>
+<pad name="5" x="0" y="0" drill="1.01" diameter="1.51"/>
+<text x="3.116" y="1.368" size="1.27" layer="25" align="center">&gt;NAME</text>
+<text x="3.116" y="1.368" size="1.27" layer="27" align="center">&gt;VALUE</text>
+<wire x1="-1.8" y1="1.75" x2="8.6" y2="1.75" width="0.2" layer="21"/>
+<wire x1="8.6" y1="1.75" x2="8.6" y2="-3.85" width="0.2" layer="21"/>
+<wire x1="8.6" y1="-3.85" x2="-1.8" y2="-3.85" width="0.2" layer="21"/>
+<wire x1="-1.8" y1="-3.85" x2="-1.8" y2="1.75" width="0.2" layer="21"/>
+<wire x1="-1.8" y1="1.75" x2="8.6" y2="1.75" width="0.2" layer="51"/>
+<wire x1="8.6" y1="1.75" x2="8.6" y2="-3.85" width="0.2" layer="51"/>
+<wire x1="8.6" y1="-3.85" x2="-1.8" y2="-3.85" width="0.2" layer="51"/>
+<wire x1="-1.8" y1="-3.85" x2="-1.8" y2="1.75" width="0.2" layer="51"/>
+<circle x="9.605" y="0.011" radius="0.15815" width="0.4" layer="25"/>
+</package>
+</packages>
+<symbols>
+<symbol name="OKR-T_3-W12-C">
+<wire x1="5.08" y1="2.54" x2="53.34" y2="2.54" width="0.254" layer="94"/>
+<wire x1="53.34" y1="-7.62" x2="53.34" y2="2.54" width="0.254" layer="94"/>
+<wire x1="53.34" y1="-7.62" x2="5.08" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="5.08" y1="2.54" x2="5.08" y2="-7.62" width="0.254" layer="94"/>
+<text x="54.61" y="7.62" size="1.778" layer="95" align="center-left">&gt;NAME</text>
+<text x="54.61" y="5.08" size="1.778" layer="96" align="center-left">&gt;VALUE</text>
+<pin name="REMOTE_ON/OFF_CONTROL" x="0" y="0" length="middle"/>
+<pin name="+VIN" x="0" y="-2.54" length="middle" direction="in"/>
+<pin name="GROUND" x="0" y="-5.08" length="middle"/>
+<pin name="+VOUT" x="58.42" y="0" length="middle" direction="out" rot="R180"/>
+<pin name="OUTPUT_TRIM" x="58.42" y="-2.54" length="middle" direction="out" rot="R180"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="OKR-T_3-W12-C" prefix="IC">
+<description>&lt;b&gt;Non-Isolated DC-DC Converter 12V dc Input, 0.591 ??6V dc Output, 3A%0 &lt;/b&gt;&lt;p&gt;
+Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&gt; Datasheet &lt;/a&gt;</description>
+<gates>
+<gate name="G$1" symbol="OKR-T_3-W12-C" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="MURATACASEC72">
+<connects>
+<connect gate="G$1" pin="+VIN" pad="2"/>
+<connect gate="G$1" pin="+VOUT" pad="4"/>
+<connect gate="G$1" pin="GROUND" pad="3"/>
+<connect gate="G$1" pin="OUTPUT_TRIM" pad="5"/>
+<connect gate="G$1" pin="REMOTE_ON/OFF_CONTROL" pad="1"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="DESCRIPTION" value="Non-Isolated DC-DC Converter 12V dc Input, 0.591 ??6V dc Output, 3A%0 " constant="no"/>
+<attribute name="HEIGHT" value="mm" constant="no"/>
+<attribute name="MANUFACTURER_NAME" value="Murata Electronics" constant="no"/>
+<attribute name="MANUFACTURER_PART_NUMBER" value="OKR-T/3-W12-C" constant="no"/>
+<attribute name="MOUSER_PART_NUMBER" value="580-OKR-T/3-W12-C" constant="no"/>
+<attribute name="MOUSER_PRICE-STOCK" value="https://www.mouser.com/Search/Refine.aspx?Keyword=580-OKR-T%2F3-W12-C" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -36861,7 +36874,6 @@ high speed (Philips)</description>
 <part name="GND21" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="+3V1" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
 <part name="+3V2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
-<part name="IC3" library="main_library" deviceset="MURATA_SWITCHING_REG" device=""/>
 <part name="GND22" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="J2" library="main_library" deviceset="2_PIN_JST-XH" device=""/>
 <part name="GND23" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -36962,6 +36974,9 @@ high speed (Philips)</description>
 <part name="JP9" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:22485/2"/>
 <part name="JP10" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:22485/2"/>
 <part name="GND46" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="IC4" library="SamacSys_Parts" deviceset="OKR-T_3-W12-C" device=""/>
+<part name="R36" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="270"/>
+<part name="GND47" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -37157,16 +37172,12 @@ high speed (Philips)</description>
 <instance part="+3V2" gate="G$1" x="411.48" y="350.52" smashed="yes">
 <attribute name="VALUE" x="408.94" y="345.44" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="IC3" gate="1" x="299.72" y="383.54" smashed="yes">
-<attribute name="NAME" x="302.26" y="375.92" size="1.778" layer="95"/>
-<attribute name="VALUE" x="302.26" y="373.38" size="1.778" layer="96"/>
+<instance part="GND22" gate="1" x="241.3" y="368.3" smashed="yes">
+<attribute name="VALUE" x="238.76" y="365.76" size="1.778" layer="96"/>
 </instance>
-<instance part="GND22" gate="1" x="299.72" y="373.38" smashed="yes">
-<attribute name="VALUE" x="297.18" y="370.84" size="1.778" layer="96"/>
-</instance>
-<instance part="J2" gate="G$1" x="266.7" y="381" smashed="yes" rot="R90"/>
-<instance part="GND23" gate="1" x="279.4" y="375.92" smashed="yes">
-<attribute name="VALUE" x="276.86" y="373.38" size="1.778" layer="96"/>
+<instance part="J2" gate="G$1" x="208.28" y="378.46" smashed="yes" rot="R90"/>
+<instance part="GND23" gate="1" x="220.98" y="373.38" smashed="yes">
+<attribute name="VALUE" x="218.44" y="370.84" size="1.778" layer="96"/>
 </instance>
 <instance part="P+1" gate="1" x="330.2" y="393.7" smashed="yes">
 <attribute name="VALUE" x="327.66" y="388.62" size="1.778" layer="96" rot="R90"/>
@@ -37193,12 +37204,12 @@ high speed (Philips)</description>
 <instance part="+3V3" gate="G$1" x="386.08" y="393.7" smashed="yes">
 <attribute name="VALUE" x="383.54" y="388.62" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="C17" gate="G$1" x="287.02" y="381" smashed="yes">
-<attribute name="NAME" x="288.036" y="381.635" size="1.778" layer="95"/>
-<attribute name="VALUE" x="288.036" y="376.809" size="1.778" layer="96"/>
+<instance part="C17" gate="G$1" x="228.6" y="378.46" smashed="yes">
+<attribute name="NAME" x="229.616" y="379.095" size="1.778" layer="95"/>
+<attribute name="VALUE" x="229.616" y="374.269" size="1.778" layer="96"/>
 </instance>
-<instance part="GND27" gate="1" x="287.02" y="373.38" smashed="yes">
-<attribute name="VALUE" x="284.48" y="370.84" size="1.778" layer="96"/>
+<instance part="GND27" gate="1" x="228.6" y="370.84" smashed="yes">
+<attribute name="VALUE" x="226.06" y="368.3" size="1.778" layer="96"/>
 </instance>
 <instance part="+3V4" gate="G$1" x="462.28" y="335.28" smashed="yes">
 <attribute name="VALUE" x="459.74" y="330.2" size="1.778" layer="96" rot="R90"/>
@@ -37660,11 +37671,11 @@ high speed (Philips)</description>
 <instance part="C31" gate="G$1" x="309.88" y="388.62" smashed="yes" rot="R180">
 <attribute name="VALUE" x="308.864" y="392.811" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="C32" gate="G$1" x="287.02" y="388.62" smashed="yes" rot="R180">
-<attribute name="VALUE" x="286.004" y="392.811" size="1.778" layer="96" rot="R180"/>
+<instance part="C32" gate="G$1" x="228.6" y="386.08" smashed="yes" rot="R180">
+<attribute name="VALUE" x="227.584" y="390.271" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="GND44" gate="1" x="287.02" y="398.78" smashed="yes" rot="R180">
-<attribute name="VALUE" x="289.56" y="401.32" size="1.778" layer="96" rot="R180"/>
+<instance part="GND44" gate="1" x="228.6" y="396.24" smashed="yes" rot="R180">
+<attribute name="VALUE" x="231.14" y="398.78" size="1.778" layer="96" rot="R180"/>
 </instance>
 <instance part="GND45" gate="1" x="309.88" y="398.78" smashed="yes" rot="R180">
 <attribute name="VALUE" x="312.42" y="401.32" size="1.778" layer="96" rot="R180"/>
@@ -37689,6 +37700,15 @@ high speed (Philips)</description>
 </instance>
 <instance part="GND46" gate="1" x="424.18" y="200.66" smashed="yes">
 <attribute name="VALUE" x="421.64" y="198.12" size="1.778" layer="96"/>
+</instance>
+<instance part="IC4" gate="G$1" x="243.84" y="383.54" smashed="yes">
+<attribute name="VALUE" x="298.45" y="388.62" size="1.778" layer="96" align="center-left"/>
+</instance>
+<instance part="R36" gate="G$1" x="302.26" y="373.38" smashed="yes" rot="R90">
+<attribute name="VALUE" x="300.482" y="369.57" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="GND47" gate="1" x="302.26" y="363.22" smashed="yes">
+<attribute name="VALUE" x="299.72" y="360.68" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -37984,14 +38004,10 @@ high speed (Philips)</description>
 <junction x="411.48" y="236.22"/>
 </segment>
 <segment>
-<pinref part="IC3" gate="1" pin="GND"/>
-<pinref part="GND22" gate="1" pin="GND"/>
-</segment>
-<segment>
 <pinref part="J2" gate="G$1" pin="P$1"/>
 <pinref part="GND23" gate="1" pin="GND"/>
-<wire x1="274.32" y1="381" x2="279.4" y2="381" width="0.1524" layer="91"/>
-<wire x1="279.4" y1="381" x2="279.4" y2="378.46" width="0.1524" layer="91"/>
+<wire x1="215.9" y1="378.46" x2="220.98" y2="378.46" width="0.1524" layer="91"/>
+<wire x1="220.98" y1="378.46" x2="220.98" y2="375.92" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="C8" gate="G$1" pin="2"/>
@@ -38286,7 +38302,7 @@ high speed (Philips)</description>
 <segment>
 <pinref part="GND44" gate="1" pin="GND"/>
 <pinref part="C32" gate="G$1" pin="2"/>
-<wire x1="287.02" y1="396.24" x2="287.02" y2="393.7" width="0.1524" layer="91"/>
+<wire x1="228.6" y1="393.7" x2="228.6" y2="391.16" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="C31" gate="G$1" pin="2"/>
@@ -38304,6 +38320,17 @@ high speed (Philips)</description>
 <wire x1="431.8" y1="203.2" x2="431.8" y2="210.82" width="0.1524" layer="91"/>
 <junction x="424.18" y="203.2"/>
 <pinref part="GND46" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="IC4" gate="G$1" pin="GROUND"/>
+<wire x1="243.84" y1="378.46" x2="241.3" y2="378.46" width="0.1524" layer="91"/>
+<pinref part="GND22" gate="1" pin="GND"/>
+<wire x1="241.3" y1="378.46" x2="241.3" y2="370.84" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R36" gate="G$1" pin="1"/>
+<pinref part="GND47" gate="1" pin="GND"/>
+<wire x1="302.26" y1="368.3" x2="302.26" y2="365.76" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$36" class="0">
@@ -38549,14 +38576,14 @@ high speed (Philips)</description>
 <net name="12V_IN" class="0">
 <segment>
 <pinref part="J2" gate="G$1" pin="P$2"/>
-<pinref part="IC3" gate="1" pin="IN"/>
-<wire x1="274.32" y1="383.54" x2="287.02" y2="383.54" width="0.1524" layer="91"/>
+<wire x1="215.9" y1="381" x2="228.6" y2="381" width="0.1524" layer="91"/>
 <pinref part="C17" gate="G$1" pin="+"/>
-<wire x1="287.02" y1="383.54" x2="292.1" y2="383.54" width="0.1524" layer="91"/>
-<junction x="287.02" y="383.54"/>
-<label x="276.86" y="383.54" size="1.778" layer="95"/>
+<junction x="228.6" y="381"/>
+<label x="218.44" y="381" size="1.778" layer="95"/>
 <pinref part="C32" gate="G$1" pin="1"/>
-<wire x1="287.02" y1="386.08" x2="287.02" y2="383.54" width="0.1524" layer="91"/>
+<wire x1="228.6" y1="383.54" x2="228.6" y2="381" width="0.1524" layer="91"/>
+<pinref part="IC4" gate="G$1" pin="+VIN"/>
+<wire x1="228.6" y1="381" x2="243.84" y2="381" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$29" class="0">
@@ -39329,8 +39356,6 @@ high speed (Philips)</description>
 </net>
 <net name="N$21" class="0">
 <segment>
-<pinref part="IC3" gate="1" pin="OUT"/>
-<wire x1="307.34" y1="383.54" x2="309.88" y2="383.54" width="0.1524" layer="91"/>
 <wire x1="309.88" y1="383.54" x2="312.42" y2="383.54" width="0.1524" layer="91"/>
 <pinref part="RX4" gate="G$1" pin="A"/>
 <wire x1="309.88" y1="381" x2="309.88" y2="383.54" width="0.1524" layer="91"/>
@@ -39338,6 +39363,8 @@ high speed (Philips)</description>
 <pinref part="R33" gate="G$1" pin="1"/>
 <pinref part="C31" gate="G$1" pin="1"/>
 <wire x1="309.88" y1="386.08" x2="309.88" y2="383.54" width="0.1524" layer="91"/>
+<pinref part="IC4" gate="G$1" pin="+VOUT"/>
+<wire x1="302.26" y1="383.54" x2="309.88" y2="383.54" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$11" class="0">
@@ -39354,6 +39381,13 @@ high speed (Philips)</description>
 <pinref part="CN1" gate="G$1" pin="ID"/>
 <wire x1="350.52" y1="114.3" x2="350.52" y2="127" width="0.1524" layer="91"/>
 <wire x1="350.52" y1="127" x2="347.98" y2="127" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$20" class="0">
+<segment>
+<pinref part="IC4" gate="G$1" pin="OUTPUT_TRIM"/>
+<pinref part="R36" gate="G$1" pin="2"/>
+<wire x1="302.26" y1="381" x2="302.26" y2="378.46" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
