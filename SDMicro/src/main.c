@@ -81,6 +81,17 @@ static int Drive(enum Direction left_direction, char left_speed, enum Direction 
 static void Cmd(char b);
 static void Data(char b);
 static void DispString(char* data);
+/*************************************************************************
+*	Wait specified number of microseconds
+*
+**************************************************************************/
+void usWait(int t) {
+    asm("       mov r0,%0\n"
+        "repeat:\n"
+        "       sub r0,#83\n"
+        "       bgt repeat\n"
+        : : "r"(t) : "r0", "cc");
+}
 
 int main(void) {
 	ADCInit();
@@ -93,12 +104,12 @@ int main(void) {
 	left_packet.address = MC_ADDRESS; // Only one motor controller, so use this address
 	right_packet.address = MC_ADDRESS;
 
-	mc_tx_buffer[0] = MC_ADDRESS;
+	/*mc_tx_buffer[0] = MC_ADDRESS;
 	mc_tx_buffer[1] = 14; // Serial timeout command
 	mc_tx_buffer[2] = 100; // 10000ms timeout
 	mc_tx_buffer[3] = (MC_ADDRESS + 100 + 14) & 127; // Checksum
 	mc_tx_buffer[4] = 255; // Stop byte
-	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
+	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout*/
 
 	// Test UART transfer
 	char* t = "Connected";
@@ -110,24 +121,15 @@ int main(void) {
 	for(;;) {
 		if(mc_tx_buffer_index == 0) {
 			mc_tx_buffer[0] = 'A';
+			mc_tx_buffer[1] = 255;
 			USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
-
+			usWait(10000000);
 		}
 	}
 }
 
 
-/*************************************************************************
-*	Wait specified number of microseconds
-*
-**************************************************************************/
-void usWait(int t) {
-    asm("       mov r0,%0\n"
-        "repeat:\n"
-        "       sub r0,#83\n"
-        "       bgt repeat\n"
-        : : "r"(t) : "r0", "cc");
-}
+
 
 
 /*************************************************************************

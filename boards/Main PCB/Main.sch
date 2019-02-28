@@ -36857,7 +36857,7 @@ high speed (Philips)</description>
 <part name="GND18" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="RESET" library="main_library" deviceset="TACTILE_SWITCH" device=""/>
 <part name="U3" library="main_library" deviceset="4N28" device=""/>
-<part name="R19" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="1K"/>
+<part name="R19" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="47"/>
 <part name="R20" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:23553/2" value="2K"/>
 <part name="J1" library="main_library" deviceset="3_PIN_JST-XH" device=""/>
 <part name="GND19" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
@@ -36881,7 +36881,6 @@ high speed (Philips)</description>
 <part name="GND27" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="+3V4" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
 <part name="+3V5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
-<part name="P+2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="FRAME2" library="frames" library_urn="urn:adsk.eagle:library:229" deviceset="FRAME_C_L" device=""/>
 <part name="R12" library="microbuilder" deviceset="RESISTOR" device="_0805MP" value="10K"/>
 <part name="R21" library="microbuilder" deviceset="RESISTOR" device="_0805MP" value="10K"/>
@@ -36951,6 +36950,7 @@ high speed (Philips)</description>
 <part name="GND40" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="C30" library="adafruit" deviceset="C-US" device="C0805K" value="0.1uF"/>
 <part name="GND41" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="+3V12" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+3V3" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -36965,7 +36965,7 @@ high speed (Philips)</description>
 <text x="68.58" y="154.94" size="1.778" layer="91">IMU</text>
 <text x="226.06" y="152.4" size="1.778" layer="91">Lidar UART Converter</text>
 <text x="203.2" y="342.9" size="1.778" layer="91">Reset Circuitry</text>
-<text x="424.18" y="228.6" size="1.778" layer="91">External Oscillator</text>
+<text x="424.18" y="228.6" size="1.778" layer="91">External Crystal</text>
 <text x="480.06" y="289.56" size="1.778" layer="91">3.3V-5V Logic Converter For Display</text>
 <text x="454.66" y="340.36" size="1.778" layer="91">Encoder Connectors</text>
 <text x="403.86" y="358.14" size="1.778" layer="91">Decoupling Capacitors</text>
@@ -37194,9 +37194,6 @@ high speed (Philips)</description>
 </instance>
 <instance part="+3V5" gate="G$1" x="462.28" y="312.42" smashed="yes">
 <attribute name="VALUE" x="459.74" y="307.34" size="1.778" layer="96" rot="R90"/>
-</instance>
-<instance part="P+2" gate="1" x="109.22" y="193.04" smashed="yes">
-<attribute name="VALUE" x="106.68" y="187.96" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="FRAME2" gate="G$1" x="0" y="0" smashed="yes"/>
 <instance part="FRAME2" gate="G$2" x="453.39" y="0" smashed="yes">
@@ -37634,6 +37631,9 @@ high speed (Philips)</description>
 <instance part="GND41" gate="1" x="261.62" y="55.88" smashed="yes">
 <attribute name="VALUE" x="259.08" y="53.34" size="1.778" layer="96"/>
 </instance>
+<instance part="+3V12" gate="G$1" x="109.22" y="193.04" smashed="yes">
+<attribute name="VALUE" x="106.68" y="187.96" size="1.778" layer="96" rot="R90"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -37829,6 +37829,12 @@ high speed (Philips)</description>
 <pinref part="R9" gate="G$1" pin="2"/>
 <pinref part="U$4" gate="G$1" pin="3.3V"/>
 <wire x1="109.22" y1="149.86" x2="109.22" y2="147.32" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R19" gate="G$1" pin="2"/>
+<wire x1="106.68" y1="187.96" x2="109.22" y2="187.96" width="0.1524" layer="91"/>
+<wire x1="109.22" y1="187.96" x2="109.22" y2="190.5" width="0.1524" layer="91"/>
+<pinref part="+3V12" gate="G$1" pin="+3V3"/>
 </segment>
 </net>
 <net name="BOOT0" class="0">
@@ -38255,12 +38261,6 @@ high speed (Philips)</description>
 </segment>
 </net>
 <net name="+5V" class="0">
-<segment>
-<pinref part="R19" gate="G$1" pin="2"/>
-<pinref part="P+2" gate="1" pin="+5V"/>
-<wire x1="106.68" y1="187.96" x2="109.22" y2="187.96" width="0.1524" layer="91"/>
-<wire x1="109.22" y1="187.96" x2="109.22" y2="190.5" width="0.1524" layer="91"/>
-</segment>
 <segment>
 <wire x1="53.34" y1="370.84" x2="53.34" y2="365.76" width="0.1524" layer="91"/>
 <pinref part="R29" gate="G$1" pin="2"/>
