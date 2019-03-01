@@ -4793,14 +4793,14 @@ Please make sure your boards conform to these design rules.
 <wire x1="89.698" y1="73.152" x2="92.218" y2="73.152" width="0.2032" layer="1"/>
 <contactref element="C32" pad="2"/>
 <contactref element="C31" pad="2"/>
-<wire x1="2.352" y1="7.366" x2="1.844" y2="7.874" width="0.508" layer="1"/>
+<wire x1="2.352" y1="7.366" x2="1.844" y2="7.874" width="0.762" layer="1"/>
 <contactref element="IC4" pad="3"/>
 <wire x1="1.778" y1="18.034" x2="2.696" y2="17.116" width="0.762" layer="1"/>
 <wire x1="2.696" y1="17.116" x2="3.556" y2="17.116" width="0.508" layer="1"/>
 <wire x1="3.556" y1="17.116" x2="3.5333" y2="17.1387" width="0.508" layer="1"/>
 <wire x1="3.5333" y1="17.1387" x2="2.79885" y2="17.1387" width="0.508" layer="1"/>
 <wire x1="1.844" y1="16.18385" x2="2.79885" y2="17.1387" width="0.508" layer="1"/>
-<wire x1="1.844" y1="7.874" x2="1.844" y2="16.18385" width="0.508" layer="1"/>
+<wire x1="1.844" y1="7.874" x2="1.844" y2="16.18385" width="0.762" layer="1"/>
 <wire x1="10.668" y1="18.608" x2="9.176" y2="17.116" width="0.762" layer="1"/>
 <wire x1="9.176" y1="17.116" x2="3.556" y2="17.116" width="0.762" layer="1"/>
 <contactref element="R36" pad="1"/>
