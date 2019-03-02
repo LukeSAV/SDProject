@@ -32343,6 +32343,21 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <rectangle x1="1.746" y1="-0.254" x2="2.254" y2="0.254" layer="51"/>
 <rectangle x1="3.746" y1="-0.254" x2="4.254" y2="0.254" layer="51"/>
 </package>
+<package name="1X01" urn="urn:adsk.eagle:footprint:22382/1" library_version="3">
+<description>&lt;b&gt;PIN HEADER&lt;/b&gt;</description>
+<wire x1="-0.635" y1="1.27" x2="0.635" y2="1.27" width="0.1524" layer="21"/>
+<wire x1="0.635" y1="1.27" x2="1.27" y2="0.635" width="0.1524" layer="21"/>
+<wire x1="1.27" y1="0.635" x2="1.27" y2="-0.635" width="0.1524" layer="21"/>
+<wire x1="1.27" y1="-0.635" x2="0.635" y2="-1.27" width="0.1524" layer="21"/>
+<wire x1="-1.27" y1="0.635" x2="-1.27" y2="-0.635" width="0.1524" layer="21"/>
+<wire x1="-0.635" y1="1.27" x2="-1.27" y2="0.635" width="0.1524" layer="21"/>
+<wire x1="-1.27" y1="-0.635" x2="-0.635" y2="-1.27" width="0.1524" layer="21"/>
+<wire x1="0.635" y1="-1.27" x2="-0.635" y2="-1.27" width="0.1524" layer="21"/>
+<pad name="1" x="0" y="0" drill="1.016" shape="octagon"/>
+<text x="-1.3462" y="1.8288" size="1.27" layer="25" ratio="10">&gt;NAME</text>
+<text x="-1.27" y="-3.175" size="1.27" layer="27">&gt;VALUE</text>
+<rectangle x1="-0.254" y1="-0.254" x2="0.254" y2="0.254" layer="51"/>
+</package>
 </packages>
 <packages3d>
 <package3d name="1X06" urn="urn:adsk.eagle:package:22472/2" type="model" library_version="3">
@@ -32375,6 +32390,12 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <packageinstance name="1_05X2MM"/>
 </packageinstances>
 </package3d>
+<package3d name="1X01" urn="urn:adsk.eagle:package:22485/2" type="model" library_version="3">
+<description>PIN HEADER</description>
+<packageinstances>
+<packageinstance name="1X01"/>
+</packageinstances>
+</package3d>
 </packages3d>
 <symbols>
 <symbol name="PINHD6" urn="urn:adsk.eagle:symbol:22360/1" library_version="3">
@@ -32403,6 +32424,15 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <pin name="3" x="-2.54" y="0" visible="pad" length="short" direction="pas" function="dot"/>
 <pin name="4" x="-2.54" y="-2.54" visible="pad" length="short" direction="pas" function="dot"/>
 <pin name="5" x="-2.54" y="-5.08" visible="pad" length="short" direction="pas" function="dot"/>
+</symbol>
+<symbol name="PINHD1" urn="urn:adsk.eagle:symbol:22381/1" library_version="3">
+<wire x1="-6.35" y1="-2.54" x2="1.27" y2="-2.54" width="0.4064" layer="94"/>
+<wire x1="1.27" y1="-2.54" x2="1.27" y2="2.54" width="0.4064" layer="94"/>
+<wire x1="1.27" y1="2.54" x2="-6.35" y2="2.54" width="0.4064" layer="94"/>
+<wire x1="-6.35" y1="2.54" x2="-6.35" y2="-2.54" width="0.4064" layer="94"/>
+<text x="-6.35" y="3.175" size="1.778" layer="95">&gt;NAME</text>
+<text x="-6.35" y="-5.08" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="1" x="-2.54" y="0" visible="pad" length="short" direction="pas" function="dot"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -32492,6 +32522,25 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 </connects>
 <package3dinstances>
 <package3dinstance package3d_urn="urn:adsk.eagle:package:22466/2"/>
+</package3dinstances>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="PINHD-1X1" urn="urn:adsk.eagle:component:22540/2" prefix="JP" uservalue="yes" library_version="3">
+<description>&lt;b&gt;PIN HEADER&lt;/b&gt;</description>
+<gates>
+<gate name="G$1" symbol="PINHD1" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="1X01">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+</connects>
+<package3dinstances>
+<package3dinstance package3d_urn="urn:adsk.eagle:package:22485/2"/>
 </package3dinstances>
 <technologies>
 <technology name=""/>
@@ -38472,16 +38521,7 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <part name="JP11" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X6" device="" package3d_urn="urn:adsk.eagle:package:22472/2"/>
 <part name="R37" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:26059/1" value="100"/>
 <part name="JP2" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X5" device="" package3d_urn="urn:adsk.eagle:package:22469/2"/>
-<part name="C33" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-US" device="C0805" package3d_urn="urn:adsk.eagle:package:23617/2" value="10nF">
-<spice>
-<pinmapping spiceprefix="C">
-<pinmap gate="G$1" pin="1" pinorder="1"/>
-<pinmap gate="G$1" pin="2" pinorder="2"/>
-</pinmapping>
-</spice>
-<attribute name="SPICEPREFIX" value="10nF"/>
-</part>
-<part name="GND48" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
+<part name="JP1" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:22485/2"/>
 </parts>
 <sheets>
 <sheet>
@@ -38495,7 +38535,7 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <text x="53.34" y="205.74" size="1.778" layer="91">Motor Controller UART Optical Isolator</text>
 <text x="68.58" y="154.94" size="1.778" layer="91">IMU</text>
 <text x="226.06" y="152.4" size="1.778" layer="91">Lidar UART Converter</text>
-<text x="203.2" y="342.9" size="1.778" layer="91">Reset Circuitry</text>
+<text x="203.2" y="327.66" size="1.778" layer="91">Reset Circuitry</text>
 <text x="424.18" y="228.6" size="1.778" layer="91">External Crystal</text>
 <text x="480.06" y="289.56" size="1.778" layer="91">3.3V-5V Logic Converter For Display</text>
 <text x="454.66" y="340.36" size="1.778" layer="91">Encoder Connectors</text>
@@ -39194,18 +39234,15 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <attribute name="VALUE" x="455.93" y="261.62" size="1.778" layer="96"/>
 </instance>
 <instance part="R37" gate="G$1" x="220.98" y="314.96" smashed="yes" rot="R90">
-<attribute name="NAME" x="219.4814" y="311.15" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="224.282" y="311.15" size="1.778" layer="96" rot="R90"/>
 </instance>
 <instance part="JP2" gate="A" x="203.2" y="228.6" smashed="yes" rot="R180">
 <attribute name="NAME" x="209.55" y="220.345" size="1.778" layer="95" rot="R180"/>
 <attribute name="VALUE" x="209.55" y="238.76" size="1.778" layer="96" rot="R180"/>
 </instance>
-<instance part="C33" gate="G$1" x="218.44" y="297.18" smashed="yes" rot="R270">
-<attribute name="VALUE" x="214.249" y="296.164" size="1.778" layer="96" rot="R270"/>
-</instance>
-<instance part="GND48" gate="1" x="210.82" y="294.64" smashed="yes">
-<attribute name="VALUE" x="208.28" y="292.1" size="1.778" layer="96"/>
+<instance part="JP1" gate="G$1" x="213.36" y="337.82" smashed="yes" rot="R90">
+<attribute name="NAME" x="210.185" y="331.47" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="218.44" y="331.47" size="1.778" layer="96" rot="R90"/>
 </instance>
 </instances>
 <busses>
@@ -39471,11 +39508,9 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <junction x="213.36" y="304.8"/>
 <pinref part="RESET" gate="G$1" pin="3"/>
 <wire x1="213.36" y1="304.8" x2="215.9" y2="304.8" width="0.1524" layer="91"/>
-<wire x1="213.36" y1="304.8" x2="205.74" y2="304.8" width="0.1524" layer="91"/>
-<wire x1="205.74" y1="304.8" x2="205.74" y2="309.88" width="0.1524" layer="91"/>
 <pinref part="C13" gate="G$1" pin="2"/>
-<wire x1="195.58" y1="314.96" x2="195.58" y2="309.88" width="0.1524" layer="91"/>
-<wire x1="205.74" y1="309.88" x2="195.58" y2="309.88" width="0.1524" layer="91"/>
+<wire x1="195.58" y1="314.96" x2="195.58" y2="304.8" width="0.1524" layer="91"/>
+<wire x1="213.36" y1="304.8" x2="195.58" y2="304.8" width="0.1524" layer="91"/>
 <wire x1="213.36" y1="304.8" x2="210.82" y2="304.8" width="0.1524" layer="91"/>
 </segment>
 <segment>
@@ -39833,11 +39868,6 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <pinref part="GND46" gate="1" pin="GND"/>
 <wire x1="452.12" y1="269.24" x2="457.2" y2="269.24" width="0.1524" layer="91"/>
 </segment>
-<segment>
-<pinref part="GND48" gate="1" pin="GND"/>
-<pinref part="C33" gate="G$1" pin="2"/>
-<wire x1="210.82" y1="297.18" x2="213.36" y2="297.18" width="0.1524" layer="91"/>
-</segment>
 </net>
 <net name="N$36" class="0">
 <segment>
@@ -40031,11 +40061,15 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <junction x="195.58" y="325.12"/>
 <pinref part="RESET" gate="G$1" pin="1"/>
 <junction x="210.82" y="325.12"/>
-<wire x1="210.82" y1="325.12" x2="215.9" y2="325.12" width="0.1524" layer="91"/>
+<wire x1="210.82" y1="325.12" x2="213.36" y2="325.12" width="0.1524" layer="91"/>
+<wire x1="213.36" y1="325.12" x2="215.9" y2="325.12" width="0.1524" layer="91"/>
 <wire x1="220.98" y1="325.12" x2="215.9" y2="325.12" width="0.1524" layer="91"/>
 <junction x="215.9" y="325.12"/>
 <pinref part="R37" gate="G$1" pin="2"/>
 <wire x1="220.98" y1="325.12" x2="220.98" y2="320.04" width="0.1524" layer="91"/>
+<pinref part="JP1" gate="G$1" pin="1"/>
+<wire x1="213.36" y1="335.28" x2="213.36" y2="325.12" width="0.1524" layer="91"/>
+<junction x="213.36" y="325.12"/>
 </segment>
 </net>
 <net name="SDA_3V" class="0">
@@ -40896,8 +40930,6 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <pinref part="R37" gate="G$1" pin="1"/>
 <wire x1="220.98" y1="309.88" x2="220.98" y2="297.18" width="0.1524" layer="91"/>
 <label x="233.68" y="297.18" size="1.778" layer="95" rot="R180" xref="yes"/>
-<pinref part="C33" gate="G$1" pin="1"/>
-<junction x="220.98" y="297.18"/>
 </segment>
 <segment>
 <pinref part="JP2" gate="A" pin="5"/>
