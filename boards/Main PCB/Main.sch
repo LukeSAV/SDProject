@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.3.1">
+<eagle version="9.2.2">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -39396,8 +39396,13 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 </segment>
 <segment>
 <pinref part="U4" gate="A" pin="VCCA"/>
-<wire x1="480.06" y1="246.38" x2="467.36" y2="246.38" width="0.1524" layer="91"/>
+<wire x1="480.06" y1="246.38" x2="477.52" y2="246.38" width="0.1524" layer="91"/>
 <label x="467.36" y="246.38" size="1.778" layer="95" rot="R180"/>
+<pinref part="U4" gate="A" pin="OE"/>
+<wire x1="477.52" y1="246.38" x2="467.36" y2="246.38" width="0.1524" layer="91"/>
+<wire x1="480.06" y1="266.7" x2="477.52" y2="266.7" width="0.1524" layer="91"/>
+<wire x1="477.52" y1="266.7" x2="477.52" y2="246.38" width="0.1524" layer="91"/>
+<junction x="477.52" y="246.38"/>
 </segment>
 <segment>
 <pinref part="+3V10" gate="G$1" pin="+3V3"/>
@@ -39976,12 +39981,7 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 </segment>
 <segment>
 <pinref part="U4" gate="A" pin="VCCB"/>
-<wire x1="480.06" y1="248.92" x2="477.52" y2="248.92" width="0.1524" layer="91"/>
-<pinref part="U4" gate="A" pin="OE"/>
-<wire x1="477.52" y1="248.92" x2="474.98" y2="248.92" width="0.1524" layer="91"/>
-<wire x1="480.06" y1="266.7" x2="477.52" y2="266.7" width="0.1524" layer="91"/>
-<wire x1="477.52" y1="266.7" x2="477.52" y2="248.92" width="0.1524" layer="91"/>
-<junction x="477.52" y="248.92"/>
+<wire x1="480.06" y1="248.92" x2="474.98" y2="248.92" width="0.1524" layer="91"/>
 <label x="474.98" y="248.92" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
