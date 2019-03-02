@@ -38522,6 +38522,8 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <part name="R37" library="resistor" library_urn="urn:adsk.eagle:library:348" deviceset="R-US_" device="R0805" package3d_urn="urn:adsk.eagle:package:26059/1" value="100"/>
 <part name="JP2" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X5" device="" package3d_urn="urn:adsk.eagle:package:22469/2"/>
 <part name="JP1" library="pinhead" library_urn="urn:adsk.eagle:library:325" deviceset="PINHD-1X1" device="" package3d_urn="urn:adsk.eagle:package:22485/2"/>
+<part name="C33" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="C-US" device="C0805" package3d_urn="urn:adsk.eagle:package:23617/2" value=".1uF"/>
+<part name="GND48" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -39244,6 +39246,12 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <attribute name="NAME" x="210.185" y="331.47" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="218.44" y="331.47" size="1.778" layer="96" rot="R90"/>
 </instance>
+<instance part="C33" gate="G$1" x="477.52" y="241.3" smashed="yes">
+<attribute name="VALUE" x="478.536" y="237.109" size="1.778" layer="96"/>
+</instance>
+<instance part="GND48" gate="1" x="477.52" y="231.14" smashed="yes">
+<attribute name="VALUE" x="474.98" y="228.6" size="1.778" layer="96"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -39403,6 +39411,8 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <wire x1="480.06" y1="266.7" x2="477.52" y2="266.7" width="0.1524" layer="91"/>
 <wire x1="477.52" y1="266.7" x2="477.52" y2="246.38" width="0.1524" layer="91"/>
 <junction x="477.52" y="246.38"/>
+<pinref part="C33" gate="G$1" pin="1"/>
+<wire x1="477.52" y1="246.38" x2="477.52" y2="243.84" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="+3V10" gate="G$1" pin="+3V3"/>
@@ -39872,6 +39882,11 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <junction x="457.2" y="269.24"/>
 <pinref part="GND46" gate="1" pin="GND"/>
 <wire x1="452.12" y1="269.24" x2="457.2" y2="269.24" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="C33" gate="G$1" pin="2"/>
+<pinref part="GND48" gate="1" pin="GND"/>
+<wire x1="477.52" y1="236.22" x2="477.52" y2="233.68" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$36" class="0">
