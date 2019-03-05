@@ -117,13 +117,14 @@ int main(void) {
 	USART_ITConfig(USART1, USART_IT_TXE, ENABLE);   // Enable USART1 Transmit interrupt
 	DispString(t);
 
+
 	//Drive(FORWARD, 20, FORWARD, 20);
 	for(;;) {
 		if(mc_tx_buffer_index == 0) {
 			mc_tx_buffer[0] = 'A';
 			mc_tx_buffer[1] = 255;
 			USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
-			usWait(10000000);
+			usWait(100000000);
 		}
 	}
 }
@@ -438,7 +439,11 @@ static void USARTInit() {
 	USART_Init(USART1, &USART_InitStructure);		// Initialize USART1 with above settings
 
 	USART_InitStructure.USART_BaudRate = 9600; 		// Set baud rate to 9600 b/s
+	USART_InitStructure.USART_WordLength = USART_WordLength_8b; 						// 8b word length
+	USART_InitStructure.USART_StopBits = USART_StopBits_1;								// 1 stop bit
+	USART_InitStructure.USART_Parity = USART_Parity_No;									// No parity
 	USART_InitStructure.USART_Mode = USART_Mode_Tx; // Enable TX on pin 2
+	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;		// No flow control
 	USART_Init(USART2, &USART_InitStructure);		// Initialize USART2 with above settings
 
 	USART_Cmd(USART1, ENABLE);						// Enable USART1

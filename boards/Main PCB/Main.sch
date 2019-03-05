@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="9.3.1">
+<eagle version="9.3.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -12443,47 +12443,6 @@ Source: http://www.ftdichip.com/Documents/DataSheets/DS_FT232R_v104.pdf</descrip
 &lt;p&gt;THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 &lt;/p&gt;</description>
 <packages>
-<package name="BNO055">
-<wire x1="-2.6" y1="1.9" x2="2.6" y2="1.9" width="0.127" layer="51"/>
-<wire x1="2.6" y1="1.9" x2="2.6" y2="-1.9" width="0.127" layer="51"/>
-<wire x1="2.6" y1="-1.9" x2="-2.6" y2="-1.9" width="0.127" layer="51"/>
-<wire x1="-2.6" y1="-1.9" x2="-2.6" y2="1.9" width="0.127" layer="51"/>
-<smd name="1" x="-2.25" y="1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="2" x="-2.3125" y="0.75" dx="0.375" dy="0.25" layer="1"/>
-<smd name="3" x="-2.3125" y="0.25" dx="0.375" dy="0.25" layer="1"/>
-<smd name="4" x="-2.3125" y="-0.25" dx="0.375" dy="0.25" layer="1"/>
-<smd name="5" x="-2.3125" y="-0.75" dx="0.375" dy="0.25" layer="1"/>
-<smd name="6" x="-2.25" y="-1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="7" x="-1.75" y="-1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="8" x="-1.25" y="-1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="9" x="-0.75" y="-1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="10" x="-0.25" y="-1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="11" x="0.25" y="-1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="12" x="0.75" y="-1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="13" x="1.25" y="-1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="14" x="1.75" y="-1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="15" x="2.25" y="-1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="16" x="2.3125" y="-0.75" dx="0.375" dy="0.25" layer="1"/>
-<smd name="17" x="2.3125" y="-0.25" dx="0.375" dy="0.25" layer="1"/>
-<smd name="18" x="2.3125" y="0.25" dx="0.375" dy="0.25" layer="1"/>
-<smd name="19" x="2.3125" y="0.75" dx="0.375" dy="0.25" layer="1"/>
-<smd name="20" x="2.25" y="1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="21" x="1.75" y="1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="22" x="1.25" y="1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="23" x="0.75" y="1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="24" x="0.25" y="1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="25" x="-0.25" y="1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="26" x="-0.75" y="1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="27" x="-1.25" y="1.5625" dx="0.25" dy="0.475" layer="1"/>
-<smd name="28" x="-1.75" y="1.5625" dx="0.25" dy="0.475" layer="1"/>
-<text x="-2.84" y="2.248" size="0.8128" layer="25" ratio="18">&gt;NAME</text>
-<text x="-2.74" y="-2.71" size="0.4064" layer="27" ratio="10">&gt;VALUE</text>
-<wire x1="-2.8" y1="2.1" x2="2.8" y2="2.1" width="0.127" layer="21"/>
-<wire x1="2.8" y1="2.1" x2="2.8" y2="-2.1" width="0.127" layer="21"/>
-<wire x1="2.8" y1="-2.1" x2="-2.8" y2="-2.1" width="0.127" layer="21"/>
-<wire x1="-2.8" y1="-2.1" x2="-2.8" y2="2.1" width="0.127" layer="21"/>
-<circle x="-3.4" y="1.6" radius="0.2" width="0.35" layer="21"/>
-</package>
 <package name="0603-MINI">
 <description>0603-Mini
 &lt;p&gt;Mini footprint for dense boards&lt;/p&gt;</description>
@@ -13068,49 +13027,6 @@ TS-003</description>
 </package>
 </packages>
 <symbols>
-<symbol name="BNO055">
-<pin name="GND@1" x="-20.32" y="5.08" length="short" direction="pwr"/>
-<pin name="VDD" x="-20.32" y="17.78" length="short" direction="pwr"/>
-<pin name="NBOOT_LOAD_PIN" x="20.32" y="-12.7" length="short" rot="R180"/>
-<pin name="PS1" x="20.32" y="-7.62" length="short" direction="in" rot="R180"/>
-<pin name="PS0" x="20.32" y="-5.08" length="short" direction="in" rot="R180"/>
-<pin name="CAP" x="-20.32" y="10.16" length="short" direction="pas"/>
-<pin name="PIN10(GND)" x="-20.32" y="-2.54" length="short"/>
-<pin name="NRESET" x="20.32" y="0" length="short" rot="R180"/>
-<pin name="INT" x="20.32" y="5.08" length="short" direction="out" rot="R180"/>
-<pin name="PIN15(GND)" x="-20.32" y="-5.08" length="short"/>
-<pin name="PIN16(GND)" x="-20.32" y="-7.62" length="short"/>
-<pin name="COM3/I2C_ADDR" x="20.32" y="10.16" length="short" rot="R180"/>
-<pin name="COM2(GND)" x="20.32" y="12.7" length="short" rot="R180"/>
-<pin name="COM1/SCL/RX" x="20.32" y="15.24" length="short" rot="R180"/>
-<pin name="COM0/SDA/TX" x="20.32" y="17.78" length="short" rot="R180"/>
-<pin name="GND@2" x="-20.32" y="2.54" length="short" direction="pwr"/>
-<pin name="XOUT32" x="-20.32" y="-17.78" length="short" direction="out"/>
-<pin name="XIN32" x="-20.32" y="-12.7" length="short" direction="in"/>
-<pin name="VDDIO" x="-20.32" y="15.24" length="short" direction="pwr"/>
-<wire x1="-17.78" y1="20.32" x2="17.78" y2="20.32" width="0.254" layer="94" style="shortdash"/>
-<wire x1="17.78" y1="20.32" x2="17.78" y2="-20.32" width="0.254" layer="94"/>
-<wire x1="17.78" y1="-20.32" x2="-17.78" y2="-20.32" width="0.254" layer="94" style="shortdash"/>
-<wire x1="-17.78" y1="-20.32" x2="-17.78" y2="20.32" width="0.254" layer="94"/>
-<wire x1="-17.78" y1="20.32" x2="-17.78" y2="25.4" width="0.254" layer="94"/>
-<wire x1="-17.78" y1="25.4" x2="17.78" y2="25.4" width="0.254" layer="94"/>
-<wire x1="17.78" y1="25.4" x2="17.78" y2="20.32" width="0.254" layer="94"/>
-<text x="0" y="22.86" size="1.27" layer="94" align="center">BNO055
-MOTION CO-PROCESSOR</text>
-<text x="-15.24" y="-24.13" size="1.27" layer="94" align="center-left">VDD:
-VDDIO:
-Operating Temp:</text>
-<text x="5.08" y="-24.13" size="1.27" layer="94" align="center-left">2.4-3.6V
-1.7-3.6V
--40~85°C</text>
-<wire x1="-17.78" y1="-20.32" x2="-17.78" y2="-27.94" width="0.254" layer="94"/>
-<wire x1="-17.78" y1="-27.94" x2="17.78" y2="-27.94" width="0.254" layer="94"/>
-<wire x1="17.78" y1="-27.94" x2="17.78" y2="-20.32" width="0.254" layer="94"/>
-<text x="-17.78" y="26.67" size="1.27" layer="95">&gt;NAME</text>
-<text x="-17.78" y="-30.48" size="1.27" layer="96">&gt;VALUE</text>
-<pin name="PIN7(SWDIO)" x="20.32" y="-15.24" length="short" rot="R180"/>
-<pin name="PIN8(SWCLK)" x="20.32" y="-17.78" length="short" rot="R180"/>
-</symbol>
 <symbol name="RESISTOR">
 <wire x1="-2.54" y1="1.27" x2="2.54" y2="1.27" width="0.254" layer="94"/>
 <wire x1="2.54" y1="1.27" x2="2.54" y2="-1.27" width="0.254" layer="94"/>
@@ -13212,42 +13128,6 @@ Operating Temp:</text>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="BNO055" uservalue="yes">
-<description>&lt;p&gt;&lt;b&gt;BNO055&lt;/b&gt; - Motion Co-Processor&lt;/p&gt;</description>
-<gates>
-<gate name="G$1" symbol="BNO055" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="BNO055">
-<connects>
-<connect gate="G$1" pin="CAP" pad="9"/>
-<connect gate="G$1" pin="COM0/SDA/TX" pad="20"/>
-<connect gate="G$1" pin="COM1/SCL/RX" pad="19"/>
-<connect gate="G$1" pin="COM2(GND)" pad="18"/>
-<connect gate="G$1" pin="COM3/I2C_ADDR" pad="17"/>
-<connect gate="G$1" pin="GND@1" pad="2"/>
-<connect gate="G$1" pin="GND@2" pad="25"/>
-<connect gate="G$1" pin="INT" pad="14"/>
-<connect gate="G$1" pin="NBOOT_LOAD_PIN" pad="4"/>
-<connect gate="G$1" pin="NRESET" pad="11"/>
-<connect gate="G$1" pin="PIN10(GND)" pad="10"/>
-<connect gate="G$1" pin="PIN15(GND)" pad="15"/>
-<connect gate="G$1" pin="PIN16(GND)" pad="16"/>
-<connect gate="G$1" pin="PIN7(SWDIO)" pad="7"/>
-<connect gate="G$1" pin="PIN8(SWCLK)" pad="8"/>
-<connect gate="G$1" pin="PS0" pad="6"/>
-<connect gate="G$1" pin="PS1" pad="5"/>
-<connect gate="G$1" pin="VDD" pad="3"/>
-<connect gate="G$1" pin="VDDIO" pad="28"/>
-<connect gate="G$1" pin="XIN32" pad="27"/>
-<connect gate="G$1" pin="XOUT32" pad="26"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
 <deviceset name="RESISTOR" prefix="R" uservalue="yes">
 <description>&lt;p&gt;&lt;b&gt;Resistors&lt;/b&gt;&lt;/p&gt;
 &lt;p&gt;For new designs, use the packages preceded by an '_' character since they are more reliable:&lt;/p&gt;
@@ -31677,6 +31557,47 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <wire x1="3.75" y1="2.36" x2="3.75" y2="1.96" width="0.127" layer="21"/>
 <pad name="P$3" x="0" y="0.06" drill="1" shape="long" rot="R90"/>
 </package>
+<package name="MICROBUILDER_BNO055">
+<circle x="-3.4" y="1.6" radius="0.2" width="0.35" layer="21"/>
+<wire x1="-2.6" y1="1.9" x2="2.6" y2="1.9" width="0.127" layer="51"/>
+<wire x1="2.6" y1="1.9" x2="2.6" y2="-1.9" width="0.127" layer="51"/>
+<wire x1="2.6" y1="-1.9" x2="-2.6" y2="-1.9" width="0.127" layer="51"/>
+<wire x1="-2.6" y1="-1.9" x2="-2.6" y2="1.9" width="0.127" layer="51"/>
+<wire x1="-2.8" y1="2.1" x2="2.8" y2="2.1" width="0.127" layer="21"/>
+<wire x1="2.8" y1="2.1" x2="2.8" y2="-2.1" width="0.127" layer="21"/>
+<wire x1="2.8" y1="-2.1" x2="-2.8" y2="-2.1" width="0.127" layer="21"/>
+<wire x1="-2.8" y1="-2.1" x2="-2.8" y2="2.1" width="0.127" layer="21"/>
+<smd name="1" x="-2.25" y="1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="2" x="-2.633" y="0.75" dx="1.016" dy="0.25" layer="1"/>
+<smd name="3" x="-2.633" y="0.25" dx="1.016" dy="0.25" layer="1"/>
+<smd name="4" x="-2.633" y="-0.25" dx="1.016" dy="0.25" layer="1"/>
+<smd name="5" x="-2.633" y="-0.75" dx="1.016" dy="0.25" layer="1"/>
+<smd name="6" x="-2.25" y="-1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="7" x="-1.75" y="-1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="8" x="-1.25" y="-1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="9" x="-0.75" y="-1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="10" x="-0.25" y="-1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="11" x="0.25" y="-1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="12" x="0.75" y="-1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="13" x="1.25" y="-1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="14" x="1.75" y="-1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="15" x="2.25" y="-1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="16" x="2.633" y="-0.75" dx="1.016" dy="0.25" layer="1"/>
+<smd name="17" x="2.633" y="-0.25" dx="1.016" dy="0.25" layer="1"/>
+<smd name="18" x="2.633" y="0.25" dx="1.016" dy="0.25" layer="1"/>
+<smd name="19" x="2.633" y="0.75" dx="1.016" dy="0.25" layer="1"/>
+<smd name="20" x="2.25" y="1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="21" x="1.75" y="1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="22" x="1.25" y="1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="23" x="0.75" y="1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="24" x="0.25" y="1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="25" x="-0.25" y="1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="26" x="-0.75" y="1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="27" x="-1.25" y="1.833" dx="0.25" dy="1.016" layer="1"/>
+<smd name="28" x="-1.75" y="1.833" dx="0.25" dy="1.016" layer="1"/>
+<text x="-2.84" y="2.248" size="0.8128" layer="25" ratio="18">&gt;NAME</text>
+<text x="-2.74" y="-2.71" size="0.4064" layer="27" ratio="10">&gt;VALUE</text>
+</package>
 </packages>
 <symbols>
 <symbol name="1825910-6">
@@ -31820,6 +31741,49 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <pin name="P$3" x="-7.62" y="0" length="middle"/>
 <pin name="P$4" x="-7.62" y="-5.08" length="middle"/>
 <pin name="P$5" x="-7.62" y="-10.16" length="middle"/>
+</symbol>
+<symbol name="MICROBUILDER_BNO055">
+<wire x1="-17.78" y1="20.32" x2="17.78" y2="20.32" width="0.254" layer="94"/>
+<wire x1="17.78" y1="20.32" x2="17.78" y2="-20.32" width="0.254" layer="94"/>
+<wire x1="17.78" y1="-20.32" x2="-17.78" y2="-20.32" width="0.254" layer="94"/>
+<wire x1="-17.78" y1="-20.32" x2="-17.78" y2="20.32" width="0.254" layer="94"/>
+<wire x1="-17.78" y1="20.32" x2="-17.78" y2="25.4" width="0.254" layer="94"/>
+<wire x1="-17.78" y1="25.4" x2="17.78" y2="25.4" width="0.254" layer="94"/>
+<wire x1="17.78" y1="25.4" x2="17.78" y2="20.32" width="0.254" layer="94"/>
+<wire x1="-17.78" y1="-20.32" x2="-17.78" y2="-27.94" width="0.254" layer="94"/>
+<wire x1="-17.78" y1="-27.94" x2="17.78" y2="-27.94" width="0.254" layer="94"/>
+<wire x1="17.78" y1="-27.94" x2="17.78" y2="-20.32" width="0.254" layer="94"/>
+<pin name="CAP" x="-20.32" y="10.16" length="short" direction="pas"/>
+<pin name="COM0/SDA/TX" x="20.32" y="17.78" length="short" rot="R180"/>
+<pin name="COM1/SCL/RX" x="20.32" y="15.24" length="short" rot="R180"/>
+<pin name="COM2(GND)" x="20.32" y="12.7" length="short" rot="R180"/>
+<pin name="COM3/I2C_ADDR" x="20.32" y="10.16" length="short" rot="R180"/>
+<pin name="GND@1" x="-20.32" y="5.08" length="short" direction="pwr"/>
+<pin name="GND@2" x="-20.32" y="2.54" length="short" direction="pwr"/>
+<pin name="INT" x="20.32" y="5.08" length="short" direction="out" rot="R180"/>
+<pin name="NBOOT_LOAD_PIN" x="20.32" y="-12.7" length="short" rot="R180"/>
+<pin name="NRESET" x="20.32" y="0" length="short" rot="R180"/>
+<pin name="PIN7(SWDIO)" x="20.32" y="-15.24" length="short" rot="R180"/>
+<pin name="PIN8(SWCLK)" x="20.32" y="-17.78" length="short" rot="R180"/>
+<pin name="PIN10(GND)" x="-20.32" y="-2.54" length="short"/>
+<pin name="PIN15(GND)" x="-20.32" y="-5.08" length="short"/>
+<pin name="PIN16(GND)" x="-20.32" y="-7.62" length="short"/>
+<pin name="PS0" x="20.32" y="-5.08" length="short" direction="in" rot="R180"/>
+<pin name="PS1" x="20.32" y="-7.62" length="short" direction="in" rot="R180"/>
+<pin name="VDD" x="-20.32" y="17.78" length="short" direction="pwr"/>
+<pin name="VDDIO" x="-20.32" y="15.24" length="short" direction="pwr"/>
+<pin name="XIN32" x="-20.32" y="-12.7" length="short" direction="in"/>
+<pin name="XOUT32" x="-20.32" y="-17.78" length="short" direction="out"/>
+<text x="0" y="22.86" size="1.27" layer="94" align="center">BNO055
+MOTION CO-PROCESSOR</text>
+<text x="-15.24" y="-24.13" size="1.27" layer="94" align="center-left">VDD:
+VDDIO:
+Operating Temp:</text>
+<text x="5.08" y="-24.13" size="1.27" layer="94" align="center-left">2.4-3.6V
+1.7-3.6V
+-40~85°C</text>
+<text x="-17.78" y="26.67" size="1.27" layer="95">&gt;NAME</text>
+<text x="-17.78" y="-30.48" size="1.27" layer="96">&gt;VALUE</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -32079,6 +32043,42 @@ Hole diameter spec'd by jst is 0.9 mm; hole diameter used here is 1.0 mm&lt;br&g
 <connect gate="G$1" pin="P$3" pad="P$3"/>
 <connect gate="G$1" pin="P$4" pad="P$4"/>
 <connect gate="G$1" pin="P$5" pad="P$5"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="MICROBUILDER_BNO055" uservalue="yes">
+<description>&lt;p&gt;&lt;b&gt;BNO055&lt;/b&gt; - Motion Co-Processor&lt;/p&gt;</description>
+<gates>
+<gate name="G$1" symbol="MICROBUILDER_BNO055" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="MICROBUILDER_BNO055">
+<connects>
+<connect gate="G$1" pin="CAP" pad="9"/>
+<connect gate="G$1" pin="COM0/SDA/TX" pad="20"/>
+<connect gate="G$1" pin="COM1/SCL/RX" pad="19"/>
+<connect gate="G$1" pin="COM2(GND)" pad="18"/>
+<connect gate="G$1" pin="COM3/I2C_ADDR" pad="17"/>
+<connect gate="G$1" pin="GND@1" pad="2"/>
+<connect gate="G$1" pin="GND@2" pad="25"/>
+<connect gate="G$1" pin="INT" pad="14"/>
+<connect gate="G$1" pin="NBOOT_LOAD_PIN" pad="4"/>
+<connect gate="G$1" pin="NRESET" pad="11"/>
+<connect gate="G$1" pin="PIN10(GND)" pad="10"/>
+<connect gate="G$1" pin="PIN15(GND)" pad="15"/>
+<connect gate="G$1" pin="PIN16(GND)" pad="16"/>
+<connect gate="G$1" pin="PIN7(SWDIO)" pad="7"/>
+<connect gate="G$1" pin="PIN8(SWCLK)" pad="8"/>
+<connect gate="G$1" pin="PS0" pad="6"/>
+<connect gate="G$1" pin="PS1" pad="5"/>
+<connect gate="G$1" pin="VDD" pad="3"/>
+<connect gate="G$1" pin="VDDIO" pad="28"/>
+<connect gate="G$1" pin="XIN32" pad="27"/>
+<connect gate="G$1" pin="XOUT32" pad="26"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -38491,7 +38491,6 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <part name="GND5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="GND6" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="R1" library="adafruit" deviceset="R-US_" device="R0805" value="10"/>
-<part name="U$3" library="microbuilder" deviceset="BNO055" device="" value="BNO055"/>
 <part name="R4" library="microbuilder" deviceset="RESISTOR" device="0805_NOOUTLINE" value="10K">
 <attribute name="10K" value=""/>
 </part>
@@ -38684,6 +38683,7 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <part name="T1" library="triac" library_urn="urn:adsk.eagle:library:403" deviceset="TIC116" device="" package3d_urn="urn:adsk.eagle:package:30140/2"/>
 <part name="GND51" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="GND" device=""/>
 <part name="VR1" library="v-reg" library_urn="urn:adsk.eagle:library:409" deviceset="TL431CLP" device="" package3d_urn="urn:adsk.eagle:package:30363/1"/>
+<part name="U$9" library="main_library" deviceset="MICROBUILDER_BNO055" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -39083,9 +39083,6 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <instance part="GND33" gate="1" x="309.88" y="355.6" smashed="yes">
 <attribute name="VALUE" x="307.34" y="353.06" size="1.778" layer="96"/>
 </instance>
-<instance part="U$3" gate="G$1" x="71.12" y="121.92" smashed="yes">
-<attribute name="VALUE" x="53.34" y="91.44" size="1.27" layer="96"/>
-</instance>
 <instance part="R4" gate="G$1" x="114.3" y="116.84" smashed="yes">
 <attribute name="VALUE" x="114.3" y="116.84" size="1.016" layer="96" font="vector" ratio="15" align="center"/>
 <attribute name="10K" x="114.3" y="116.84" size="1.778" layer="96" display="off"/>
@@ -39442,6 +39439,10 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <attribute name="NAME" x="382.27" y="374.65" size="1.778" layer="95" rot="R90"/>
 <attribute name="VALUE" x="384.175" y="374.65" size="1.778" layer="96" rot="R90"/>
 </instance>
+<instance part="U$9" gate="G$1" x="71.12" y="121.92" smashed="yes">
+<attribute name="NAME" x="53.34" y="148.59" size="1.27" layer="95"/>
+<attribute name="VALUE" x="53.34" y="91.44" size="1.27" layer="96"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -39616,21 +39617,21 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <wire x1="431.8" y1="345.44" x2="431.8" y2="350.52" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="U$3" gate="G$1" pin="NBOOT_LOAD_PIN"/>
 <pinref part="U$15" gate="G$1" pin="3.3V"/>
 <wire x1="91.44" y1="109.22" x2="93.98" y2="109.22" width="0.1524" layer="91"/>
+<pinref part="U$9" gate="G$1" pin="NBOOT_LOAD_PIN"/>
 </segment>
 <segment>
-<pinref part="U$3" gate="G$1" pin="VDDIO"/>
 <pinref part="U$21" gate="G$1" pin="3.3V"/>
 <wire x1="50.8" y1="137.16" x2="48.26" y2="137.16" width="0.1524" layer="91"/>
 <wire x1="48.26" y1="137.16" x2="48.26" y2="139.7" width="0.1524" layer="91"/>
-<pinref part="U$3" gate="G$1" pin="VDD"/>
 <wire x1="48.26" y1="139.7" x2="48.26" y2="142.24" width="0.1524" layer="91"/>
 <wire x1="50.8" y1="139.7" x2="48.26" y2="139.7" width="0.1524" layer="91"/>
 <junction x="48.26" y="139.7"/>
 <pinref part="C7" gate="G$1" pin="2"/>
 <wire x1="45.72" y1="139.7" x2="48.26" y2="139.7" width="0.1524" layer="91"/>
+<pinref part="U$9" gate="G$1" pin="VDD"/>
+<pinref part="U$9" gate="G$1" pin="VDDIO"/>
 </segment>
 <segment>
 <pinref part="JP5" gate="A" pin="2"/>
@@ -39812,9 +39813,9 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <pinref part="U$7" gate="G$1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="U$3" gate="G$1" pin="COM2(GND)"/>
 <pinref part="U$8" gate="G$1" pin="GND"/>
 <wire x1="124.46" y1="134.62" x2="91.44" y2="134.62" width="0.1524" layer="91"/>
+<pinref part="U$9" gate="G$1" pin="COM2(GND)"/>
 </segment>
 <segment>
 <pinref part="C5" gate="G$1" pin="1"/>
@@ -39827,27 +39828,27 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <junction x="25.4" y="93.98"/>
 </segment>
 <segment>
-<pinref part="U$3" gate="G$1" pin="PIN15(GND)"/>
 <pinref part="U$12" gate="G$1" pin="GND"/>
 <wire x1="50.8" y1="116.84" x2="48.26" y2="116.84" width="0.1524" layer="91"/>
-<pinref part="U$3" gate="G$1" pin="PIN10(GND)"/>
 <wire x1="48.26" y1="116.84" x2="45.72" y2="116.84" width="0.1524" layer="91"/>
 <wire x1="50.8" y1="119.38" x2="48.26" y2="119.38" width="0.1524" layer="91"/>
 <wire x1="48.26" y1="119.38" x2="48.26" y2="116.84" width="0.1524" layer="91"/>
 <junction x="48.26" y="116.84"/>
-<pinref part="U$3" gate="G$1" pin="PIN16(GND)"/>
 <wire x1="50.8" y1="114.3" x2="48.26" y2="114.3" width="0.1524" layer="91"/>
 <wire x1="48.26" y1="114.3" x2="48.26" y2="116.84" width="0.1524" layer="91"/>
+<pinref part="U$9" gate="G$1" pin="PIN10(GND)"/>
+<pinref part="U$9" gate="G$1" pin="PIN15(GND)"/>
+<pinref part="U$9" gate="G$1" pin="PIN16(GND)"/>
 </segment>
 <segment>
-<pinref part="U$3" gate="G$1" pin="GND@2"/>
 <pinref part="U$13" gate="G$1" pin="GND"/>
 <wire x1="50.8" y1="124.46" x2="48.26" y2="124.46" width="0.1524" layer="91"/>
-<pinref part="U$3" gate="G$1" pin="GND@1"/>
 <wire x1="48.26" y1="124.46" x2="45.72" y2="124.46" width="0.1524" layer="91"/>
 <wire x1="50.8" y1="127" x2="48.26" y2="127" width="0.1524" layer="91"/>
 <wire x1="48.26" y1="127" x2="48.26" y2="124.46" width="0.1524" layer="91"/>
 <junction x="48.26" y="124.46"/>
+<pinref part="U$9" gate="G$1" pin="GND@1"/>
+<pinref part="U$9" gate="G$1" pin="GND@2"/>
 </segment>
 <segment>
 <pinref part="C6" gate="G$1" pin="1"/>
@@ -40308,10 +40309,10 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <label x="193.04" y="248.92" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="U$3" gate="G$1" pin="COM0/SDA/TX"/>
 <wire x1="91.44" y1="139.7" x2="104.14" y2="139.7" width="0.1524" layer="91"/>
 <label x="93.98" y="139.7" size="1.778" layer="95"/>
 <pinref part="R8" gate="G$1" pin="1"/>
+<pinref part="U$9" gate="G$1" pin="COM0/SDA/TX"/>
 </segment>
 <segment>
 <pinref part="JP5" gate="A" pin="4"/>
@@ -40326,10 +40327,10 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <label x="193.04" y="246.38" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="U$3" gate="G$1" pin="COM1/SCL/RX"/>
 <wire x1="91.44" y1="137.16" x2="109.22" y2="137.16" width="0.1524" layer="91"/>
 <label x="93.98" y="137.16" size="1.778" layer="95"/>
 <pinref part="R9" gate="G$1" pin="1"/>
+<pinref part="U$9" gate="G$1" pin="COM1/SCL/RX"/>
 </segment>
 <segment>
 <pinref part="JP5" gate="A" pin="5"/>
@@ -40364,9 +40365,9 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <label x="193.04" y="243.84" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="U$3" gate="G$1" pin="NRESET"/>
 <wire x1="91.44" y1="121.92" x2="109.22" y2="121.92" width="0.1524" layer="91"/>
 <label x="93.98" y="121.92" size="1.778" layer="95"/>
+<pinref part="U$9" gate="G$1" pin="NRESET"/>
 </segment>
 <segment>
 <pinref part="JP5" gate="A" pin="6"/>
@@ -40653,10 +40654,10 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 </net>
 <net name="PS1_3V" class="0">
 <segment>
-<pinref part="U$3" gate="G$1" pin="PS1"/>
 <wire x1="91.44" y1="114.3" x2="119.38" y2="114.3" width="0.1524" layer="91"/>
 <label x="93.98" y="114.3" size="1.778" layer="95"/>
 <pinref part="R6" gate="G$1" pin="1"/>
+<pinref part="U$9" gate="G$1" pin="PS1"/>
 </segment>
 <segment>
 <pinref part="JP4" gate="A" pin="3"/>
@@ -40666,10 +40667,10 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 </net>
 <net name="PS0_3V" class="0">
 <segment>
-<pinref part="U$3" gate="G$1" pin="PS0"/>
 <wire x1="91.44" y1="116.84" x2="109.22" y2="116.84" width="0.1524" layer="91"/>
 <label x="93.98" y="116.84" size="1.778" layer="95"/>
 <pinref part="R4" gate="G$1" pin="1"/>
+<pinref part="U$9" gate="G$1" pin="PS0"/>
 </segment>
 <segment>
 <pinref part="JP4" gate="A" pin="4"/>
@@ -40679,9 +40680,9 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 </net>
 <net name="INT_3V" class="0">
 <segment>
-<pinref part="U$3" gate="G$1" pin="INT"/>
 <wire x1="91.44" y1="127" x2="104.14" y2="127" width="0.1524" layer="91"/>
 <label x="93.98" y="127" size="1.778" layer="95"/>
+<pinref part="U$9" gate="G$1" pin="INT"/>
 </segment>
 <segment>
 <pinref part="JP4" gate="A" pin="2"/>
@@ -40691,10 +40692,10 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 </net>
 <net name="I2CADDR_3V" class="0">
 <segment>
-<pinref part="U$3" gate="G$1" pin="COM3/I2C_ADDR"/>
 <pinref part="R7" gate="G$1" pin="1"/>
 <wire x1="91.44" y1="132.08" x2="109.22" y2="132.08" width="0.1524" layer="91"/>
 <label x="93.98" y="132.08" size="1.778" layer="95"/>
+<pinref part="U$9" gate="G$1" pin="COM3/I2C_ADDR"/>
 </segment>
 <segment>
 <pinref part="JP4" gate="A" pin="1"/>
@@ -40704,18 +40705,17 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 </net>
 <net name="N$1" class="0">
 <segment>
-<pinref part="U$3" gate="G$1" pin="XIN32"/>
 <pinref part="C4" gate="G$1" pin="2"/>
 <wire x1="50.8" y1="109.22" x2="38.1" y2="109.22" width="0.1524" layer="91"/>
 <pinref part="Y1" gate="G$1" pin="2"/>
 <wire x1="38.1" y1="109.22" x2="35.56" y2="109.22" width="0.1524" layer="91"/>
 <wire x1="38.1" y1="104.14" x2="38.1" y2="109.22" width="0.1524" layer="91"/>
 <junction x="38.1" y="109.22"/>
+<pinref part="U$9" gate="G$1" pin="XIN32"/>
 </segment>
 </net>
 <net name="N$10" class="0">
 <segment>
-<pinref part="U$3" gate="G$1" pin="XOUT32"/>
 <wire x1="50.8" y1="104.14" x2="43.18" y2="104.14" width="0.1524" layer="91"/>
 <wire x1="43.18" y1="104.14" x2="43.18" y2="93.98" width="0.1524" layer="91"/>
 <pinref part="C5" gate="G$1" pin="2"/>
@@ -40724,13 +40724,14 @@ Source: &lt;a href="http://www.mouser.com/datasheet/2/281/okr-t3-w12-21655.pdf"&
 <wire x1="38.1" y1="93.98" x2="35.56" y2="93.98" width="0.1524" layer="91"/>
 <wire x1="38.1" y1="99.06" x2="38.1" y2="93.98" width="0.1524" layer="91"/>
 <junction x="38.1" y="93.98"/>
+<pinref part="U$9" gate="G$1" pin="XOUT32"/>
 </segment>
 </net>
 <net name="CAP" class="0">
 <segment>
-<pinref part="U$3" gate="G$1" pin="CAP"/>
 <pinref part="C6" gate="G$1" pin="2"/>
 <wire x1="50.8" y1="132.08" x2="45.72" y2="132.08" width="0.1524" layer="91"/>
+<pinref part="U$9" gate="G$1" pin="CAP"/>
 </segment>
 </net>
 <net name="D+_LIDAR" class="0">
