@@ -52,17 +52,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             DeliveryInformation.deliveryInformation.delivering = snapshot.value as! Bool
         })
         ref.child("Current Position").observeSingleEvent(of: .value, with: { (snapshot) in
-            let value = snapshot.value as! String // GPGGA string to convert to lat/lon
-            let gpggaArray = value.split(separator: ",")
-            if gpggaArray.count >= 8  { // At least has all of the things I care about
-                let latitudeStr = gpggaArray[2]
-                let latIndex = latitudeStr.index(latitudeStr.startIndex, offsetBy: 2) // First two digits are degrees, rest are minutes
-                let latitude = (Double(latitudeStr[..<latIndex]) ?? 40.0) + (Double(latitudeStr[latIndex...]) ?? 25.160) / 60.0
-                let longitudeStr = gpggaArray[4]
-                let lonIndex = longitudeStr.index(longitudeStr.startIndex, offsetBy: 3) // First three digits are degrees, rest are minutes
-                let longitude = ((Double(longitudeStr[..<lonIndex]) ?? 86.0) + (Double(longitudeStr[lonIndex...]) ?? 54.400) / 60.0) * (gpggaArray[5].prefix(1) == "W" ? -1.0 : 1.0) // Multiply by -1 if west
-                DeliveryInformation.deliveryInformation.setCurrentLocation(lat: latitude, lon: longitude)
-                print(gpggaArray)
+            let value = snapshot.value as! String // String to convert to lat/lon
+            let curPosArray = value.split(separator: ",")
+            if curPosArray.count >= 2  { // At least has all of the things I care about
+                let latitude = Double(curPosArray[0])
+                let longitude = Double(curPosArray[1])
+                DeliveryInformation.deliveryInformation.setCurrentLocation(lat: latitude ?? DeliveryInformation.deliveryInformation.defaultCoord.latitude, lon: longitude ?? DeliveryInformation.deliveryInformation.defaultCoord.longitude)
             }
             
         })

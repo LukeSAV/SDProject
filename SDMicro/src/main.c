@@ -81,6 +81,17 @@ static int Drive(enum Direction left_direction, char left_speed, enum Direction 
 static void Cmd(char b);
 static void Data(char b);
 static void DispString(char* data);
+/*************************************************************************
+*	Wait specified number of microseconds
+*
+**************************************************************************/
+void usWait(int t) {
+    asm("       mov r0,%0\n"
+        "repeat:\n"
+        "       sub r0,#83\n"
+        "       bgt repeat\n"
+        : : "r"(t) : "r0", "cc");
+}
 
 int main(void) {
 	ADCInit();
@@ -93,12 +104,12 @@ int main(void) {
 	left_packet.address = MC_ADDRESS; // Only one motor controller, so use this address
 	right_packet.address = MC_ADDRESS;
 
-	mc_tx_buffer[0] = MC_ADDRESS;
+	/*mc_tx_buffer[0] = MC_ADDRESS;
 	mc_tx_buffer[1] = 14; // Serial timeout command
 	mc_tx_buffer[2] = 100; // 10000ms timeout
 	mc_tx_buffer[3] = (MC_ADDRESS + 100 + 14) & 127; // Checksum
 	mc_tx_buffer[4] = 255; // Stop byte
-	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
+	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout*/
 
 	// Test UART transfer
 	char* t = "Connected";
@@ -106,23 +117,20 @@ int main(void) {
 	USART_ITConfig(USART1, USART_IT_TXE, ENABLE);   // Enable USART1 Transmit interrupt
 	DispString(t);
 
+
 	//Drive(FORWARD, 20, FORWARD, 20);
 	for(;;) {
+		if(mc_tx_buffer_index == 0) {
+			mc_tx_buffer[0] = 'A';
+			mc_tx_buffer[1] = 255;
+			USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
+			usWait(100000000);
+		}
 	}
 }
 
 
-/*************************************************************************
-*	Wait specified number of microseconds
-*
-**************************************************************************/
-void usWait(int t) {
-    asm("       mov r0,%0\n"
-        "repeat:\n"
-        "       sub r0,#83\n"
-        "       bgt repeat\n"
-        : : "r"(t) : "r0", "cc");
-}
+
 
 
 /*************************************************************************
@@ -431,7 +439,11 @@ static void USARTInit() {
 	USART_Init(USART1, &USART_InitStructure);		// Initialize USART1 with above settings
 
 	USART_InitStructure.USART_BaudRate = 9600; 		// Set baud rate to 9600 b/s
+	USART_InitStructure.USART_WordLength = USART_WordLength_8b; 						// 8b word length
+	USART_InitStructure.USART_StopBits = USART_StopBits_1;								// 1 stop bit
+	USART_InitStructure.USART_Parity = USART_Parity_No;									// No parity
 	USART_InitStructure.USART_Mode = USART_Mode_Tx; // Enable TX on pin 2
+	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;		// No flow control
 	USART_Init(USART2, &USART_InitStructure);		// Initialize USART2 with above settings
 
 	USART_Cmd(USART1, ENABLE);						// Enable USART1

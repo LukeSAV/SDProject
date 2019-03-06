@@ -52,9 +52,13 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>message_generation</build_depend>
-  <run_depend>message_generation</run_depend>
+  <build_depend>rtk</build_depend>
   <build_depend>rospy</build_depend>
+
+  <run_depend>message_generation</run_depend>
+  <run_depend>rtk</run_depend>
   <run_depend>rospy</run_depend>
+
   <!-- build_export_depend>rospy</build_export_depend -->
   <!-- exec_depend>rospy</exec_depend -->
 

@@ -1,8 +1,13 @@
+#pragma once
+#include "rtk/HeadingSpeed.h"
+#include "rtk/HeadingSpeed.h"
 #include <atomic>
 #include <mutex>
 #include <ros/ros.h>
 #include <string>
 #include <utility>
+#include "sensor_msgs/NavSatFix.h"
+#include "rtk/HeadingSpeed.h"
 class NMEAData {
 public:
 	NMEAData();
@@ -16,6 +21,7 @@ public:
 	static std::mutex gpvtg_mu; // Mutex lock on GPVTG string
 	static std::atomic<bool> gpvtg_ready; // Semaphore on GPVTG
 
-	static std::pair<double, double> getLatLon(); // Get latitude and longitude from live gpgga message
 	static void parseNMEA(char* read_buf, int readBytes, ros::Publisher gpgga_pub, ros::Publisher gpvtg_pub);
+	static void popMsg(sensor_msgs::NavSatFix &msg); // Populates the given message based on the GPGGA string received
+	static void popHSMessage(rtk::HeadingSpeed &msg); // Populates the given message based on the GPVTG string received
 };
