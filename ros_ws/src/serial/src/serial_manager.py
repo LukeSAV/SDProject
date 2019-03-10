@@ -4,7 +4,7 @@ import serial
 import time
 from sensor_msgs import msg
 
-ser = serial.Serial("/dev/ttyS0", 57600, timeout=1)
+ser = serial.Serial("/dev/ttyUSB0", 57600, timeout=1)
 
 def controllerCallback(joyMsg):
 	ser.write('L' + str(int(-1 * joyMsg.axes[1] * 35) + 90) + '\n')
@@ -23,4 +23,9 @@ def listener():
 
 
 if __name__ == '__main__':
+	while True:
+		time.sleep(1)
+		ser.write('Test')
+
+	
  	listener()
