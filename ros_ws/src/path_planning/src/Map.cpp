@@ -1,6 +1,7 @@
 #include "../include/Map.h"
 #include "../include/Node.h"
 #include <memory>
+#include <queue>
 #include <set>
 #include "GL/freeglut.h"
 #include "GL/gl.h"
@@ -11,7 +12,7 @@ Map::Map(int x_index, int y_index) : grid(boost::numeric::ublas::matrix<std::sha
         for(unsigned int j = 0; j < MAP_SIZE; j++) {
             std::shared_ptr<Node> next_node(new Node);
             grid(i, j) = next_node;
-            grid(i, j)->H = abs(i - x_index) + abs(j - y_index) + obstacle_grid(i, j); // Initialize heuristic to be the sum of the x and y deltas to the final point
+            grid(i, j)->H = sqrt((i - x_index) * (i - x_index) + (j - y_index) * (j - y_index)) + obstacle_grid(i, j); // Initialize heuristic to be the sum of the x and y deltas to the final point
             grid(i, j)->x_index = i;
             grid(i, j)->y_index = j;
         }
@@ -32,11 +33,19 @@ bool IsOutOfBounds(int x, int y) {
     }
 }
 
+bool Map::Compare(std::shared_ptr<Node> n1, std::shared_ptr<Node> n2) { // Return true if the first arg has a lower cost
+    if((n1->G + n1->H) < (n2->G + n2->H)) {
+        return true;
+    }
+    return false;
+}
+
 std::shared_ptr<Node> Map::AStarSearch() {
     std::set<std::shared_ptr<Node>> closedSet; // Nodes already passed 
     std::set<std::shared_ptr<Node>> openSet; // Nodes not yet passed
     std::set<std::shared_ptr<Node>> pathSet; // Nodes in the final path
     openSet.insert(grid(0, (MAP_SIZE - 1) / 2)); // Add the first node to the set of nodes to be evaluated
+    
     while(!openSet.empty()) {
         std::shared_ptr<Node> min_node; // Least cost node in the open set
         int min_distance = -1;
@@ -47,13 +56,13 @@ std::shared_ptr<Node> Map::AStarSearch() {
                 min_node = *set_iterator;
             }
         }
+        openSet.erase(min_node); 
 
         if(min_node == end) { // Destination reached
             std::cout << "Destination reached" << std::endl;
             return min_node;
         }
 
-        openSet.erase(min_node); 
         closedSet.insert(min_node);
         for(int i = -1; i <= 1; i++) { // Check each neighbor or the current node
             for(int j = -1; j <= 1; j++) { 
@@ -65,6 +74,9 @@ std::shared_ptr<Node> Map::AStarSearch() {
                         continue; // Already looked at this tile
                     }
                     int new_G_val = min_node->G + 1; // Add distance between original and this neighboring node
+                    if(j != 0) {
+                        new_G_val += 1;
+                    }
                     auto neighbor = grid(min_node->x_index + i, min_node->y_index + j);
                     if(openSet.find(neighbor) == openSet.end()) {
                         openSet.insert(neighbor);
