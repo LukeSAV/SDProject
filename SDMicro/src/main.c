@@ -99,23 +99,30 @@ int main(void) {
 	SPIInit();
 	UltrasonicInit();
 
+
+	//RCC->AHBENR |= RCC_AHBENR_GPIOBEN; // Ensure clock to port B is enabled
+	//GPIOB->MODER = 0x00000100;
+	//GPIOB->ODR = 0xFFFF;
+	//GPIOB->ODR = 0x0000;
+
 	mc_tx_buffer[8] = 255; // Set end character in buffer
 
 	left_packet.address = MC_ADDRESS; // Only one motor controller, so use this address
 	right_packet.address = MC_ADDRESS;
 
-	/*mc_tx_buffer[0] = MC_ADDRESS;
+	mc_tx_buffer[0] = MC_ADDRESS;
 	mc_tx_buffer[1] = 14; // Serial timeout command
 	mc_tx_buffer[2] = 100; // 10000ms timeout
 	mc_tx_buffer[3] = (MC_ADDRESS + 100 + 14) & 127; // Checksum
 	mc_tx_buffer[4] = 255; // Stop byte
-	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout*/
+	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
 
 	// Test UART transfer
 	char* t = "Connected";
 	memcpy(jetson_tx_buffer, t, 9 * sizeof(char));
 	USART_ITConfig(USART1, USART_IT_TXE, ENABLE);   // Enable USART1 Transmit interrupt
 	DispString(t);
+
 
 
 	//Drive(FORWARD, 20, FORWARD, 20);
@@ -311,12 +318,12 @@ void TIM14_IRQHandler() {
 	elapsed_response_time = 0;
 
 	/* Update Display */
-	if(disp_count >= 5 && us1_distance < 500) { // Update the display every second
+	if(disp_count >= 5 && us3_distance < 500) { // Update the display every second
 		Cmd(0x01); // clear entire display
 		usWait(6200000); // clear takes 6.2ms to complete
 		Cmd(0x02); // put the cursor in the home position
 		Cmd(0x06); // 0000 01IS: set display to increment
-		int distance = us1_distance;
+		int distance = us3_distance;
 		char out_data[4] = {48, 48, 48, 0};
 		int data_loc = 2;
 		while(distance > 0) {
@@ -377,7 +384,7 @@ void TIM15_IRQHandler() {
 	}
 	else if(us3_started && !us3_return) { // Pulse went low
 		us3_started = 0;
-		us3_distance = us2_elapsed_echo_time * 0.0343 / 2; // Using speed of sound in cm/us to get distance
+		us3_distance = us3_elapsed_echo_time * 0.0343 / 2; // Using speed of sound in cm/us to get distance
 	}
 }
 
@@ -535,6 +542,7 @@ static void SPIInit() {
 	GPIOB->MODER &= 0x30ffffff;
 	GPIOB->MODER |= 0x8A000000;
 	GPIOB->AFR[1] &= 0x0f00ffff;
+	//GPIOB->ODR = 0xFFFF;
 
 	RCC->APB1ENR |= RCC_APB1ENR_SPI2EN;
 	SPI2->CR1 |= (SPI_CR1_MSTR | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 | SPI_CR1_BIDIMODE | SPI_CR1_BIDIOE);
