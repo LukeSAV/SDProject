@@ -83,7 +83,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if value != nil {
                 let lineArray = value!.split(separator: ",")
                 if lineArray.count > 1 {
-                    DeliveryInformation.deliveryInformation.sideOfLine = String(lineArray[0])
                     DeliveryInformation.deliveryInformation.distanceFromLine = Double(lineArray[1])!
                 }
             }
