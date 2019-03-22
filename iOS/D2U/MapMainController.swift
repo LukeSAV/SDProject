@@ -20,7 +20,6 @@ class MapMainController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     @IBOutlet weak var centerOnDestinationBtn: UIButton!
     @IBOutlet weak var freeFloatBtn: UIButton!
     
-    @IBOutlet weak var sideOfLineTxt: UITextField!
     @IBOutlet weak var distanceFromLineTxt: UITextField!
     
     
@@ -199,7 +198,6 @@ class MapMainController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         
         centerMap()
         
-        sideOfLineTxt.text = DeliveryInformation.deliveryInformation.sideOfLine
         distanceFromLineTxt.text = String(DeliveryInformation.deliveryInformation.distanceFromLine)
     }
 }

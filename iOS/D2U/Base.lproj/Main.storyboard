@@ -26,7 +26,7 @@
             </objects>
             <point key="canvasLocation" x="823" y="58"/>
         </scene>
-        <!--No Delivery-->
+        <!--Map-->
         <scene sceneID="TmZ-Mj-poT">
             <objects>
                 <viewController id="DDm-jn-0oq" customClass="MapMainController" customModule="D2U" customModuleProvider="target" sceneMemberID="viewController">
@@ -38,13 +38,6 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </mapView>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Side of Line:" borderStyle="roundedRect" textAlignment="justified" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="j2B-ZC-Gfa">
-                                <rect key="frame" x="10" y="74" width="101" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="textColor" red="0.75962507720000005" green="0.55830192570000003" blue="0.051884837449999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dx1-Qb-OZ3">
                                 <rect key="frame" x="0.0" y="596" width="375" height="71"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -54,7 +47,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fCe-px-Xwl">
-                                <rect key="frame" x="180" y="608" width="58" height="57"/>
+                                <rect key="frame" x="277" y="601" width="69" height="68"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="Earth_gold"/>
                                 <connections>
@@ -62,7 +55,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RLD-JU-que">
-                                <rect key="frame" x="121" y="608" width="58" height="57"/>
+                                <rect key="frame" x="192" y="603" width="68" height="67"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="Destination_gray"/>
                                 <connections>
@@ -78,7 +71,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xOU-VB-EBU">
-                                <rect key="frame" x="62" y="608" width="58" height="57"/>
+                                <rect key="frame" x="98" y="601" width="69" height="68"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="Robot_gray"/>
                                 <connections>
@@ -86,42 +79,22 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IFQ-Ov-7Us">
-                                <rect key="frame" x="3" y="608" width="58" height="57"/>
+                                <rect key="frame" x="16" y="601" width="68" height="69"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="WalkingMan_gray"/>
                                 <connections>
                                     <action selector="centerOnUserBtn:" destination="DDm-jn-0oq" eventType="touchUpInside" id="glF-G9-hrL"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="Cpu-rd-gpH">
-                                <rect key="frame" x="264" y="618" width="99" height="36"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.75962507720000005" green="0.55830192570000003" blue="0.051884837449999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" title=" Cancel Delivery">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                            </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="SeparatorBar_1x40" translatesAutoresizingMaskIntoConstraints="NO" id="pyO-S8-cjo">
-                                <rect key="frame" x="251" y="612" width="1" height="51"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.30310052630000001" green="0.25097644330000002" blue="0.21901232000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </imageView>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Center" borderStyle="roundedRect" textAlignment="justified" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nzt-O2-21s">
-                                <rect key="frame" x="115" y="74" width="97" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="textColor" red="0.75962507720000005" green="0.55830192570000003" blue="0.051884837449999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Distance from Line:" borderStyle="roundedRect" textAlignment="justified" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5O1-eQ-RQV">
-                                <rect key="frame" x="3" y="102" width="147" height="30"/>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="Distance to next wpt:" borderStyle="roundedRect" textAlignment="justified" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5O1-eQ-RQV">
+                                <rect key="frame" x="5" y="70" width="152" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="textColor" red="0.75962507720000005" green="0.55830192570000003" blue="0.051884837449999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="0.0m" borderStyle="roundedRect" textAlignment="justified" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="s3Q-bc-BrJ">
-                                <rect key="frame" x="155" y="102" width="97" height="30"/>
+                                <rect key="frame" x="159" y="70" width="81" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="textColor" red="0.75962507720000005" green="0.55830192570000003" blue="0.051884837449999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -131,7 +104,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="MgN-ya-K69"/>
                     </view>
-                    <navigationItem key="navigationItem" title="No Delivery" id="egt-sC-b8E">
+                    <navigationItem key="navigationItem" title="Map" id="egt-sC-b8E">
                         <barButtonItem key="rightBarButtonItem" title="Options" id="jgq-kh-PEh">
                             <color key="tintColor" red="0.75962507720000005" green="0.55830192570000003" blue="0.051884837449999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
@@ -146,7 +119,6 @@
                         <outlet property="distanceFromLineTxt" destination="s3Q-bc-BrJ" id="sPM-Vb-6HE"/>
                         <outlet property="freeFloatBtn" destination="fCe-px-Xwl" id="Th6-0g-v13"/>
                         <outlet property="mapView" destination="5qb-Jp-dXm" id="esZ-6Q-m0K"/>
-                        <outlet property="sideOfLineTxt" destination="nzt-O2-21s" id="fx1-y2-831"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1xb-4o-FKi" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -368,7 +340,6 @@
         <image name="Earth_gold" width="240" height="240"/>
         <image name="RadioBtn_filled" width="240" height="240"/>
         <image name="Robot_gray" width="240" height="240"/>
-        <image name="SeparatorBar_1x40" width="0.23999999463558197" height="9.6000003814697266"/>
         <image name="WalkingMan_gray" width="240" height="240"/>
     </resources>
     <color key="tintColor" red="0.75962507720000005" green="0.55830192570000003" blue="0.051884837449999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
