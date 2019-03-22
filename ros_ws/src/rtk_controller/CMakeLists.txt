@@ -36,7 +36,7 @@ include_directories(
 
 add_executable(${PROJECT_NAME}_node
   src/main.cpp
-  src/Node.cpp
+  src/MapNode.cpp
   src/MapData.cpp
 	src/xml_reader.cpp
 )

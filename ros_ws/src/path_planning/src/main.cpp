@@ -9,41 +9,47 @@
 #include "ros/ros.h"
 #include "ros/callback_queue.h"
 #include "std_msgs/String.h"
+#include "sensor_msgs/NavSatFix.h"
+#include "rtk/HeadingSpeed.h"
+
 #include "../include/Map.h"
 #include "../include/Node.h"
+#include "../include/GlobalNode.h"
+#include "../include/GlobalMap.h"
+#include "../include/xml_reader.h"
+#include "../include/GLDebug.h"
+#include "../include/LocalOp.h"
+
 #include "GL/freeglut.h"
 #include "GL/gl.h"
+
+#include <map>
+#include <exception>
+#include <chrono>
 #include <thread>
 
-ros::Subscriber state_sub;
-Map* m;
+ros::Subscriber state_sub; // Subscriber to occupation grid/current position
+
+static ros::Publisher cmd_pub; // Publisher for output to robot
+static std::pair<double, double> cur_coord(0,0); // Current GPS latitude/longitude of robot
+static enum GlobalMap::positionStatus position_status = GlobalMap::FixNotValid; // Current position fix status
+static int num_satellites = 0; // Current number of satellites in view
+static double cur_heading; // Current heading of robot
+static double cur_speed; // Current speed of robot
+static std_msgs::String pub_msg; // Published message for serial output
+
+std::chrono::time_point<std::chrono::system_clock> last_gpgga_received_time;  
+
+static std::string next_waypoint_key = "";
+static std::string prev_waypoint_key = "";
+static GlobalNode prev_waypoint = GlobalNode(0.0f, 0.0f);
+
+static int left_speed = 90;
+static int right_speed = 90;
+
 
 static void pathCallback(const std_msgs::String::ConstPtr& msg) {
-    int x_index;
-    int y_index;
-    Map current_map(x_index, y_index);
-}
-
-void disp() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    m->DrawMap();
-    glBegin(GL_LINES);
-    glLineWidth(1);
-    glColor3f(1.0, 1.0, 1.0);
-    for(unsigned int i = 0; i < 51; i++) {
-        glVertex2d(i * 20, 0);
-        glVertex2d(i * 20, MAP_SIZE * 20);
-        glVertex2d(0, i * 20);
-        glVertex2d(MAP_SIZE * 20, i * 20);
-    }
-    glEnd();
-    glFlush();
-    glutSwapBuffers();
-}
-
-void idle() {
-    ros::spinOnce();
-    glutPostRedisplay();
+    
 }
 
 int main(int argc, char** argv) {
@@ -51,19 +57,9 @@ int main(int argc, char** argv) {
     ros::NodeHandle nh;
     state_sub = nh.subscribe<std_msgs::String>("state", 100, pathCallback);
 
-    /* glut init stuff */
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(MAP_SIZE * 20, MAP_SIZE * 20);
-    glutInitWindowPosition(100, 100);
-    glutCreateWindow("A*");
-    glMatrixMode(GL_PROJECTION);
-    gluOrtho2D(0, MAP_SIZE * 20, MAP_SIZE * 20, 0);
-    glutDisplayFunc(disp);
-    glutIdleFunc(idle);
-
-    m = new Map(50, 25);
-    std::shared_ptr<Node> n = m->AStarSearch();
+    GLDebug::init(argc, argv);
+    LocalOp::addMap(50, 25);
+    std::shared_ptr<Node> n = LocalOp::m->AStarSearch();
     
     glutMainLoop();
 
