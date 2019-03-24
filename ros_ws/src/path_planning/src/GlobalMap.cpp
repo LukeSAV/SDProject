@@ -5,20 +5,20 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "../include/MapData.h"
-#include "../include/MapNode.h"
+#include "../include/GlobalMap.h"
+#include "../include/GlobalNode.h"
 
 #define DEGREE_MULTI_FACTOR 111139 // Factor by which to multiple a difference in lat/lon degrees to get distance in meters
 
-std::map<std::string, MapNode> MapData::node_map; // Key: Unique identifier for node, Value: MapNode type with relevant data for a single point on the Map
-std::map<std::string, MapNode> MapData::path_map; // Key: Unique identifier for path node, Value: MapNode type with relevant data for a single point on the Map
-std::map<std::string, std::pair<std::vector<std::string>, std::string>> MapData::landmark_map; // Key: Unique identifier string for waypoint, Value: pair - first element = vector of unique node identifier strings, second element = name of waypoint
+std::map<std::string, GlobalNode> GlobalMap::node_map; // Key: Unique identifier for node, Value: GlobalNode type with relevant data for a single point on the Map
+std::map<std::string, GlobalNode> GlobalMap::path_map; // Key: Unique identifier for path node, Value: GlobalNode type with relevant data for a single point on the Map
+std::map<std::string, std::pair<std::vector<std::string>, std::string>> GlobalMap::landmark_map; // Key: Unique identifier string for waypoint, Value: pair - first element = vector of unique node identifier strings, second element = name of waypoint
 
-MapData::MapData() {
+GlobalMap::GlobalMap() {
 
 }
 
-MapData::~MapData() {
+GlobalMap::~GlobalMap() {
 
 }
 
@@ -33,7 +33,7 @@ static std::vector<std::string> getCommaDelineated(std::string comma_sep_msg) {
 	return comma_delineated;
 }
 
-std::pair<double, double> MapData::getLatLon(std::string gpgga_msg) { // Get latitude and longitude from live gpgga message
+std::pair<double, double> GlobalMap::getLatLon(std::string gpgga_msg) { // Get latitude and longitude from live gpgga message
 	double cur_lat = 0.0;
 	double cur_lon = 0.0;
 	std::vector<std::string> gpgga_delineated = getCommaDelineated(gpgga_msg);
@@ -53,7 +53,7 @@ std::pair<double, double> MapData::getLatLon(std::string gpgga_msg) { // Get lat
 	return std::pair<double, double>(cur_lat, cur_lon);
 }
 
-std::string MapData::getClosestLandmark(std::pair<double, double> cur_coord) { // Set the closest landmark to the user position based on the current gpgga string
+std::string GlobalMap::getClosestLandmark(std::pair<double, double> cur_coord) { // Set the closest landmark to the user position based on the current gpgga string
 	std::map<std::string, std::pair<std::vector<std::string>, std::string>>::iterator ways_it;
 	static std::string nearestLandmarkKey; // String key using unique identifier to the nearest landmark
 	double cur_lat = cur_coord.first;
@@ -66,7 +66,7 @@ std::string MapData::getClosestLandmark(std::pair<double, double> cur_coord) { /
 	for(ways_it = landmark_map.begin(); ways_it != landmark_map.end(); ways_it++) { // Check each of the landmarks
 		for(std::string node_id : ways_it->second.first) { // Check each point that constitutes a landmark
 			try {
-				MapNode cur_node = node_map[node_id];
+				GlobalNode cur_node = node_map[node_id];
 				double distance = sqrt((cur_node.lat - cur_lat) * (cur_node.lat - cur_lat) + (cur_node.lon - cur_lon) * (cur_node.lon - cur_lon));
 				if(shortest_distance == -1) {
 					nearestLandmarkKey = ways_it->first;
@@ -86,8 +86,8 @@ std::string MapData::getClosestLandmark(std::pair<double, double> cur_coord) { /
 	return nearestLandmarkKey;
 }
 
-std::string MapData::getClosestWaypoint(std::pair<double, double> cur_coord) { // Set the closest landmark to the user position based on the current gpgga string
-	std::map<std::string, MapNode>::iterator ways_it;
+std::string GlobalMap::getClosestWaypoint(std::pair<double, double> cur_coord) { // Set the closest landmark to the user position based on the current gpgga string
+	std::map<std::string, GlobalNode>::iterator ways_it;
 	static std::string nearestWaypointKey; // String key using unique identifier to the nearest landmark
 	double cur_lat = cur_coord.first;
 	double cur_lon = cur_coord.second;
@@ -96,7 +96,7 @@ std::string MapData::getClosestWaypoint(std::pair<double, double> cur_coord) { /
 	}
 	double shortest_distance = -1; // Closest distance between a node and the current coordinate
 	for(ways_it = path_map.begin(); ways_it != path_map.end(); ways_it++) { // Check each of the landmarks
-		MapNode cur_node = ways_it->second;
+		GlobalNode cur_node = ways_it->second;
 		double distance = sqrt((cur_node.lat - cur_lat) * (cur_node.lat - cur_lat) + (cur_node.lon - cur_lon) * (cur_node.lon - cur_lon));
 		if(shortest_distance == -1) {
 			nearestWaypointKey = ways_it->first;
@@ -112,7 +112,7 @@ std::string MapData::getClosestWaypoint(std::pair<double, double> cur_coord) { /
 	return nearestWaypointKey;
 }
 
-int MapData::getNumSatellites(std::string gpgga_msg) {
+int GlobalMap::getNumSatellites(std::string gpgga_msg) {
 	std::vector<std::string> gpgga_delineated = getCommaDelineated(gpgga_msg);	
 	if(gpgga_delineated.size() > 7) {
 		return std::stoi(gpgga_delineated[7]);
@@ -120,7 +120,7 @@ int MapData::getNumSatellites(std::string gpgga_msg) {
 	return 0;
 }
 
-MapData::positionStatus MapData::getPositionStatus(std::string gpgga_msg) {
+GlobalMap::positionStatus GlobalMap::getPositionStatus(std::string gpgga_msg) {
 	std::vector<std::string> gpgga_delineated = getCommaDelineated(gpgga_msg);	
 	if(gpgga_delineated.size() > 6) {
 		return positionStatus(std::stoi(gpgga_delineated[6]));
@@ -128,22 +128,22 @@ MapData::positionStatus MapData::getPositionStatus(std::string gpgga_msg) {
 	return positionStatus(0);
 }
 
-double MapData::getSpeed(std::string gpvtg_msg) {
+double GlobalMap::getSpeed(std::string gpvtg_msg) {
 	std::vector<std::string> gpvtg_delineated = getCommaDelineated(gpvtg_msg);	
 	if(gpvtg_delineated.size() > 7) {
 		return std::stod(gpvtg_delineated[7]);
 	}
 }
 
-double MapData::getHeading(std::string gpvtg_msg) {
+double GlobalMap::getHeading(std::string gpvtg_msg) {
 	std::vector<std::string> gpvtg_delineated = getCommaDelineated(gpvtg_msg);	
 	if(gpvtg_delineated.size() > 1) {
 		return std::stod(gpvtg_delineated[1]);
 	}
 }
 
-/*std::pair<std::string, std::string> MapData::getPrevAndNextWaypoints(std::pair<double, double> cur_coord) {
-	std::map<std::string, MapNode>::iterator path_map_it; 
+/*std::pair<std::string, std::string> GlobalMap::getPrevAndNextWaypoints(std::pair<double, double> cur_coord) {
+	std::map<std::string, GlobalNode>::iterator path_map_it; 
 	for(path_map_it = std::next(path_map.begin()); path_map_it != path_map.end(); path_map_it++) { // Iterate through each node to find the 
 		std::pair<double, double> prev_waypoint_coord = std::pair<double, double>(std::prev(path_map_it)->second.lat, std::prev(path_map_it)->second.lon);
 		std::pair<double, double> next_waypoint_coord = std::pair<double, double>(path_map_it->second.lat, path_map_it->second.lon);
@@ -155,20 +155,20 @@ double MapData::getHeading(std::string gpvtg_msg) {
 	return std::pair<std::string, std::string>("", "");
 }*/
 
-double MapData::getDistance(std::pair<double, double> cur_pos, MapNode waypoint) {
+double GlobalMap::getDistance(std::pair<double, double> cur_pos, GlobalNode waypoint) {
 	return DEGREE_MULTI_FACTOR * sqrt((cur_pos.first - waypoint.lat) * (cur_pos.first - waypoint.lat) + (cur_pos.second - waypoint.lon) * (cur_pos.second - waypoint.lon));
 }
 
-MapData::linePos MapData::getSideOfLine(MapNode prev_waypoint, MapNode next_waypoint, std::pair<double, double> cur_pos) {
+GlobalMap::linePos GlobalMap::getSideOfLine(GlobalNode prev_waypoint, GlobalNode next_waypoint, std::pair<double, double> cur_pos) {
 	double line_val = (cur_pos.first - prev_waypoint.lat) * (next_waypoint.lon - prev_waypoint.lon) - (cur_pos.second - prev_waypoint.lon) * (next_waypoint.lat - prev_waypoint.lat); // Use outer product
 	if(line_val > 0) { 
-		return MapData::linePos::Left;
+		return GlobalMap::linePos::Left;
 	}
 	else {
-		return MapData::linePos::Right;
+		return GlobalMap::linePos::Right;
 	}
 }
-double MapData::getDistanceFromLine(MapNode prev_waypoint, MapNode next_waypoint, std::pair<double, double> cur_pos) {
+double GlobalMap::getDistanceFromLine(GlobalNode prev_waypoint, GlobalNode next_waypoint, std::pair<double, double> cur_pos) {
 	// Do vector projection of current point onto line
 	std::pair<double, double> line_vec = std::pair<double, double>(next_waypoint.lat - prev_waypoint.lat, next_waypoint.lon - prev_waypoint.lon);
 	std::pair<double, double> point_vec = std::pair<double, double>(cur_pos.first - prev_waypoint.lat, cur_pos.second - prev_waypoint.lon);

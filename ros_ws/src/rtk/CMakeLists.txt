@@ -41,7 +41,8 @@ add_executable(${PROJECT_NAME}_gps_node
 	src/NMEAData.cpp
 	src/ntripclient.cpp
 )
-add_dependencies(${PROJECT_NAME}_gps_node
+add_dependencies(${PROJECT_NAME}_gps_node 
+	${${PROJECT_NAME}_EXPORTED_TARGETS}
 	${catkin_EXPORTED_TARGETS}
 )
 

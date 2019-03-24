@@ -2,7 +2,6 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "MapNode.h"
 #include "XMLParser/rapidxml.hpp"
 void xml_reader(const char* filename); // , std::map<std::string, Node> &node_map, std::map<std::string, std::pair<std::vector<std::string>, std::string>> &way_map
 	// Map of unique identifiers to their respective nodes
