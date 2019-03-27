@@ -4,11 +4,11 @@ import serial
 import time
 from sensor_msgs import msg
 
-ser = serial.Serial("/dev/ttyUSB0", 57600, timeout=1)
+ser = serial.Serial(port="/dev/ttyTHS2", baudrate=9600, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=0)
 
 def controllerCallback(joyMsg):
-	ser.write('L' + str(int(-1 * joyMsg.axes[1] * 35) + 90) + '\n')
-	ser.write('R' + str(int(-1 * joyMsg.axes[5] * 35) + 90) + '\n')
+	ser.write('{' + str(int(-1 * joyMsg.axes[1] * 35)) + ' ' + str(int(-1 * joyMsg.axes[3] * 35)) + '}' + '\n')
+	
 
 
 def listener():
@@ -24,8 +24,11 @@ def listener():
 
 if __name__ == '__main__':
 	while True:
+		value=ser.read()
+		if value is not None: 
+			print value
 		time.sleep(1)
-		ser.write('Test')
 
-	
+	print('Ending serial connection')
  	listener()
+	ser.close()
