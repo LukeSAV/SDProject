@@ -131,6 +131,8 @@ int main(void) {
 			mc_tx_buffer[0] = 'A';
 			mc_tx_buffer[1] = 255;
 			USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
+			memcpy(jetson_tx_buffer, t, 9 * sizeof(char));
+			USART_ITConfig(USART1, USART_IT_TXE, ENABLE);   // Enable USART1 Transmit interrupt
 			usWait(100000000);
 		}
 	}

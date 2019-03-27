@@ -60,7 +60,7 @@ std::shared_ptr<Node> Map::AStarSearch() {
 
         if(min_node == end) { // Destination reached
             std::cout << "Destination reached" << std::endl;
-            return min_node;
+            return min_node; // Returning last node 
         }
 
         closedSet.insert(min_node);
@@ -95,36 +95,6 @@ std::shared_ptr<Node> Map::AStarSearch() {
         }
     }
 }
-
-void Map::DrawMap() {
-    std::shared_ptr<Node> n = end;
-    glColor3f(0.0, 1.0, 0.0);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    while(n) {
-        glBegin(GL_POLYGON);
-        glVertex2f(1020 - n->y_index * 20, 1020 - n->x_index * 20); 
-        glVertex2f(1000 - n->y_index * 20, 1020 - n->x_index * 20); 
-        glVertex2f(1000 - n->y_index * 20, 1000 - n->x_index * 20); 
-        glVertex2f(1020 - n->y_index * 20, 1000 - n->x_index * 20); 
-        glEnd();
-        glColor3f(1.0, 1.0, 1.0);
-        n = n->prevNode;
-    }
-    for(unsigned int i = 0; i < MAP_SIZE; i++) {
-        for(unsigned int j = 0; j < MAP_SIZE; j++) {
-            if(obstacle_grid(i, j) > 0) {
-                glBegin(GL_POLYGON);
-                glColor3f((float)obstacle_grid(i, j) / 128.0f, 0.0f, 0.0f);
-                glVertex2f(1020 - j * 20, 1020 - i * 20); 
-                glVertex2f(1000 - j * 20, 1020 - i * 20); 
-                glVertex2f(1000 - j * 20, 1000 - i * 20); 
-                glVertex2f(1020 - j * 20, 1000 - i * 20); 
-                glEnd();
-            }
-        }
-    }
-}
-
 
 void Map::ApplyObstacles() {
     for(unsigned int i = 0; i < MAP_SIZE; i++) {

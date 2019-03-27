@@ -6,7 +6,7 @@
 #include "sensor_msgs/NavSatFix.h"
 #include "ros/callback_queue.h"
 #include "ros/ros.h"
-#include "../include/Node.h"
+#include "../include/MapNode.h"
 #include "../include/MapData.h"
 #include "../include/xml_reader.h"
 #include "rtk/HeadingSpeed.h"
@@ -25,7 +25,7 @@ std::chrono::time_point<std::chrono::system_clock> last_gpgga_received_time;
 
 static std::string next_waypoint_key = "";
 static std::string prev_waypoint_key = "";
-static Node prev_waypoint = Node(0.0f, 0.0f);
+static MapNode prev_waypoint = MapNode(0.0f, 0.0f);
 
 static int left_speed = 90;
 static int right_speed = 90;
