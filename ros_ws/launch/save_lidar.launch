@@ -1,0 +1,6 @@
+<launch>
+
+  <node name="extract" pkg="image_view" type="extract_images" respawn="false" required="true" output="screen" cwd="ROS_HOME">
+  <remap from="/scan_img" to="/camera/image_raw"/>
+    </node>
+</launch>

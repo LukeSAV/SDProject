@@ -1,0 +1,4 @@
+<launch>
+  <node name="lidar_proc" pkg="perception" type="perception_node" output="screen" />
+  <node name="lidar_track" pkg="perception" type="lidar.py" output="screen" />
+</launch>
