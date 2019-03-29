@@ -320,14 +320,30 @@ void TIM14_IRQHandler() {
 	elapsed_response_time = 0;
 
 	/* Update Display */
-	if(disp_count >= 5 && us3_distance < 500) { // Update the display every second
+	if(disp_count >= 5) { // Update the display every second
 		Cmd(0x01); // clear entire display
 		usWait(6200000); // clear takes 6.2ms to complete
 		Cmd(0x02); // put the cursor in the home position
 		Cmd(0x06); // 0000 01IS: set display to increment
-		int distance = us3_distance;
-		char out_data[4] = {48, 48, 48, 0};
+		char out_data[18] = {'U', 'S', ' ', '0', '0', '0', ' ', ' ', '0', '0', '0', ' ', ' ', '0', '0', '0', 10, 0}; // Write ultrasonic data to screen
 		int data_loc = 2;
+		int distance = us1_distance;
+		while(distance > 0) {
+			int num_to_disp = distance % 10;
+			out_data[data_loc] = num_to_disp + 48;
+			data_loc--;
+			distance = distance / 10;
+		}
+		data_loc = 8;
+		distance = us2_distance;
+		while(distance > 0) {
+			int num_to_disp = distance % 10;
+			out_data[data_loc] = num_to_disp + 48;
+			data_loc--;
+			distance = distance / 10;
+		}
+		data_loc = 15;
+		distance = us3_distance;
 		while(distance > 0) {
 			int num_to_disp = distance % 10;
 			out_data[data_loc] = num_to_disp + 48;
@@ -335,6 +351,10 @@ void TIM14_IRQHandler() {
 			distance = distance / 10;
 		}
 		DispString(out_data);
+
+		char out_data[17] = {'I', 'R', ' ', 'L', ':', '0', '0', '0', '0', ' ', 'R', ':', '0', '0', '0', '0', 0}; // Write infrared encoder data to screen
+		DispString(out_data);
+
 		disp_count = 0;
 	}
 	disp_count++;
@@ -353,6 +373,9 @@ void TIM15_IRQHandler() {
 	uint8_t us2_return = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5);
 	uint8_t us3_return = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7);
 	if(elapsed_response_time > 25000) { // More than 4 meters away
+		us1_distance = 500;
+		us2_distance = 500;
+		us3_distance = 500;
 		NVIC_DisableIRQ(TIM15_IRQn);
 	}
 
