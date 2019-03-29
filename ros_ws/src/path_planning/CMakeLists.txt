@@ -10,16 +10,20 @@ find_package(OpenGL REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
 	roscpp
 	std_msgs
-  nav_msgs
+	nav_msgs
+	rtk
 )
 
 catkin_package(
 	INCLUDE_DIRS
 	include
+
 	CATKIN_DEPENDS
 	roscpp
+	rospy
 	std_msgs
-  nav_msgs
+	nav_msgs
+	rtk
 )
 
 
@@ -31,9 +35,14 @@ include_directories(
 )
 
 add_executable(${PROJECT_NAME}_node
-  src/main.cpp
-  src/Map.cpp
-  src/Node.cpp
+	src/main.cpp
+	src/Map.cpp
+	src/Node.cpp
+	src/GlobalMap.cpp
+	src/GlobalNode.cpp
+	src/xml_reader.cpp
+	src/GLDebug.cpp
+	src/LocalOp.cpp
 )
 
 add_dependencies(${PROJECT_NAME}_node

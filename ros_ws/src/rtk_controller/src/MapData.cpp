@@ -6,12 +6,12 @@
 #include <string>
 #include <vector>
 #include "../include/MapData.h"
-#include "../include/Node.h"
+#include "../include/MapNode.h"
 
 #define DEGREE_MULTI_FACTOR 111139 // Factor by which to multiple a difference in lat/lon degrees to get distance in meters
 
-std::map<std::string, Node> MapData::node_map; // Key: Unique identifier for node, Value: Node type with relevant data for a single point on the Map
-std::map<std::string, Node> MapData::path_map; // Key: Unique identifier for path node, Value: Node type with relevant data for a single point on the Map
+std::map<std::string, MapNode> MapData::node_map; // Key: Unique identifier for node, Value: MapNode type with relevant data for a single point on the Map
+std::map<std::string, MapNode> MapData::path_map; // Key: Unique identifier for path node, Value: MapNode type with relevant data for a single point on the Map
 std::map<std::string, std::pair<std::vector<std::string>, std::string>> MapData::landmark_map; // Key: Unique identifier string for waypoint, Value: pair - first element = vector of unique node identifier strings, second element = name of waypoint
 
 MapData::MapData() {
@@ -66,7 +66,7 @@ std::string MapData::getClosestLandmark(std::pair<double, double> cur_coord) { /
 	for(ways_it = landmark_map.begin(); ways_it != landmark_map.end(); ways_it++) { // Check each of the landmarks
 		for(std::string node_id : ways_it->second.first) { // Check each point that constitutes a landmark
 			try {
-				Node cur_node = node_map[node_id];
+				MapNode cur_node = node_map[node_id];
 				double distance = sqrt((cur_node.lat - cur_lat) * (cur_node.lat - cur_lat) + (cur_node.lon - cur_lon) * (cur_node.lon - cur_lon));
 				if(shortest_distance == -1) {
 					nearestLandmarkKey = ways_it->first;
@@ -87,7 +87,7 @@ std::string MapData::getClosestLandmark(std::pair<double, double> cur_coord) { /
 }
 
 std::string MapData::getClosestWaypoint(std::pair<double, double> cur_coord) { // Set the closest landmark to the user position based on the current gpgga string
-	std::map<std::string, Node>::iterator ways_it;
+	std::map<std::string, MapNode>::iterator ways_it;
 	static std::string nearestWaypointKey; // String key using unique identifier to the nearest landmark
 	double cur_lat = cur_coord.first;
 	double cur_lon = cur_coord.second;
@@ -96,7 +96,7 @@ std::string MapData::getClosestWaypoint(std::pair<double, double> cur_coord) { /
 	}
 	double shortest_distance = -1; // Closest distance between a node and the current coordinate
 	for(ways_it = path_map.begin(); ways_it != path_map.end(); ways_it++) { // Check each of the landmarks
-		Node cur_node = ways_it->second;
+		MapNode cur_node = ways_it->second;
 		double distance = sqrt((cur_node.lat - cur_lat) * (cur_node.lat - cur_lat) + (cur_node.lon - cur_lon) * (cur_node.lon - cur_lon));
 		if(shortest_distance == -1) {
 			nearestWaypointKey = ways_it->first;
@@ -143,7 +143,7 @@ double MapData::getHeading(std::string gpvtg_msg) {
 }
 
 /*std::pair<std::string, std::string> MapData::getPrevAndNextWaypoints(std::pair<double, double> cur_coord) {
-	std::map<std::string, Node>::iterator path_map_it; 
+	std::map<std::string, MapNode>::iterator path_map_it; 
 	for(path_map_it = std::next(path_map.begin()); path_map_it != path_map.end(); path_map_it++) { // Iterate through each node to find the 
 		std::pair<double, double> prev_waypoint_coord = std::pair<double, double>(std::prev(path_map_it)->second.lat, std::prev(path_map_it)->second.lon);
 		std::pair<double, double> next_waypoint_coord = std::pair<double, double>(path_map_it->second.lat, path_map_it->second.lon);
@@ -155,11 +155,11 @@ double MapData::getHeading(std::string gpvtg_msg) {
 	return std::pair<std::string, std::string>("", "");
 }*/
 
-double MapData::getDistance(std::pair<double, double> cur_pos, Node waypoint) {
+double MapData::getDistance(std::pair<double, double> cur_pos, MapNode waypoint) {
 	return DEGREE_MULTI_FACTOR * sqrt((cur_pos.first - waypoint.lat) * (cur_pos.first - waypoint.lat) + (cur_pos.second - waypoint.lon) * (cur_pos.second - waypoint.lon));
 }
 
-MapData::linePos MapData::getSideOfLine(Node prev_waypoint, Node next_waypoint, std::pair<double, double> cur_pos) {
+MapData::linePos MapData::getSideOfLine(MapNode prev_waypoint, MapNode next_waypoint, std::pair<double, double> cur_pos) {
 	double line_val = (cur_pos.first - prev_waypoint.lat) * (next_waypoint.lon - prev_waypoint.lon) - (cur_pos.second - prev_waypoint.lon) * (next_waypoint.lat - prev_waypoint.lat); // Use outer product
 	if(line_val > 0) { 
 		return MapData::linePos::Left;
@@ -168,7 +168,7 @@ MapData::linePos MapData::getSideOfLine(Node prev_waypoint, Node next_waypoint, 
 		return MapData::linePos::Right;
 	}
 }
-double MapData::getDistanceFromLine(Node prev_waypoint, Node next_waypoint, std::pair<double, double> cur_pos) {
+double MapData::getDistanceFromLine(MapNode prev_waypoint, MapNode next_waypoint, std::pair<double, double> cur_pos) {
 	// Do vector projection of current point onto line
 	std::pair<double, double> line_vec = std::pair<double, double>(next_waypoint.lat - prev_waypoint.lat, next_waypoint.lon - prev_waypoint.lon);
 	std::pair<double, double> point_vec = std::pair<double, double>(cur_pos.first - prev_waypoint.lat, cur_pos.second - prev_waypoint.lon);

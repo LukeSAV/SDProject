@@ -40,6 +40,9 @@ static uint32_t adc1_val = 0; // Current ADC channel 1 reading
 static uint32_t adc0_slots = 0; // Number of times a reading on ADC channel 0 has crossed the threshold
 static uint32_t adc1_slots = 0; // Number of times a reading on ADC channel 1 has crossed the threshold
 
+static uint8_t left_speed = 0;
+static uint8_t right_speed = 0;
+
 /* UART vars */
 static char last_message[RX_BUFFER_MAX]; // Contains last full string enclosed in curly braces
 
@@ -73,6 +76,10 @@ static uint8_t disp_count = 0;
 Packet left_packet;
 Packet right_packet;
 
+uint16_t num_chars_received = 0;
+
+static void decodeJetsonString();
+
 static void ADCInit();
 static void USARTInit();
 static void UltrasonicInit();
@@ -94,42 +101,49 @@ void usWait(int t) {
 }
 
 int main(void) {
-	ADCInit();
+	//ADCInit();
 	USARTInit();
-	SPIInit();
-	UltrasonicInit();
+	//SPIInit();
+	//UltrasonicInit();
+
+
+	//RCC->AHBENR |= RCC_AHBENR_GPIOBEN; // Ensure clock to port B is enabled
+	//GPIOB->MODER = 0x00000100;
+	//GPIOB->ODR = 0xFFFF;
+	//GPIOB->ODR = 0x0000;
 
 	mc_tx_buffer[8] = 255; // Set end character in buffer
 
 	left_packet.address = MC_ADDRESS; // Only one motor controller, so use this address
 	right_packet.address = MC_ADDRESS;
 
-	/*mc_tx_buffer[0] = MC_ADDRESS;
+	mc_tx_buffer[0] = MC_ADDRESS;
 	mc_tx_buffer[1] = 14; // Serial timeout command
-	mc_tx_buffer[2] = 100; // 10000ms timeout
+	mc_tx_buffer[2] = 20; // 10000ms timeout
 	mc_tx_buffer[3] = (MC_ADDRESS + 100 + 14) & 127; // Checksum
 	mc_tx_buffer[4] = 255; // Stop byte
-	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout*/
+	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
 
 	// Test UART transfer
-	char* t = "Connected";
-	memcpy(jetson_tx_buffer, t, 9 * sizeof(char));
-	USART_ITConfig(USART1, USART_IT_TXE, ENABLE);   // Enable USART1 Transmit interrupt
-	DispString(t);
+	//char* t = "Connected";
+	//memcpy(jetson_tx_buffer, t, 9 * sizeof(char));
+	//USART_ITConfig(USART1, USART_IT_TXE, ENABLE);   // Enable USART1 Transmit interrupt
+	//DispString(t);
 
-	//Drive(FORWARD, 20, FORWARD, 20);
+
+
 	for(;;) {
-		if(mc_tx_buffer_index == 0) {
-			mc_tx_buffer[0] = 'A';
-			mc_tx_buffer[1] = 255;
-			USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
-			usWait(10000000);
-		}
+		Drive(FORWARD, left_speed, FORWARD, right_speed);
+		usWait(100000000);
 	}
 }
 
 
 
+static void decodeJetsonString() {
+	left_speed = (last_message[3] - 48) + (last_message[2] - 48) * 10 + (last_message[1] - 48) * 100;
+	right_speed = (last_message[7] - 48) + (last_message[6] - 48) * 10 + (last_message[5] - 48) * 100;
+}
 
 
 /*************************************************************************
@@ -155,7 +169,7 @@ static int Drive(enum Direction left_direction, char left_speed, enum Direction 
 		right_packet.command = 5;
 	}
 	left_packet.data = left_speed;
-	right_packet.data = left_speed;
+	right_packet.data = right_speed;
 
 	left_packet.checksum = (left_packet.address + left_packet.command + left_packet.data) & 127;
 	right_packet.checksum = (right_packet.address + right_packet.command + right_packet.data) & 127;
@@ -234,9 +248,10 @@ void TIM2_IRQHandler() {
 *
 **************************************************************************/
 void USART1_IRQHandler() {
-	if(USART1->ISR & USART_ISR_RXNE) { // Check if RXNE flag is set
+	if((USART1->ISR & USART_ISR_RXNE) == USART_ISR_RXNE) { // Check if RXNE flag is set
 		if(rx_buffer_index < RX_BUFFER_MAX) {
-			char in_char = (char) USART_ReceiveData(USART1);
+			char in_char = (uint8_t) USART1->RDR;
+			num_chars_received++;
 			if(rx_buffer_index == 0 && in_char != '{') {
 				return; // Ignoring data that is not contained within braces
 			}
@@ -244,6 +259,7 @@ void USART1_IRQHandler() {
 			if(in_char == '}') {
 				memcpy(last_message, rx_buffer, rx_buffer_index * sizeof(char)); // Copy completed message to memory
 				memset(rx_buffer, '\0', RX_BUFFER_MAX); // Clear buffer
+				decodeJetsonString();
 				rx_buffer_index = 0; // Reset buffer index
 			}
 		} else {
@@ -252,7 +268,7 @@ void USART1_IRQHandler() {
 			rx_buffer_index = 0; // Reset buffer index
 		}
 	}
-	if(USART1->ISR & USART_ISR_TXE) { // Check if TXE flag is set
+	if((USART1->ISR & USART_ISR_TC) == USART_ISR_TC) { // Check if TXE flag is set
 		if(jetson_tx_buffer[jetson_tx_buffer_index] != '\0') {
 			USART1->TDR = jetson_tx_buffer[jetson_tx_buffer_index++]; // Load next character into data register
 		} else {
@@ -310,14 +326,30 @@ void TIM14_IRQHandler() {
 	elapsed_response_time = 0;
 
 	/* Update Display */
-	if(disp_count >= 5 && us1_distance < 500) { // Update the display every second
+	if(disp_count >= 5) { // Update the display every second
 		Cmd(0x01); // clear entire display
 		usWait(6200000); // clear takes 6.2ms to complete
 		Cmd(0x02); // put the cursor in the home position
 		Cmd(0x06); // 0000 01IS: set display to increment
-		int distance = us1_distance;
-		char out_data[4] = {48, 48, 48, 0};
+		char out_data[18] = {'U', 'S', ' ', '0', '0', '0', ' ', ' ', '0', '0', '0', ' ', ' ', '0', '0', '0', 10, 0}; // Write ultrasonic data to screen
 		int data_loc = 2;
+		int distance = us1_distance;
+		while(distance > 0) {
+			int num_to_disp = distance % 10;
+			out_data[data_loc] = num_to_disp + 48;
+			data_loc--;
+			distance = distance / 10;
+		}
+		data_loc = 8;
+		distance = us2_distance;
+		while(distance > 0) {
+			int num_to_disp = distance % 10;
+			out_data[data_loc] = num_to_disp + 48;
+			data_loc--;
+			distance = distance / 10;
+		}
+		data_loc = 15;
+		distance = us3_distance;
 		while(distance > 0) {
 			int num_to_disp = distance % 10;
 			out_data[data_loc] = num_to_disp + 48;
@@ -325,6 +357,10 @@ void TIM14_IRQHandler() {
 			distance = distance / 10;
 		}
 		DispString(out_data);
+
+		char out_data[17] = {'I', 'R', ' ', 'L', ':', '0', '0', '0', '0', ' ', 'R', ':', '0', '0', '0', '0', 0}; // Write infrared encoder data to screen
+		DispString(out_data);
+
 		disp_count = 0;
 	}
 	disp_count++;
@@ -343,6 +379,9 @@ void TIM15_IRQHandler() {
 	uint8_t us2_return = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5);
 	uint8_t us3_return = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_7);
 	if(elapsed_response_time > 25000) { // More than 4 meters away
+		us1_distance = 500;
+		us2_distance = 500;
+		us3_distance = 500;
 		NVIC_DisableIRQ(TIM15_IRQn);
 	}
 
@@ -376,7 +415,7 @@ void TIM15_IRQHandler() {
 	}
 	else if(us3_started && !us3_return) { // Pulse went low
 		us3_started = 0;
-		us3_distance = us2_elapsed_echo_time * 0.0343 / 2; // Using speed of sound in cm/us to get distance
+		us3_distance = us3_elapsed_echo_time * 0.0343 / 2; // Using speed of sound in cm/us to get distance
 	}
 }
 
@@ -429,7 +468,8 @@ static void USARTInit() {
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; 				// Push pull
 	GPIO_Init(GPIOA, &GPIO_InitStructure);						// Initialize GPIOA with above settings
 
-	USART_InitStructure.USART_BaudRate = 57600; 										// Set baud rate to 57600 b/s
+
+	USART_InitStructure.USART_BaudRate = 9600; 										// Set baud rate to 57600 b/s
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b; 						// 8b word length
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;								// 1 stop bit
 	USART_InitStructure.USART_Parity = USART_Parity_No;									// No parity
@@ -438,7 +478,11 @@ static void USARTInit() {
 	USART_Init(USART1, &USART_InitStructure);		// Initialize USART1 with above settings
 
 	USART_InitStructure.USART_BaudRate = 9600; 		// Set baud rate to 9600 b/s
+	USART_InitStructure.USART_WordLength = USART_WordLength_8b; 						// 8b word length
+	USART_InitStructure.USART_StopBits = USART_StopBits_1;								// 1 stop bit
+	USART_InitStructure.USART_Parity = USART_Parity_No;									// No parity
 	USART_InitStructure.USART_Mode = USART_Mode_Tx; // Enable TX on pin 2
+	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;		// No flow control
 	USART_Init(USART2, &USART_InitStructure);		// Initialize USART2 with above settings
 
 	USART_Cmd(USART1, ENABLE);						// Enable USART1
@@ -530,6 +574,7 @@ static void SPIInit() {
 	GPIOB->MODER &= 0x30ffffff;
 	GPIOB->MODER |= 0x8A000000;
 	GPIOB->AFR[1] &= 0x0f00ffff;
+	//GPIOB->ODR = 0xFFFF;
 
 	RCC->APB1ENR |= RCC_APB1ENR_SPI2EN;
 	SPI2->CR1 |= (SPI_CR1_MSTR | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 | SPI_CR1_BIDIMODE | SPI_CR1_BIDIOE);
