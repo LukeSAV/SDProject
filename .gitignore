@@ -64,6 +64,7 @@ cmake-build-release/
 
 **/.DS_STORE
 **/Thumbs.db
+*.swp
 
 .metadata/*
 
