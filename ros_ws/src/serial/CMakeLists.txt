@@ -26,10 +26,10 @@ check_include_files(linux/joystick.h HAVE_LINUX_JOYSTICK_H)
 
 
 
-catkin_install_python(PROGRAMS
-	src/serial_manager.py
-	DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/src
-)
+#catkin_install_python(PROGRAMS
+#	src/serial_manager.py
+#	DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/src
+#)
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations

@@ -14,7 +14,7 @@ namespace imu_bno055 {
 BNO055I2CActivity::BNO055I2CActivity(ros::NodeHandle &_nh, ros::NodeHandle &_nh_priv) :
   nh(_nh), nh_priv(_nh_priv) {
     ROS_INFO("initializing");
-    nh_priv.param("device", param_device, (std::string)"/dev/i2c-1");
+    nh_priv.param("device", param_device, (std::string)"/dev/i2c-0");
     nh_priv.param("address", param_address, (int)BNO055_ADDRESS_A);
     nh_priv.param("frame_id", param_frame_id, (std::string)"imu");
 
