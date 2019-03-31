@@ -15,14 +15,15 @@
 #include <string.h>
 
 #define IR_RECEIVE_MAX 500
-#define IR_NO_RECEIVE_MIN 2000
-#define RX_BUFFER_MAX 1500
-#define TX_BUFFER_MAX 500
+#define IR_NO_RECEIVE_MIN 1000
+#define RX_BUFFER_MAX 100
+#define TX_BUFFER_MAX 100
 #define MC_ADDRESS 130
 
 enum Encoders{RECEIVE, NO_RECEIVE};
 enum Direction{FORWARD, REVERSE};
 enum LastMotorSent{LEFT, RIGHT};
+enum DisplayMode{START=0, ULTRASONICS=1, ENCODERS=2, END=3};
 typedef struct {
 	char address;
 	char command;
@@ -30,15 +31,26 @@ typedef struct {
 	char checksum;
 } Packet;
 
+/* Display mode info */
+static uint8_t current_mode = ULTRASONICS;
+
 /* Encoder state vars */
 enum Encoders prev_adc0_state = NO_RECEIVE; // Previous ADC channel 0 state
 enum Encoders prev_adc1_state = NO_RECEIVE; // Previous ADC channel 1 state
 enum Encoders adc0_state = NO_RECEIVE; // Current ADC channel 0 state
 enum Encoders adc1_state = NO_RECEIVE; // Current ADC channel 1 state
+
+enum Direction left_direction = FORWARD;
+enum Direction right_direction = FORWARD;
+
 static uint32_t adc0_val = 0; // Current ADC channel 0 reading
 static uint32_t adc1_val = 0; // Current ADC channel 1 reading
-static uint32_t adc0_slots = 0; // Number of times a reading on ADC channel 0 has crossed the threshold
-static uint32_t adc1_slots = 0; // Number of times a reading on ADC channel 1 has crossed the threshold
+
+static uint32_t adc0_slots = 0; // Number of times a reading on ADC channel 0 has crossed the threshold - right
+static uint32_t adc1_slots = 0; // Number of times a reading on ADC channel 1 has crossed the threshold - left
+
+static uint32_t last_encoder_left_count_to_jetson = 0;
+static uint32_t last_encoder_right_count_to_jetson = 0;
 
 static uint8_t left_speed = 0;
 static uint8_t right_speed = 0;
@@ -72,11 +84,15 @@ static uint16_t us3_elapsed_echo_time = 0; // Elapsed ultrasonic echo time in us
 
 static uint8_t disp_count = 0;
 
+static uint16_t time_since_last_jetson_msg = 0; // Time in milliseconds since last message was received from jetson
+
 /* Motor state vars */
 Packet left_packet;
 Packet right_packet;
 
 uint16_t num_chars_received = 0;
+
+uint32_t loop_count = 0;
 
 static void decodeJetsonString();
 
@@ -88,11 +104,12 @@ static int Drive(enum Direction left_direction, char left_speed, enum Direction 
 static void Cmd(char b);
 static void Data(char b);
 static void DispString(char* data);
+static void SendEncoderCount();
 /*************************************************************************
 *	Wait specified number of microseconds
 *
 **************************************************************************/
-void usWait(int t) {
+void nsWait(int t) {
     asm("       mov r0,%0\n"
         "repeat:\n"
         "       sub r0,#83\n"
@@ -101,10 +118,10 @@ void usWait(int t) {
 }
 
 int main(void) {
-	//ADCInit();
+	ADCInit();
 	USARTInit();
-	//SPIInit();
-	//UltrasonicInit();
+	SPIInit();
+	UltrasonicInit();
 
 
 	//RCC->AHBENR |= RCC_AHBENR_GPIOBEN; // Ensure clock to port B is enabled
@@ -119,8 +136,8 @@ int main(void) {
 
 	mc_tx_buffer[0] = MC_ADDRESS;
 	mc_tx_buffer[1] = 14; // Serial timeout command
-	mc_tx_buffer[2] = 20; // 10000ms timeout
-	mc_tx_buffer[3] = (MC_ADDRESS + 100 + 14) & 127; // Checksum
+	mc_tx_buffer[2] = 10; // 1000ms timeout
+	mc_tx_buffer[3] = (MC_ADDRESS + 10 + 14) & 127; // Checksum
 	mc_tx_buffer[4] = 255; // Stop byte
 	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
 
@@ -133,16 +150,92 @@ int main(void) {
 
 
 	for(;;) {
-		Drive(FORWARD, left_speed, FORWARD, right_speed);
-		usWait(100000000);
+		if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
+			left_speed = right_speed = 0;
+		}
+		Drive(left_direction, left_speed, right_direction, right_speed);
+		nsWait(100000000); // wait 100ms
+		loop_count++;
 	}
 }
 
+/*
+ * Send number of encoder ticks since last message was sent to Jetson
+ */
+static void SendEncoderCount() {
+	uint32_t left_count_to_send = adc1_slots - last_encoder_left_count_to_jetson;
+	uint32_t right_count_to_send = adc0_slots - last_encoder_right_count_to_jetson;
+	/* If the encoder count deltas to the jetson are too high something is wrong - loop infinitely for now */
+	last_encoder_left_count_to_jetson = adc1_slots;
+	last_encoder_right_count_to_jetson = adc0_slots;
+	if(left_count_to_send > 99 || right_count_to_send > 99) {
+		return; // REALLY fast if this is true
+	} else {
+		char second_left_char = left_count_to_send % 10 + 48;
+		left_count_to_send /= 10;
+		char first_left_char = left_count_to_send % 10 + 48;
 
+		char second_right_char = right_count_to_send % 10 + 48;
+		right_count_to_send /= 10;
+		char first_right_char = right_count_to_send % 10 + 48;
 
+		jetson_tx_buffer[0] = '{';
+		jetson_tx_buffer[1] = 'E';
+		jetson_tx_buffer[2] = first_left_char;
+		jetson_tx_buffer[3] = second_left_char;
+		jetson_tx_buffer[4] = ',';
+		jetson_tx_buffer[5] = first_right_char;
+		jetson_tx_buffer[6] = second_right_char;
+		jetson_tx_buffer[7] = '}';
+		jetson_tx_buffer[8] = '\0';
+		USART_ITConfig(USART1, USART_IT_TXE, ENABLE);   // Enable USART1 Transmit interrupt
+	}
+}
+
+/*
+ * Switch to next display mode
+ */
+static void nextMode() {
+	current_mode++;
+	if(current_mode >= END) {
+		current_mode = START + 1;
+	}
+}
+
+/*
+ * Decode the remote controller message from the Jetson and set desired wheel speed.
+ */
+static void decodeControllerMsg() {
+	time_since_last_jetson_msg = 0;
+	left_speed = (last_message[5] - 48) + (last_message[4] - 48) * 10 + (last_message[3] - 48) * 100;
+	right_speed = (last_message[10] - 48) + (last_message[9] - 48) * 10 + (last_message[8] - 48) * 100;
+	if(last_message[2] == '+') {
+		left_direction = FORWARD;
+	} else if(last_message[2] == '-') {
+		left_direction = REVERSE;
+	}
+	if(last_message[7] == '+') {
+		right_direction = FORWARD;
+	} else if(last_message[7] == '-') {
+		right_direction = REVERSE;
+	}
+}
+
+/*
+ * Determine which type of message was received from the Jetson and parse the data accordingly.
+ */
 static void decodeJetsonString() {
-	left_speed = (last_message[3] - 48) + (last_message[2] - 48) * 10 + (last_message[1] - 48) * 100;
-	right_speed = (last_message[7] - 48) + (last_message[6] - 48) * 10 + (last_message[5] - 48) * 100;
+	switch (last_message[1]) {
+	case 'C': // Remote controller feedback
+		decodeControllerMsg();
+		break;
+	case 'M': // Mode swtich
+		nextMode();
+		break;
+	default:
+		break;
+	}
+
 }
 
 
@@ -248,6 +341,11 @@ void TIM2_IRQHandler() {
 *
 **************************************************************************/
 void USART1_IRQHandler() {
+	if(USART1->ISR & USART_ISR_ORE) { // Overran buffer
+		USART1->ICR |= USART_ICR_ORECF;
+		memset(rx_buffer, '\0', RX_BUFFER_MAX);
+		rx_buffer_index = 0; // Reset buffer index
+	}
 	if((USART1->ISR & USART_ISR_RXNE) == USART_ISR_RXNE) { // Check if RXNE flag is set
 		if(rx_buffer_index < RX_BUFFER_MAX) {
 			char in_char = (uint8_t) USART1->RDR;
@@ -300,12 +398,14 @@ void USART2_IRQHandler() {
 
 
 /*************************************************************************
-*	100 ms Interrupt
+*	200 ms Interrupt
 *
 *	Hold the trigger pin high for 10us every 200ms and enable timer to count response time before echo pin goes high.
 *
 **************************************************************************/
 void TIM14_IRQHandler() {
+	SendEncoderCount();
+	time_since_last_jetson_msg += 200; // Increment timer for last jetson message
 	/* Run ultrasonic pulse */
 	TIM14->SR &= 0x00; 					// Clear the IRQ flag
 	NVIC_EnableIRQ(TIM15_IRQn); 		// Enable IRQ for TIM15 in NVIC
@@ -313,7 +413,7 @@ void TIM14_IRQHandler() {
 	GPIO_SetBits(GPIOA, GPIO_Pin_0);
 	GPIO_SetBits(GPIOA, GPIO_Pin_4);
 	GPIO_SetBits(GPIOA, GPIO_Pin_6);
-	usWait(10000); // Idle while trigger is high (~10 us)
+	nsWait(10000); // Idle while trigger is high (~10 us)
 	// Set the trigger pins low
 	GPIO_ResetBits(GPIOA, GPIO_Pin_0);
 	GPIO_ResetBits(GPIOA, GPIO_Pin_4);
@@ -328,38 +428,56 @@ void TIM14_IRQHandler() {
 	/* Update Display */
 	if(disp_count >= 5) { // Update the display every second
 		Cmd(0x01); // clear entire display
-		usWait(6200000); // clear takes 6.2ms to complete
+		nsWait(6200000); // clear takes 6.2ms to complete
 		Cmd(0x02); // put the cursor in the home position
-		Cmd(0x06); // 0000 01IS: set display to increment
-		char out_data[18] = {'U', 'S', ' ', '0', '0', '0', ' ', ' ', '0', '0', '0', ' ', ' ', '0', '0', '0', 10, 0}; // Write ultrasonic data to screen
-		int data_loc = 2;
-		int distance = us1_distance;
-		while(distance > 0) {
-			int num_to_disp = distance % 10;
-			out_data[data_loc] = num_to_disp + 48;
-			data_loc--;
-			distance = distance / 10;
-		}
-		data_loc = 8;
-		distance = us2_distance;
-		while(distance > 0) {
-			int num_to_disp = distance % 10;
-			out_data[data_loc] = num_to_disp + 48;
-			data_loc--;
-			distance = distance / 10;
-		}
-		data_loc = 15;
-		distance = us3_distance;
-		while(distance > 0) {
-			int num_to_disp = distance % 10;
-			out_data[data_loc] = num_to_disp + 48;
-			data_loc--;
-			distance = distance / 10;
-		}
-		DispString(out_data);
+		Cmd(0x06); // Set display to increment
+		Cmd(0x38); // Enable 2 line mode
+		if(current_mode == ULTRASONICS) {
+			char out_data1[17] = {'L', '0', '0', '0', ' ', 'M', '0', '0', '0', ' ', 'R', '0', '0', '0'}; // Write ultrasonic data to screen
+			int data_loc = 3;
+			int distance = us2_distance;
+			while(distance > 0) {
+				int num_to_disp = distance % 10;
+				out_data1[data_loc] = num_to_disp + 48;
+				data_loc--;
+				distance /= 10;
+			}
+			data_loc = 8;
+			distance = us3_distance;
+			while(distance > 0) {
+				int num_to_disp = distance % 10;
+				out_data1[data_loc] = num_to_disp + 48;
+				data_loc--;
+				distance /= 10;
+			}
+			data_loc = 13;
+			distance = us1_distance;
+			while(distance > 0) {
+				int num_to_disp = distance % 10;
+				out_data1[data_loc] = num_to_disp + 48;
+				data_loc--;
+				distance = distance /= 10;
+			}
+			DispString(out_data1);
+		} else if(current_mode == ENCODERS) {
+			char out_data2[17] = {'I', 'R', ' ', 'L', ':', '0', '0', '0', '0', ' ', 'R', ':', '0', '0', '0', '0'}; // Write infrared encoder data to screen
+			int data_loc = 8;
+			int count = adc1_slots;
+			while(count > 0) {
+				int num_to_disp = count % 10;
+				out_data2[data_loc--] = num_to_disp + 48;
+				count /= 10;
+			}
+			data_loc = 15;
+			count = adc0_slots;
+			while(count > 0) {
+				int num_to_disp = count % 10;
+				out_data2[data_loc--] = num_to_disp + 48;
+				count /= 10;
+			}
+			DispString(out_data2);
 
-		char out_data[17] = {'I', 'R', ' ', 'L', ':', '0', '0', '0', '0', ' ', 'R', ':', '0', '0', '0', '0', 0}; // Write infrared encoder data to screen
-		DispString(out_data);
+		}
 
 		disp_count = 0;
 	}
@@ -473,7 +591,7 @@ static void USARTInit() {
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b; 						// 8b word length
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;								// 1 stop bit
 	USART_InitStructure.USART_Parity = USART_Parity_No;									// No parity
-	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;						// Enable TX and RX on pins 9 and 10 respectively of port A
+	USART_InitStructure.USART_Mode = USART_Mode_Rx; //| USART_Mode_Tx;						// Enable TX and RX on pins 9 and 10 respectively of port A
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;		// No flow control
 	USART_Init(USART1, &USART_InitStructure);		// Initialize USART1 with above settings
 
@@ -581,11 +699,11 @@ static void SPIInit() {
 	SPI2->CR2 = (SPI_CR2_SSOE | SPI_CR2_NSSP | SPI_CR2_DS_3 | SPI_CR2_DS_0);
 	SPI2->CR1 |= SPI_CR1_SPE;
 
-	usWait(100000000); // Give it 100ms to initialize
+	nsWait(100000000); // Give it 100ms to initialize
 	Cmd(0x38); // 0011 NF00 N=1, F=0: two lines
 	Cmd(0x0c); // 0000 1DCB: display on, no cursor, no blink
 	Cmd(0x01); // clear entire display
-	usWait(6200000); // clear takes 6.2ms to complete
+	nsWait(6200000); // clear takes 6.2ms to complete
 	Cmd(0x02); // put the cursor in the home position
 	Cmd(0x06); // 0000 01IS: set display to increment
 }
