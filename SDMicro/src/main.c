@@ -52,8 +52,8 @@ static uint32_t adc1_slots = 0; // Number of times a reading on ADC channel 1 ha
 static uint32_t last_encoder_left_count_to_jetson = 0;
 static uint32_t last_encoder_right_count_to_jetson = 0;
 
-static uint8_t left_speed = 0;
-static uint8_t right_speed = 0;
+static uint8_t left_speed = 0; // Current left speed to be requested
+static uint8_t right_speed = 0; // Current right speed to be requested
 
 /* UART vars */
 static char last_message[RX_BUFFER_MAX]; // Contains last full string enclosed in curly braces
@@ -90,8 +90,8 @@ static uint16_t time_since_last_jetson_msg = 0; // Time in milliseconds since la
 Packet left_packet;
 Packet right_packet;
 
+/* Vars for debugging */
 uint16_t num_chars_received = 0;
-
 uint32_t loop_count = 0;
 
 static void decodeJetsonString();
@@ -105,17 +105,8 @@ static void Cmd(char b);
 static void Data(char b);
 static void DispString(char* data);
 static void SendEncoderCount();
-/*************************************************************************
-*	Wait specified number of microseconds
-*
-**************************************************************************/
-void nsWait(int t) {
-    asm("       mov r0,%0\n"
-        "repeat:\n"
-        "       sub r0,#83\n"
-        "       bgt repeat\n"
-        : : "r"(t) : "r0", "cc");
-}
+static void nsWait(int t);
+
 
 int main(void) {
 	ADCInit();
@@ -147,9 +138,8 @@ int main(void) {
 	//USART_ITConfig(USART1, USART_IT_TXE, ENABLE);   // Enable USART1 Transmit interrupt
 	//DispString(t);
 
-
-
 	for(;;) {
+		// This could include non-controller related messages so if using the controller be wary that if the node dies and the Jetson is still sending data over problems can occur
 		if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
 			left_speed = right_speed = 0;
 		}
@@ -235,7 +225,6 @@ static void decodeJetsonString() {
 	default:
 		break;
 	}
-
 }
 
 
@@ -476,9 +465,7 @@ void TIM14_IRQHandler() {
 				count /= 10;
 			}
 			DispString(out_data2);
-
 		}
-
 		disp_count = 0;
 	}
 	disp_count++;
@@ -706,4 +693,16 @@ static void SPIInit() {
 	nsWait(6200000); // clear takes 6.2ms to complete
 	Cmd(0x02); // put the cursor in the home position
 	Cmd(0x06); // 0000 01IS: set display to increment
+}
+
+/*************************************************************************
+*	Wait specified number of microseconds
+*
+**************************************************************************/
+void nsWait(int t) {
+    asm("       mov r0,%0\n"
+        "repeat:\n"
+        "       sub r0,#83\n"
+        "       bgt repeat\n"
+        : : "r"(t) : "r0", "cc");
 }
