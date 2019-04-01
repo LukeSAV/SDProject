@@ -20,12 +20,16 @@ catkin_package(
 #  DEPENDS system_lib
 )
 
-catkin_install_python(PROGRAMS
-	src/fb_manager.py
-	DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/src
-)
+#catkin_install_python(PROGRAMS
+	#src/fb_manager.py
+	#DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/src
+#)
 
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
 )
+
+install(DIRECTORY migration_rules scripts config launch
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  USE_SOURCE_PERMISSIONS)
