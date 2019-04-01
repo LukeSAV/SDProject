@@ -15,7 +15,7 @@
 #include <string.h>
 
 #define IR_RECEIVE_MAX 500
-#define IR_NO_RECEIVE_MIN 1000
+#define IR_NO_RECEIVE_MIN 1200
 #define RX_BUFFER_MAX 100
 #define TX_BUFFER_MAX 100
 #define MC_ADDRESS 130
@@ -23,7 +23,7 @@
 enum Encoders{RECEIVE, NO_RECEIVE};
 enum Direction{FORWARD, REVERSE};
 enum LastMotorSent{LEFT, RIGHT};
-enum DisplayMode{START=0, ULTRASONICS=1, ENCODERS=2, END=3};
+enum DisplayMode{START=0, ULTRASONICS=1, ENCODERS=2, DELIVERY=3, END=4};
 typedef struct {
 	char address;
 	char command;
@@ -86,6 +86,8 @@ static uint8_t disp_count = 0;
 
 static uint16_t time_since_last_jetson_msg = 0; // Time in milliseconds since last message was received from jetson
 
+static uint8_t delivery_requested = 0; // Indication that delivery was requested has been received from Jetson
+
 /* Motor state vars */
 Packet left_packet;
 Packet right_packet;
@@ -122,9 +124,11 @@ int main(void) {
 
 	mc_tx_buffer[8] = 255; // Set end character in buffer
 
-	left_packet.address = MC_ADDRESS; // Only one motor controller, so use this address
+	/* Only one motor controller, so use this address */
+	left_packet.address = MC_ADDRESS;
 	right_packet.address = MC_ADDRESS;
 
+	/* Send timeout packet */
 	mc_tx_buffer[0] = MC_ADDRESS;
 	mc_tx_buffer[1] = 14; // Serial timeout command
 	mc_tx_buffer[2] = 10; // 1000ms timeout
@@ -144,7 +148,7 @@ int main(void) {
 			left_speed = right_speed = 0;
 		}
 		Drive(left_direction, left_speed, right_direction, right_speed);
-		nsWait(100000000); // wait 100ms
+		nsWait(50000000); // wait 50 ms
 		loop_count++;
 	}
 }
@@ -221,6 +225,12 @@ static void decodeJetsonString() {
 		break;
 	case 'M': // Mode swtich
 		nextMode();
+		break;
+	case 'N': // Cancel delivery request
+		delivery_requested = 0;
+		break;
+	case 'D': // Delivery request received
+		delivery_requested = 1;
 		break;
 	default:
 		break;
@@ -378,7 +388,7 @@ void USART2_IRQHandler() {
 			USART2->TDR = mc_tx_buffer[mc_tx_buffer_index++]; // Load next character into data register
 		} else {
 			USART_ITConfig(USART2, USART_IT_TXE, DISABLE);
-			memset(jetson_tx_buffer, 255, 9);
+			memset(mc_tx_buffer, 255, 9);
 			mc_tx_buffer_index = 0;
 		}
 
@@ -422,12 +432,12 @@ void TIM14_IRQHandler() {
 		Cmd(0x06); // Set display to increment
 		Cmd(0x38); // Enable 2 line mode
 		if(current_mode == ULTRASONICS) {
-			char out_data1[17] = {'L', '0', '0', '0', ' ', 'M', '0', '0', '0', ' ', 'R', '0', '0', '0'}; // Write ultrasonic data to screen
+			char out_data[17] = {'L', '0', '0', '0', ' ', 'M', '0', '0', '0', ' ', 'R', '0', '0', '0'}; // Write ultrasonic data to screen
 			int data_loc = 3;
 			int distance = us2_distance;
 			while(distance > 0) {
 				int num_to_disp = distance % 10;
-				out_data1[data_loc] = num_to_disp + 48;
+				out_data[data_loc] = num_to_disp + 48;
 				data_loc--;
 				distance /= 10;
 			}
@@ -435,7 +445,7 @@ void TIM14_IRQHandler() {
 			distance = us3_distance;
 			while(distance > 0) {
 				int num_to_disp = distance % 10;
-				out_data1[data_loc] = num_to_disp + 48;
+				out_data[data_loc] = num_to_disp + 48;
 				data_loc--;
 				distance /= 10;
 			}
@@ -443,28 +453,36 @@ void TIM14_IRQHandler() {
 			distance = us1_distance;
 			while(distance > 0) {
 				int num_to_disp = distance % 10;
-				out_data1[data_loc] = num_to_disp + 48;
+				out_data[data_loc] = num_to_disp + 48;
 				data_loc--;
 				distance = distance /= 10;
 			}
-			DispString(out_data1);
+			DispString(out_data);
 		} else if(current_mode == ENCODERS) {
-			char out_data2[17] = {'I', 'R', ' ', 'L', ':', '0', '0', '0', '0', ' ', 'R', ':', '0', '0', '0', '0'}; // Write infrared encoder data to screen
+			char out_data[17] = {'I', 'R', ' ', 'L', ':', '0', '0', '0', '0', ' ', 'R', ':', '0', '0', '0', '0'}; // Write infrared encoder data to screen
 			int data_loc = 8;
 			int count = adc1_slots;
 			while(count > 0) {
 				int num_to_disp = count % 10;
-				out_data2[data_loc--] = num_to_disp + 48;
+				out_data[data_loc--] = num_to_disp + 48;
 				count /= 10;
 			}
 			data_loc = 15;
 			count = adc0_slots;
 			while(count > 0) {
 				int num_to_disp = count % 10;
-				out_data2[data_loc--] = num_to_disp + 48;
+				out_data[data_loc--] = num_to_disp + 48;
 				count /= 10;
 			}
-			DispString(out_data2);
+			DispString(out_data);
+		} else if(current_mode == DELIVERY) {
+			if(delivery_requested) {
+				char out_data[16] = {'D', 'E', 'L', 'I', 'V', 'E', 'R', 'Y', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
+				DispString(out_data);
+			} else {
+				char out_data[16] = {'N', 'O', ' ', 'D', 'E', 'L', 'I', 'V', 'E', 'R', 'Y', ' ', ' ', ' ', ' ', ' '};
+				DispString(out_data);
+			}
 		}
 		disp_count = 0;
 	}
@@ -494,7 +512,7 @@ void TIM15_IRQHandler() {
 		us1_started = 1;
 	}
 	else if(us1_started && us1_return) { // Pulse stayed high
-		us1_elapsed_echo_time += 30; // Increment by 30 us
+		us1_elapsed_echo_time += 60; // Increment by 60 us
 	}
 	else if(us1_started && !us1_return) { // Pulse went low
 		us1_started = 0;
@@ -505,7 +523,7 @@ void TIM15_IRQHandler() {
 		us2_started = 1;
 	}
 	else if(us2_started && us2_return) { // Pulse stayed high
-		us2_elapsed_echo_time += 30; // Increment by 30 us
+		us2_elapsed_echo_time += 60; // Increment by 60 us
 	}
 	else if(us2_started && !us2_return) { // Pulse went low
 		us2_started = 0;
@@ -516,7 +534,7 @@ void TIM15_IRQHandler() {
 		us3_started = 1;
 	}
 	else if(us3_started && us3_return) { // Pulse stayed high
-		us3_elapsed_echo_time += 30; // Increment by 30 us
+		us3_elapsed_echo_time += 60; // Increment by 60 us
 	}
 	else if(us3_started && !us3_return) { // Pulse went low
 		us3_started = 0;
@@ -574,11 +592,11 @@ static void USARTInit() {
 	GPIO_Init(GPIOA, &GPIO_InitStructure);						// Initialize GPIOA with above settings
 
 
-	USART_InitStructure.USART_BaudRate = 9600; 										// Set baud rate to 57600 b/s
+	USART_InitStructure.USART_BaudRate = 19200; 										// Set baud rate to 57600 b/s
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b; 						// 8b word length
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;								// 1 stop bit
 	USART_InitStructure.USART_Parity = USART_Parity_No;									// No parity
-	USART_InitStructure.USART_Mode = USART_Mode_Rx; //| USART_Mode_Tx;						// Enable TX and RX on pins 9 and 10 respectively of port A
+	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx; //| USART_Mode_Tx;						// Enable TX and RX on pins 9 and 10 respectively of port A
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;		// No flow control
 	USART_Init(USART1, &USART_InitStructure);		// Initialize USART1 with above settings
 
@@ -595,7 +613,7 @@ static void USARTInit() {
 
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);  // Enable USART1 Receive interrupt
 
-	NVIC_SetPriority(USART1_IRQn, 2); 				// Set USART1 interrupt priority
+	NVIC_SetPriority(USART1_IRQn, 0); 				// Set USART1 interrupt priority
 	NVIC_SetPriority(USART2_IRQn, 0); 				// Set USART2 interrupt priority (higher for MC)
 	NVIC_EnableIRQ(USART1_IRQn);					// Enable USART1 NVIC interrupt
 	NVIC_EnableIRQ(USART2_IRQn);					// Enable USART2 NVIC interrupt
@@ -618,7 +636,7 @@ static void UltrasonicInit() {
 
 	RCC->APB2ENR |= RCC_APB2ENR_TIM15EN; 	// Enable clock to timer
 	TIM15->PSC = 47; 						// Prescale clock to 1MHz
-	TIM15->ARR = 30; 						// Trigger every 30 clock cycles (30 us)
+	TIM15->ARR = 60; 						// Trigger every 60 clock cycles (60 us)
 	TIM15->DIER |= 0x01; 					// Update interrupt enable
 	TIM15->CR1 |= 0x01; 					// Enable counter
 
