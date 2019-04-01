@@ -19,6 +19,7 @@ std::atomic<bool> NMEAData::gpvtg_ready;
 std::string NMEAData::broken_gpgga; 
 std::string NMEAData::broken_gpvtg;
 
+
 NMEAData::NMEAData() {
 }
 
@@ -54,6 +55,10 @@ void NMEAData::popMsg(sensor_msgs::NavSatFix &msg) { // Populate NavSatFix messa
 		msg.altitude = std::stod(alt_gpgga); 
 		msg.status.status = std::stoi(gpgga_delineated[6]); // Position fix status
 		msg.status.service = std::stoi(gpgga_delineated[7]); // Number of satellites in view
+		msg.header.stamp.sec = std::stoi(gpgga_delineated[1]);
+	}
+	else { 
+		std::cout << "Missed message" << std::endl;
 	}
 }
 
@@ -90,6 +95,9 @@ void NMEAData::parseNMEA(char* read_buf, int readBytes, ros::Publisher gpgga_pub
 	if(start_loc != std::string::npos) {
 		std::string start_of_new_string = incoming_data.substr(start_loc);
 		std::size_t end_loc = start_of_new_string.find_first_of('\n'); 
+		if(broken_gpgga != "") {
+			std::cout << "Broken GPGGA message was lost" << std::endl;
+		}
 		broken_gpgga = ""; // Reset and ignore any currently tracked broken string
 		if(end_loc != std::string::npos) {
 			new_gpgga = start_of_new_string.substr(0, end_loc + 1);
@@ -139,6 +147,7 @@ void NMEAData::parseNMEA(char* read_buf, int readBytes, ros::Publisher gpgga_pub
 		popMsg(msg);
 		gpgga_mu.lock();
 		gpgga_pub.publish(msg);
+		std::cout << gpgga_msg << std::endl;
 		gpgga_ready.store(true); // Signal that a new GPGGA string was added
 		gpgga_mu.unlock();
 	}
