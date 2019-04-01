@@ -262,7 +262,7 @@ int main(int argc, char **argv)
 		size_t nmeabufpos = 0;
 		size_t nmeastarpos = 0;
 		int sleeptime = 0;
-		const char *rtk_uart_conn = SerialInit(&rtk_uart, "/dev/ttyUSB0", SPABAUD_57600,
+		const char *rtk_uart_conn = SerialInit(&rtk_uart, "/dev/gps", SPABAUD_57600,
 				args.stopbits, args.protocol, args.parity, args.databits, 1);
 		
 		if(rtk_uart_conn)

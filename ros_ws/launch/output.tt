@@ -1,0 +1,69 @@
+Successfully opened device: /dev/gps
+Server: 108.59.49.226
+Port: 10000
+Waiting for data...
+[0m[ INFO] [1554069435.862894700]: RPLIDAR running on ROS package rplidar_ros. SDK Version:1.9.0[0m
+[0m[ INFO] [1554069436.044774263]: using default calibration URL[0m
+[0m[ INFO] [1554069436.044935249]: camera calibration URL: file:///home/nvidia/.ros/camera_info/head_camera.yaml[0m
+[0m[ INFO] [1554069436.045045091]: Unable to open camera calibration file [/home/nvidia/.ros/camera_info/head_camera.yaml][0m
+[33m[ WARN] [1554069436.045086235]: Camera calibration file /home/nvidia/.ros/camera_info/head_camera.yaml not found.[0m
+[0m[ INFO] [1554069436.045132276]: Starting 'head_camera' (/dev/video0) at 640x480 via mmap (yuyv) at 30 FPS[0m
+
+Data not valid yet
+
+Data not valid yet
+
+Data not valid yet
+... logging to /home/nvidia/.ros/log/f1345c94-53ff-11e9-ad1d-00044b5aba3e/roslaunch-tegra-ubuntu-20360.log
+Checking log directory for disk usage. This may take awhile.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+]2;main.launch
+[1mstarted roslaunch server http://tegra-ubuntu:35701/[0m
+
+SUMMARY
+========
+
+PARAMETERS
+ * /rosdistro: kinetic
+ * /rosversion: 1.12.14
+ * /rplidarNode/angle_compensate: True
+ * /rplidarNode/frame_id: laser
+ * /rplidarNode/inverted: False
+ * /rplidarNode/serial_baudrate: 115200
+ * /rplidarNode/serial_port: /dev/lidar
+ * /usb_cam/camera_frame_id: usb_cam
+ * /usb_cam/image_height: 480
+ * /usb_cam/image_width: 640
+ * /usb_cam/io_method: mmap
+ * /usb_cam/pixel_format: yuyv
+ * /usb_cam/video_device: /dev/video0
+
+NODES
+  /
+    joy_node (joy/joy_node)
+    rplidarNode (rplidar_ros/rplidarNode)
+    rtk_gps_node (rtk/rtk_gps_node)
+    serial_manager (serial/serial_manager.py)
+    usb_cam (usb_cam/usb_cam_node)
+
+auto-starting new master
+[1mprocess[master]: started with pid [20370][0m
+[1mROS_MASTER_URI=http://localhost:11311[0m
+]2;main.launch http://localhost:11311
+[1msetting /run_id to f1345c94-53ff-11e9-ad1d-00044b5aba3e[0m
+[1mprocess[rosout-1]: started with pid [20383][0m
+started core service [/rosout]
+[1mprocess[rtk_gps_node-2]: started with pid [20394][0m
+[1mprocess[joy_node-3]: started with pid [20401][0m
+[1mprocess[serial_manager-4]: started with pid [20413][0m
+[1mprocess[rplidarNode-5]: started with pid [20415][0m
+[1mprocess[usb_cam-6]: started with pid [20424][0m
+[serial_manager-4] killing on exit
+[joy_node-3] killing on exit
+[rtk_gps_node-2] killing on exit
+[rosout-1] killing on exit
+[master] killing on exit
+shutting down processing monitor...
+... shutting down processing monitor complete
+[1mdone[0m

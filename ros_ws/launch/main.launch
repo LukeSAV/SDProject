@@ -1,8 +1,30 @@
 <launch>
+
+    <!-- GPS Manager -->
 	<node name="rtk_gps_node" pkg="rtk" type="rtk_gps_node" output="screen"/>
-	<!--node name="rtk_controller_node" pkg="rtk_controller" type="rtk_controller_node" output="screen"/-->
-	<node name="fb_manager" pkg="fb" type="fb_manager.py" output="screen"/>
+
+
+    <!-- Joystick controller -->
 	<node name="joy_node" pkg="joy" type="joy_node" output="screen"/>
-	<node name="rc_manager" pkg="rc" type="rc_manager.py" output="screen"/>
+
+
+    <!-- Serial Manager -->
+    <node name="serial_manager" pkg="serial" type="serial_manager.py" output="screen"/>
+
+    <!-- Lidar -->
 	<include file="../src/rplidar_ros/launch/rplidar.launch"/>
+
+    <!-- IMU -->
+    <include file="imu.launch"/>
+
+    <!-- Camera -->
+    <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
+    <param name="video_device" value="/dev/video0" />
+    <param name="image_width" value="640" />
+    <param name="image_height" value="480" />
+    <param name="pixel_format" value="yuyv" />
+    <param name="camera_frame_id" value="usb_cam" />
+    <param name="io_method" value="mmap"/>
+    </node>
+
 </launch>
