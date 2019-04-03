@@ -74,6 +74,8 @@ def encoder_callback(encoder_msg):
     purdue_fountain = (40.428642, -86.913776) 
     x = (lat_lon[1]-purdue_fountain[1])/111139 # in meters
     y = (lat_lon[0]-purdue_fountain[0])/111139 # in meters
+    print("GPS X: " + str(float(x)))
+    print("GPS Y: " + str(float(y)))
 
   # Find IMU Heading (True North)
   quaternion = (imu_meas.orientation.x,
@@ -85,7 +87,7 @@ def encoder_callback(encoder_msg):
   yaw = angles[2]
 
       
-  imuHeading = imu_meas.orientation.y
+  imuHeading = yaw
 
   if(gps_valid and not state_space_init):
       ekf.x[0] = x
@@ -99,7 +101,8 @@ def encoder_callback(encoder_msg):
 
   if gps_valid:
     ekf.update_gps_cov(gps_meas.status.service)
-  
+    print("IMU Heading: " + str(float(yaw)))
+
   ekf.update_encoder_cov(theta_r, theta_l)
 
   if(gps_valid and state_space_init):
@@ -107,16 +110,13 @@ def encoder_callback(encoder_msg):
   elif (state_space_init):
       ekf.step(0.2, imuHeading, theta_l, theta_r)
     
-  print("FILETERED OUTPUT:")
+  '''print("FILETERED OUTPUT:")
   print("GPS X (meters): " + str(float(ekf.x[0])))
   print("GPS Y (meters): " + str(float(ekf.x[1])))
   print("IMU Heading (radians): " + str(float(ekf.x[2])))
   print("Encoder Theta R (ticks): " + str(float(ekf.x[3])))
-  print("Encoder THeta L (ticks): " + str(float(ekf.x[4])))
-  print("\n")
-
-  if(gps_valid):
-    print(gps_meas)
+  print("Encoder Theta L (ticks): " + str(float(ekf.x[4])))
+  print("\n")'''
 
 if __name__ == "__main__":
   rospy.init_node('ekf')
