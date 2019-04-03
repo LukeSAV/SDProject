@@ -32,37 +32,28 @@ theta_r_meas = 0
 init_gps_meas = NavSatFix()
 init_imu_meas = Imu()
 
-is_gps_init = False
-is_imu_init = False
+state_space_init = False
 
 
 # TODO what is the default orientation?
 def gps_callback(gps_msg):
-  global gps_updated, gps_meas_msg, init_gps_meas
-  global is_gps_init, init_gps_msg
+  global gps_updated, gps_meas_msg
   gps_lock.acquire()
   gps_meas_msg = deepcopy(gps_msg)
   gps_updated = True
-  if not is_gps_init:
-      init_gps_meas = deepcopy(gps_msg)
-      is_gps_init = True
   gps_lock.release()
 
 def imu_callback(imu_msg):
   global imu_meas_msg, imu_updated
-  global is_imu_init
   imu_lock.acquire()
   imu_meas_msg = deepcopy(imu_msg)
   imu_updated = True
-  if not is_imu_init:
-      init_imu_meas = deepcopy(imu_msg)
-      is_imu_init = True
   imu_lock.release()
 
 
 def encoder_callback(encoder_msg):
   global gps_updated
-  global ekf
+  global ekf, state_space_init
   gps_lock.acquire()
   gps_meas = deepcopy(gps_meas_msg)
   gps_valid = copy(gps_updated)
@@ -77,21 +68,19 @@ def encoder_callback(encoder_msg):
 
   lat_lon = (gps_meas.latitude, gps_meas.longitude)
 
-  # compute initial gps location and get init x,y
-  init_lat_lon = (init_gps_meas.latitude,
-    init_gps_meas.longitude)
-
   # y is north, x is east
   purdue_fountain = (40.428642, -86.913776) 
-  init_x = None
-  init_y = None
+  x = (lat_lon[1]-purdue_fountain[1])/111139 # in meters
+  y = (lat_lon[0]-purdue_fountain[0])/111139 # in meters
 
-  # Convert from lat_lon to x_y
-  x = (lat_lon[0] - init_lat_lon[0])/111139
-  x = (lat_lon[1] - init_lat_lon[1])/111139
+  # Find IMU Heading (True North)
+  imuHeading = imu_meas.orientation.y
 
-  # Convert IMU data into current reference frame
-  imu_x = imu_meas.orientation.x = init_imu_meas.orientation.x
+  if(gps_valid and not state_space_init):
+      ekf.x[0] = x
+      ekf.x[1] = y
+      elf.x[2] = imuHeading
+      state_space_init = True
 
   ############# Mike takes the wheel ######
   theta_l = int(encoder_msg.data[2:4])
@@ -100,10 +89,10 @@ def encoder_callback(encoder_msg):
   ekf.update_gps_cov(gps_msg.status.service)
   ekf.update_encoder_cov(theta_r, theta_l)
 
-  if(gps_valid):
-      ekf.step(0.2, x_y[0], x_y[1], imu_x, theta_l, theta_r)
-  else:
-      ekf.step(0.2, imu_x, thetaL, thetaR)
+  if(gps_valid and state_space_init):
+      ekf.step(0.2, x, y, imuHeading, theta_l, theta_r)
+  elif (state_space_init):
+      ekf.step(0.2, imuHeading, theta_l, theta_r)
     
   print("FILETERED OUTPUT:")
   print("GPS X (meters): " + str(float(ekf.x[0])))
