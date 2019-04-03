@@ -1,10 +1,12 @@
 #! /usr/bin/python
-import rospy
+import rospy,tf
 from sensor_msgs.msg import NavSatFix, Imu
 from std_msgs.msg import String
 from threading import Lock
 from copy import deepcopy, copy
 from EKF import EKF
+
+
 
 # TODO import encoder message
 
@@ -66,27 +68,38 @@ def encoder_callback(encoder_msg):
 
   enc_updated = True
 
-  lat_lon = (gps_meas.latitude, gps_meas.longitude)
-
-  # y is north, x is east
-  purdue_fountain = (40.428642, -86.913776) 
-  x = (lat_lon[1]-purdue_fountain[1])/111139 # in meters
-  y = (lat_lon[0]-purdue_fountain[0])/111139 # in meters
+  if gps_valid:
+    # y is north, x is east
+    lat_lon = (gps_meas.latitude, gps_meas.longitude)
+    purdue_fountain = (40.428642, -86.913776) 
+    x = (lat_lon[1]-purdue_fountain[1])/111139 # in meters
+    y = (lat_lon[0]-purdue_fountain[0])/111139 # in meters
 
   # Find IMU Heading (True North)
+  quaternion = (imu_meas.orientation.x,
+    imu_meas.orientation.y,
+    imu_meas.orientation.z,
+    imu_meas.orientation.w)
+  angles = tf.transformations.euler_from_quaternion(
+    quaternion)
+  yaw = angles[2]
+
+      
   imuHeading = imu_meas.orientation.y
 
   if(gps_valid and not state_space_init):
       ekf.x[0] = x
       ekf.x[1] = y
-      elf.x[2] = imuHeading
+      ekf.x[2] = imuHeading
       state_space_init = True
 
   ############# Mike takes the wheel ######
   theta_l = int(encoder_msg.data[2:4])
   theta_r = int(encoder_msg.data[5:7])
 
-  ekf.update_gps_cov(gps_msg.status.service)
+  if gps_valid:
+    ekf.update_gps_cov(gps_meas.status.service)
+  
   ekf.update_encoder_cov(theta_r, theta_l)
 
   if(gps_valid and state_space_init):

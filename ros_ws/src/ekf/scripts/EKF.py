@@ -22,19 +22,21 @@ class EKF(object):
         self.P = 100*self.P
         self.l = 0.5715
 
-    def update_gps_cov(NumSats):
+    def update_gps_cov(self, NumSats):
         #asusming x and y have the same covariance and no cross-covariance
         self.R[0][0] = .4/NumSats
         self.R[1][1] = .4/NumSats
 
-    def update_imu_cov(cov):
+    def update_imu_cov(self, cov):
         #assuming no cross covariance between IMU and other sensors
         self.R[2][2] = cov
 
-    def update_encoder_cov(thetaR, thetaL):
+    def update_encoder_cov(self, thetaR, thetaL):
         #assuming left and right wheel encoders have same covariance and no cross-covariance
-        self.R[3][3] = 0.10/thetaR
-        self.R[4][4] = 0.10/thetaL
+        if thetaR != 0:
+          self.R[3][3] = 0.10 / thetaR
+        if thetaL != 0:
+          self.R[4][4] = 0.10 / thetaL
 
     def step(self, *args):
         if(len(args) == 6):
