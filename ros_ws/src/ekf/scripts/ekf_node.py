@@ -4,7 +4,6 @@ from sensor_msgs.msg import NavSatFix, Imu
 from std_msgs.msg import String
 from threading import Lock
 from copy import deepcopy, copy
-import geopy.distance
 
 # TODO import encoder message
 
