@@ -39,20 +39,22 @@ is_imu_init = False
 # TODO what is the default orientation?
 def gps_callback(gps_msg):
   global gps_updated, gps_meas_msg, init_gps_meas
+  global is_gps_init, init_gps_msg
   gps_lock.acquire()
   gps_meas_msg = deepcopy(gps_msg)
   gps_updated = True
-  if(not is_gps_init):
+  if not is_gps_init:
       init_gps_meas = deepcopy(gps_msg)
       is_gps_init = True
   gps_lock.release()
 
 def imu_callback(imu_msg):
   global imu_meas_msg, imu_updated
+  global is_imu_init
   imu_lock.acquire()
-  imu_meas_msg = imu_msg
+  imu_meas_msg = deepcopy(imu_msg)
   imu_updated = True
-  if(not is_imu_init):
+  if not is_imu_init:
       init_imu_meas = deepcopy(imu_msg)
       is_imu_init = True
   imu_lock.release()
@@ -73,36 +75,42 @@ def encoder_callback(encoder_msg):
 
   enc_updated = True
 
-  # HELP MIKE WUT TO DO
-  # gps_meas is the gps message
   lat_lon = (gps_meas.latitude, gps_meas.longitude)
-  init_lat_lon = (init_gps_meas.latitude, init_gps_longitude)
-  purdue_fountain = () # to be determined later
+
+  # compute initial gps location and get init x,y
+  init_lat_lon = (init_gps_meas.latitude,
+    init_gps_meas.longitude)
+
+  # y is north, x is east
+  purdue_fountain = (40.428642, -86.913776) 
+  init_x = None
+  init_y = None
 
   # Convert from lat_lon to x_y
-  x_y = (lat_lon - init_lat_lon)/111139
+  x = (lat_lon[0] - init_lat_lon[0])/111139
+  x = (lat_lon[1] - init_lat_lon[1])/111139
 
   # Convert IMU data into current reference frame
   imu_x = imu_meas.orientation.x = init_imu_meas.orientation.x
 
   ############# Mike takes the wheel ######
   theta_l = int(encoder_msg.data[2:4])
-  theta_r = int(encoder_msg.data[5:7])i
+  theta_r = int(encoder_msg.data[5:7])
 
   ekf.update_gps_cov(gps_msg.status.service)
-  ekf.update_encoder_cov(thetaR, thetaL)
+  ekf.update_encoder_cov(theta_r, theta_l)
 
   if(gps_valid):
-      ekf.step(0.1, x_y[0], x_y[1], imu_x, thetaL, thetaR)
+      ekf.step(0.2, x_y[0], x_y[1], imu_x, theta_l, theta_r)
   else:
-      ekf.step(0.1, imu_x, thetaL, thetaR)
+      ekf.step(0.2, imu_x, thetaL, thetaR)
     
   print("FILETERED OUTPUT:")
   print("GPS X (meters): " + str(float(ekf.x[0])))
   print("GPS Y (meters): " + str(float(ekf.x[1])))
   print("IMU Heading (radians): " + str(float(ekf.x[2])))
   print("Encoder Theta R (ticks): " + str(float(ekf.x[3])))
-  print("Encoder THeta L (ticks): " str(float(ekf.x[4])))
+  print("Encoder THeta L (ticks): " + str(float(ekf.x[4])))
   print("\n")
 
   if(gps_valid):
