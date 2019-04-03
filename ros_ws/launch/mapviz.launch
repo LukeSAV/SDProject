@@ -1,0 +1,23 @@
+<launch>
+
+<node pkg="mapviz" type="mapviz" name="mapviz"></node>
+
+<node pkg="swri_transform_util" type="initialize_origin.py" name="initialize_origin" >
+  <param name="local_xy_frame" value="/map"/>
+  <param name="local_xy_origin" value="purdue"/>
+  <rosparam param="local_xy_origins">
+    [{ name: purdue,
+      latitude: 40.428655,
+      longitude: -86.913745,
+      altitude: 600.0,
+      heading: 0.0}
+    ]
+   </rosparam>
+</node>
+
+<node pkg="tf" type="static_transform_publisher" name="swri_transform" args="0 0 0 0 0 0 /map /origin 100"  />
+
+<param name="use_sim_time" value="true" />
+<node name="republish" type="republish" pkg="image_transport" output="screen" args="compressed in:=/usb_cam/image_raw raw out:=/image_raw" />
+
+</launch>
