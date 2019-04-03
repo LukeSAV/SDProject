@@ -13,12 +13,15 @@
 //#include "stm32f0_discovery.h"
 #include <stdio.h>
 #include <string.h>
+#include "arm_math.h"
 
-#define IR_RECEIVE_MAX 500
-#define IR_NO_RECEIVE_MIN 1200
+#define IR_RECEIVE_MAX 300
+#define IR_NO_RECEIVE_MIN 900
 #define RX_BUFFER_MAX 100
 #define TX_BUFFER_MAX 100
 #define MC_ADDRESS 130
+
+#define AMBIENT_SPEED 15
 
 enum Encoders{RECEIVE, NO_RECEIVE};
 enum Direction{FORWARD, REVERSE};
@@ -49,10 +52,13 @@ static uint32_t adc1_val = 0; // Current ADC channel 1 reading
 static uint32_t adc0_slots = 0; // Number of times a reading on ADC channel 0 has crossed the threshold - right
 static uint32_t adc1_slots = 0; // Number of times a reading on ADC channel 1 has crossed the threshold - left
 
+static uint32_t last_used_adc0_slots = 0; // Right
+static uint32_t last_used_adc1_slots = 0; // Left
+
 static uint32_t last_encoder_left_count_to_jetson = 0;
 static uint32_t last_encoder_right_count_to_jetson = 0;
 
-static uint8_t left_speed = 0; // Current left speed to be requested
+static uint8_t left_speed = 5; // Current left speed to be requested
 static uint8_t right_speed = 0; // Current right speed to be requested
 
 /* UART vars */
@@ -108,6 +114,7 @@ static void Data(char b);
 static void DispString(char* data);
 static void SendEncoderCount();
 static void nsWait(int t);
+static void StraightLine();
 
 
 int main(void) {
@@ -135,6 +142,9 @@ int main(void) {
 	mc_tx_buffer[3] = (MC_ADDRESS + 10 + 14) & 127; // Checksum
 	mc_tx_buffer[4] = 255; // Stop byte
 	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
+	nsWait(1000000000);
+
+
 
 	// Test UART transfer
 	//char* t = "Connected";
@@ -144,15 +154,51 @@ int main(void) {
 
 	for(;;) {
 		// This could include non-controller related messages so if using the controller be wary that if the node dies and the Jetson is still sending data over problems can occur
-		if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
+		/*if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
 			left_speed = right_speed = 0;
-		}
+		}*/
+		//StraightLine();
 		Drive(left_direction, left_speed, right_direction, right_speed);
 		nsWait(50000000); // wait 50 ms
 		loop_count++;
 	}
 }
 
+/*
+ * Drives the robot in a straight line based solely off encoder counts
+ */
+static void StraightLine() {
+	int8_t slot_diff = adc1_slots - adc0_slots;
+	if(slot_diff > 30 || slot_diff < -30) { // Veered too far off the line
+		left_speed = right_speed = 0;
+		return;
+	}
+	if(slot_diff == 0) {
+		if(left_speed < AMBIENT_SPEED && right_speed < AMBIENT_SPEED) {
+			left_speed++;
+			right_speed++;
+		}
+	} else if(slot_diff < 0) { // Right wheel has not moved as much as left
+		if(right_speed < AMBIENT_SPEED) {
+			right_speed++;
+		}
+		else {
+			if(left_speed >= 1) {
+				left_speed--;
+			}
+		}
+
+	} else { // Left wheel has not moved as much as right
+		if(left_speed < AMBIENT_SPEED) {
+			left_speed++;
+		}
+		else {
+			if(right_speed >= 1) {
+				right_speed--;
+			}
+		}
+	}
+}
 /*
  * Send number of encoder ticks since last message was sent to Jetson
  */
@@ -600,7 +646,7 @@ static void USARTInit() {
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;		// No flow control
 	USART_Init(USART1, &USART_InitStructure);		// Initialize USART1 with above settings
 
-	USART_InitStructure.USART_BaudRate = 9600; 		// Set baud rate to 9600 b/s
+	USART_InitStructure.USART_BaudRate = 9600; 		// Set baud rate to 38400 b/s
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b; 						// 8b word length
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;								// 1 stop bit
 	USART_InitStructure.USART_Parity = USART_Parity_No;									// No parity
