@@ -78,6 +78,12 @@ static char datestr[]     = "$Date: 2018/12/12 09:49:19 $";
 
 enum MODE { HTTP = 1, RTSP = 2, NTRIP1 = 3, AUTO = 4, UDP = 5, END };
 
+/* */
+std::mutex input_buf_lock;
+static char input_buf[MAXDATASIZE * 2];
+static void handleIPConnection(sockettype sockfd);
+static int numbytes = 0;
+
 struct Args
 {
 	const char *server;
@@ -262,7 +268,7 @@ int main(int argc, char **argv)
 		size_t nmeabufpos = 0;
 		size_t nmeastarpos = 0;
 		int sleeptime = 0;
-		const char *rtk_uart_conn = SerialInit(&rtk_uart, "/dev/gps", SPABAUD_57600,
+		const char *rtk_uart_conn = SerialInit(&rtk_uart, "/dev/ttyUSB0", SPABAUD_57600,
 				args.stopbits, args.protocol, args.parity, args.databits, 1);
 		
 		if(rtk_uart_conn)
@@ -278,9 +284,7 @@ int main(int argc, char **argv)
 			char* b;
 			long in_i;
 			long out_i;
-			int numbytes;
 			char output_buf[MAXDATASIZE];
-			char input_buf[MAXDATASIZE];
 
 			char read_buf[MAXDATASIZE];
 			int readBytes = 0;
@@ -375,7 +379,6 @@ int main(int argc, char **argv)
 
 				if(numbytes > 17 && strstr(input_buf, "ICY 200 OK")) { // Caster responded properly
 					printf("Proper stream connected. Caster expects data.\n");
-					numbytes = 0;	
 					NMEAData::gpgga_mu.lock();
 					if(send(sockfd, NMEAData::gpgga_msg.c_str(), NMEAData::gpgga_msg.size(), 0) != NMEAData::gpgga_msg.size()) {
 						printf("Issue writing on socket");
@@ -397,35 +400,61 @@ int main(int argc, char **argv)
 				auto start = std::chrono::system_clock::now();
 				auto cur_time = start;
 				std::chrono::duration<double> elapsed_time = std::chrono::duration<double>(10.0f); // Initially send message to caster
+
+				std::thread ntrip_thread(handleIPConnection, sockfd); // Launch thread to handle communication with NTRIP server
+				numbytes = 0;
+
 				while(true) { // Read Caster data on socket continuously. Send GPGGA message every 5s.
 					if(elapsed_time.count() >= 5.0f) { // 5 second passed, send caster most recent GPGGA message
 						NMEAData::gpgga_mu.lock();
 						if(send(sockfd, NMEAData::gpgga_msg.c_str(), NMEAData::gpgga_msg.size(), 0) != NMEAData::gpgga_msg.size()) {
-							printf("Issue writing on socket");
+							printf("Issue writing on socket in main loop");
 							break; // Reconnect to caster 
 						}
 						NMEAData::gpgga_mu.unlock();
 						start = std::chrono::system_clock::now();
 					}
-
-					numbytes = recv(sockfd, input_buf, MAXDATASIZE-1, 0); // Receive any RTCM data from caster
 					if(numbytes > 0) { // This should be the full blown RTCM3 message
 						alarm(ALARMTIME); // Data has been received, reset the alarm
+						input_buf_lock.lock();
 						SerialWrite(&rtk_uart, input_buf, numbytes);	
+						numbytes = 0; // All buffer data was written
+						input_buf_lock.unlock();
 					}
 
 					memset(read_buf, '\0', sizeof(read_buf)); // Clear the buffer
 					readBytes = SerialRead(&rtk_uart, read_buf, MAXDATASIZE); // Receive any data from the UART hardware buffer
+
 					NMEAData::parseNMEA(read_buf, readBytes, gpgga_pub, gpvtg_pub); // Check the buffer for the relevant data
 
 					cur_time = std::chrono::system_clock::now();
 					elapsed_time = cur_time - start;
+					//std::cout << elapsed_time.count() << std::endl;
 				}
+				ntrip_thread.join();
 			}
 			printf("Done\n");
 			//
 			sleep(1);
-		} while(1);
+		} while(true);
 		return 0;
 	}
+}
+
+static void handleIPConnection(sockettype sockfd) {
+	std::chrono::duration<double> debug_time = std::chrono::duration<double>(0.0f);
+	char ip_recv_buf[MAXDATASIZE];
+	int ip_recv_bytes = 0;
+
+	while(true) {
+		ip_recv_bytes = recv(sockfd, ip_recv_buf, MAXDATASIZE-1, 0); // Receive any RTCM data from caster
+		if(ip_recv_bytes + numbytes > MAXDATASIZE) {
+			ROS_ERROR("OVERRAN NTRIP BUFFER");
+		}
+		input_buf_lock.lock();
+		memcpy(input_buf + numbytes, ip_recv_buf, ip_recv_bytes);
+		numbytes += ip_recv_bytes;
+		input_buf_lock.unlock();
+	}
+
 }
