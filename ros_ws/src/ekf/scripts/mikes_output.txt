@@ -1,0 +1,1585 @@
+FILETERED OUTPUT:
+GPS X (meters): 0.0
+GPS Y (meters): 0.0
+IMU Heading (radians): 0.0
+Encoder Theta R (ticks): 0.0
+Encoder THeta L (ticks): 0.0
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.0
+GPS Y (meters): 0.0
+IMU Heading (radians): 0.0
+Encoder Theta R (ticks): 0.0
+Encoder THeta L (ticks): 0.0
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.0
+GPS Y (meters): 0.0
+IMU Heading (radians): 0.0
+Encoder Theta R (ticks): 0.0
+Encoder THeta L (ticks): 0.0
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.0
+GPS Y (meters): 0.0
+IMU Heading (radians): 0.0
+Encoder Theta R (ticks): 0.0
+Encoder THeta L (ticks): 0.0
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.000435800938247
+GPS Y (meters): 0.00101374511032
+IMU Heading (radians): 7.60296764115
+Encoder Theta R (ticks): 2.03229518931
+Encoder THeta L (ticks): 2.94782950717
+
+
+header: 
+  seq: 698
+  stamp: 
+    secs: 231707
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 2
+  service: 9
+latitude: 40.42903965
+longitude: -86.9129811733
+altitude: 191.929
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): -2.41836904811
+GPS Y (meters): 0.62125242568
+IMU Heading (radians): 6.81619949999
+Encoder Theta R (ticks): 2.07312542387
+Encoder THeta L (ticks): 2.9005403247
+
+
+FILETERED OUTPUT:
+GPS X (meters): -3.67535079273
+GPS Y (meters): 2.68784041538
+IMU Heading (radians): 11.851339841
+Encoder Theta R (ticks): 1.06824364976
+Encoder THeta L (ticks): 2.47703984029
+
+
+FILETERED OUTPUT:
+GPS X (meters): -2.31012886963
+GPS Y (meters): 4.36490730872
+IMU Heading (radians): 7.92486613604
+Encoder Theta R (ticks): 3.15064385664
+Encoder THeta L (ticks): 4.10534140881
+
+
+FILETERED OUTPUT:
+GPS X (meters): -5.96174350096
+GPS Y (meters): 4.08821340442
+IMU Heading (radians): 5.39274441342
+Encoder Theta R (ticks): 3.60179260044
+Encoder THeta L (ticks): 4.2696894633
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.21220776663
+GPS Y (meters): 0.464456545595
+IMU Heading (radians): 4.39868441728
+Encoder Theta R (ticks): 2.5348130826
+Encoder THeta L (ticks): 3.09378223223
+
+
+header: 
+  seq: 699
+  stamp: 
+    secs: 231708
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 5
+  service: 9
+latitude: 40.4290285567
+longitude: -86.9129179633
+altitude: 221.57
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): 2.232445232
+GPS Y (meters): -0.328309819652
+IMU Heading (radians): 5.27599593526
+Encoder Theta R (ticks): 1.39354473151
+Encoder THeta L (ticks): 2.06007313722
+
+
+FILETERED OUTPUT:
+GPS X (meters): 3.62995495613
+GPS Y (meters): 0.565516509157
+IMU Heading (radians): 5.11628081232
+Encoder Theta R (ticks): 1.05516738604
+Encoder THeta L (ticks): 1.70300114692
+
+
+FILETERED OUTPUT:
+GPS X (meters): 4.94511935153
+GPS Y (meters): 1.12587121568
+IMU Heading (radians): 5.4521449731
+Encoder Theta R (ticks): 1.09202331324
+Encoder THeta L (ticks): 1.78238564427
+
+
+FILETERED OUTPUT:
+GPS X (meters): 6.04884845171
+GPS Y (meters): 2.11791266972
+IMU Heading (radians): 5.63892239948
+Encoder Theta R (ticks): 1.09645493088
+Encoder THeta L (ticks): 1.80949247097
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.526916347946
+GPS Y (meters): 0.247418641436
+IMU Heading (radians): 4.57766183593
+Encoder Theta R (ticks): 1.24833628629
+Encoder THeta L (ticks): 1.83691301596
+
+
+header: 
+  seq: 700
+  stamp: 
+    secs: 231709
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 2
+  service: 8
+latitude: 40.4290471667
+longitude: -86.9129562183
+altitude: 194.833
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): 2.07778755711
+GPS Y (meters): 0.0381221473733
+IMU Heading (radians): 3.89170031963
+Encoder Theta R (ticks): 1.35077905417
+Encoder THeta L (ticks): 1.86259957269
+
+
+FILETERED OUTPUT:
+GPS X (meters): 3.0684811236
+GPS Y (meters): -1.04484352874
+IMU Heading (radians): 3.88091150394
+Encoder Theta R (ticks): 0.848908944277
+Encoder THeta L (ticks): 1.36289179504
+
+
+FILETERED OUTPUT:
+GPS X (meters): 4.12846906019
+GPS Y (meters): -2.17354413209
+IMU Heading (radians): 3.62740024351
+Encoder Theta R (ticks): 2.17552296605
+Encoder THeta L (ticks): 2.66027716273
+
+
+FILETERED OUTPUT:
+GPS X (meters): 5.31821098911
+GPS Y (meters): -4.39315578287
+IMU Heading (radians): 3.39689718495
+Encoder Theta R (ticks): 2.4474192655
+Encoder THeta L (ticks): 2.90761934513
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.435973994812
+GPS Y (meters): -0.499183522938
+IMU Heading (radians): 3.30816389899
+Encoder Theta R (ticks): 1.31612466153
+Encoder THeta L (ticks): 1.76851630674
+
+
+header: 
+  seq: 701
+  stamp: 
+    secs: 231710
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 2
+  service: 8
+latitude: 40.42904078
+longitude: -86.91294281
+altitude: 196.024
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): 0.75108263383
+GPS Y (meters): -2.37325163212
+IMU Heading (radians): 1.96470987504
+Encoder Theta R (ticks): 2.92540251306
+Encoder THeta L (ticks): 3.21754427662
+
+
+FILETERED OUTPUT:
+GPS X (meters): -2.21546600667
+GPS Y (meters): -3.64194927741
+IMU Heading (radians): 1.31400199787
+Encoder Theta R (ticks): 3.73413369466
+Encoder THeta L (ticks): 3.95329350043
+
+
+FILETERED OUTPUT:
+GPS X (meters): -5.72299216123
+GPS Y (meters): -2.69214521016
+IMU Heading (radians): 1.2606806257
+Encoder Theta R (ticks): 2.66806054297
+Encoder THeta L (ticks): 2.88237059275
+
+
+FILETERED OUTPUT:
+GPS X (meters): -8.0547602126
+GPS Y (meters): -1.93630251029
+IMU Heading (radians): 1.86858674956
+Encoder Theta R (ticks): 1.45134729119
+Encoder THeta L (ticks): 1.73615680507
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.73564718676
+GPS Y (meters): -0.19485606811
+IMU Heading (radians): 2.74785305422
+Encoder Theta R (ticks): 1.18858005104
+Encoder THeta L (ticks): 1.57338103028
+
+
+header: 
+  seq: 702
+  stamp: 
+    secs: 231711
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 2
+  service: 8
+latitude: 40.4290363717
+longitude: -86.9129273117
+altitude: 195.614
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): -1.24447759428
+GPS Y (meters): -1.4217155115
+IMU Heading (radians): 2.5493076488
+Encoder Theta R (ticks): 0.932014038344
+Encoder THeta L (ticks): 1.28710463496
+
+
+FILETERED OUTPUT:
+GPS X (meters): -1.88544018986
+GPS Y (meters): -2.37807824752
+IMU Heading (radians): 2.85932057007
+Encoder Theta R (ticks): 1.01554550837
+Encoder THeta L (ticks): 1.40457592178
+
+
+FILETERED OUTPUT:
+GPS X (meters): -2.32314289942
+GPS Y (meters): -3.81584078365
+IMU Heading (radians): 2.40496279763
+Encoder Theta R (ticks): 1.98203483028
+Encoder THeta L (ticks): 2.31235050667
+
+
+FILETERED OUTPUT:
+GPS X (meters): -3.64768968136
+GPS Y (meters): -5.25404643072
+IMU Heading (radians): 2.7775886198
+Encoder Theta R (ticks): 1.26633941088
+Encoder THeta L (ticks): 1.63812491854
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.323564778577
+GPS Y (meters): -0.510711925537
+IMU Heading (radians): 1.54499141134
+Encoder Theta R (ticks): 2.90746402973
+Encoder THeta L (ticks): 3.12751695071
+
+
+header: 
+  seq: 703
+  stamp: 
+    secs: 231712
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 2
+  service: 8
+latitude: 40.42903276
+longitude: -86.9129172867
+altitude: 193.619
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): -3.49671635226
+GPS Y (meters): -0.431858714032
+IMU Heading (radians): 1.05306904737
+Encoder Theta R (ticks): 3.75408444926
+Encoder THeta L (ticks): 3.91506284701
+
+
+FILETERED OUTPUT:
+GPS X (meters): -6.54603965204
+GPS Y (meters): 1.33382978563
+IMU Heading (radians): 2.88731485834
+Encoder Theta R (ticks): 2.12661817845
+Encoder THeta L (ticks): 2.5021963502
+
+
+FILETERED OUTPUT:
+GPS X (meters): -7.08780411525
+GPS Y (meters): -0.829838388846
+IMU Heading (radians): 3.48877955766
+Encoder Theta R (ticks): 1.58634655862
+Encoder THeta L (ticks): 2.0216248843
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.627737360455
+GPS Y (meters): -0.246720269465
+IMU Heading (radians): 3.98548083017
+Encoder Theta R (ticks): 1.45409021509
+Encoder THeta L (ticks): 1.9406018844
+
+
+header: 
+  seq: 704
+  stamp: 
+    secs: 231713
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 5
+  service: 8
+latitude: 40.4268708833
+longitude: -86.9144620883
+altitude: 908.209
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): 0.754872470779
+GPS Y (meters): -1.47859141754
+IMU Heading (radians): 3.65713776483
+Encoder Theta R (ticks): 2.29651926943
+Encoder THeta L (ticks): 2.73869193642
+
+
+FILETERED OUTPUT:
+GPS X (meters): 2.02071396115
+GPS Y (meters): -3.70866579654
+IMU Heading (radians): 3.49590890753
+Encoder Theta R (ticks): 2.48175312287
+Encoder THeta L (ticks): 2.90303659066
+
+
+FILETERED OUTPUT:
+GPS X (meters): 2.97828643494
+GPS Y (meters): -6.28997295064
+IMU Heading (radians): 2.63469517071
+Encoder Theta R (ticks): 2.77630479196
+Encoder THeta L (ticks): 3.09462731962
+
+
+FILETERED OUTPUT:
+GPS X (meters): 1.54860554102
+GPS Y (meters): -8.86664823949
+IMU Heading (radians): 1.97310338956
+Encoder Theta R (ticks): 2.86462913322
+Encoder THeta L (ticks): 3.10833913442
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.118709213349
+GPS Y (meters): -0.792508212906
+IMU Heading (radians): 1.40088562404
+Encoder Theta R (ticks): 3.71545004876
+Encoder THeta L (ticks): 3.89632357254
+
+
+header: 
+  seq: 705
+  stamp: 
+    secs: 231714
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 2
+  service: 8
+latitude: 40.42902152
+longitude: -86.9128976883
+altitude: 193.531
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): -3.61061794808
+GPS Y (meters): -0.191277964696
+IMU Heading (radians): 3.17979288895
+Encoder Theta R (ticks): 2.11076177178
+Encoder THeta L (ticks): 2.50835206057
+
+
+FILETERED OUTPUT:
+GPS X (meters): -3.52105555912
+GPS Y (meters): -2.49326261544
+IMU Heading (radians): 5.28613811088
+Encoder Theta R (ticks): 1.94317132791
+Encoder THeta L (ticks): 2.58903848136
+
+
+FILETERED OUTPUT:
+GPS X (meters): -1.64074283823
+GPS Y (meters): -1.27457342906
+IMU Heading (radians): 6.03391372793
+Encoder Theta R (ticks): 1.68172370158
+Encoder THeta L (ticks): 2.41340388292
+
+
+FILETERED OUTPUT:
+GPS X (meters): -1.15305212886
+GPS Y (meters): 0.656260160258
+IMU Heading (radians): 5.87307332055
+Encoder Theta R (ticks): 1.3799698571
+Encoder THeta L (ticks): 2.0939745337
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.0391170208983
+GPS Y (meters): 0.183274376342
+IMU Heading (radians): 6.48064770025
+Encoder Theta R (ticks): 1.55208076955
+Encoder THeta L (ticks): 2.34188977705
+
+
+header: 
+  seq: 706
+  stamp: 
+    secs: 231715
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 2
+  service: 8
+latitude: 40.42900483
+longitude: -86.9128987217
+altitude: 192.563
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): -0.442297354506
+GPS Y (meters): 2.20401800536
+IMU Heading (radians): 5.55733454659
+Encoder Theta R (ticks): 2.25923543569
+Encoder THeta L (ticks): 2.94062359797
+
+
+FILETERED OUTPUT:
+GPS X (meters): 1.17213881429
+GPS Y (meters): 3.98564073977
+IMU Heading (radians): 5.67851407713
+Encoder Theta R (ticks): 1.34225834113
+Encoder THeta L (ticks): 2.04518375011
+
+
+FILETERED OUTPUT:
+GPS X (meters): 2.12234827537
+GPS Y (meters): 5.36012739182
+IMU Heading (radians): 5.74201769085
+Encoder Theta R (ticks): 1.14935438352
+Encoder THeta L (ticks): 1.86294959059
+
+
+FILETERED OUTPUT:
+GPS X (meters): 3.00094163043
+GPS Y (meters): 6.81676742176
+IMU Heading (radians): 4.65032984692
+Encoder Theta R (ticks): 1.93674603302
+Encoder THeta L (ticks): 2.52376579829
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.462631825855
+GPS Y (meters): 0.579553646185
+IMU Heading (radians): 4.08704039852
+Encoder Theta R (ticks): 2.35116581118
+Encoder THeta L (ticks): 2.87896052895
+
+
+header: 
+  seq: 707
+  stamp: 
+    secs: 231716
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 2
+  service: 7
+latitude: 40.42899882
+longitude: -86.9129010817
+altitude: 192.544
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): 2.43253955304
+GPS Y (meters): -0.84337195057
+IMU Heading (radians): 4.53695245767
+Encoder Theta R (ticks): 1.3887597471
+Encoder THeta L (ticks): 1.97397718229
+
+
+FILETERED OUTPUT:
+GPS X (meters): 4.30586537291
+GPS Y (meters): -1.19351220543
+IMU Heading (radians): 4.07736013775
+Encoder Theta R (ticks): 2.26758071608
+Encoder THeta L (ticks): 2.7975860416
+
+
+FILETERED OUTPUT:
+GPS X (meters): 6.42160396688
+GPS Y (meters): -2.74457245291
+IMU Heading (radians): 2.9954519277
+Encoder Theta R (ticks): 2.70016735179
+Encoder THeta L (ticks): 3.103883042
+
+
+FILETERED OUTPUT:
+GPS X (meters): 6.00369448655
+GPS Y (meters): -5.91296897739
+IMU Heading (radians): 1.52976194702
+Encoder Theta R (ticks): 4.08590757347
+Encoder THeta L (ticks): 4.31913727348
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.153455423408
+GPS Y (meters): -0.453027676504
+IMU Heading (radians): 3.35711662892
+Encoder Theta R (ticks): 2.28551799101
+Encoder THeta L (ticks): 2.74103813161
+
+
+header: 
+  seq: 708
+  stamp: 
+    secs: 231717
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 2
+  service: 8
+latitude: 40.4289956717
+longitude: -86.9129001067
+altitude: 192.094
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): 0.672911508731
+GPS Y (meters): -2.8142316659
+IMU Heading (radians): 3.88221131733
+Encoder Theta R (ticks): 1.6769925436
+Encoder THeta L (ticks): 2.1876017335
+
+
+FILETERED OUTPUT:
+GPS X (meters): 1.95684965704
+GPS Y (meters): -4.21170530597
+IMU Heading (radians): 4.30919706326
+Encoder Theta R (ticks): 1.54555171372
+Encoder THeta L (ticks): 2.10420332074
+
+
+FILETERED OUTPUT:
+GPS X (meters): 3.75884323163
+GPS Y (meters): -4.99008948952
+IMU Heading (radians): 3.82448337599
+Encoder Theta R (ticks): 2.29918826629
+Encoder THeta L (ticks): 2.79817406939
+
+
+FILETERED OUTPUT:
+GPS X (meters): 5.19915495989
+GPS Y (meters): -6.7881221191
+IMU Heading (radians): 3.83470041117
+Encoder Theta R (ticks): 1.31392282455
+Encoder THeta L (ticks): 1.81563333327
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.525249065186
+GPS Y (meters): -0.686381291042
+IMU Heading (radians): 3.81299448717
+Encoder Theta R (ticks): 1.00850259234
+Encoder THeta L (ticks): 1.5083197419
+
+
+header: 
+  seq: 709
+  stamp: 
+    secs: 231718
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 2
+  service: 7
+latitude: 40.4289948933
+longitude: -86.9128982417
+altitude: 192.368
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): 1.57918987146
+GPS Y (meters): -2.01236354634
+IMU Heading (radians): 3.22919703917
+Encoder Theta R (ticks): 2.84890775581
+Encoder THeta L (ticks): 3.28041337625
+
+
+FILETERED OUTPUT:
+GPS X (meters): 1.80502586843
+GPS Y (meters): -4.84574266472
+IMU Heading (radians): 3.19806165293
+Encoder Theta R (ticks): 1.84131512587
+Encoder THeta L (ticks): 2.27358339098
+
+
+FILETERED OUTPUT:
+GPS X (meters): 1.93718548521
+GPS Y (meters): -7.07205347022
+IMU Heading (radians): 3.07423223535
+Encoder Theta R (ticks): 2.39109318169
+Encoder THeta L (ticks): 2.81089899639
+
+
+FILETERED OUTPUT:
+GPS X (meters): 1.76295997384
+GPS Y (meters): -9.78433830345
+IMU Heading (radians): 3.40641053524
+Encoder Theta R (ticks): 2.66260423774
+Encoder THeta L (ticks): 3.12472774854
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.19238421761
+GPS Y (meters): -0.954594733922
+IMU Heading (radians): 2.82298611056
+Encoder Theta R (ticks): 3.98544409357
+Encoder THeta L (ticks): 4.38027944757
+
+
+header: 
+  seq: 710
+  stamp: 
+    secs: 231719
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 2
+  service: 8
+latitude: 40.428992035
+longitude: -86.9128950783
+altitude: 192.022
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): -1.06318923224
+GPS Y (meters): -4.75849712789
+IMU Heading (radians): 2.81942378722
+Encoder Theta R (ticks): 2.85258930348
+Encoder THeta L (ticks): 3.25033027945
+
+
+FILETERED OUTPUT:
+GPS X (meters): -1.93786502578
+GPS Y (meters): -7.38108261821
+IMU Heading (radians): 3.53435364129
+Encoder Theta R (ticks): 1.51793544353
+Encoder THeta L (ticks): 2.00199121711
+
+
+FILETERED OUTPUT:
+GPS X (meters): -1.28127882948
+GPS Y (meters): -8.97703307897
+IMU Heading (radians): 4.05174335435
+Encoder Theta R (ticks): 1.22600678693
+Encoder THeta L (ticks): 1.76962160176
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.123476004057
+GPS Y (meters): -9.88744318674
+IMU Heading (radians): 3.97500142501
+Encoder Theta R (ticks): 1.04822348875
+Encoder THeta L (ticks): 1.5815781398
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.0490018182341
+GPS Y (meters): -0.831946035845
+IMU Heading (radians): 3.79821944287
+Encoder Theta R (ticks): 0.957331678837
+Encoder THeta L (ticks): 1.4704600918
+
+
+header: 
+  seq: 711
+  stamp: 
+    secs: 231720
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 5
+  service: 8
+latitude: 40.428785555
+longitude: -86.9132311917
+altitude: 236.858
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): 0.821701063813
+GPS Y (meters): -1.83495443344
+IMU Heading (radians): 4.25426970389
+Encoder Theta R (ticks): 1.1030646359
+Encoder THeta L (ticks): 1.67001046687
+
+
+FILETERED OUTPUT:
+GPS X (meters): 2.10703056799
+GPS Y (meters): -2.47437235137
+IMU Heading (radians): 3.59205145462
+Encoder Theta R (ticks): 1.31311779364
+Encoder THeta L (ticks): 1.79918594524
+
+
+FILETERED OUTPUT:
+GPS X (meters): 2.82111845954
+GPS Y (meters): -3.92793785093
+IMU Heading (radians): 3.34559706135
+Encoder Theta R (ticks): 1.46969654516
+Encoder THeta L (ticks): 1.92770941533
+
+
+FILETERED OUTPUT:
+GPS X (meters): 3.22192786338
+GPS Y (meters): -5.77085258037
+IMU Heading (radians): 2.7944402893
+Encoder Theta R (ticks): 2.07139478576
+Encoder THeta L (ticks): 2.4634776351
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.151122485694
+GPS Y (meters): -0.547602742246
+IMU Heading (radians): 1.40988691205
+Encoder Theta R (ticks): 3.05110035033
+Encoder THeta L (ticks): 3.28017539319
+
+
+header: 
+  seq: 712
+  stamp: 
+    secs: 231721
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 5
+  service: 9
+latitude: 40.4289076267
+longitude: -86.9130872867
+altitude: 195.658
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): -3.01469996098
+GPS Y (meters): -0.0334660222748
+IMU Heading (radians): 0.448427514222
+Encoder Theta R (ticks): 3.31377336653
+Encoder THeta L (ticks): 3.43162899897
+
+
+FILETERED OUTPUT:
+GPS X (meters): -4.30958648804
+GPS Y (meters): 2.75925866213
+IMU Heading (radians): 1.60736502307
+Encoder Theta R (ticks): 1.88136584878
+Encoder THeta L (ticks): 2.13886281803
+
+
+FILETERED OUTPUT:
+GPS X (meters): -6.29642018764
+GPS Y (meters): 2.67451118152
+IMU Heading (radians): 3.23574649876
+Encoder Theta R (ticks): 1.77653277181
+Encoder THeta L (ticks): 2.22283941819
+
+
+FILETERED OUTPUT:
+GPS X (meters): -6.09403197338
+GPS Y (meters): 0.676924201944
+IMU Heading (radians): 4.43979832465
+Encoder Theta R (ticks): 1.70786551646
+Encoder THeta L (ticks): 2.29152679427
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.302056245607
+GPS Y (meters): 0.00591209302311
+IMU Heading (radians): 4.60955228301
+Encoder Theta R (ticks): 1.44691476711
+Encoder THeta L (ticks): 2.04716162208
+
+
+header: 
+  seq: 713
+  stamp: 
+    secs: 231722
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 2
+  service: 9
+latitude: 40.4289948067
+longitude: -86.912870315
+altitude: 190.415
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): 1.46801011408
+GPS Y (meters): -0.177090809902
+IMU Heading (radians): 5.46873462947
+Encoder Theta R (ticks): 1.60440897674
+Encoder THeta L (ticks): 2.30700886664
+
+
+FILETERED OUTPUT:
+GPS X (meters): 2.98933107039
+GPS Y (meters): 1.23798807236
+IMU Heading (radians): 4.7262803594
+Encoder Theta R (ticks): 2.28678936494
+Encoder THeta L (ticks): 2.89872648301
+
+
+FILETERED OUTPUT:
+GPS X (meters): 5.37408545749
+GPS Y (meters): 1.2511868299
+IMU Heading (radians): 4.99195790832
+Encoder Theta R (ticks): 1.36156852339
+Encoder THeta L (ticks): 2.00812307825
+
+
+FILETERED OUTPUT:
+GPS X (meters): 6.92850994738
+GPS Y (meters): 1.69916984371
+IMU Heading (radians): 4.70361155837
+Encoder Theta R (ticks): 1.06025241926
+Encoder THeta L (ticks): 1.67081682058
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.580984724141
+GPS Y (meters): 0.117547054055
+IMU Heading (radians): 3.72157797249
+Encoder Theta R (ticks): 1.88932262322
+Encoder THeta L (ticks): 2.38300295752
+
+
+header: 
+  seq: 714
+  stamp: 
+    secs: 231723
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 2
+  service: 9
+latitude: 40.428994315
+longitude: -86.9128582367
+altitude: 190.406
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): 1.79842766964
+GPS Y (meters): -1.73980856834
+IMU Heading (radians): 1.99922320449
+Encoder Theta R (ticks): 2.37321908288
+Encoder THeta L (ticks): 2.66420843502
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.36827530405
+GPS Y (meters): -2.69729154684
+IMU Heading (radians): 2.81862602059
+Encoder Theta R (ticks): 1.640926719
+Encoder THeta L (ticks): 2.03318344821
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.926870437795
+GPS Y (meters): -4.40510327413
+IMU Heading (radians): 3.41335399391
+Encoder Theta R (ticks): 1.48041976381
+Encoder THeta L (ticks): 1.93815111154
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.475785215465
+GPS Y (meters): -5.96787088476
+IMU Heading (radians): 3.20943119954
+Encoder Theta R (ticks): 1.14228548496
+Encoder THeta L (ticks): 1.57062737946
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.0242304202673
+GPS Y (meters): -0.464942719266
+IMU Heading (radians): 3.7866376036
+Encoder Theta R (ticks): 1.33538294235
+Encoder THeta L (ticks): 1.8292206114
+
+
+header: 
+  seq: 715
+  stamp: 
+    secs: 231724
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 5
+  service: 10
+latitude: 40.4289179283
+longitude: -86.91301203
+altitude: 190.926
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): 0.89611857011
+GPS Y (meters): -1.68667576943
+IMU Heading (radians): 3.51531222949
+Encoder Theta R (ticks): 1.0978143147
+Encoder THeta L (ticks): 1.55358334046
+
+
+FILETERED OUTPUT:
+GPS X (meters): 1.42926301593
+GPS Y (meters): -3.03206416097
+IMU Heading (radians): 2.59617232878
+Encoder Theta R (ticks): 1.6374336333
+Encoder THeta L (ticks): 1.98099442231
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.553794451696
+GPS Y (meters): -4.40330695831
+IMU Heading (radians): 2.49842437678
+Encoder Theta R (ticks): 1.05212908431
+Encoder THeta L (ticks): 1.38262639213
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.147654963753
+GPS Y (meters): -5.32581252171
+IMU Heading (radians): 2.42432962571
+Encoder Theta R (ticks): 0.899210969633
+Encoder THeta L (ticks): 1.21716688665
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.0769791129666
+GPS Y (meters): -0.494409062571
+IMU Heading (radians): 1.13404590354
+Encoder Theta R (ticks): 2.20693143121
+Encoder THeta L (ticks): 2.36860153256
+
+
+header: 
+  seq: 716
+  stamp: 
+    secs: 231725
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 5
+  service: 8
+latitude: 40.42891797
+longitude: -86.9129841383
+altitude: 191.623
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): -2.33580220752
+GPS Y (meters): 0.553897710799
+IMU Heading (radians): 0.296401633093
+Encoder Theta R (ticks): 3.18394926035
+Encoder THeta L (ticks): 3.24841946065
+
+
+FILETERED OUTPUT:
+GPS X (meters): -3.13083719971
+GPS Y (meters): 3.32894194666
+IMU Heading (radians): 0.841055110702
+Encoder Theta R (ticks): 1.65091521671
+Encoder THeta L (ticks): 1.78097722157
+
+
+FILETERED OUTPUT:
+GPS X (meters): -4.41815977626
+GPS Y (meters): 4.48347897712
+IMU Heading (radians): 2.75278460946
+Encoder Theta R (ticks): 1.77206519808
+Encoder THeta L (ticks): 2.12528240047
+
+
+FILETERED OUTPUT:
+GPS X (meters): -5.12077522471
+GPS Y (meters): 2.6948304269
+IMU Heading (radians): 3.41885403576
+Encoder Theta R (ticks): 1.52213879514
+Encoder THeta L (ticks): 1.94628662061
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.303881720448
+GPS Y (meters): 0.0592380726801
+IMU Heading (radians): 3.95213078227
+Encoder Theta R (ticks): 1.45366051291
+Encoder THeta L (ticks): 1.93681873688
+
+
+header: 
+  seq: 717
+  stamp: 
+    secs: 231726
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 5
+  service: 10
+latitude: 40.428916415
+longitude: -86.9129642067
+altitude: 191.19
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): 0.918723713525
+GPS Y (meters): -1.10297402705
+IMU Heading (radians): 4.34398356397
+Encoder Theta R (ticks): 1.41565543755
+Encoder THeta L (ticks): 1.94205794032
+
+
+FILETERED OUTPUT:
+GPS X (meters): 2.47304892984
+GPS Y (meters): -1.70165504296
+IMU Heading (radians): 3.770213335
+Encoder Theta R (ticks): 1.40432655312
+Encoder THeta L (ticks): 1.85980311142
+
+
+FILETERED OUTPUT:
+GPS X (meters): 3.42924993352
+GPS Y (meters): -3.01870654556
+IMU Heading (radians): 3.33183709622
+Encoder Theta R (ticks): 1.40874412895
+Encoder THeta L (ticks): 1.81261279957
+
+
+FILETERED OUTPUT:
+GPS X (meters): 3.67927016621
+GPS Y (meters): -4.43150929802
+IMU Heading (radians): 3.23376017859
+Encoder Theta R (ticks): 0.85921182713
+Encoder THeta L (ticks): 1.25161423706
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.264898940879
+GPS Y (meters): -0.426936992991
+IMU Heading (radians): 2.45450253026
+Encoder Theta R (ticks): 3.35575930693
+Encoder THeta L (ticks): 3.65429833903
+
+
+header: 
+  seq: 718
+  stamp: 
+    secs: 231727
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 5
+  service: 9
+latitude: 40.4288997433
+longitude: -86.9129626183
+altitude: 196.229
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): -1.94995916191
+GPS Y (meters): -3.12469748096
+IMU Heading (radians): 1.34092297782
+Encoder Theta R (ticks): 3.34894877002
+Encoder THeta L (ticks): 3.51741532977
+
+
+FILETERED OUTPUT:
+GPS X (meters): -5.13556625139
+GPS Y (meters): -2.35623384283
+IMU Heading (radians): 1.38751804713
+Encoder Theta R (ticks): 2.57750711342
+Encoder THeta L (ticks): 2.75524384194
+
+
+FILETERED OUTPUT:
+GPS X (meters): -7.48093640372
+GPS Y (meters): -1.91919312137
+IMU Heading (radians): 2.57866917378
+Encoder Theta R (ticks): 1.48964683743
+Encoder THeta L (ticks): 1.80852026214
+
+
+FILETERED OUTPUT:
+GPS X (meters): -8.31718671584
+GPS Y (meters): -3.26975317387
+IMU Heading (radians): 2.95670057393
+Encoder Theta R (ticks): 1.15799680961
+Encoder THeta L (ticks): 1.51787055921
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.500485409574
+GPS Y (meters): -0.26649421858
+IMU Heading (radians): 3.65551722143
+Encoder Theta R (ticks): 1.13282136035
+Encoder THeta L (ticks): 1.57553828695
+
+
+header: 
+  seq: 719
+  stamp: 
+    secs: 231728
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 5
+  service: 11
+latitude: 40.42889959
+longitude: -86.91295096
+altitude: 194.894
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): 0.1769792831
+GPS Y (meters): -1.46913825342
+IMU Heading (radians): 4.25874057081
+Encoder Theta R (ticks): 1.15249251906
+Encoder THeta L (ticks): 1.66553494702
+
+
+FILETERED OUTPUT:
+GPS X (meters): 1.43131928511
+GPS Y (meters): -2.08362445931
+IMU Heading (radians): 4.2472504992
+Encoder Theta R (ticks): 1.03639731822
+Encoder THeta L (ticks): 1.54738098299
+
+
+FILETERED OUTPUT:
+GPS X (meters): 2.68540227505
+GPS Y (meters): -2.71821616551
+IMU Heading (radians): 3.9219671214
+Encoder Theta R (ticks): 1.40073339389
+Encoder THeta L (ticks): 1.87460429561
+
+
+FILETERED OUTPUT:
+GPS X (meters): 3.84332158215
+GPS Y (meters): -3.88667995014
+IMU Heading (radians): 3.45115261651
+Encoder Theta R (ticks): 1.40593225513
+Encoder THeta L (ticks): 1.82657954399
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.28488129109
+GPS Y (meters): -0.360514676718
+IMU Heading (radians): 3.44823017547
+Encoder Theta R (ticks): 0.82205046554
+Encoder THeta L (ticks): 1.24630928271
+
+
+header: 
+  seq: 720
+  stamp: 
+    secs: 231729
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 5
+  service: 9
+latitude: 40.4288951917
+longitude: -86.9129416067
+altitude: 194.167
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): 0.702063758606
+GPS Y (meters): -1.67349021631
+IMU Heading (radians): 3.37119016117
+Encoder Theta R (ticks): 2.1861805832
+Encoder THeta L (ticks): 2.60180876655
+
+
+FILETERED OUTPUT:
+GPS X (meters): 1.29427368279
+GPS Y (meters): -4.19797289613
+IMU Heading (radians): 2.07933887794
+Encoder Theta R (ticks): 3.08897144429
+Encoder THeta L (ticks): 3.35329341559
+
+
+FILETERED OUTPUT:
+GPS X (meters): -1.49339652789
+GPS Y (meters): -5.74011098308
+IMU Heading (radians): 1.52992173922
+Encoder Theta R (ticks): 2.94463404569
+Encoder THeta L (ticks): 3.14958707162
+
+
+FILETERED OUTPUT:
+GPS X (meters): -4.28311519389
+GPS Y (meters): -5.60685900421
+IMU Heading (radians): 1.96593110797
+Encoder Theta R (ticks): 1.87746452028
+Encoder THeta L (ticks): 2.13700555254
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.416543465825
+GPS Y (meters): -0.448758999
+IMU Heading (radians): 2.05213879909
+Encoder Theta R (ticks): 0.951836665661
+Encoder THeta L (ticks): 1.2208912076
+
+
+header: 
+  seq: 721
+  stamp: 
+    secs: 231730
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 5
+  service: 9
+latitude: 40.4288857733
+longitude: -86.9129360667
+altitude: 194.996
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): -1.35727787748
+GPS Y (meters): -0.940803922594
+IMU Heading (radians): 2.4761920325
+Encoder Theta R (ticks): 0.783647928831
+Encoder THeta L (ticks): 1.10210558925
+
+
+FILETERED OUTPUT:
+GPS X (meters): -1.95785930655
+GPS Y (meters): -1.69749537076
+IMU Heading (radians): 2.80192311933
+Encoder Theta R (ticks): 0.742230632962
+Encoder THeta L (ticks): 1.09784288157
+
+
+FILETERED OUTPUT:
+GPS X (meters): -2.27558453985
+GPS Y (meters): -2.57331937027
+IMU Heading (radians): 2.783728051
+Encoder Theta R (ticks): 0.688755728562
+Encoder THeta L (ticks): 1.04069516067
+
+
+FILETERED OUTPUT:
+GPS X (meters): -2.59509435547
+GPS Y (meters): -3.40763938055
+IMU Heading (radians): 2.7734936698
+Encoder Theta R (ticks): 0.672902976348
+Encoder THeta L (ticks): 1.02390230405
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.185850207782
+GPS Y (meters): -0.279069259371
+IMU Heading (radians): 2.68153451781
+Encoder Theta R (ticks): 2.14757254917
+Encoder THeta L (ticks): 2.48853083832
+
+
+header: 
+  seq: 722
+  stamp: 
+    secs: 231731
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 5
+  service: 10
+latitude: 40.428892275
+longitude: -86.9129144317
+altitude: 189.462
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): -1.15603638858
+GPS Y (meters): -2.23587554458
+IMU Heading (radians): 3.52449861357
+Encoder Theta R (ticks): 1.37975354047
+Encoder THeta L (ticks): 1.82228194621
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.506833061276
+GPS Y (meters): -3.94611973852
+IMU Heading (radians): 3.36194315256
+Encoder Theta R (ticks): 2.29102830095
+Encoder THeta L (ticks): 2.71234547369
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.0516378263221
+GPS Y (meters): -6.45349302113
+IMU Heading (radians): 3.25359855174
+Encoder Theta R (ticks): 2.48284474052
+Encoder THeta L (ticks): 2.89354253811
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.355289033016
+GPS Y (meters): -9.15778599997
+IMU Heading (radians): 3.16867811751
+Encoder Theta R (ticks): 2.52450473025
+Encoder THeta L (ticks): 2.92775373648
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.0228816656393
+GPS Y (meters): -0.73289868091
+IMU Heading (radians): 2.88716696
+Encoder Theta R (ticks): 2.47850964635
+Encoder THeta L (ticks): 2.8524519879
+
+
+header: 
+  seq: 723
+  stamp: 
+    secs: 231732
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 5
+  service: 10
+latitude: 40.4288876467
+longitude: -86.9129063833
+altitude: 188.979
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): -0.59974700929
+GPS Y (meters): -3.12681389714
+IMU Heading (radians): 3.65234451241
+Encoder Theta R (ticks): 1.44324717437
+Encoder THeta L (ticks): 1.91056511558
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.177086009605
+GPS Y (meters): -4.48973579338
+IMU Heading (radians): 3.27741781758
+Encoder Theta R (ticks): 0.982029483786
+Encoder THeta L (ticks): 1.40495429548
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.286236575481
+GPS Y (meters): -5.39004279458
+IMU Heading (radians): 2.43327773218
+Encoder Theta R (ticks): 0.157725839197
+Encoder THeta L (ticks): 0.484333887997
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.000332042123864
+GPS Y (meters): -5.78514018812
+IMU Heading (radians): 2.36595443467
+Encoder Theta R (ticks): 0.65611926169
+Encoder THeta L (ticks): 0.98007855339
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.0356258136566
+GPS Y (meters): -0.400158820183
+IMU Heading (radians): 3.15443492803
+Encoder Theta R (ticks): 1.03948338943
+Encoder THeta L (ticks): 1.46034934744
+
+
+header: 
+  seq: 724
+  stamp: 
+    secs: 231733
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 5
+  service: 10
+latitude: 40.4288834533
+longitude: -86.9128969483
+altitude: 188.404
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): -0.0195569113966
+GPS Y (meters): -1.69261247827
+IMU Heading (radians): 3.80755257052
+Encoder Theta R (ticks): 1.13585116347
+Encoder THeta L (ticks): 1.63432538169
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.979078916386
+GPS Y (meters): -3.01807319458
+IMU Heading (radians): 3.52165291972
+Encoder Theta R (ticks): 2.22994501937
+Encoder THeta L (ticks): 2.69444645992
+
+
+FILETERED OUTPUT:
+GPS X (meters): 1.83527711628
+GPS Y (meters): -5.17894994903
+IMU Heading (radians): 4.61039364407
+Encoder Theta R (ticks): 1.4295407978
+Encoder THeta L (ticks): 2.02693397747
+
+
+FILETERED OUTPUT:
+GPS X (meters): 3.53850845627
+GPS Y (meters): -5.37301446638
+IMU Heading (radians): 4.89940770601
+Encoder Theta R (ticks): 1.18970415845
+Encoder THeta L (ticks): 1.81992537104
+
+
+FILETERED OUTPUT:
+GPS X (meters): 0.344517853536
+GPS Y (meters): -0.320414290555
+IMU Heading (radians): 3.11970875282
+Encoder Theta R (ticks): 2.8144917453
+Encoder THeta L (ticks): 3.23494891438
+
+
+header: 
+  seq: 725
+  stamp: 
+    secs: 231734
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 5
+  service: 10
+latitude: 40.42888062
+longitude: -86.9128875133
+altitude: 188.07
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): 0.279555414743
+GPS Y (meters): -3.3004550897
+IMU Heading (radians): 3.02655099225
+Encoder Theta R (ticks): 2.58877145645
+Encoder THeta L (ticks): 3.00546895797
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.0657161358453
+GPS Y (meters): -6.32467893186
+IMU Heading (radians): 2.15962787908
+Encoder Theta R (ticks): 3.64350253499
+Encoder THeta L (ticks): 3.95842105345
+
+
+FILETERED OUTPUT:
+GPS X (meters): -2.76111731174
+GPS Y (meters): -7.99866515341
+IMU Heading (radians): 1.45589110083
+Encoder Theta R (ticks): 0.533688244568
+Encoder THeta L (ticks): 0.769104554492
+
+
+FILETERED OUTPUT:
+GPS X (meters): -3.62862696566
+GPS Y (meters): -7.94036915193
+IMU Heading (radians): 3.10912650444
+Encoder Theta R (ticks): 1.55131380951
+Encoder THeta L (ticks): 1.98605762274
+
+
+FILETERED OUTPUT:
+GPS X (meters): -0.262603382707
+GPS Y (meters): -0.694519262024
+IMU Heading (radians): 4.31061519008
+Encoder Theta R (ticks): 1.64388060165
+Encoder THeta L (ticks): 2.21624207733
+
+
+header: 
+  seq: 726
+  stamp: 
+    secs: 231735
+    nsecs:         0
+  frame_id: ''
+status: 
+  status: 5
+  service: 9
+latitude: 40.428870775
+longitude: -86.912880395
+altitude: 191.102
+position_covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+position_covariance_type: 0
+FILETERED OUTPUT:
+GPS X (meters): 1.52281674377
+GPS Y (meters): -1.45372322313
+IMU Heading (radians): 5.22620923341
+Encoder Theta R (ticks): 1.64925947154
+Encoder THeta L (ticks): 2.32673520008
+
+
+FILETERED OUTPUT:
+GPS X (meters): 3.29595973307
+GPS Y (meters): -0.459851456495
+IMU Heading (radians): 6.69238289762
+Encoder Theta R (ticks): 1.80137036152
+Encoder THeta L (ticks): 2.64986108153
+
+
+FILETERED OUTPUT:
+GPS X (meters): 2.39474561955
+GPS Y (meters): 1.65210021711
+IMU Heading (radians): 5.67440425026
+Encoder Theta R (ticks): 2.30341758755
+Encoder THeta L (ticks): 3.02528637158
+
+
+FILETERED OUTPUT:
+GPS X (meters): 3.81826428474
+GPS Y (meters): 3.659

@@ -1,13 +1,17 @@
 #! /usr/bin/python
-import rospy
+import rospy,tf
 from sensor_msgs.msg import NavSatFix, Imu
 from std_msgs.msg import String
 from threading import Lock
 from copy import deepcopy, copy
+from EKF import EKF
+
+
 
 # TODO import encoder message
 
 
+ekf = EKF()
 gps_meas_msg = NavSatFix()
 enc_meas_msg = String()
 imu_meas_msg = Imu()
@@ -26,6 +30,12 @@ imu_lock = Lock()
 theta_l_meas = 0
 theta_r_meas = 0
 
+# Initial gps coordinates
+init_gps_meas = NavSatFix()
+init_imu_meas = Imu()
+
+state_space_init = False
+
 
 # TODO what is the default orientation?
 def gps_callback(gps_msg):
@@ -38,13 +48,14 @@ def gps_callback(gps_msg):
 def imu_callback(imu_msg):
   global imu_meas_msg, imu_updated
   imu_lock.acquire()
-  imu_meas_msg = imu_msg
+  imu_meas_msg = deepcopy(imu_msg)
   imu_updated = True
   imu_lock.release()
 
 
 def encoder_callback(encoder_msg):
   global gps_updated
+  global ekf, state_space_init
   gps_lock.acquire()
   gps_meas = deepcopy(gps_meas_msg)
   gps_valid = copy(gps_updated)
@@ -57,27 +68,55 @@ def encoder_callback(encoder_msg):
 
   enc_updated = True
 
-  # HELP MIKE WUT TO DO
-  # gps_meas is the gps message
-  lat_lon = (gps_meas.latitude, gps_meas.longitude)
-  purdue_fountain = ( 
+  if gps_valid:
+    # y is north, x is east
+    lat_lon = (gps_meas.latitude, gps_meas.longitude)
+    purdue_fountain = (40.428642, -86.913776) 
+    x = (lat_lon[1]-purdue_fountain[1])/111139 # in meters
+    y = (lat_lon[0]-purdue_fountain[0])/111139 # in meters
+    print("GPS X: " + str(float(x)))
+    print("GPS Y: " + str(float(y)))
 
-  # IMU IS AVAILABLE AS imu_meas
+  # Find IMU Heading (True North)
+  quaternion = (imu_meas.orientation.x,
+    imu_meas.orientation.y,
+    imu_meas.orientation.z,
+    imu_meas.orientation.w)
+  angles = tf.transformations.euler_from_quaternion(
+    quaternion)
+  yaw = angles[2]
 
+      
+  imuHeading = yaw
 
+  if(gps_valid and not state_space_init):
+      ekf.x[0] = x
+      ekf.x[1] = y
+      ekf.x[2] = imuHeading
+      state_space_init = True
 
   ############# Mike takes the wheel ######
   theta_l = int(encoder_msg.data[2:4])
   theta_r = int(encoder_msg.data[5:7])
 
+  if gps_valid:
+    ekf.update_gps_cov(gps_meas.status.service)
+    print("IMU Heading: " + str(float(yaw)))
 
+  ekf.update_encoder_cov(theta_r, theta_l)
 
-
-  if(gps_valid):
-    print(gps_meas)
-
-
-
+  if(gps_valid and state_space_init):
+      ekf.step(0.2, x, y, imuHeading, theta_l, theta_r)
+  elif (state_space_init):
+      ekf.step(0.2, imuHeading, theta_l, theta_r)
+    
+  '''print("FILETERED OUTPUT:")
+  print("GPS X (meters): " + str(float(ekf.x[0])))
+  print("GPS Y (meters): " + str(float(ekf.x[1])))
+  print("IMU Heading (radians): " + str(float(ekf.x[2])))
+  print("Encoder Theta R (ticks): " + str(float(ekf.x[3])))
+  print("Encoder Theta L (ticks): " + str(float(ekf.x[4])))
+  print("\n")'''
 
 if __name__ == "__main__":
   rospy.init_node('ekf')
