@@ -27,10 +27,10 @@
 #define RESOLUTION ((uint8_t)8)
 //#define LOOK_AHEAD 1.0
 #define LOOK_AHEAD_SQ 1.0
-#define NORMAL_SPEED 40
+#define NORMAL_SPEED 25
 #define TIC_LENGTH 0.053086
-#define VELOCITY_COEFF 1.0 //TODO FIND AT LEAST AN ESTIMATE FOR THIS, CONVERTING VELOCITY TO MOTOR CONTROLLER NUMBERS
-#define ACCEL 5
+#define VELOCITY_COEFF 0.5 //TODO FIND AT LEAST AN ESTIMATE FOR THIS, CONVERTING VELOCITY TO MOTOR CONTROLLER NUMBERS
+#define ACCEL 2
 #define VEHICLE_WIDTH 0.575
 #define MAX_SPEED 80
 #define MAX_TURN 20
@@ -114,7 +114,8 @@ static uint8_t delivery_requested = 0; // Indication that delivery was requested
 /* Control Algorithm Variables */
 static uint32_t encoder_diff_l;
 static uint32_t encoder_diff_r;
-float points_x[] = {0.004, -0.004,  0.008, -0.008, -0.004, -0.080, -0.200, -0.500};
+//float points_x[] = {0.004, -0.004,  0.008, -0.008, -0.004, -0.080, -0.200, -0.500};
+float points_x[] = {0,0,0,0,0,0,0,0};
 float points_y[] = {1.000,  2.000,  3.000,  4.000,  5.000,  6.000,  7.000,  7.000};
 float goal_x = 0.0;
 float goal_y = 0.0;
@@ -143,7 +144,7 @@ static void StraightLine();
 
 bool find_goal();
 float distance_squared(float x1, float y1, float x2, float y2);
-void SetMotors (uint32_t diff_l, uint32_t diff_r, uint32_t diff_t);
+void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void PointUpdate (uint32_t diff_l, uint32_t diff_r);
 
 int main(void) {
@@ -182,16 +183,16 @@ int main(void) {
 
 	//TODO Maybe replace these diff variables with global variables, and modify functions to accept them instead
 
-	uint32_t diff_t = 0;
+	float32_t diff_t = 0.01;
 
 	for(;;) {
-		drive_enable = find_goal();
+/*		drive_enable = find_goal();
 		if(drive_enable) {
-			encoder_diff_l = adc1_slots - last_used_adc1_slots;
-			last_used_adc1_slots = adc1_slots;
-
-			encoder_diff_r = adc0_slots - last_used_adc0_slots;
+			encoder_diff_l = adc0_slots - last_used_adc0_slots;
 			last_used_adc0_slots = adc0_slots;
+
+			encoder_diff_r = adc1_slots - last_used_adc1_slots;
+			last_used_adc1_slots = adc1_slots;
 
 			//TODO
 			//diff_t = total_time - last_used_time;
@@ -203,13 +204,15 @@ int main(void) {
 		else {
 			Drive(left_direction, 0, right_direction, 0);
 		}
+		*/
 //		// This could include non-controller related messages so if using the controller be wary that if the node dies and the Jetson is still sending data over problems can occur
 //		/*if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
 //			left_speed = right_speed = 0;
 //		}*/
 //		//StraightLine();
 //		Drive(left_direction, left_speed, right_direction, right_speed);
-//		nsWait(50000000); // wait 50 ms
+//		Drive(left_direction, 20, right_direction,(int) (20 * 0.85));
+		nsWait(50000000); // wait 50 ms
 //		loop_count++;
 	}
 }
@@ -345,16 +348,16 @@ static int Drive(enum Direction left_direction, char left_speed, enum Direction 
 		return 1; // Haven't finished sending the last message
 	}
 	if(left_direction == FORWARD) {
-		left_packet.command = 0;
+		left_packet.command = 4;
 	}
 	else if(left_direction == REVERSE) {
-		left_packet.command = 1;
+		left_packet.command = 5;
 	}
 	if(right_direction == FORWARD) {
-		right_packet.command = 4;
+		right_packet.command = 0;
 	}
 	else if(right_direction == REVERSE) {
-		right_packet.command = 5;
+		right_packet.command = 1;
 	}
 	left_packet.data = left_speed;
 	right_packet.data = right_speed;
@@ -921,11 +924,11 @@ bool find_goal() {
 	return true;
 }
 
-void SetMotors (uint32_t diff_l, uint32_t diff_r, uint32_t diff_t) {
-	float v_c = (diff_l + diff_r) * TIC_LENGTH / 2 / diff_t * VELOCITY_COEFF;
+void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
+	float v_c = (diff_l + diff_r) * TIC_LENGTH / 2.00 / diff_t * VELOCITY_COEFF;
 	//TODO MODIFY VELOCITY_COEFF
 
-	if(v_c < NORMAL_SPEED) v_c += ACCEL;
+	if(v_c < 20) v_c += 20;
 	if(v_c > NORMAL_SPEED) v_c -= ACCEL;
 
 	//Allow negative for now, don't want to have to worry about overflow later
@@ -947,9 +950,10 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, uint32_t diff_t) {
 
 	//Optional, not sure if global variable is really even needed
 	left_speed = v_l; // Current left speed to be requested
-	right_speed = v_r; // Current right speed to be requested
+	right_speed = (int) ((float)v_r * 0.85); // Current right speed to be requested
 
-	Drive(left_direction, v_l, right_direction, v_r);
+
+	Drive(left_direction, left_speed, right_direction, right_speed);
 
 	return;
 }
