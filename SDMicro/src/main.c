@@ -27,12 +27,17 @@
 #define RESOLUTION ((uint8_t)8)
 //#define LOOK_AHEAD 1.0
 #define LOOK_AHEAD_SQ 1.0
-#define NORMAL_SPEED 25
+#define NORMAL_SPEED 20
 #define TIC_LENGTH 0.053086
-#define VELOCITY_COEFF 0.5 //TODO FIND AT LEAST AN ESTIMATE FOR THIS, CONVERTING VELOCITY TO MOTOR CONTROLLER NUMBERS
-#define ACCEL 2
+#define VELOCITY_EQ_M 11.013
+#define VELOCITY_EQ_B 12.0
+
+//#define VELOCITY_EQ_B 9.586
+//#define VELOCITY_EQ_B 9.5862
+#define L_R_BIAS 0.96      	//Multiply to Right Wheel
+#define ACCEL 5
 #define VEHICLE_WIDTH 0.575
-#define MAX_SPEED 80
+#define MAX_SPEED 50
 #define MAX_TURN 20
 
 enum Encoders{RECEIVE, NO_RECEIVE};
@@ -75,7 +80,7 @@ static uint32_t last_used_adc1_slots = 0; // Left
 static uint32_t last_encoder_left_count_to_jetson = 0;
 static uint32_t last_encoder_right_count_to_jetson = 0;
 
-static uint8_t left_speed = 5; // Current left speed to be requested
+static uint8_t left_speed = 0; // Current left speed to be requested
 static uint8_t right_speed = 0; // Current right speed to be requested
 
 /* UART vars */
@@ -115,7 +120,8 @@ static uint8_t delivery_requested = 0; // Indication that delivery was requested
 static uint32_t encoder_diff_l;
 static uint32_t encoder_diff_r;
 //float points_x[] = {0.004, -0.004,  0.008, -0.008, -0.004, -0.080, -0.200, -0.500};
-float points_x[] = {0,0,0,0,0,0,0,0};
+float points_x[] = {0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18};
+//float points_x[] = {0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01};
 float points_y[] = {1.000,  2.000,  3.000,  4.000,  5.000,  6.000,  7.000,  7.000};
 float goal_x = 0.0;
 float goal_y = 0.0;
@@ -171,7 +177,7 @@ int main(void) {
 	mc_tx_buffer[3] = (MC_ADDRESS + 10 + 14) & 127; // Checksum
 	mc_tx_buffer[4] = 255; // Stop byte
 	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
-	nsWait(1000000000);
+	nsWait(100000000);
 
 	// Test UART transfer
 	//char* t = "Connected";
@@ -180,14 +186,12 @@ int main(void) {
 	//DispString(t);
 
 	bool drive_enable = true;
-
-	//TODO Maybe replace these diff variables with global variables, and modify functions to accept them instead
-
-	float32_t diff_t = 0.01;
+	float32_t diff_t = 0.05;
 
 	for(;;) {
-/*		drive_enable = find_goal();
+		drive_enable = find_goal();
 		if(drive_enable) {
+			nsWait(50000000); // wait 50 ms
 			encoder_diff_l = adc0_slots - last_used_adc0_slots;
 			last_used_adc0_slots = adc0_slots;
 
@@ -195,25 +199,31 @@ int main(void) {
 			last_used_adc1_slots = adc1_slots;
 
 			//TODO
+			diff_t = 0.05;
 			//diff_t = total_time - last_used_time;
 			//last_used_time = total_time;
 
 			SetMotors(encoder_diff_l, encoder_diff_r, diff_t);
-			PointUpdate (encoder_diff_l, encoder_diff_r);
+
+			for(int banana = 0; banana < ARRAY_SIZE; banana++) {
+				points_y[banana] -= ( (float)(encoder_diff_l + encoder_diff_r) / 2.0 ) * TIC_LENGTH ;
+			}
+
+//			PointUpdate(encoder_diff_l, encoder_diff_r);
+
 		}
 		else {
 			Drive(left_direction, 0, right_direction, 0);
 		}
-		*/
-//		// This could include non-controller related messages so if using the controller be wary that if the node dies and the Jetson is still sending data over problems can occur
-//		/*if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
-//			left_speed = right_speed = 0;
-//		}*/
-//		//StraightLine();
-//		Drive(left_direction, left_speed, right_direction, right_speed);
-//		Drive(left_direction, 20, right_direction,(int) (20 * 0.85));
-		nsWait(50000000); // wait 50 ms
-//		loop_count++;
+
+
+		/*if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
+			left_speed = right_speed = 0;
+		}
+		StraightLine();
+		Drive(left_direction, left_speed, right_direction, right_speed);
+		nsWait(50000000);*/
+		loop_count++;
 	}
 }
 
@@ -857,9 +867,9 @@ bool find_goal() {
 	//Find points of the line that Goal Point lies on
 	Point target_1;
 	Point target_2;
-	if( (min_dis < LOOK_AHEAD_SQ) || (min_idx == (ARRAY_SIZE - 1)) ) {
+	if( (min_dis <= LOOK_AHEAD_SQ) || (min_idx == (ARRAY_SIZE - 1)) ) {
 		bool break_success = false;
-		for(int offset = 0; offset + min_idx < ARRAY_SIZE; offset++) {
+		for(int offset = 1; offset + min_idx < ARRAY_SIZE; offset++) {
 			if(dist_array[min_idx + offset] >= LOOK_AHEAD_SQ ) {
 				target_2.x = points_x[min_idx + offset];
 				target_2.y = points_y[min_idx + offset];
@@ -880,15 +890,17 @@ bool find_goal() {
 	else {
 		float decision_dist = distance_squared(points_x[min_idx], points_y[min_idx], points_x[min_idx + 1], points_y[min_idx + 1]);
 		if(dist_array[min_idx + 1] > decision_dist) {
-			target_2.x = points_x[min_idx];
-			target_2.y = points_y[min_idx];
 			if(min_idx != 0) {
 				target_1.x = points_x[min_idx - 1];
 				target_1.y = points_y[min_idx - 1];
+				target_2.x = points_x[min_idx];
+				target_2.y = points_y[min_idx];
 			}
 			else {
-				target_1.x = 0;
-				target_1.y = 0;
+				target_1.x = points_x[0];
+				target_1.y = points_y[0];
+				target_2.x = points_x[1];
+				target_2.y = points_y[1];
 			}
 		}
 		else {
@@ -925,10 +937,10 @@ bool find_goal() {
 }
 
 void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
-	float v_c = (diff_l + diff_r) * TIC_LENGTH / 2.00 / diff_t * VELOCITY_COEFF;
-	//TODO MODIFY VELOCITY_COEFF
+	float v_c = (diff_l + diff_r) * TIC_LENGTH / 2.00 / diff_t;
+	v_c = VELOCITY_EQ_M * v_c + VELOCITY_EQ_B;
 
-	if(v_c < 20) v_c += 20;
+	if(v_c < 20) v_c += ACCEL;
 	if(v_c > NORMAL_SPEED) v_c -= ACCEL;
 
 	//Allow negative for now, don't want to have to worry about overflow later
@@ -950,8 +962,7 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 
 	//Optional, not sure if global variable is really even needed
 	left_speed = v_l; // Current left speed to be requested
-	right_speed = (int) ((float)v_r * 0.85); // Current right speed to be requested
-
+	right_speed = (int) ((float)v_r * L_R_BIAS); // Current right speed to be requested
 
 	Drive(left_direction, left_speed, right_direction, right_speed);
 
@@ -959,33 +970,37 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 }
 
 void PointUpdate (uint32_t diff_l, uint32_t diff_r) {
-//	float v_l = diff_l * TIC_LENGTH;
-//	float v_r = diff_r * TIC_LENGTH;
-//	float theta = (v_r - v_l) / VEHICLE_WIDTH;
-//	float delta_x = -0.5 * (v_l + v_r) * sin(theta);
-//	float delta_y =  0.5 * (v_l + v_r) * cos(theta);
+//	float theta = (diff_r - diff_l) * TIC_LENGTH / VEHICLE_WIDTH;
+//	float delta_x = -0.5 * TIC_LENGTH * (diff_l + diff_r) * sin(theta);
+//	float delta_y =  0.5 * TIC_LENGTH * (diff_l + diff_r) * cos(theta);
+//
+//	float x_rot;
+//	float y_rot;
+//
+//	for(int i = 0; i < ARRAY_SIZE; i++) {
+//		x_rot = points_x[i] * cos(theta) + points_y[i] * -1 * sin(theta);
+//		y_rot = points_x[i] * sin(theta) + points_y[i] *      cos(theta);
+//
+//		points_x[i] = x_rot - delta_x;
+//		points_y[i] = y_rot - delta_y;
+//	}
+//
+//	return;
+		float theta = (diff_r - diff_l) * TIC_LENGTH / VEHICLE_WIDTH;
+		float delta_x = -0.5 * TIC_LENGTH * (diff_l + diff_r) * sin(theta);
+		float delta_y =  0.5 * TIC_LENGTH * (diff_l + diff_r) * cos(theta);
 
-	float theta = (diff_r - diff_l) * TIC_LENGTH / VEHICLE_WIDTH;
-	float delta_x = -0.5 * TIC_LENGTH * (diff_l + diff_r) * sin(theta);
-	float delta_y =  0.5 * TIC_LENGTH * (diff_l + diff_r) * cos(theta);
+		float x_rot;
+		float y_rot;
 
-	float x_rot;
-	float y_rot;
+		for(int i = 0; i < ARRAY_SIZE; i++) {
+			y_rot = points_x[i] * cos(theta) + points_y[i] * -1 * sin(theta);
+			x_rot = points_x[i] * sin(theta) + points_y[i] *      cos(theta);
 
-	for(int i = 0; i < ARRAY_SIZE; i++) {
-		x_rot = points_x[i] * cos(theta) + points_y[i] * -1 * sin(theta);
-		y_rot = points_x[i] * sin(theta) + points_y[i] * cos(theta);
+			points_x[i] = x_rot - delta_x;
+			points_y[i] = y_rot - delta_y;
+		}
 
-		points_x[i] = x_rot - delta_x;
-		points_y[i] = y_rot - delta_y;
-	}
-
-	return;
+		return;
 }
-
-
-
-
-
-
 
