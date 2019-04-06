@@ -21,8 +21,6 @@
 #define TX_BUFFER_MAX 100
 #define MC_ADDRESS 130
 
-#define AMBIENT_SPEED 15
-
 #define ARRAY_SIZE ((uint8_t)8)
 #define RESOLUTION ((uint8_t)8)
 //#define LOOK_AHEAD 1.0
@@ -120,8 +118,8 @@ static uint8_t delivery_requested = 0; // Indication that delivery was requested
 static uint32_t encoder_diff_l;
 static uint32_t encoder_diff_r;
 //float points_x[] = {0.004, -0.004,  0.008, -0.008, -0.004, -0.080, -0.200, -0.500};
-float points_x[] = {0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18};
-//float points_x[] = {0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01};
+//float points_x[] = {0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18};
+float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 float points_y[] = {1.000,  2.000,  3.000,  4.000,  5.000,  6.000,  7.000,  7.000};
 float goal_x = 0.0;
 float goal_y = 0.0;
@@ -237,12 +235,12 @@ static void StraightLine() {
 		return;
 	}
 	if(slot_diff == 0) {
-		if(left_speed < AMBIENT_SPEED && right_speed < AMBIENT_SPEED) {
+		if(left_speed < NORMAL_SPEED && right_speed < NORMAL_SPEED) {
 			left_speed++;
 			right_speed++;
 		}
 	} else if(slot_diff < 0) { // Right wheel has not moved as much as left
-		if(right_speed < AMBIENT_SPEED) {
+		if(right_speed < NORMAL_SPEED) {
 			right_speed++;
 		}
 		else {
@@ -252,7 +250,7 @@ static void StraightLine() {
 		}
 
 	} else { // Left wheel has not moved as much as right
-		if(left_speed < AMBIENT_SPEED) {
+		if(left_speed < NORMAL_SPEED) {
 			left_speed++;
 		}
 		else {
@@ -912,6 +910,10 @@ bool find_goal() {
 	}
 
 	//Solve Equations of Line 1 and Line 2 from Target 1 and Target 2
+	if(target_2.x == target_1.x) {
+		goal_x = 0.0f;
+		return true;
+	}
 	float slope_1 = (target_2.y - target_1.y) / (target_2.x - target_1.x);
 	float b_1 = target_2.y - slope_1 * target_2.x;
 
