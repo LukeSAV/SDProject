@@ -35,7 +35,7 @@
 #define L_R_BIAS 0.96      	//Multiply to Right Wheel
 #define ACCEL 5
 #define VEHICLE_WIDTH 0.575
-#define MAX_SPEED 50
+#define MAX_SPEED 30
 #define MAX_TURN 20
 
 enum Encoders{RECEIVE, NO_RECEIVE};
@@ -203,15 +203,16 @@ int main(void) {
 
 			SetMotors(encoder_diff_l, encoder_diff_r, diff_t);
 
-			for(int banana = 0; banana < ARRAY_SIZE; banana++) {
+			/*for(int banana = 0; banana < ARRAY_SIZE; banana++) {
 				points_y[banana] -= ( (float)(encoder_diff_l + encoder_diff_r) / 2.0 ) * TIC_LENGTH ;
-			}
+			}*/
 
-//			PointUpdate(encoder_diff_l, encoder_diff_r);
+			PointUpdate(encoder_diff_l, encoder_diff_r);
 
 		}
 		else {
 			Drive(left_direction, 0, right_direction, 0);
+			for(;;);
 		}
 
 
@@ -882,6 +883,7 @@ bool find_goal() {
 			//You'd also arrive here if STM moved within the last point the Jetson sent, or if mini-EKF greatly misbehaved
 			goal_x = 0.0;
 			goal_y = 0.0;
+			for(;;); //TODO REMOVE
 			return false;
 		}
 	}
@@ -942,7 +944,7 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	float v_c = (diff_l + diff_r) * TIC_LENGTH / 2.00 / diff_t;
 	v_c = VELOCITY_EQ_M * v_c + VELOCITY_EQ_B;
 
-	if(v_c < 20) v_c += ACCEL;
+	if(v_c < NORMAL_SPEED) v_c += ACCEL;
 	if(v_c > NORMAL_SPEED) v_c -= ACCEL;
 
 	//Allow negative for now, don't want to have to worry about overflow later
@@ -972,37 +974,21 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 }
 
 void PointUpdate (uint32_t diff_l, uint32_t diff_r) {
-//	float theta = (diff_r - diff_l) * TIC_LENGTH / VEHICLE_WIDTH;
-//	float delta_x = -0.5 * TIC_LENGTH * (diff_l + diff_r) * sin(theta);
-//	float delta_y =  0.5 * TIC_LENGTH * (diff_l + diff_r) * cos(theta);
-//
-//	float x_rot;
-//	float y_rot;
-//
-//	for(int i = 0; i < ARRAY_SIZE; i++) {
-//		x_rot = points_x[i] * cos(theta) + points_y[i] * -1 * sin(theta);
-//		y_rot = points_x[i] * sin(theta) + points_y[i] *      cos(theta);
-//
-//		points_x[i] = x_rot - delta_x;
-//		points_y[i] = y_rot - delta_y;
-//	}
-//
-//	return;
-		float theta = (diff_r - diff_l) * TIC_LENGTH / VEHICLE_WIDTH;
-		float delta_x = -0.5 * TIC_LENGTH * (diff_l + diff_r) * sin(theta);
-		float delta_y =  0.5 * TIC_LENGTH * (diff_l + diff_r) * cos(theta);
+	float delta_theta = (diff_l - diff_r) * TIC_LENGTH / VEHICLE_WIDTH;
+	float delta_x = -0.5 * TIC_LENGTH * (diff_l + diff_r) * sin(delta_theta);
+	float delta_y = 0.5 * TIC_LENGTH * (diff_l + diff_r) * cos(delta_theta);
 
-		float x_rot;
-		float y_rot;
+	float x_rot;
+	float y_rot;
 
-		for(int i = 0; i < ARRAY_SIZE; i++) {
-			y_rot = points_x[i] * cos(theta) + points_y[i] * -1 * sin(theta);
-			x_rot = points_x[i] * sin(theta) + points_y[i] *      cos(theta);
+	for(int i = 0; i < ARRAY_SIZE; i++) {
+		x_rot = points_x[i] * cos(delta_theta) + points_y[i] * -1 * sin(delta_theta);
+		y_rot = points_x[i] * sin(delta_theta) + points_y[i] *      cos(delta_theta);
 
-			points_x[i] = x_rot - delta_x;
-			points_y[i] = y_rot - delta_y;
-		}
+		points_x[i] = x_rot - delta_x;
+		points_y[i] = y_rot - delta_y;
+	}
 
-		return;
+	return;
 }
 
