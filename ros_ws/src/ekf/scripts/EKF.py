@@ -22,10 +22,23 @@ class EKF(object):
         self.P = 100*self.P
         self.l = 0.5715
 
-    def update_gps_cov(self, NumSats):
+    def update_gps_cov(self, satStatus):
         #asusming x and y have the same covariance and no cross-covariance
-        self.R[0][0] = .4/NumSats
-        self.R[1][1] = .4/NumSats
+        if(satStatus == 1):
+          self.R[0][0] = 20
+          self.R[1][1] = 20
+        elif(satStatus == 2):
+          self.R[0][0] = 10
+          self.R[1][1] = 10
+        elif(satStatus == 3):
+          self.R[0][0] = 2
+          self.R[1][1] = 2
+        elif(satStatus == 4):
+          self.R[0][0] = 0.10
+          self.R[1][1] = 0.10
+        elif(satStatus == 5):
+          self.R[0][0] = 0.75
+          self.R[1][1] = 0.75
 
     def update_imu_cov(self, cov):
         #assuming no cross covariance between IMU and other sensors
@@ -34,20 +47,20 @@ class EKF(object):
     def update_encoder_cov(self, thetaR, thetaL):
         #assuming left and right wheel encoders have same covariance and no cross-covariance
         if thetaR != 0:
-          self.R[3][3] = 0.10 / thetaR
+          self.R[3][3] = 0.50 / thetaR
         if thetaL != 0:
-          self.R[4][4] = 0.10 / thetaL
+          self.R[4][4] = 0.50 / thetaL
 
     def step(self, *args):
         if(len(args) == 6):
             timestep, gpsX, gpsY, imuHeading, thetaR, thetaL = args
             #Prediction Equations
-            self.A[0][3] = -0.005*math.sin(self.x[2])
-            self.A[0][4] = -0.005*math.sin(self.x[2])
-            self.A[1][3] = 0.005*math.cos(self.x[2])
-            self.A[1][4] = 0.005*math.cos(self.x[2])
-            self.A[2][3] = 0.01/self.l
-            self.A[2][4] = -0.01/self.l
+            self.A[0][3] = -0.05*math.sin(self.x[2])
+            self.A[0][4] = -0.05*math.sin(self.x[2])
+            self.A[1][3] = 0.05*math.cos(self.x[2])
+            self.A[1][4] = 0.05*math.cos(self.x[2])
+            self.A[2][3] = 0.1/self.l
+            self.A[2][4] = -0.1/self.l
             self.xest = self.A.dot(self.x)
             #print("Previous Vr " + str(float(self.x[3])))
             #print("Previous Vl " + str(float(self.x[4])))
@@ -60,8 +73,8 @@ class EKF(object):
             self.H = numpy.identity(5)
             self.H[0][0] = 1
             self.H[1][1] = 1
-            self.H[2][3] = 0.01/(timestep*self.l)
-            self.H[2][4] = -0.01/(timestep*self.l)
+            self.H[2][3] = 0#0.1/(timestep*self.l)
+            self.H[2][4] = 0#-0.1/(timestep*self.l)
             self.H[3][3] = 1
             self.H[4][4] = 1
 
@@ -79,12 +92,12 @@ class EKF(object):
         elif (len(args) == 4):
             timestep, imuHeading, thetaR, thetaL = args
             # Prediction Equations
-            self.A[0][3] = -0.005 * math.sin(self.x[2])
-            self.A[0][4] = -0.005 * math.sin(self.x[2])
-            self.A[1][3] = 0.005 * math.cos(self.x[2])
-            self.A[1][4] = 0.005 * math.cos(self.x[2])
-            self.A[2][3] = 0.01 / self.l
-            self.A[2][4] = -0.01 / self.l
+            self.A[0][3] = -0.05 * math.sin(self.x[2])
+            self.A[0][4] = -0.05 * math.sin(self.x[2])
+            self.A[1][3] = 0.05 * math.cos(self.x[2])
+            self.A[1][4] = 0.05 * math.cos(self.x[2])
+            self.A[2][3] = 0.1 / self.l
+            self.A[2][4] = -0.1 / self.l
             self.xest = self.A.dot(self.x)
             # print("Previous Vr " + str(float(self.x[3])))
             # print("Previous Vl " + str(float(self.x[4])))
@@ -97,8 +110,8 @@ class EKF(object):
             self.H = numpy.identity(5)
             self.H[0][0] = 0
             self.H[1][1] = 0
-            self.H[2][3] = 0.01 / (timestep * self.l)
-            self.H[2][4] = -0.01 / (timestep * self.l)
+            self.H[2][3] = 0#0.1 / (timestep * self.l)
+            self.H[2][4] = 0#-0.1 / (timestep * self.l)
             self.H[3][3] = 1
             self.H[4][4] = 1
 

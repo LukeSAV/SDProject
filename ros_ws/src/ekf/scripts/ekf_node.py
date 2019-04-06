@@ -36,6 +36,15 @@ init_imu_meas = Imu()
 
 state_space_init = False
 
+filtered_lat = 0
+filtered_lon = 0
+
+seq = 0
+sec = 0
+nsec = 0
+
+r = rospy.Publisher("/ekf/filtered", NavSatFix)
+r2 = rospy.Publisher("/ekf/imu/data", Imu)
 
 # TODO what is the default orientation?
 def gps_callback(gps_msg):
@@ -56,6 +65,8 @@ def imu_callback(imu_msg):
 def encoder_callback(encoder_msg):
   global gps_updated
   global ekf, state_space_init
+  global fitlered_lat, filtered_lon
+  global seq, sec, nsec
   gps_lock.acquire()
   gps_meas = deepcopy(gps_meas_msg)
   gps_valid = copy(gps_updated)
@@ -68,14 +79,15 @@ def encoder_callback(encoder_msg):
 
   enc_updated = True
 
+  purdue_fountain = (40.428642, -86.913776) 
+  
   if gps_valid:
     # y is north, x is east
     lat_lon = (gps_meas.latitude, gps_meas.longitude)
-    purdue_fountain = (40.428642, -86.913776) 
-    x = (lat_lon[1]-purdue_fountain[1])/111139 # in meters
-    y = (lat_lon[0]-purdue_fountain[0])/111139 # in meters
-    print("GPS X: " + str(float(x)))
-    print("GPS Y: " + str(float(y)))
+    x = (lat_lon[1]-purdue_fountain[1])*111139 # in meters
+    y = (lat_lon[0]-purdue_fountain[0])*111139 # in meters
+    print("GPS LAT: " + str(float(lat_lon[0])))
+    print("GPS LON: " + str(float(lat_lon[1])))
 
   # Find IMU Heading (True North)
   quaternion = (imu_meas.orientation.x,
@@ -84,7 +96,7 @@ def encoder_callback(encoder_msg):
     imu_meas.orientation.w)
   angles = tf.transformations.euler_from_quaternion(
     quaternion)
-  yaw = angles[2]
+  yaw = 2*angles[2]
 
       
   imuHeading = yaw
@@ -109,14 +121,34 @@ def encoder_callback(encoder_msg):
       ekf.step(0.2, x, y, imuHeading, theta_l, theta_r)
   elif (state_space_init):
       ekf.step(0.2, imuHeading, theta_l, theta_r)
+  
+  if(state_space_init):
+    print("FILETERED OUTPUT:")
+    print("GPS X (meters): " + str(float(ekf.x[0])))
+    print("GPS Y (meters): " + str(float(ekf.x[1])))
+    print("IMU Heading (radians): " + str(float(ekf.x[2])))
+    print("Encoder Theta R (ticks): " + str(float(ekf.x[3])))
+    print("Encoder Theta L (ticks): " + str(float(ekf.x[4])))
+    print("\n")
+
+    filtered_nsf = NavSatFix()
+    filtered_nsf.longitude = ekf.x[0] / 111139 + purdue_fountain[1]
+    filtered_nsf.latitude  = ekf.x[1] / 111139 + purdue_fountain[0]
+
+    seq = seq+1
+    filtered_nsf.header.seq = seq
+    filtered_nsf.header.stamp = gps_meas.header.stamp
+    filtered_nsf.header.frame_id = gps_meas.header.frame_id
     
-  '''print("FILETERED OUTPUT:")
-  print("GPS X (meters): " + str(float(ekf.x[0])))
-  print("GPS Y (meters): " + str(float(ekf.x[1])))
-  print("IMU Heading (radians): " + str(float(ekf.x[2])))
-  print("Encoder Theta R (ticks): " + str(float(ekf.x[3])))
-  print("Encoder Theta L (ticks): " + str(float(ekf.x[4])))
-  print("\n")'''
+    print("Filtered Lat: " + str(float(filtered_nsf.latitude)))
+    print("Filtered Lon: " + str(float(filtered_nsf.longitude)))
+  
+    r.publish(filtered_nsf)
+
+    filtered_imu = deepcopy(imu_meas)
+    filtered_imu.orientation.x = yaw
+    filtered_imu.orientation.y = ekf.x[2]
+    r2.publish(filtered_imu)
 
 if __name__ == "__main__":
   rospy.init_node('ekf')
@@ -127,7 +159,5 @@ if __name__ == "__main__":
   rospy.Subscriber("/encoder", String, encoder_callback)
 
   rospy.spin()
-
-
 
 
