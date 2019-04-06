@@ -10,10 +10,10 @@
 
 
 #include "stm32f0xx.h"
-//#include "stm32f0_discovery.h"
 #include <stdio.h>
 #include <string.h>
 #include "arm_math.h"
+#include "stdbool.h"
 
 #define IR_RECEIVE_MAX 300
 #define IR_NO_RECEIVE_MIN 900
@@ -22,6 +22,18 @@
 #define MC_ADDRESS 130
 
 #define AMBIENT_SPEED 15
+
+#define ARRAY_SIZE ((uint8_t)8)
+#define RESOLUTION ((uint8_t)8)
+//#define LOOK_AHEAD 1.0
+#define LOOK_AHEAD_SQ 1.0
+#define NORMAL_SPEED 25
+#define TIC_LENGTH 0.053086
+#define VELOCITY_COEFF 0.5 //TODO FIND AT LEAST AN ESTIMATE FOR THIS, CONVERTING VELOCITY TO MOTOR CONTROLLER NUMBERS
+#define ACCEL 2
+#define VEHICLE_WIDTH 0.575
+#define MAX_SPEED 80
+#define MAX_TURN 20
 
 enum Encoders{RECEIVE, NO_RECEIVE};
 enum Direction{FORWARD, REVERSE};
@@ -33,6 +45,11 @@ typedef struct {
 	char data;
 	char checksum;
 } Packet;
+
+typedef struct _Point {
+	float x;
+	float y;
+} Point;
 
 /* Display mode info */
 static uint8_t current_mode = ULTRASONICS;
@@ -94,6 +111,15 @@ static uint16_t time_since_last_jetson_msg = 0; // Time in milliseconds since la
 
 static uint8_t delivery_requested = 0; // Indication that delivery was requested has been received from Jetson
 
+/* Control Algorithm Variables */
+static uint32_t encoder_diff_l;
+static uint32_t encoder_diff_r;
+//float points_x[] = {0.004, -0.004,  0.008, -0.008, -0.004, -0.080, -0.200, -0.500};
+float points_x[] = {0,0,0,0,0,0,0,0};
+float points_y[] = {1.000,  2.000,  3.000,  4.000,  5.000,  6.000,  7.000,  7.000};
+float goal_x = 0.0;
+float goal_y = 0.0;
+
 /* Motor state vars */
 Packet left_packet;
 Packet right_packet;
@@ -116,13 +142,16 @@ static void SendEncoderCount();
 static void nsWait(int t);
 static void StraightLine();
 
+bool find_goal();
+float distance_squared(float x1, float y1, float x2, float y2);
+void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
+void PointUpdate (uint32_t diff_l, uint32_t diff_r);
 
 int main(void) {
 	ADCInit();
 	USARTInit();
 	SPIInit();
 	UltrasonicInit();
-
 
 	//RCC->AHBENR |= RCC_AHBENR_GPIOBEN; // Ensure clock to port B is enabled
 	//GPIOB->MODER = 0x00000100;
@@ -144,23 +173,47 @@ int main(void) {
 	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
 	nsWait(1000000000);
 
-
-
 	// Test UART transfer
 	//char* t = "Connected";
 	//memcpy(jetson_tx_buffer, t, 9 * sizeof(char));
 	//USART_ITConfig(USART1, USART_IT_TXE, ENABLE);   // Enable USART1 Transmit interrupt
 	//DispString(t);
 
+	bool drive_enable = true;
+
+	//TODO Maybe replace these diff variables with global variables, and modify functions to accept them instead
+
+	float32_t diff_t = 0.01;
+
 	for(;;) {
-		// This could include non-controller related messages so if using the controller be wary that if the node dies and the Jetson is still sending data over problems can occur
-		/*if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
-			left_speed = right_speed = 0;
-		}*/
-		//StraightLine();
-		Drive(left_direction, left_speed, right_direction, right_speed);
+/*		drive_enable = find_goal();
+		if(drive_enable) {
+			encoder_diff_l = adc0_slots - last_used_adc0_slots;
+			last_used_adc0_slots = adc0_slots;
+
+			encoder_diff_r = adc1_slots - last_used_adc1_slots;
+			last_used_adc1_slots = adc1_slots;
+
+			//TODO
+			//diff_t = total_time - last_used_time;
+			//last_used_time = total_time;
+
+			SetMotors(encoder_diff_l, encoder_diff_r, diff_t);
+			PointUpdate (encoder_diff_l, encoder_diff_r);
+		}
+		else {
+			Drive(left_direction, 0, right_direction, 0);
+		}
+		*/
+//		// This could include non-controller related messages so if using the controller be wary that if the node dies and the Jetson is still sending data over problems can occur
+//		/*if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
+//			left_speed = right_speed = 0;
+//		}*/
+//		//StraightLine();
+//		Drive(left_direction, left_speed, right_direction, right_speed);
+//		Drive(left_direction, 20, right_direction,(int) (20 * 0.85));
 		nsWait(50000000); // wait 50 ms
-		loop_count++;
+//		loop_count++;
 	}
 }
 
@@ -295,16 +348,16 @@ static int Drive(enum Direction left_direction, char left_speed, enum Direction 
 		return 1; // Haven't finished sending the last message
 	}
 	if(left_direction == FORWARD) {
-		left_packet.command = 0;
+		left_packet.command = 4;
 	}
 	else if(left_direction == REVERSE) {
-		left_packet.command = 1;
+		left_packet.command = 5;
 	}
 	if(right_direction == FORWARD) {
-		right_packet.command = 4;
+		right_packet.command = 0;
 	}
 	else if(right_direction == REVERSE) {
-		right_packet.command = 5;
+		right_packet.command = 1;
 	}
 	left_packet.data = left_speed;
 	right_packet.data = right_speed;
@@ -422,6 +475,7 @@ void USART1_IRQHandler() {
 	}
 }
 
+
 /*************************************************************************
 *	UART TX Interrupt
 *
@@ -501,7 +555,7 @@ void TIM14_IRQHandler() {
 				int num_to_disp = distance % 10;
 				out_data[data_loc] = num_to_disp + 48;
 				data_loc--;
-				distance = distance /= 10;
+				distance /= 10;
 			}
 			DispString(out_data);
 		} else if(current_mode == ENCODERS) {
@@ -705,6 +759,7 @@ static void UltrasonicInit() {
 
 }
 
+
 /*************************************************************************
 *	Send string to display
 *
@@ -716,6 +771,7 @@ static void DispString(char* data) {
 	}
 }
 
+
 /*************************************************************************
 *	Send command to display
 *
@@ -725,6 +781,7 @@ static void Cmd(char b) {
     SPI2->DR = b;
 }
 
+
 /*************************************************************************
 *	Send character to display
 *
@@ -733,6 +790,7 @@ static void Data(char b) {
     while((SPI2->SR & SPI_SR_TXE) != SPI_SR_TXE);
     SPI2->DR = 0x200 | b;
 }
+
 
 /*************************************************************************
 *	SPI Initialization Routine
@@ -759,6 +817,7 @@ static void SPIInit() {
 	Cmd(0x06); // 0000 01IS: set display to increment
 }
 
+
 /*************************************************************************
 *	Wait specified number of microseconds
 *
@@ -770,3 +829,163 @@ void nsWait(int t) {
         "       bgt repeat\n"
         : : "r"(t) : "r0", "cc");
 }
+
+float distance_squared(float x1, float y1, float x2, float y2) {
+	return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+}
+
+bool find_goal() {
+	//Calculate all distances relative to origin/robot
+	float dist_array[ARRAY_SIZE];
+	for(int idx = 0; idx < ARRAY_SIZE; idx++) {
+		dist_array[idx] = distance_squared(0.0, 0.0, points_x[idx], points_y[idx]);
+	}
+
+	//Locate point closest to origin/robot
+	float min_dis = dist_array[0];
+	uint8_t min_idx = 0;
+	for(int idx = 1; idx < ARRAY_SIZE; idx++) {		//Index starts at 1 as points[0] is default
+		//TODO Add some sort of exception for whatever "Ending Condition" distance creates
+		//IE, what points does the Jetson send when destination is reached
+		//Maybe just copy last valid point throughout the array
+		if(dist_array[idx] < min_dis) {
+			min_dis = dist_array[idx];
+			min_idx = idx;
+		}
+	}
+
+	//Find points of the line that Goal Point lies on
+	Point target_1;
+	Point target_2;
+	if( (min_dis < LOOK_AHEAD_SQ) || (min_idx == (ARRAY_SIZE - 1)) ) {
+		bool break_success = false;
+		for(int offset = 0; offset + min_idx < ARRAY_SIZE; offset++) {
+			if(dist_array[min_idx + offset] >= LOOK_AHEAD_SQ ) {
+				target_2.x = points_x[min_idx + offset];
+				target_2.y = points_y[min_idx + offset];
+				target_1.x = points_x[min_idx + offset - 1];
+				target_1.y = points_y[min_idx + offset - 1];
+				break_success = true;
+				break;
+			}
+		}
+		if(!break_success) {
+			//All next destination points within Look Ahead Distance, Probably Trigger a Slowdown Flag and Stop
+			//You'd also arrive here if STM moved within the last point the Jetson sent, or if mini-EKF greatly misbehaved
+			goal_x = 0.0;
+			goal_y = 0.0;
+			return false;
+		}
+	}
+	else {
+		float decision_dist = distance_squared(points_x[min_idx], points_y[min_idx], points_x[min_idx + 1], points_y[min_idx + 1]);
+		if(dist_array[min_idx + 1] > decision_dist) {
+			target_2.x = points_x[min_idx];
+			target_2.y = points_y[min_idx];
+			if(min_idx != 0) {
+				target_1.x = points_x[min_idx - 1];
+				target_1.y = points_y[min_idx - 1];
+			}
+			else {
+				target_1.x = 0;
+				target_1.y = 0;
+			}
+		}
+		else {
+			target_1.x = points_x[min_idx];
+			target_1.y = points_y[min_idx];
+			target_2.x = points_x[min_idx + 1];
+			target_2.y = points_y[min_idx + 1];
+		}
+	}
+
+	//Solve Equations of Line 1 and Line 2 from Target 1 and Target 2
+	float slope_1 = (target_2.y - target_1.y) / (target_2.x - target_1.x);
+	float b_1 = target_2.y - slope_1 * target_2.x;
+
+	//Locate X-Coordinate of Goal Point
+	target_1.x = b_1 / (-2.0 * slope_1);
+	target_1.y = slope_1 * target_1.x + b_1;
+	Point temp_point;
+
+	for(int idx = 0; idx < RESOLUTION; idx++) {
+		temp_point.x = ((target_2.x - target_1.x) / 2 ) + target_1.x;
+		temp_point.y = slope_1 * temp_point.x + b_1;
+		if(distance_squared(0.0, 0.0, temp_point.x, temp_point.y) > LOOK_AHEAD_SQ ) {
+			target_2 = temp_point;
+		}
+		else {
+			target_1 = temp_point;
+		}
+	}
+
+	goal_x = ((target_2.x - target_1.x) / 2 ) + target_1.x;
+	goal_y = goal_x * slope_1 + b_1;
+	return true;
+}
+
+void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
+	float v_c = (diff_l + diff_r) * TIC_LENGTH / 2.00 / diff_t * VELOCITY_COEFF;
+	//TODO MODIFY VELOCITY_COEFF
+
+	if(v_c < 20) v_c += 20;
+	if(v_c > NORMAL_SPEED) v_c -= ACCEL;
+
+	//Allow negative for now, don't want to have to worry about overflow later
+	int8_t v_l = (int) (v_c * (1.0f + VEHICLE_WIDTH * goal_x / LOOK_AHEAD_SQ));
+	int8_t v_r = (int) (v_c * (1.0f - VEHICLE_WIDTH * goal_x / LOOK_AHEAD_SQ));
+
+	if(v_l > MAX_SPEED) {
+		v_r -= v_l - MAX_SPEED;
+		v_l = MAX_SPEED;
+	}
+	if(v_r > MAX_SPEED) {
+		v_l -= v_r - MAX_SPEED;
+		v_r = MAX_SPEED;
+	}
+	if( (v_l - v_r) > MAX_TURN) v_l -= v_l - v_r - MAX_TURN;
+	if( (v_r - v_l) > MAX_TURN) v_r -= v_r - v_l - MAX_TURN;
+	if(v_l < 0) v_l = 0;
+	if(v_r < 0) v_r = 0;
+
+	//Optional, not sure if global variable is really even needed
+	left_speed = v_l; // Current left speed to be requested
+	right_speed = (int) ((float)v_r * 0.85); // Current right speed to be requested
+
+
+	Drive(left_direction, left_speed, right_direction, right_speed);
+
+	return;
+}
+
+void PointUpdate (uint32_t diff_l, uint32_t diff_r) {
+//	float v_l = diff_l * TIC_LENGTH;
+//	float v_r = diff_r * TIC_LENGTH;
+//	float theta = (v_r - v_l) / VEHICLE_WIDTH;
+//	float delta_x = -0.5 * (v_l + v_r) * sin(theta);
+//	float delta_y =  0.5 * (v_l + v_r) * cos(theta);
+
+	float theta = (diff_r - diff_l) * TIC_LENGTH / VEHICLE_WIDTH;
+	float delta_x = -0.5 * TIC_LENGTH * (diff_l + diff_r) * sin(theta);
+	float delta_y =  0.5 * TIC_LENGTH * (diff_l + diff_r) * cos(theta);
+
+	float x_rot;
+	float y_rot;
+
+	for(int i = 0; i < ARRAY_SIZE; i++) {
+		x_rot = points_x[i] * cos(theta) + points_y[i] * -1 * sin(theta);
+		y_rot = points_x[i] * sin(theta) + points_y[i] * cos(theta);
+
+		points_x[i] = x_rot - delta_x;
+		points_y[i] = y_rot - delta_y;
+	}
+
+	return;
+}
+
+
+
+
+
+
+
