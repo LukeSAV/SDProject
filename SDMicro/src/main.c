@@ -25,17 +25,17 @@
 #define RESOLUTION ((uint8_t)8)
 //#define LOOK_AHEAD 1.0
 #define LOOK_AHEAD_SQ 1.0
-#define NORMAL_SPEED 28
+#define NORMAL_SPEED 26
 #define TIC_LENGTH 0.053086
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 25.0
 
 //#define VELOCITY_EQ_B 9.586
 //#define VELOCITY_EQ_B 9.5862
-#define L_R_BIAS 1.04      	//Multiply to Right Wheel
-#define ACCEL 2
+#define L_R_BIAS 1.0    	//Multiply to Right Wheel
+#define ACCEL 1
 #define VEHICLE_WIDTH 0.575
-#define MAX_SPEED 35
+#define MAX_SPEED 32
 #define MAX_TURN 20
 
 enum Encoders{RECEIVE, NO_RECEIVE};
@@ -69,11 +69,11 @@ enum Direction right_direction = FORWARD;
 static uint32_t adc0_val = 0; // Current ADC channel 0 reading
 static uint32_t adc1_val = 0; // Current ADC channel 1 reading
 
-static uint32_t adc0_slots = 0; // Number of times a reading on ADC channel 0 has crossed the threshold - right
-static uint32_t adc1_slots = 0; // Number of times a reading on ADC channel 1 has crossed the threshold - left
+static uint32_t adc_left_slots = 0; // Number of times a reading on ADC channel 0 has crossed the threshold - right
+static uint32_t adc_right_slots = 0; // Number of times a reading on ADC channel 1 has crossed the threshold - left
 
-static uint32_t last_used_adc0_slots = 0; // Right
-static uint32_t last_used_adc1_slots = 0; // Left
+static uint32_t last_used_adc_left_slots = 0; // Right
+static uint32_t last_used_adc_right_slots = 0; // Left
 
 static uint32_t last_encoder_left_count_to_jetson = 0;
 static uint32_t last_encoder_right_count_to_jetson = 0;
@@ -190,11 +190,11 @@ int main(void) {
 		drive_enable = find_goal();
 		if(drive_enable) {
 			nsWait(50000000); // wait 50 ms
-			encoder_diff_l = adc0_slots - last_used_adc0_slots;
-			last_used_adc0_slots = adc0_slots;
+			encoder_diff_l = adc_left_slots - last_used_adc_left_slots;
+			last_used_adc_left_slots = adc_left_slots;
 
-			encoder_diff_r = adc1_slots - last_used_adc1_slots;
-			last_used_adc1_slots = adc1_slots;
+			encoder_diff_r = adc_right_slots - last_used_adc_right_slots;
+			last_used_adc_right_slots = adc_right_slots;
 
 			//TODO
 			diff_t = 0.05;
@@ -202,11 +202,6 @@ int main(void) {
 			//last_used_time = total_time;
 
 			SetMotors(encoder_diff_l, encoder_diff_r, diff_t);
-
-			/*for(int banana = 0; banana < ARRAY_SIZE; banana++) {
-				points_y[banana] -= ( (float)(encoder_diff_l + encoder_diff_r) / 2.0 ) * TIC_LENGTH ;
-			}*/
-
 			PointUpdate(encoder_diff_l, encoder_diff_r);
 
 		}
@@ -226,11 +221,41 @@ int main(void) {
 	}
 }
 
+
+void PointUpdate (uint32_t diff_l, uint32_t diff_r) {
+	float delta_theta = ((float)diff_r - (float)diff_l) * TIC_LENGTH / VEHICLE_WIDTH;
+	float delta_x = -0.5 * TIC_LENGTH * ((float)diff_l + (float)diff_r) * sin(delta_theta);
+	float delta_y = 0.5 * TIC_LENGTH * ((float)diff_l + (float)diff_r) * cos(delta_theta);
+
+	float x_rot;
+	float y_rot;
+
+	for(int i = 0; i < ARRAY_SIZE; i++) {
+		x_rot = (points_x[i] - delta_x) * cos(-delta_theta) + (points_y[i] - delta_y) * -sin(-delta_theta);
+		y_rot = (points_x[i] - delta_x) * sin(-delta_theta) + (points_y[i] - delta_y) * cos(-delta_theta);
+
+		points_x[i] = x_rot;
+		points_y[i] = y_rot;
+
+		/*if(y_rot != 0) {
+			int j = 0;
+			j+=1;
+		}
+		if(x_rot != 0) {
+			int j = 0;
+			j+=1;
+		}*/
+	}
+
+	return;
+}
+
+
 /*
  * Drives the robot in a straight line based solely off encoder counts
  */
 static void StraightLine() {
-	int8_t slot_diff = adc1_slots - adc0_slots;
+	int8_t slot_diff = adc_right_slots - adc_left_slots;
 	if(slot_diff > 30 || slot_diff < -30) { // Veered too far off the line
 		left_speed = right_speed = 0;
 		return;
@@ -265,11 +290,11 @@ static void StraightLine() {
  * Send number of encoder ticks since last message was sent to Jetson
  */
 static void SendEncoderCount() {
-	uint32_t left_count_to_send = adc1_slots - last_encoder_left_count_to_jetson;
-	uint32_t right_count_to_send = adc0_slots - last_encoder_right_count_to_jetson;
+	uint32_t left_count_to_send = adc_right_slots - last_encoder_left_count_to_jetson;
+	uint32_t right_count_to_send = adc_left_slots - last_encoder_right_count_to_jetson;
 	/* If the encoder count deltas to the jetson are too high something is wrong - loop infinitely for now */
-	last_encoder_left_count_to_jetson = adc1_slots;
-	last_encoder_right_count_to_jetson = adc0_slots;
+	last_encoder_left_count_to_jetson = adc_right_slots;
+	last_encoder_right_count_to_jetson = adc_left_slots;
 	if(left_count_to_send > 99 || right_count_to_send > 99) {
 		return; // REALLY fast if this is true
 	} else {
@@ -430,11 +455,11 @@ void TIM2_IRQHandler() {
 	}
 
 	if(adc0_state != prev_adc0_state) {
-		adc0_slots++;
+		adc_left_slots++;
 		prev_adc0_state = adc0_state;
 	}
 	if(adc1_state != prev_adc1_state) {
-		adc1_slots++;
+		adc_right_slots++;
 		prev_adc1_state = adc1_state;
 	}
 }
@@ -570,14 +595,14 @@ void TIM14_IRQHandler() {
 		} else if(current_mode == ENCODERS) {
 			char out_data[17] = {'I', 'R', ' ', 'L', ':', '0', '0', '0', '0', ' ', 'R', ':', '0', '0', '0', '0'}; // Write infrared encoder data to screen
 			int data_loc = 8;
-			int count = adc1_slots;
+			int count = adc_left_slots;
 			while(count > 0) {
 				int num_to_disp = count % 10;
 				out_data[data_loc--] = num_to_disp + 48;
 				count /= 10;
 			}
 			data_loc = 15;
-			count = adc0_slots;
+			count = adc_right_slots;
 			while(count > 0) {
 				int num_to_disp = count % 10;
 				out_data[data_loc--] = num_to_disp + 48;
@@ -969,25 +994,6 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	right_speed = (int) ((float)v_r * L_R_BIAS); // Current right speed to be requested
 
 	Drive(left_direction, left_speed, right_direction, right_speed);
-
-	return;
-}
-
-void PointUpdate (uint32_t diff_l, uint32_t diff_r) {
-	float delta_theta = (diff_l - diff_r) * TIC_LENGTH / VEHICLE_WIDTH;
-	float delta_x = -0.5 * TIC_LENGTH * (diff_l + diff_r) * sin(delta_theta);
-	float delta_y = 0.5 * TIC_LENGTH * (diff_l + diff_r) * cos(delta_theta);
-
-	float x_rot;
-	float y_rot;
-
-	for(int i = 0; i < ARRAY_SIZE; i++) {
-		x_rot = (points_x[i] - delta_x) * cos(-delta_theta) + (points_y[i] - delta_y) * -sin(-delta_theta);
-		y_rot = (points_x[i] - delta_x) * sin(-delta_theta) + (points_y[i] - delta_y) * cos(-delta_theta);
-
-		points_x[i] = x_rot;
-		points_y[i] = y_rot;
-	}
 
 	return;
 }
