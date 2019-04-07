@@ -217,7 +217,6 @@ int main(void) {
 		StraightLine();
 		Drive(left_direction, left_speed, right_direction, right_speed);
 		nsWait(50000000);*/
-		Drive(FORWARD, 30, FORWARD, 30);
 		loop_count++;
 	}
 }
@@ -994,7 +993,7 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	left_speed = v_l; // Current left speed to be requested
 	right_speed = (int) ((float)v_r * L_R_BIAS); // Current right speed to be requested
 
-	//Drive(left_direction, left_speed, right_direction, right_speed);
+	Drive(left_direction, left_speed, right_direction, right_speed);
 
 	return;
 }
