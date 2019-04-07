@@ -25,17 +25,17 @@
 #define RESOLUTION ((uint8_t)8)
 //#define LOOK_AHEAD 1.0
 #define LOOK_AHEAD_SQ 1.0
-#define NORMAL_SPEED 20
+#define NORMAL_SPEED 28
 #define TIC_LENGTH 0.053086
 #define VELOCITY_EQ_M 11.013
-#define VELOCITY_EQ_B 12.0
+#define VELOCITY_EQ_B 25.0
 
 //#define VELOCITY_EQ_B 9.586
 //#define VELOCITY_EQ_B 9.5862
-#define L_R_BIAS 0.96      	//Multiply to Right Wheel
-#define ACCEL 5
+#define L_R_BIAS 1.04      	//Multiply to Right Wheel
+#define ACCEL 2
 #define VEHICLE_WIDTH 0.575
-#define MAX_SPEED 30
+#define MAX_SPEED 35
 #define MAX_TURN 20
 
 enum Encoders{RECEIVE, NO_RECEIVE};
@@ -982,11 +982,11 @@ void PointUpdate (uint32_t diff_l, uint32_t diff_r) {
 	float y_rot;
 
 	for(int i = 0; i < ARRAY_SIZE; i++) {
-		x_rot = points_x[i] * cos(delta_theta) + points_y[i] * -1 * sin(delta_theta);
-		y_rot = points_x[i] * sin(delta_theta) + points_y[i] *      cos(delta_theta);
+		x_rot = (points_x[i] - delta_x) * cos(-delta_theta) + (points_y[i] - delta_y) * -sin(-delta_theta);
+		y_rot = (points_x[i] - delta_x) * sin(-delta_theta) + (points_y[i] - delta_y) * cos(-delta_theta);
 
-		points_x[i] = x_rot - delta_x;
-		points_y[i] = y_rot - delta_y;
+		points_x[i] = x_rot;
+		points_y[i] = y_rot;
 	}
 
 	return;
