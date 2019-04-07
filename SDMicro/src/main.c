@@ -32,7 +32,7 @@
 
 //#define VELOCITY_EQ_B 9.586
 //#define VELOCITY_EQ_B 9.5862
-#define L_R_BIAS 1.0    	//Multiply to Right Wheel
+#define L_R_BIAS 0.97    	//Multiply to Right Wheel
 #define ACCEL 1
 #define VEHICLE_WIDTH 0.575
 #define MAX_SPEED 32
