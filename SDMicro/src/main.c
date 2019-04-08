@@ -24,18 +24,18 @@
 #define ARRAY_SIZE ((uint8_t)8)
 #define RESOLUTION ((uint8_t)8)
 //#define LOOK_AHEAD 1.0
-#define LOOK_AHEAD_SQ 1.0
-#define NORMAL_SPEED 26
+#define LOOK_AHEAD_SQ 3
+#define NORMAL_SPEED 32
 #define TIC_LENGTH 0.053086
 #define VELOCITY_EQ_M 11.013
-#define VELOCITY_EQ_B 25.0
+#define VELOCITY_EQ_B 33.0
 
 //#define VELOCITY_EQ_B 9.586
 //#define VELOCITY_EQ_B 9.5862
-#define L_R_BIAS 1.0    	//Multiply to Right Wheel
+#define L_R_BIAS 1.03    	//Multiply to Right Wheel
 #define ACCEL 2
 #define VEHICLE_WIDTH 0.575
-#define MAX_SPEED 30
+#define MAX_SPEED 42
 #define MAX_TURN 20
 
 enum Encoders{RECEIVE, NO_RECEIVE};
@@ -119,8 +119,8 @@ static uint32_t encoder_diff_l;
 static uint32_t encoder_diff_r;
 //float points_x[] = {0.004, -0.004,  0.008, -0.008, -0.004, -0.080, -0.200, -0.500};
 //float points_x[] = {0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18};
-float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-float points_y[] = {1.000,  2.000,  3.000,  4.000,  5.000,  6.000,  7.000,  7.000};
+float points_x[] = {0.0, 0.0, 0.0, 0.0, -3.0, -6.0, -9.0, -12.0,};
+float points_y[] = {3.000,  6.000,  9.000,  12.000,  12.000, 12.000,  12.000,  12.000};
 float goal_x = 0.0;
 float goal_y = 0.0;
 
@@ -215,8 +215,8 @@ int main(void) {
 			left_speed = right_speed = 0;
 		}
 		StraightLine();
-		Drive(left_direction, left_speed, right_direction, right_speed);
-		nsWait(50000000);*/
+		Drive(left_direction, left_speed, right_direction, right_speed);*/
+		nsWait(50000000);
 		loop_count++;
 	}
 }
@@ -906,8 +906,8 @@ bool find_goal() {
 		if(!break_success) {
 			//All next destination points within Look Ahead Distance, Probably Trigger a Slowdown Flag and Stop
 			//You'd also arrive here if STM moved within the last point the Jetson sent, or if mini-EKF greatly misbehaved
-			goal_x = 0.0;
-			goal_y = 0.0;
+			goal_x = 0.0f;
+			goal_y = 0.0f;
 			for(;;); //TODO REMOVE
 			return false;
 		}
@@ -966,7 +966,7 @@ bool find_goal() {
 }
 
 void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
-	float v_c = (diff_l + diff_r) * TIC_LENGTH / 2.00 / diff_t;
+	float v_c = ((float)diff_l + (float)diff_r) * TIC_LENGTH / 2.00f / diff_t;
 	v_c = VELOCITY_EQ_M * v_c + VELOCITY_EQ_B;
 
 	if(v_c < NORMAL_SPEED) v_c += ACCEL;
