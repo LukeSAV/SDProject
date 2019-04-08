@@ -34,7 +34,12 @@ theta_r_meas = 0
 init_gps_meas = NavSatFix()
 init_imu_meas = Imu()
 
+elapsed_time = 0
+avg_x = 0
+avg_y = 0
+
 state_space_init = False
+yaw_init = 0
 
 filtered_lat = 0
 filtered_lon = 0
@@ -43,8 +48,8 @@ seq = 0
 sec = 0
 nsec = 0
 
-r = rospy.Publisher("/ekf/filtered", NavSatFix)
-r2 = rospy.Publisher("/ekf/imu/data", Imu)
+r = rospy.Publisher("/ekf/filtered", NavSatFix, queue_size = 2)
+r2 = rospy.Publisher("/ekf/imu/data", Imu, queue_size = 2)
 
 # TODO what is the default orientation?
 def gps_callback(gps_msg):
@@ -64,7 +69,7 @@ def imu_callback(imu_msg):
 
 def encoder_callback(encoder_msg):
   global gps_updated
-  global ekf, state_space_init
+  global ekf, state_space_init, yaw_init, elapsed_time, avg_x, avg_y
   global fitlered_lat, filtered_lon
   global seq, sec, nsec
   gps_lock.acquire()
@@ -96,24 +101,28 @@ def encoder_callback(encoder_msg):
     imu_meas.orientation.w)
   angles = tf.transformations.euler_from_quaternion(
     quaternion)
-  yaw = 2*angles[2]
+  yaw = angles[2]
 
       
   imuHeading = yaw
 
   if(gps_valid and not state_space_init):
-      ekf.x[0] = x
-      ekf.x[1] = y
-      ekf.x[2] = imuHeading
-      state_space_init = True
-
+      elapsed_time = elapsed_time + 1
+      avg_x = avg_x + 0.1*x
+      avg_y = avg_y + 0.1*y
+      if(elapsed_time >= 10):
+        ekf.x[0] = avg_x
+        ekf.x[1] = avg_y
+        ekf.x[2] = 5.0
+        yaw_init = yaw
+        state_space_init = True
+  imuHeading = (yaw - yaw_init) + 5.0
   ############# Mike takes the wheel ######
   theta_l = int(encoder_msg.data[2:4])
   theta_r = int(encoder_msg.data[5:7])
 
   if gps_valid:
-    ekf.update_gps_cov(gps_meas.status.service)
-    print("IMU Heading: " + str(float(yaw)))
+    ekf.update_gps_cov(gps_meas.status.status)
 
   ekf.update_encoder_cov(theta_r, theta_l)
 
@@ -146,8 +155,9 @@ def encoder_callback(encoder_msg):
     r.publish(filtered_nsf)
 
     filtered_imu = deepcopy(imu_meas)
-    filtered_imu.orientation.x = yaw
+    filtered_imu.orientation.x = imuHeading
     filtered_imu.orientation.y = ekf.x[2]
+    filtered_imu.orientation.z = yaw_init
     r2.publish(filtered_imu)
 
 if __name__ == "__main__":
