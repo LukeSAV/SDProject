@@ -113,10 +113,10 @@ def encoder_callback(encoder_msg):
       if(elapsed_time >= 10):
         ekf.x[0] = avg_x
         ekf.x[1] = avg_y
-        ekf.x[2] = 5.0
+        ekf.x[2] = 5.4
         yaw_init = yaw
         state_space_init = True
-  imuHeading = (yaw - yaw_init) + 5.0
+  imuHeading = (yaw - yaw_init) + 5.4
   ############# Mike takes the wheel ######
   theta_l = int(encoder_msg.data[2:4])
   theta_r = int(encoder_msg.data[5:7])
