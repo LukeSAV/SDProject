@@ -3,6 +3,8 @@
     <!-- GPS Manager -->
 	<node name="rtk_gps_node" pkg="rtk" type="rtk_gps_node" output="screen"/>
 
+	<!-- Path Point Generation -->
+	<node name="rtk_controller_node" pkg="rtk_controller" type="rtk_controller_node" output="screen"/>
 
     <!-- Joystick controller -->
 	<node name="joy_node" pkg="joy" type="joy_node" output="screen"/>

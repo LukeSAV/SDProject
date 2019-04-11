@@ -62,7 +62,7 @@ class EKF(object):
         if(len(args) == 6):
             timestep, gpsX, gpsY, imuHeading, thetaR, thetaL = args
             #Prediction Equations
-            print("X[2]: " + str(float(self.x[2])))
+            #print("X[2]: " + str(float(self.x[2])))
             self.A[0][3] = -0.05308*math.sin(self.x[2])
             self.A[0][4] = -0.05308*math.sin(self.x[2])
             self.A[1][3] = 0.05308*math.cos(self.x[2])

@@ -1,0 +1,12 @@
+<launch>
+
+	<!-- Path Point Generation -->
+	<node name="rtk_controller_node" pkg="rtk_controller" type="rtk_controller_node" output="screen"/>
+
+    <!-- Firebase -->
+    <node name="fb_node" pkg="fb" type="fb_manager.py" output="screen"/>
+
+	<!-- EKF -->
+	<node name="ekf_node" pkg="ekf" type="ekf_node.py" output="screen"/>
+
+</launch>

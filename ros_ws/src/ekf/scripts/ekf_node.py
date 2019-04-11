@@ -91,8 +91,8 @@ def encoder_callback(encoder_msg):
     lat_lon = (gps_meas.latitude, gps_meas.longitude)
     x = (lat_lon[1]-purdue_fountain[1])*111139 # in meters
     y = (lat_lon[0]-purdue_fountain[0])*111139 # in meters
-    print("GPS LAT: " + str(float(lat_lon[0])))
-    print("GPS LON: " + str(float(lat_lon[1])))
+    #print("GPS LAT: " + str(float(lat_lon[0])))
+    #print("GPS LON: " + str(float(lat_lon[1])))
 
   # Find IMU Heading (True North)
   quaternion = (imu_meas.orientation.x,
@@ -113,10 +113,10 @@ def encoder_callback(encoder_msg):
       if(elapsed_time >= 10):
         ekf.x[0] = avg_x
         ekf.x[1] = avg_y
-        ekf.x[2] = 5.4
+        ekf.x[2] = 2.25
         yaw_init = yaw
         state_space_init = True
-  imuHeading = (yaw - yaw_init) + 5.4
+  imuHeading = (yaw - yaw_init) + 2.25
   ############# Mike takes the wheel ######
   theta_l = int(encoder_msg.data[2:4])
   theta_r = int(encoder_msg.data[5:7])
@@ -132,13 +132,13 @@ def encoder_callback(encoder_msg):
       ekf.step(0.2, imuHeading, theta_l, theta_r)
   
   if(state_space_init):
-    print("FILETERED OUTPUT:")
-    print("GPS X (meters): " + str(float(ekf.x[0])))
-    print("GPS Y (meters): " + str(float(ekf.x[1])))
-    print("IMU Heading (radians): " + str(float(ekf.x[2])))
-    print("Encoder Theta R (ticks): " + str(float(ekf.x[3])))
-    print("Encoder Theta L (ticks): " + str(float(ekf.x[4])))
-    print("\n")
+    #print("FILETERED OUTPUT:")
+    #print("GPS X (meters): " + str(float(ekf.x[0])))
+    #print("GPS Y (meters): " + str(float(ekf.x[1])))
+    #print("IMU Heading (radians): " + str(float(ekf.x[2])))
+    #print("Encoder Theta R (ticks): " + str(float(ekf.x[3])))
+    #print("Encoder Theta L (ticks): " + str(float(ekf.x[4])))
+    #print("\n")
 
     filtered_nsf = NavSatFix()
     filtered_nsf.longitude = ekf.x[0] / 111139 + purdue_fountain[1]
@@ -149,8 +149,8 @@ def encoder_callback(encoder_msg):
     filtered_nsf.header.stamp = gps_meas.header.stamp
     filtered_nsf.header.frame_id = gps_meas.header.frame_id
     
-    print("Filtered Lat: " + str(float(filtered_nsf.latitude)))
-    print("Filtered Lon: " + str(float(filtered_nsf.longitude)))
+    #print("Filtered Lat: " + str(float(filtered_nsf.latitude)))
+    #print("Filtered Lon: " + str(float(filtered_nsf.longitude)))
   
     r.publish(filtered_nsf)
 
