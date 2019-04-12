@@ -11,6 +11,7 @@
 
 #include "stm32f0xx.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "arm_math.h"
 #include "stdbool.h"
@@ -41,7 +42,7 @@
 enum Encoders{RECEIVE, NO_RECEIVE};
 enum Direction{FORWARD, REVERSE};
 enum LastMotorSent{LEFT, RIGHT};
-enum DisplayMode{START=0, ULTRASONICS=1, ENCODERS=2, DELIVERY=3, END=4};
+enum DisplayMode{START=0, ULTRASONICS=1, ENCODERS=2, DELIVERY=3, CHANGE_MODE=4, END=5};
 typedef struct {
 	char address;
 	char command;
@@ -117,10 +118,18 @@ static uint8_t delivery_requested = 0; // Indication that delivery was requested
 /* Control Algorithm Variables */
 static uint32_t encoder_diff_l;
 static uint32_t encoder_diff_r;
-//float points_x[] = {0.004, -0.004,  0.008, -0.008, -0.004, -0.080, -0.200, -0.500};
-//float points_x[] = {0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18};
+
+static bool use_ps4_controller = false;
+bool new_points_ready = false;
+
+/* New points from Jetson */
+float new_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+float new_points_y[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+
+/* Current working points */
 float points_x[] = {0.0, 0.0, 0.0, 0.0, -3.0, -6.0, -9.0, -12.0,};
 float points_y[] = {3.000,  6.000,  9.000,  12.000,  12.000, 12.000,  12.000,  12.000};
+
 float goal_x = 0.0;
 float goal_y = 0.0;
 
@@ -144,7 +153,6 @@ static void Data(char b);
 static void DispString(char* data);
 static void SendEncoderCount();
 static void nsWait(int t);
-static void StraightLine();
 
 bool find_goal();
 float distance_squared(float x1, float y1, float x2, float y2);
@@ -156,11 +164,6 @@ int main(void) {
 	USARTInit();
 	SPIInit();
 	UltrasonicInit();
-
-	//RCC->AHBENR |= RCC_AHBENR_GPIOBEN; // Ensure clock to port B is enabled
-	//GPIOB->MODER = 0x00000100;
-	//GPIOB->ODR = 0xFFFF;
-	//GPIOB->ODR = 0x0000;
 
 	mc_tx_buffer[8] = 255; // Set end character in buffer
 
@@ -177,45 +180,47 @@ int main(void) {
 	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
 	nsWait(100000000);
 
-	// Test UART transfer
-	//char* t = "Connected";
-	//memcpy(jetson_tx_buffer, t, 9 * sizeof(char));
-	//USART_ITConfig(USART1, USART_IT_TXE, ENABLE);   // Enable USART1 Transmit interrupt
-	//DispString(t);
-
 	bool drive_enable = true;
 	float32_t diff_t = 0.05;
 
 	for(;;) {
-		drive_enable = find_goal();
-		if(drive_enable) {
-			nsWait(50000000); // wait 50 ms
-			encoder_diff_l = adc_left_slots - last_used_adc_left_slots;
-			last_used_adc_left_slots = adc_left_slots;
+		if(!use_ps4_controller) {
+			if(new_points_ready) {
+				memcpy(points_x, new_points_x, sizeof(float) * 8);
+				memcpy(points_y, new_points_y, sizeof(float) * 8);
+				memset(new_points_x, 0.0f, sizeof(float) * 8);
+				memset(new_points_y, 0.0f, sizeof(float) * 8);
+				new_points_ready = false;
+			}
+			drive_enable = find_goal();
+			if(drive_enable) {
+				nsWait(50000000); // wait 50 ms
+				encoder_diff_l = adc_left_slots - last_used_adc_left_slots;
+				last_used_adc_left_slots = adc_left_slots;
 
-			encoder_diff_r = adc_right_slots - last_used_adc_right_slots;
-			last_used_adc_right_slots = adc_right_slots;
+				encoder_diff_r = adc_right_slots - last_used_adc_right_slots;
+				last_used_adc_right_slots = adc_right_slots;
 
-			//TODO
-			diff_t = 0.05;
-			//diff_t = total_time - last_used_time;
-			//last_used_time = total_time;
+				//TODO
+				diff_t = 0.05;
+				//diff_t = total_time - last_used_time;
+				//last_used_time = total_time;
 
-			SetMotors(encoder_diff_l, encoder_diff_r, diff_t);
-			PointUpdate(encoder_diff_l, encoder_diff_r);
+				SetMotors(encoder_diff_l, encoder_diff_r, diff_t);
+				PointUpdate(encoder_diff_l, encoder_diff_r);
 
+			}
+			else {
+				Drive(left_direction, 0, right_direction, 0);
+				for(;;);
+			}
+		} else {
+			if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
+				left_speed = right_speed = 0;
+			}
+			Drive(left_direction, left_speed, right_direction, right_speed);
 		}
-		else {
-			Drive(left_direction, 0, right_direction, 0);
-			for(;;);
-		}
 
-
-		/*if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
-			left_speed = right_speed = 0;
-		}
-		StraightLine();
-		Drive(left_direction, left_speed, right_direction, right_speed);*/
 		nsWait(50000000);
 		loop_count++;
 	}
@@ -236,56 +241,11 @@ void PointUpdate (uint32_t diff_l, uint32_t diff_r) {
 
 		points_x[i] = x_rot;
 		points_y[i] = y_rot;
-
-		/*if(y_rot != 0) {
-			int j = 0;
-			j+=1;
-		}
-		if(x_rot != 0) {
-			int j = 0;
-			j+=1;
-		}*/
 	}
 
 	return;
 }
 
-
-/*
- * Drives the robot in a straight line based solely off encoder counts
- */
-static void StraightLine() {
-	int8_t slot_diff = adc_right_slots - adc_left_slots;
-	if(slot_diff > 30 || slot_diff < -30) { // Veered too far off the line
-		left_speed = right_speed = 0;
-		return;
-	}
-	if(slot_diff == 0) {
-		if(left_speed < NORMAL_SPEED && right_speed < NORMAL_SPEED) {
-			left_speed++;
-			right_speed++;
-		}
-	} else if(slot_diff < 0) { // Right wheel has not moved as much as left
-		if(right_speed < NORMAL_SPEED) {
-			right_speed++;
-		}
-		else {
-			if(left_speed >= 1) {
-				left_speed--;
-			}
-		}
-
-	} else { // Left wheel has not moved as much as right
-		if(left_speed < NORMAL_SPEED) {
-			left_speed++;
-		}
-		else {
-			if(right_speed >= 1) {
-				right_speed--;
-			}
-		}
-	}
-}
 /*
  * Send number of encoder ticks since last message was sent to Jetson
  */
@@ -349,10 +309,31 @@ static void decodeControllerMsg() {
 }
 
 /*
+ *  Decodes the points message sent from the Jetson
+ */
+static void decodePointUpdateMsg() {
+	const char comma[2] = ",";
+	// Ignoring { and K
+	char* token = strtok(last_message, comma);
+	token = strtok(NULL, comma);
+
+	for(int i = 0; i < 8; i++) {
+		token = strtok(NULL, comma);
+		new_points_x[i] = atof(token);
+		token = strtok(NULL, comma);
+		new_points_y[i] = atof(token);
+	}
+	new_points_ready = true;
+}
+
+/*
  * Determine which type of message was received from the Jetson and parse the data accordingly.
  */
 static void decodeJetsonString() {
 	switch (last_message[1]) {
+	case 'K': // Points for control algorithm
+		decodePointUpdateMsg();
+		break;
 	case 'C': // Remote controller feedback
 		decodeControllerMsg();
 		break;
@@ -364,6 +345,13 @@ static void decodeJetsonString() {
 		break;
 	case 'D': // Delivery request received
 		delivery_requested = 1;
+		break;
+	case 'S': // Switch modes for controller requested
+		if(current_mode == CHANGE_MODE) {
+			use_ps4_controller = !use_ps4_controller;
+			left_speed = 0;
+			right_speed = 0;
+		}
 		break;
 	default:
 		break;
@@ -615,6 +603,15 @@ void TIM14_IRQHandler() {
 				DispString(out_data);
 			} else {
 				char out_data[16] = {'N', 'O', ' ', 'D', 'E', 'L', 'I', 'V', 'E', 'R', 'Y', ' ', ' ', ' ', ' ', ' '};
+				DispString(out_data);
+			}
+		} else if(current_mode == CHANGE_MODE) {
+			if(use_ps4_controller) {
+				char out_data[13] = {'B', 'T', ' ', 'C', 'O', 'N', 'T', 'R', 'O', 'L', 'L', 'E', 'R'};
+				DispString(out_data);
+			}
+			else {
+				char out_data[10] = {'A', 'U', 'T', 'O', 'N', 'O', 'M', 'O', 'U', 'S'};
 				DispString(out_data);
 			}
 		}
