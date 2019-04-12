@@ -1,4 +1,5 @@
 <launch>
+    <param name="use_sim_time" value="true"/>
 
     <!-- GPS Manager -->
 	<node name="rtk_gps_node" pkg="rtk" type="rtk_gps_node" output="screen"/>
