@@ -51,7 +51,6 @@ void convertPubMsg() {
         pub_msg.data += y_stream.str();
     }
     pub_msg.data += "}";
-    std::cout << pub_msg.data << std::endl;
 }
 
 void EKFHeadingCallback(const sensor_msgs::Imu::ConstPtr& msg) { 
@@ -120,6 +119,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
             }
         }
         convertPubMsg(); // Convert the x_series and y_series points to a string to send to the microcontroller
+        cmd_pub.publish(pub_msg);
     } catch(std::out_of_range& eor) {
         ROS_ERROR("Waypoint out of range");
     }

@@ -20,6 +20,9 @@ prev_mode_change = 0 # Previous mode change indicator (debounce)
 controllerCallbackCalled = True
 lock = Lock()
 
+def controlAlgorithmCallback(commandMsg):
+	ser.write(commandMsg.data)
+
 def deliveryCallback(deliveryRequestedMsg):
     if deliveryRequestedMsg.data == True:
         ser.write('{D}')	
@@ -88,6 +91,7 @@ def listener():
     rospy.init_node('rc_listener')
     rospy.Subscriber("joy", msg.Joy, controllerCallback)
     rospy.Subscriber("delivery_requested_status", Bool, deliveryCallback)
+    rospy.Subscriber("robot_cmd", String, controlAlgorithmCallback);
     rospy.Timer(rospy.Duration(0.1), outputTimerCallback)
     rospy.Timer(rospy.Duration(1.0), joystickTimeoutCallback)
     enc_pub = rospy.Publisher("/encoder", String, queue_size=2)
