@@ -105,9 +105,9 @@ def encoder_callback(encoder_msg):
 
       
   imuHeading = yaw
+  elapsed_time = elapsed_time + 1
 
   if(gps_valid and not state_space_init):
-      elapsed_time = elapsed_time + 1
       avg_x = avg_x + 0.1*x
       avg_y = avg_y + 0.1*y
       if(elapsed_time >= 10):
@@ -125,6 +125,7 @@ def encoder_callback(encoder_msg):
     ekf.update_gps_cov(gps_meas.status.status)
 
   ekf.update_encoder_cov(theta_r, theta_l)
+  ekf.update_imu_cov(0.01+0.005*elapsed_time)
 
   if(gps_valid and state_space_init):
       ekf.step(0.2, x, y, imuHeading, theta_l, theta_r)
