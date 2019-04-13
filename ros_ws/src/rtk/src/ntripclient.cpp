@@ -430,6 +430,7 @@ int main(int argc, char **argv)
 					cur_time = std::chrono::system_clock::now();
 					elapsed_time = cur_time - start;
 					//std::cout << elapsed_time.count() << std::endl;
+                    sleep(1);
 				}
 				ntrip_thread.join();
 			}

@@ -21,7 +21,7 @@ controllerCallbackCalled = True
 lock = Lock()
 
 def controlAlgorithmCallback(commandMsg):
-	ser.write(commandMsg.data)
+    ser.write(commandMsg.data)
 
 def deliveryCallback(deliveryRequestedMsg):
     if deliveryRequestedMsg.data == True:
@@ -39,8 +39,8 @@ def controllerCallback(joyMsg):
     global prev_mode_change
     lock.acquire()
     controllerCallbackCalled = True
-    left_speed = str(abs(int(joyMsg.axes[5] * 65)))
-    right_speed = str(abs(int(joyMsg.axes[1] * 65)))
+    left_speed = str(abs(int(joyMsg.axes[1] * 65)))
+    right_speed = str(abs(int(joyMsg.axes[5] * 65)))
     lock.release()
 
     if joyMsg.axes[5] < 0.0:

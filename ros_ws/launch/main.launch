@@ -6,9 +6,11 @@
 	<!-- Path Point Generation -->
 	<node name="rtk_controller_node" pkg="rtk_controller" type="rtk_controller_node" output="screen"/>
 
+    <!-- EKF -->
+    <node name="ekf_node" pkg="ekf" type="ekf_node.py" output="screen"/>
+
     <!-- Joystick controller -->
 	<node name="joy_node" pkg="joy" type="joy_node" output="screen"/>
-
 
     <!-- Serial Manager -->
     <node name="serial_manager" pkg="serial" type="serial_manager.py" output="screen"/>

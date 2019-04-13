@@ -61,7 +61,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
     auto cur_time = std::chrono::system_clock::now();
     std::chrono::duration<double> time_since_last_position_series_sent = cur_time - time_last_position_series_sent;
     last_ekf_received_time = std::chrono::system_clock::now();
-    if(time_since_last_position_series_sent.count() < 1.0f) { // Not sending messages closer than one second apart
+    if(time_since_last_position_series_sent.count() < 2.0f) { // Not sending messages closer than one second apart
         return;
     }
     time_last_position_series_sent = std::chrono::system_clock::now();
@@ -143,8 +143,8 @@ int main(int argc, char **argv)
     auto start_landmark = std::chrono::system_clock::now();
     auto cur_time = start_landmark;
     std::chrono::duration<double> elapsed_time;
-    xml_reader("/home/luke/SDProject/purdue_mapv1.0.xml");
-    //xml_reader("/home/ubuntu/SDProject/ros_ws/src/rtk_controller/lukes_test_path.xml");
+    //xml_reader("/home/luke/SDProject/purdue_mapv1.0.xml");
+    xml_reader("/home/nvidia/workspace/SDProject/ros_ws/src/rtk_controller/purdue_mapv1.0.xml");
 
     // Initialize frst waypoint
     prev_waypoint_key = MapData::path_map.begin()->first;
