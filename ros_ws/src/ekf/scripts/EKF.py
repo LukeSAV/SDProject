@@ -63,10 +63,10 @@ class EKF(object):
             timestep, gpsX, gpsY, imuHeading, thetaR, thetaL = args
             #Prediction Equations
             #print("X[2]: " + str(float(self.x[2])))
-            self.A[0][3] = -0.05308*math.sin(self.x[2])
-            self.A[0][4] = -0.05308*math.sin(self.x[2])
-            self.A[1][3] = 0.05308*math.cos(self.x[2])
-            self.A[1][4] = 0.05308*math.cos(self.x[2])
+            self.A[0][3] = -0.5*0.05308*math.sin(self.x[2])
+            self.A[0][4] = -0.5*0.05308*math.sin(self.x[2])
+            self.A[1][3] = 0.5*0.05308*math.cos(self.x[2])
+            self.A[1][4] = 0.5*0.05308*math.cos(self.x[2])
             self.A[2][3] = 1/self.l
             self.A[2][4] = -1/self.l
             self.xest = self.A.dot(self.x)
@@ -111,10 +111,10 @@ class EKF(object):
         elif (len(args) == 4):
             timestep, imuHeading, thetaR, thetaL = args
             # Prediction Equations
-            self.A[0][3] = -0.05308 * math.sin(self.x[2])
-            self.A[0][4] = -0.05308 * math.sin(self.x[2])
-            self.A[1][3] = 0.05308 * math.cos(self.x[2])
-            self.A[1][4] = 0.05308 * math.cos(self.x[2])
+            self.A[0][3] = -0.5*0.05308 * math.sin(self.x[2])
+            self.A[0][4] = -0.5*0.05308 * math.sin(self.x[2])
+            self.A[1][3] = 0.5*0.05308 * math.cos(self.x[2])
+            self.A[1][4] = 0.5*0.05308 * math.cos(self.x[2])
             self.A[2][3] = 1 / self.l
             self.A[2][4] = -1 / self.l
             self.xest = self.A.dot(self.x)
