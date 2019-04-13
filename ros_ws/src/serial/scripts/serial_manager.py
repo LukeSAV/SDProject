@@ -17,6 +17,9 @@ right_direction = '+'
 mode_change = 0 # Signal was made to change between display modes
 prev_mode_change = 0 # Previous mode change indicator (debounce)
 
+controller_change = 0
+prev_controller_change = 0
+
 controllerCallbackCalled = True
 lock = Lock()
 
@@ -37,6 +40,8 @@ def controllerCallback(joyMsg):
     global right_direction
     global mode_change
     global prev_mode_change
+    global controller_change
+    global prev_controller_change
     lock.acquire()
     controllerCallbackCalled = True
     left_speed = str(abs(int(joyMsg.axes[1] * 65)))
@@ -59,6 +64,13 @@ def controllerCallback(joyMsg):
         prev_mode_change = 1
     if mode_change == 0:
         prev_mode_change = 0
+
+    controller_change = joyMsg.buttons[1]
+    if controller_change == 1 and prev_controller_change == 0:
+        ser.write('{S}')
+        prev_controller_change = 1
+    if controller_change == 0:
+        prev_controller_change = 0
             
 
 def outputTimerCallback(event):

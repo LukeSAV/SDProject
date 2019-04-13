@@ -48,7 +48,7 @@ seq = 0
 sec = 0
 nsec = 0
 
-r = rospy.Publisher("/ekf/sim_filtered", NavSatFix, queue_size = 2)
+r = rospy.Publisher("/ekf/filtered", NavSatFix, queue_size = 2)
 r2 = rospy.Publisher("/ekf/imu/data", Imu, queue_size = 2)
 
 # TODO what is the default orientation?
@@ -113,10 +113,10 @@ def encoder_callback(encoder_msg):
       if(elapsed_time >= 10):
         ekf.x[0] = avg_x
         ekf.x[1] = avg_y
-        ekf.x[2] = 2.1
+        ekf.x[2] = 2.094
         yaw_init = yaw
         state_space_init = True
-  imuHeading = (yaw - yaw_init) + 2.1
+  imuHeading = (yaw - yaw_init) + 2.094
   ############# Mike takes the wheel ######
   theta_l = int(encoder_msg.data[2:4])
   theta_r = int(encoder_msg.data[5:7])
