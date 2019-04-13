@@ -9,4 +9,7 @@
 	<!-- EKF -->
 	<node name="ekf_node" pkg="ekf" type="ekf_node.py" output="screen"/>
 
+    <!-- Serial -->
+    <node name="serial_manager" pkg="serial" type="serial_manager.py" output="screen"/>
+
 </launch>

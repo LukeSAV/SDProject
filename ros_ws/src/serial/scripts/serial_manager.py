@@ -21,7 +21,7 @@ controllerCallbackCalled = True
 lock = Lock()
 
 def controlAlgorithmCallback(commandMsg):
-	ser.write(commandMsg.data)
+    ser.write(commandMsg.data)
 
 def deliveryCallback(deliveryRequestedMsg):
     if deliveryRequestedMsg.data == True:
