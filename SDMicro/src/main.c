@@ -1,13 +1,12 @@
 /**
   ******************************************************************************
   * @file    main.c
-  * @author  Luke Armbruster
+  * @author  Luke Armbruster and Troy Conlin
   * @version V1.0
   * @date    11-January-2019
   * @brief   Main file for D2U microcontroller source.
   ******************************************************************************
 */
-
 
 #include "stm32f0xx.h"
 #include <stdio.h>
@@ -22,22 +21,24 @@
 #define TX_BUFFER_MAX 100
 #define MC_ADDRESS 130
 
-#define ARRAY_SIZE ((uint8_t)8)
-#define RESOLUTION ((uint8_t)8)
-//#define LOOK_AHEAD 1.0
+#define ARRAY_SIZE 8
+#define RESOLUTION 8
+#define LOOK_AHEAD    1.732
 #define LOOK_AHEAD_SQ 3
-#define NORMAL_SPEED 32
+//4_13 Afternoon Testing #define NORMAL_SPEED 32
+#define NORMAL_SPEED 35
 #define TIC_LENGTH 0.053086
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 30.0
-
-//#define VELOCITY_EQ_B 9.586
 //#define VELOCITY_EQ_B 9.5862
 #define L_R_BIAS 1.03    	//Multiply to Right Wheel
-#define ACCEL 2
+//4_13 Afternoon Testing #define ACCEL 2
+#define ACCEL 5
 #define VEHICLE_WIDTH 0.575
-#define MAX_SPEED 34
+//4_13 Afternoon Testing #define MAX_SPEED 34
+#define MAX_SPEED 50
 #define MAX_TURN 20
+#define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
 enum Encoders{RECEIVE, NO_RECEIVE};
 enum Direction{FORWARD, REVERSE};
@@ -118,6 +119,10 @@ static uint8_t delivery_requested = 0; // Indication that delivery was requested
 /* Control Algorithm Variables */
 static uint32_t encoder_diff_l;
 static uint32_t encoder_diff_r;
+static uint8_t  accel_count = 1;
+static uint8_t  decel_count = 1;
+static uint8_t  accel_fail_count = 0;
+static uint8_t  decel_fail_count = 0;
 
 static bool use_ps4_controller = false;
 bool new_points_ready = false;
@@ -183,7 +188,8 @@ int main(void) {
 	nsWait(100000000);
 
 	bool drive_enable = true;
-	float32_t diff_t = 0.05;
+//	float32_t diff_t = 0.05;
+	float32_t diff_t = 0.10;
 
 	for(;;) {
 		if(!use_ps4_controller) {
@@ -196,25 +202,55 @@ int main(void) {
 			}
 			drive_enable = find_goal();
 			if(drive_enable) {
-				nsWait(50000000); // wait 50 ms
+// Why was this here?				nsWait(50000000); // wait 50 ms
 				encoder_diff_l = adc_left_slots - last_used_adc_left_slots;
 				last_used_adc_left_slots = adc_left_slots;
 
 				encoder_diff_r = adc_right_slots - last_used_adc_right_slots;
 				last_used_adc_right_slots = adc_right_slots;
 
-				//TODO
-				diff_t = 0.05;
+				//diff_t = 0.05;
 				//diff_t = total_time - last_used_time;
 				//last_used_time = total_time;
 
 				SetMotors(encoder_diff_l, encoder_diff_r, diff_t);
 				PointUpdate(encoder_diff_l, encoder_diff_r);
-
 			}
 			else {
 				Drive(left_direction, 0, right_direction, 0);
 			}
+			/* Send over goal points to the Jetson */
+			int32_t goal_x_int = goal_x * 100.0f;
+			int32_t goal_y_int = goal_y * 100.0f;
+
+			jetson_tx_buffer[0] = '{';
+			jetson_tx_buffer[1] = 'C';
+			if(goal_x_int < 0) {
+				jetson_tx_buffer[2] = '-';
+				goal_x_int *= -1.0f;
+			} else {
+				jetson_tx_buffer[2] = '+';
+			}
+			for(int i = 0; i < 3; i++) {
+				char digit = goal_x_int % 10 + '0';
+				goal_x_int /= 10;
+				jetson_tx_buffer[3 + i] = digit;
+			}
+			jetson_tx_buffer[6] = ',';
+			if(goal_x_int < 0) {
+				jetson_tx_buffer[7] = '-';
+				goal_y_int *= -1.0f;
+			} else {
+				jetson_tx_buffer[7] = '+';
+			}
+			for(int i = 0; i < 3; i++) {
+				char digit = goal_y_int % 10 + '0';
+				goal_y_int /= 10;
+				jetson_tx_buffer[8 + i] = digit;
+			}
+			jetson_tx_buffer[11] = '}';
+			USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
+
 		} else {
 			if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
 				left_speed = right_speed = 0;
@@ -222,6 +258,7 @@ int main(void) {
 			Drive(left_direction, left_speed, right_direction, right_speed);
 		}
 
+		nsWait(50000000);
 		nsWait(50000000);
 		loop_count++;
 	}
@@ -876,9 +913,6 @@ bool find_goal() {
 	float min_dis = dist_array[0];
 	uint8_t min_idx = 0;
 	for(int idx = 1; idx < ARRAY_SIZE; idx++) {		//Index starts at 1 as points[0] is default
-		//TODO Add some sort of exception for whatever "Ending Condition" distance creates
-		//IE, what points does the Jetson send when destination is reached
-		//Maybe just copy last valid point throughout the array
 		if(dist_array[idx] < min_dis) {
 			min_dis = dist_array[idx];
 			min_idx = idx;
@@ -901,8 +935,8 @@ bool find_goal() {
 			}
 		}
 		if(!break_success) {
-			//All next destination points within Look Ahead Distance, Probably Trigger a Slowdown Flag and Stop
-			//You'd also arrive here if STM moved within the last point the Jetson sent, or if mini-EKF greatly misbehaved
+			//All next destination points within Look Ahead Distance, case travel
+			//TODO Insert Arrival Flag Update?
 			goal_x = 0.0f;
 			goal_y = 0.0f;
 			Drive(FORWARD, 0, FORWARD, 0);
@@ -936,6 +970,7 @@ bool find_goal() {
 	//Solve Equations of Line 1 and Line 2 from Target 1 and Target 2
 	if(target_2.x == target_1.x) {
 		goal_x = 0.0f;
+		goal_y = LOOK_AHEAD;
 		return true;
 	}
 	float slope_1 = (target_2.y - target_1.y) / (target_2.x - target_1.x);
@@ -944,8 +979,15 @@ bool find_goal() {
 	//Locate X-Coordinate of Goal Point
 	target_1.x = b_1 / (-2.0 * slope_1);
 	target_1.y = slope_1 * target_1.x + b_1;
-	Point temp_point;
 
+	//If intersected point lies beyond Look Ahead, Robot is very off course. Set course for nearest forward point
+	if(distance_squared(0.0, 0.0, target_1.x, target_1.y) > LOOK_AHEAD_SQ ) {
+		goal_x = target_2.x;
+		goal_y = target_2.y;
+		return true;
+	}
+
+	Point temp_point;
 	for(int idx = 0; idx < RESOLUTION; idx++) {
 		temp_point.x = ((target_2.x - target_1.x) / 2 ) + target_1.x;
 		temp_point.y = slope_1 * temp_point.x + b_1;
@@ -964,10 +1006,56 @@ bool find_goal() {
 
 void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	float v_c = ((float)diff_l + (float)diff_r) * TIC_LENGTH / 2.00f / diff_t;
+	//v_c above in units of m/s, v_c below in units of Motor Controller Torque
 	v_c = VELOCITY_EQ_M * v_c + VELOCITY_EQ_B;
 
-	if(v_c < NORMAL_SPEED) v_c += ACCEL;
-	if(v_c > NORMAL_SPEED) v_c -= ACCEL;
+	bool accel_flag = false;
+	bool decel_flag = false;
+
+	if(v_c < NORMAL_SPEED) {
+		accel_flag = true;
+		v_c += ACCEL * accel_count;
+		if(v_c >= MAX_SPEED) {
+			v_c = MAX_SPEED;
+			//Implement some sort of way to kill operation if failing to arrive at max_speed within
+			//a certain count of loop iterations. Each loop
+			accel_fail_count++;
+		}
+		else {
+			accel_count++;
+		}
+	}
+
+	if(v_c > NORMAL_SPEED) {
+		decel_flag = true;
+		v_c -= ACCEL * decel_count;
+		if(v_c <= 0) {
+			v_c = 0;
+			decel_fail_count++;
+		}
+		else {
+			decel_count++;
+		}
+	}
+
+	if(!accel_flag) {
+		accel_count = 1;
+		accel_fail_count = 0;
+	}
+	if(!decel_flag) {
+		decel_count = 1;
+		decel_fail_count = 0;
+	}
+
+/*	TODO Need some way to recover after COUNT exceeded
+	if(accel_fail_count >= MAX_MOTION_FAILURE_COUNT || decel_fail_count >= MAX_MOTION_FAILURE_COUNT ) {
+		Drive(left_direction, 0, right_direction, 0);
+		return;
+	}
+*/
+	//4_13 Afternoon Testing
+	//if(v_c < NORMAL_SPEED)v_c += ACCEL;
+	//if(v_c > NORMAL_SPEED)v_c -= ACCEL;
 
 	//Allow negative for now, don't want to have to worry about overflow later
 	int8_t v_l = (int) (v_c * (1.0f + VEHICLE_WIDTH * goal_x / LOOK_AHEAD_SQ));
