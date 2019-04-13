@@ -22392,21 +22392,22 @@
  <path id="1111111170" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428824" lon="-86.913475"/>
  <path id="1111111171" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428774" lon="-86.913554"/>
  <path id="1111111172" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428738" lon="-86.913627"/> 
- <path id="1111111173" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428746" lon="-86.913710"/>
- <path id="1111111174" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428757" lon="-86.913770"/>
- <path id="1111111175" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428756" lon="-86.913834"/>
- <path id="1111111176" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428738" lon="-86.913881"/>
- <path id="1111111177" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428708" lon="-86.913910"/>
- <path id="1111111178" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428677" lon="-86.913928"/>
- <path id="1111111179" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428646" lon="-86.913936"/>
- <path id="1111111180" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428607" lon="-86.913932"/>
- <path id="1111111181" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428586" lon="-86.913938"/>
- <path id="1111111182" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428555" lon="-86.913951"/>
- <path id="1111111183" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428514" lon="-86.913999"/>
- <path id="1111111184" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428492" lon="-86.914032"/>
- <path id="1111111185" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428456" lon="-86.914090"/>
- <path id="1111111186" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428397" lon="-86.914182"/>
+ <path id="1111111173" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428734" lon="-86.913703"/>
+ <path id="1111111174" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428745" lon="-86.913763"/>
+ <path id="1111111175" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428744" lon="-86.913827"/>
+ <path id="1111111176" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428726" lon="-86.913874"/>
+ <path id="1111111177" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428696" lon="-86.913903"/>
+ <path id="1111111178" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428665" lon="-86.913921"/>
+ <path id="1111111179" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428634" lon="-86.913929"/>
+ <path id="1111111180" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428595" lon="-86.913925"/>
+ <path id="1111111181" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428574" lon="-86.913931"/>
+ <path id="1111111182" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428543" lon="-86.913944"/>
+ <path id="1111111183" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428502" lon="-86.913992"/>
+ <path id="1111111184" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428480" lon="-86.914025"/>
+ <path id="1111111185" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428444" lon="-86.914083"/>
+ <path id="1111111186" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428385" lon="-86.914175"/>
 
+ <!-- The first 10 points above had a constant offset of -0.000012, +0.000007 -->
  <!-- END MSEE to Hovde by fountain -->
 
 

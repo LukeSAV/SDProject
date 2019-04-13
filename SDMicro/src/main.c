@@ -29,14 +29,14 @@
 #define NORMAL_SPEED 32
 #define TIC_LENGTH 0.053086
 #define VELOCITY_EQ_M 11.013
-#define VELOCITY_EQ_B 33.0
+#define VELOCITY_EQ_B 30.0
 
 //#define VELOCITY_EQ_B 9.586
 //#define VELOCITY_EQ_B 9.5862
 #define L_R_BIAS 1.03    	//Multiply to Right Wheel
 #define ACCEL 2
 #define VEHICLE_WIDTH 0.575
-#define MAX_SPEED 42
+#define MAX_SPEED 34
 #define MAX_TURN 20
 
 enum Encoders{RECEIVE, NO_RECEIVE};
@@ -127,8 +127,10 @@ float new_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 float new_points_y[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
 /* Current working points */
-float points_x[] = {0.0, 0.0, 0.0, 0.0, -3.0, -6.0, -9.0, -12.0,};
-float points_y[] = {3.000,  6.000,  9.000,  12.000,  12.000, 12.000,  12.000,  12.000};
+float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0,  0.0};
+//float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+//float points_y[] = {3.0,  5.0,  7.0,  9.0, 11.0, 13.0,  15.0,  17.0};
 
 float goal_x = 0.0;
 float goal_y = 0.0;
@@ -212,7 +214,6 @@ int main(void) {
 			}
 			else {
 				Drive(left_direction, 0, right_direction, 0);
-				for(;;);
 			}
 		} else {
 			if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
@@ -315,7 +316,6 @@ static void decodePointUpdateMsg() {
 	const char comma[2] = ",";
 	// Ignoring { and K
 	char* token = strtok(last_message, comma);
-	token = strtok(NULL, comma);
 
 	for(int i = 0; i < 8; i++) {
 		token = strtok(NULL, comma);
@@ -905,7 +905,7 @@ bool find_goal() {
 			//You'd also arrive here if STM moved within the last point the Jetson sent, or if mini-EKF greatly misbehaved
 			goal_x = 0.0f;
 			goal_y = 0.0f;
-			for(;;); //TODO REMOVE
+			Drive(FORWARD, 0, FORWARD, 0);
 			return false;
 		}
 	}
