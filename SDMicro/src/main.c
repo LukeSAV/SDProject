@@ -15,8 +15,8 @@
 #include "arm_math.h"
 #include "stdbool.h"
 
-#define IR_RECEIVE_MAX 300
-#define IR_NO_RECEIVE_MIN 900
+#define IR_RECEIVE_MAX 1200
+#define IR_NO_RECEIVE_MIN 2600
 #define RX_BUFFER_MAX 100
 #define TX_BUFFER_MAX 100
 #define MC_ADDRESS 130
@@ -26,18 +26,18 @@
 #define LOOK_AHEAD    1.732
 #define LOOK_AHEAD_SQ 3
 //4_13 Afternoon Testing #define NORMAL_SPEED 32
-#define NORMAL_SPEED 35
+#define NORMAL_SPEED 25
 #define TIC_LENGTH 0.053086
 #define VELOCITY_EQ_M 11.013
-#define VELOCITY_EQ_B 30.0
+#define VELOCITY_EQ_B 20.0
 //#define VELOCITY_EQ_B 9.5862
 #define L_R_BIAS 1.03    	//Multiply to Right Wheel
 //4_13 Afternoon Testing #define ACCEL 2
 #define ACCEL 5
 #define VEHICLE_WIDTH 0.575
 //4_13 Afternoon Testing #define MAX_SPEED 34
-#define MAX_SPEED 50
-#define MAX_TURN 20
+#define MAX_SPEED 60
+#define MAX_TURN 30
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
 enum Encoders{RECEIVE, NO_RECEIVE};
@@ -188,8 +188,8 @@ int main(void) {
 	nsWait(100000000);
 
 	bool drive_enable = true;
-//	float32_t diff_t = 0.05;
-	float32_t diff_t = 0.10;
+	float32_t diff_t = 0.05;
+	//float32_t diff_t = 0.10;
 
 	for(;;) {
 		if(!use_ps4_controller) {
@@ -222,35 +222,35 @@ int main(void) {
 			/* Send over goal points to the Jetson */
 			int32_t goal_x_int = goal_x * 100.0f;
 			int32_t goal_y_int = goal_y * 100.0f;
-
-			jetson_tx_buffer[0] = '{';
-			jetson_tx_buffer[1] = 'C';
-			if(goal_x_int < 0) {
-				jetson_tx_buffer[2] = '-';
-				goal_x_int *= -1.0f;
-			} else {
-				jetson_tx_buffer[2] = '+';
+			if(jetson_tx_buffer_index == 0) {
+				jetson_tx_buffer[0] = '{';
+				jetson_tx_buffer[1] = 'C';
+				if(goal_x_int < 0) {
+					jetson_tx_buffer[2] = '-';
+					goal_x_int *= -1.0f;
+				} else {
+					jetson_tx_buffer[2] = '+';
+				}
+				for(int i = 0; i < 3; i++) {
+					char digit = goal_x_int % 10 + '0';
+					goal_x_int /= 10;
+					jetson_tx_buffer[3 + i] = digit;
+				}
+				jetson_tx_buffer[6] = ',';
+				if(goal_x_int < 0) {
+					jetson_tx_buffer[7] = '-';
+					goal_y_int *= -1.0f;
+				} else {
+					jetson_tx_buffer[7] = '+';
+				}
+				for(int i = 0; i < 3; i++) {
+					char digit = goal_y_int % 10 + '0';
+					goal_y_int /= 10;
+					jetson_tx_buffer[8 + i] = digit;
+				}
+				jetson_tx_buffer[11] = '}';
+				USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
 			}
-			for(int i = 0; i < 3; i++) {
-				char digit = goal_x_int % 10 + '0';
-				goal_x_int /= 10;
-				jetson_tx_buffer[3 + i] = digit;
-			}
-			jetson_tx_buffer[6] = ',';
-			if(goal_x_int < 0) {
-				jetson_tx_buffer[7] = '-';
-				goal_y_int *= -1.0f;
-			} else {
-				jetson_tx_buffer[7] = '+';
-			}
-			for(int i = 0; i < 3; i++) {
-				char digit = goal_y_int % 10 + '0';
-				goal_y_int /= 10;
-				jetson_tx_buffer[8 + i] = digit;
-			}
-			jetson_tx_buffer[11] = '}';
-			USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
-
 		} else {
 			if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
 				left_speed = right_speed = 0;
@@ -259,7 +259,7 @@ int main(void) {
 		}
 
 		nsWait(50000000);
-		nsWait(50000000);
+		//nsWait(50000000);
 		loop_count++;
 	}
 }
@@ -1026,7 +1026,7 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 		}
 	}
 
-	if(v_c > NORMAL_SPEED) {
+	if(v_c > NORMAL_SPEED && !accel_flag) {
 		decel_flag = true;
 		v_c -= ACCEL * decel_count;
 		if(v_c <= 0) {
