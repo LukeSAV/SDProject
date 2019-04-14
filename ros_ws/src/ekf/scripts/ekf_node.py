@@ -105,7 +105,8 @@ def encoder_callback(encoder_msg):
 
       
   imuHeading = yaw
-  elapsed_time = elapsed_time + 1
+  if(gps_valid):
+    elapsed_time = elapsed_time + 1
 
   if(gps_valid and not state_space_init):
       avg_x = avg_x + 0.1*x
