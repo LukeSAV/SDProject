@@ -222,35 +222,35 @@ int main(void) {
 			/* Send over goal points to the Jetson */
 			int32_t goal_x_int = goal_x * 100.0f;
 			int32_t goal_y_int = goal_y * 100.0f;
-
-			jetson_tx_buffer[0] = '{';
-			jetson_tx_buffer[1] = 'C';
-			if(goal_x_int < 0) {
-				jetson_tx_buffer[2] = '-';
-				goal_x_int *= -1.0f;
-			} else {
-				jetson_tx_buffer[2] = '+';
+			if(jetson_tx_buffer_index == 0) {
+				jetson_tx_buffer[0] = '{';
+				jetson_tx_buffer[1] = 'C';
+				if(goal_x_int < 0) {
+					jetson_tx_buffer[2] = '-';
+					goal_x_int *= -1.0f;
+				} else {
+					jetson_tx_buffer[2] = '+';
+				}
+				for(int i = 0; i < 3; i++) {
+					char digit = goal_x_int % 10 + '0';
+					goal_x_int /= 10;
+					jetson_tx_buffer[3 + i] = digit;
+				}
+				jetson_tx_buffer[6] = ',';
+				if(goal_x_int < 0) {
+					jetson_tx_buffer[7] = '-';
+					goal_y_int *= -1.0f;
+				} else {
+					jetson_tx_buffer[7] = '+';
+				}
+				for(int i = 0; i < 3; i++) {
+					char digit = goal_y_int % 10 + '0';
+					goal_y_int /= 10;
+					jetson_tx_buffer[8 + i] = digit;
+				}
+				jetson_tx_buffer[11] = '}';
+				USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
 			}
-			for(int i = 0; i < 3; i++) {
-				char digit = goal_x_int % 10 + '0';
-				goal_x_int /= 10;
-				jetson_tx_buffer[3 + i] = digit;
-			}
-			jetson_tx_buffer[6] = ',';
-			if(goal_x_int < 0) {
-				jetson_tx_buffer[7] = '-';
-				goal_y_int *= -1.0f;
-			} else {
-				jetson_tx_buffer[7] = '+';
-			}
-			for(int i = 0; i < 3; i++) {
-				char digit = goal_y_int % 10 + '0';
-				goal_y_int /= 10;
-				jetson_tx_buffer[8 + i] = digit;
-			}
-			jetson_tx_buffer[11] = '}';
-			USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
-
 		} else {
 			if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
 				left_speed = right_speed = 0;

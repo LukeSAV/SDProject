@@ -2923,3 +2923,13 @@ java.lang.ClassNotFoundException: org.eclipse.e4.ui.workbench.renderers.swt.coco
 !MESSAGE Invalid breakpoint parameter(s)
 !SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 10004 2019-04-13 19:10:57.529
 !MESSAGE Invalid breakpoint parameter(s)
+
+!ENTRY org.eclipse.cdt.dsf 4 10004 2019-04-13 19:24:43.809
+!MESSAGE Invalid breakpoint parameter(s)
+!SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 10004 2019-04-13 19:24:43.809
+!MESSAGE Invalid breakpoint parameter(s)
+
+!ENTRY org.eclipse.cdt.dsf 4 10004 2019-04-13 19:30:04.342
+!MESSAGE Invalid breakpoint parameter(s)
+!SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 10004 2019-04-13 19:30:04.342
+!MESSAGE Invalid breakpoint parameter(s)
