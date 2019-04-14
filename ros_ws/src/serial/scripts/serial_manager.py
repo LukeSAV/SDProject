@@ -115,13 +115,20 @@ def listener():
 
         # Encoder packet from the microcontroller
         if packet_indicator == r'{E':
-          enc_data = ser.read(6)
+          enc_data = ser.read_until(r'}')
+          if len(enc_data) != 6:
+            print("Missed message encoder")
+            continue
           enc_pub.publish(String(str(packet_indicator + enc_data)))
 
         # Control algorithm output from the microcontroller
         if packet_indicator == r'{C':
-          control_data = ser.read_until(r'}') # TODO: Set this value
+          control_data = ser.read_until(r'}') 
+          if len(control_data) != 10:
+            print("Missed message goal")
+            continue
           control_pub.publish(String(str(packet_indicator + control_data)))
+
 
         # Failed Sync routine
         else:
