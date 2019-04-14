@@ -7,47 +7,91 @@ from math import sin, cos
 x = 0
 y = 0
 theta = 0
-pub = None
+cmd_string = ""
+cmd_string_refreshed = False
 
 def goal_string_callback(string_in):
   global x, y
 
-  sign1 = 1 if string_in[2] == '+' else -1
-  sign2 = 1 if string_in[7] == '+' else -1
-  print("Sign1: " + sign1 + " Sign2 " + sign2)
-  val1 = float(string_in[3:6]) / 100
-  val2 = float(string_in[8:11]) / 100
+  sign1 = 1 if string_in.data[2] == '+' else -1
+  sign2 = 1 if string_in.data[7] == '+' else -1
+
+  val1 = float(string_in.data[3:6][::-1]) / 100
+
+  val2 = float(string_in.data[8:11][::-1]) / 100
+
 
   x = sign1 * val1
   y = sign2 * val2
 
-  print("X: " + x + " Y: " y)
+  #print("X: " + str(x) + " Y: " + str(y))
 
+
+def adj_points(x_in, y_in):
+  lat_adj = (sin(theta)*x_in + cos(theta)*y_in)/111139
+  long_adj= (cos(theta)*x_in + -1 * sin(theta)*y_in)/111139
+  return lat_adj, long_adj
+  
 
 def ekf_filtered(nav_msg):
-  goal_point_msg = NavSatFix()
-  lat_adj = (sin(theta) * x + cos(theta)*y) / 111139
-  long_adj = (cos(theta)*x + -1 * sin(theta)*y) / 111139
+  global cmd_string_refreshed
 
+  odd = False
+  prev_point = None #This should be even
+
+  if cmd_string_refreshed:
+    for point in cmd_string[3:-1].split(",")[-2::]:
+      if not odd:
+        prev_point = float(point)
+      if odd:
+        
+        print("Lukes Points: " + str(prev_point) + "," +  point)
+        path_point_msg = NavSatFix()
+        lat_adj, long_adj = adj_points(prev_point, float(point))
+        path_point_msg.latitude = lat_adj + nav_msg.latitude
+        path_point_msg.longitude = long_adj + nav_msg.longitude
+
+        # Tell mapviz what the path point was
+        cmd_pub.publish(path_point_msg)
+      odd = not odd #Only output on the second point
+    cmd_string_refreshed = False
+
+
+  # Send MapViz what the goal point was
+  goal_point_msg = NavSatFix()
+  print("Troy's Points: " + str(x) + "," +  str(y))
+  lat_adj, long_adj = adj_points(x,y)
   goal_point_msg.latitude = nav_msg.latitude + lat_adj
   goal_point_msg.longitude= nav_msg.longitude + long_adj
-
   pub.publish(goal_point_msg)
 
 
-def ekf_direction(orientation):
+def cmd_callback(command_msg):
+  global cmd_string,cmd_string_refreshed
+  cmd_string = command_msg.data;
+  cmd_string_refreshed = True
+  
+
+def ekf_direction(imu_msg):
   global theta
-  theta = orientation.y
+  theta = imu_msg.orientation.y
 
 
 
 
 if __name__ == "__main__":
-  global pub
+  global pub, cmd_pub
   rospy.init_node("GoalPointDisplay")
+  pub =rospy.Publisher("/goalpoints", NavSatFix, queue_size=10)
+
   sub = rospy.Subscriber("/goal_string", String, goal_string_callback)
 
-  rospy.Subscriber("/ekf/filtered"), NavSatFix, ekf_filtered)
-  rospy.Subscriber("/efk/imu/data"), NavSatFix, ekf_direction)
-  rospy.Publisher("/goalpoint", NavSatFix, queue_size=10)
-  rospy.spin()
+  sub1 = rospy.Subscriber("/ekf/filtered", NavSatFix, ekf_filtered)
+  sub2 = rospy.Subscriber("/ekf/imu/data", Imu, ekf_direction)
+  sub3 = rospy.Subscriber("/robot_cmd", String, cmd_callback)
+  cmd_pub = rospy.Publisher("/path_points", NavSatFix, queue_size = 10)
+    
+
+  r = rospy.Rate(10)
+  while not rospy.is_shutdown():
+    r.sleep()
