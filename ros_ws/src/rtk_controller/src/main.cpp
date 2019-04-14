@@ -125,12 +125,13 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
         std::cout << "Current robot coordinates: " << cur_coord.first << ", " << cur_coord.second << std::endl;
         std::cout << "Next waypoint coordinates: " << next_wpt.first << ", " << next_wpt.second << std::endl;
         float angle_delta = angle - cur_heading_ekf;
-        if(angle_delta > pi / 2.0f) {
+        if(angle_delta > pi / 2.0f || angle_delta < -pi / 2.0f) {
             ROS_ERROR("INVALID HEADING");
             return;
         }
         std::cout << "Angle delta: " << angle_delta << std::endl;
 
+        // Adjust endpoint if an obstacle is in the way
         int x = 0;
         int y = 0;
         if(angle_delta != 0.0f) {
@@ -139,7 +140,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
 
             float y_0 = (0.0f - b) * m;
             float y_50 = (50.0f - b) * m;
-            float x_50 = (50.0f / b) + 25;
+            float x_50 = (50.0f / m) + b;
 
             if(y_0 <= 50.0f && y_0 >= 0) {
                 x = 0; 
@@ -151,10 +152,20 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                 x = x_50;
                 y = 50;
             }
-            x = 50 - x;
+            int temp_y = y;
+            y = 50 - x;
+            x = temp_y;
+
         } else {
             x = 50;
             y = 25;
+        }
+
+        float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
+        float dy = LocalOp::m->end->x_index * 0.1f;
+        angle_delta = pi / 2.0f - atan2(dy, dx);
+        if(angle_delta < 0) {
+            angle_delta += 2.0f * pi;
         }
         
         // Project points along line to next waypoint for 8 * 0.6 meters (4.8 meter projection)
@@ -199,7 +210,7 @@ int main(int argc, char **argv)
     next_waypoint_key = std::next(MapData::path_map.begin())->first;
 
     // Generate map and find shortest path to end
-    float angle_delta = 1.4f;
+    float angle_delta = 5.4f;
     int x = 0;
     int y = 0;
     if(angle_delta != 0.0f) {
@@ -208,7 +219,7 @@ int main(int argc, char **argv)
 
         float y_0 = (0.0f - b) * m;
         float y_50 = (50.0f - b) * m;
-        float x_50 = (50.0f / b) + 25;
+        float x_50 = (50.0f / m) + b;
 
         if(y_0 <= 50.0f && y_0 >= 0) {
             x = 0; 
@@ -230,6 +241,16 @@ int main(int argc, char **argv)
     }
     LocalOp::addMap(x, y);
     std::shared_ptr<Node> n = LocalOp::m->AStarSearch();
+
+    std::cout << "x: " << LocalOp::m->end->x_index << " y: " << LocalOp::m->end->y_index << std::endl;
+    float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
+    float dy = LocalOp::m->end->x_index * 0.1f;
+    std::cout << "dx: " << dx << " dy: " << dy << std::endl;
+    angle_delta = pi / 2.0f - atan2(dy, dx);
+    if(angle_delta < 0) {
+        angle_delta += 2.0f * pi;
+    }
+    std::cout << "New angle delta: " << angle_delta << std::endl;
 
     // Poll for EKF messages and publish path points
     ros::Rate r(10);

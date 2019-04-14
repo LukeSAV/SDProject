@@ -19,6 +19,7 @@ Map::Map(int x_index, int y_index) : grid(boost::numeric::ublas::matrix<std::sha
     }
     grid(0, (MAP_SIZE - 1) / 2)->G = 0; // Set the first point to have an initial cost of 0
     FixEndpoint(x_index, y_index);
+    //end = grid(x_index, y_index);
 }
 
 Map::~Map() {
