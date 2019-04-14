@@ -14,6 +14,16 @@
 #include "../include/xml_reader.h"
 #include "rtk/HeadingSpeed.h"
 
+/* Local Navigation Includes */
+#include "../include/Map.h"
+#include "../include/Node.h"
+#include "../include/LocalOp.h"
+
+/* OpenGL */
+#include "../include/GLDebug.h"
+#include "GL/freeglut.h"
+#include "GL/gl.h"
+
 #define ACCEPTED_DISTANCE_TO_WAYPOINT 5
 #define SERIES_LENGTH 8
 
@@ -38,6 +48,11 @@ static float cur_heading_ekf = 0.0f; // Most recent heading received from the EK
 static float x_series[SERIES_LENGTH] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 static float y_series[SERIES_LENGTH] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 
+static std::pair<double, double> cur_coord(41.0f, -86.0f);
+
+/*
+*  Convert the floating point series to strings to publish to micro
+*/
 void convertPubMsg() {
     pub_msg.data = "{K";
     for(int i = 0; i < SERIES_LENGTH; i++) {
@@ -53,10 +68,17 @@ void convertPubMsg() {
     pub_msg.data += "}";
 }
 
+
+/*
+*  Store the most recent heading from the EKF until a filtered NavSatFix message is received
+*/
 void EKFHeadingCallback(const sensor_msgs::Imu::ConstPtr& msg) { 
     cur_heading_ekf = 2 * pi - msg->orientation.y; // Rotation is inverted from standard notation
 }
 
+/*
+*  Iterpolate next set of points to the goal after a specified amount of time when an EKF message is received and perform path planning.
+*/
 void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
     auto cur_time = std::chrono::system_clock::now();
     std::chrono::duration<double> time_since_last_position_series_sent = cur_time - time_last_position_series_sent;
@@ -67,6 +89,8 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
     time_last_position_series_sent = std::chrono::system_clock::now();
 
     std::pair<double, double> cur_coord(msg->latitude, msg->longitude);
+    cur_coord.first = msg->latitude;
+    cur_coord.second = msg->longitude;
 
     try {
         double distance = MapData::getDistance(cur_coord, MapData::path_map.at(next_waypoint_key)); // Check the current distance to the next waypoint
@@ -107,6 +131,32 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
         }
         std::cout << "Angle delta: " << angle_delta << std::endl;
 
+        int x = 0;
+        int y = 0;
+        if(angle_delta != 0.0f) {
+            float b = 25.0f;
+            float m = 1.0f / tan(angle_delta);
+
+            float y_0 = (0.0f - b) * m;
+            float y_50 = (50.0f - b) * m;
+            float x_50 = (50.0f / b) + 25;
+
+            if(y_0 <= 50.0f && y_0 >= 0) {
+                x = 0; 
+                y = y_0;
+            } else if(y_50 <= 50 && y_50 >= 0) {
+                x = 50;
+                y = y_50;
+            } else if(x_50 >= 0 && x_50 <= 50) {
+                x = x_50;
+                y = 50;
+            }
+            x = 50 - x;
+        } else {
+            x = 50;
+            y = 25;
+        }
+        
         // Project points along line to next waypoint for 8 * 0.6 meters (4.8 meter projection)
         for(int i = 0; i < 8; i++) { 
             float new_x = 0.6f * (i + 1) * sin(angle_delta);
@@ -128,7 +178,6 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
 void gpvtgCallback(const rtk::HeadingSpeed::ConstPtr& msg) {
     cur_speed = msg->speed;
     cur_heading_gps = msg->heading;
-    //ROS_INFO("Current speed: %lf, Current Heading: %lf", cur_speed, cur_heading);
 }
 
 int main(int argc, char **argv)
@@ -143,37 +192,76 @@ int main(int argc, char **argv)
     auto start_landmark = std::chrono::system_clock::now();
     auto cur_time = start_landmark;
     std::chrono::duration<double> elapsed_time;
-    //xml_reader("/home/luke/SDProject/purdue_mapv1.0.xml");
-    xml_reader("/home/nvidia/workspace/SDProject/ros_ws/src/rtk_controller/purdue_mapv1.0_old.xml");
+    xml_reader("/home/luke/SDProject/ros_ws/src/rtk_controller/purdue_mapv1.0_old.xml");
 
     // Initialize frst waypoint
     prev_waypoint_key = MapData::path_map.begin()->first;
     next_waypoint_key = std::next(MapData::path_map.begin())->first;
 
+    // Generate map and find shortest path to end
+    float angle_delta = 1.4f;
+    int x = 0;
+    int y = 0;
+    if(angle_delta != 0.0f) {
+        float b = 25.0f;
+        float m = 1.0f / tan(angle_delta);
+
+        float y_0 = (0.0f - b) * m;
+        float y_50 = (50.0f - b) * m;
+        float x_50 = (50.0f / b) + 25;
+
+        if(y_0 <= 50.0f && y_0 >= 0) {
+            x = 0; 
+            y = y_0;
+        } else if(y_50 <= 50 && y_50 >= 0) {
+            x = 50;
+            y = y_50;
+        } else if(x_50 >= 0 && x_50 <= 50) {
+            x = x_50;
+            y = 50;
+        }
+        int temp_y = y;
+        y = 50 - x;
+        x = temp_y;
+
+    } else {
+        x = 50;
+        y = 25;
+    }
+    LocalOp::addMap(x, y);
+    std::shared_ptr<Node> n = LocalOp::m->AStarSearch();
+
     // Poll for EKF messages and publish path points
     ros::Rate r(10);
     last_ekf_received_time = std::chrono::system_clock::now();
+
+    // Spin off thread to run glut window
+    GLDebug::init(argc, argv);
+    std::thread t1(glutMainLoop);
+
     while(ros::ok()) {
         cur_time = std::chrono::system_clock::now();
         elapsed_time = cur_time - last_ekf_received_time;
         if(elapsed_time.count() > 3.0f) { // Went 3 seconds without an EKF message. Better stop.
             ROS_ERROR("3 seconds without EKF data");
         }
-        /*elapsed_time = cur_time - start_landmark;
+        elapsed_time = cur_time - start_landmark;
+
         if(elapsed_time.count() > 5.0f) { // Check the nearest landmark every 5 seconds
-            //ROS_INFO("%lf, %lf", cur_coord.first, cur_coord.second);
             std::string closestLandmarkKey = MapData::getClosestLandmark(cur_coord);
             if(closestLandmarkKey != "") {
                 try {
-                    //ROS_INFO("Nearest landmark: %s", MapData::landmark_map.at(closestLandmarkKey).second.c_str());
+                    ROS_INFO("Nearest landmark: %s", MapData::landmark_map.at(closestLandmarkKey).second.c_str());
                 } catch(std::out_of_range& oor) {
                     ROS_ERROR("Failed to get nearest landmark");
                 }
             }
             start_landmark = std::chrono::system_clock::now();
-        }*/
+        }
 
         ros::spinOnce();
         r.sleep();
     }
+
+    t1.join();
 }
