@@ -3,6 +3,7 @@ project(rtk_controller)
 set(CMAKE_CXX_FLAGS "-std=c++11")
 find_package(GLUT REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(OpenCV 3 REQUIRED)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -12,6 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   rtk
+  cv_bridge
+  image_transport
 )
 
 catkin_python_setup()
@@ -36,6 +39,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   ${OpenGL_INCLUDE_DIRS}
 	${GLUT_INCLUDE_DIRS}
+  ${OpenCv_INCLUDE_DIRS}
 )
 
 add_executable(${PROJECT_NAME}_node
@@ -57,6 +61,7 @@ target_link_libraries(${PROJECT_NAME}_node
   ${catkin_LIBRARIES}
  	${OPENGL_LIBRARIES} 
 	${GLUT_LIBRARY}
+  ${OpenCv_INCLUDE_DIRS}
 )
 
 install(TARGETS ${PROJECT_NAME}_node

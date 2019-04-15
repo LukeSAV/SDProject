@@ -5,9 +5,28 @@
 #include <set>
 #include "GL/freeglut.h"
 #include "GL/gl.h"
+#include "ros/ros.h"
+#include "sensor_msgs/Image.h"
+#include <image_transport/image_transport.h>
 
 Map::Map(int x_index, int y_index) : grid(boost::numeric::ublas::matrix<std::shared_ptr<Node>>(MAP_SIZE, MAP_SIZE)), obstacle_grid(boost::numeric::ublas::matrix<int>(MAP_SIZE, MAP_SIZE)) {
     ApplyObstacles();
+    for(unsigned int i = 0; i < MAP_SIZE; i++) {
+        for(unsigned int j = 0; j < MAP_SIZE; j++) {
+            std::shared_ptr<Node> next_node(new Node);
+            grid(i, j) = next_node;
+            grid(i, j)->H = sqrt((i - x_index) * (i - x_index) + (j - y_index) * (j - y_index)) + obstacle_grid(i, j); // Initialize heuristic to be the sum of the x and y deltas to the final point
+            grid(i, j)->x_index = i;
+            grid(i, j)->y_index = j;
+        }
+    }
+    grid(0, (MAP_SIZE - 1) / 2)->G = 0; // Set the first point to have an initial cost of 0
+    FixEndpoint(x_index, y_index);
+    //end = grid(x_index, y_index);
+}
+
+Map::Map(int x_index, int y_index, sensor_msgs::ImageConstPtr& img) : grid(boost::numeric::ublas::matrix<std::shared_ptr<Node>>(MAP_SIZE, MAP_SIZE)), obstacle_grid(boost::numeric::ublas::matrix<int>(MAP_SIZE, MAP_SIZE)) {
+    ApplyObstacles(img);
     for(unsigned int i = 0; i < MAP_SIZE; i++) {
         for(unsigned int j = 0; j < MAP_SIZE; j++) {
             std::shared_ptr<Node> next_node(new Node);
@@ -168,6 +187,15 @@ std::shared_ptr<Node> Map::AStarSearch() {
                     continue; // This neighboring node is out of bounds
                 }
             }
+        }
+    }
+}
+
+void Map::ApplyObstacles(sensor_msgs::ImageConstPtr& msg) {
+    std::cout << msg->step << std::endl;
+    for(unsigned int i = 0; i < msg->height; i++) {
+        for(unsigned int j = 0; j < msg->width; j++) {
+
         }
     }
 }

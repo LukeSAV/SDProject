@@ -18,6 +18,7 @@ void scan_callback(const sensor_msgs::LaserScan::ConstPtr& scan_in){
   int width = 400;
   int height = 400;
   cv::Mat img(width,height, CV_8UC3,CvScalar(0,0,0));
+  cv::Mat a_star_img(51, 51, CV_8UC3, CvScalar(0,0,0));
 
 
   float ang_min = scan_in->angle_min;
@@ -35,7 +36,10 @@ void scan_callback(const sensor_msgs::LaserScan::ConstPtr& scan_in){
 
   for(int index = 0; index < 360; index++){
     float angle = scan_in->angle_min + index*scan_in->angle_increment;
-
+    angle = -1.0f * (angle - M_PI / 2.0f);
+    if(angle > 0.0f && angle < M_PI) {
+      continue;
+    }
     float range = scan_in->ranges[index];
     if(range > max_range) continue;
     
@@ -43,13 +47,13 @@ void scan_callback(const sensor_msgs::LaserScan::ConstPtr& scan_in){
     float y = sin(angle) * range;
 
     int j = x*width  / (2*max_range) + width / 2;
-    int i = y*height / (2*max_range) + height / 2;
+    int i = y*height / (2*max_range) + height - 1;
     img.at<uint8_t>(i,j,0) = 255;
   }
 
   // Publish the created image
   sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", img).toImageMsg();
- imgPub.publish(msg);
+  imgPub.publish(msg);
   return;
 }
 

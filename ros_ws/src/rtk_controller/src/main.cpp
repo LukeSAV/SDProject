@@ -4,6 +4,11 @@
 #include <map>
 #include <sstream>
 #include <thread>
+
+/* OpenCV */
+#include <image_transport/image_transport.h>
+#include <cv_bridge/cv_bridge.h>
+
 #include "std_msgs/String.h"
 #include "sensor_msgs/NavSatFix.h"
 #include "sensor_msgs/Imu.h"
@@ -50,6 +55,8 @@ static float y_series[SERIES_LENGTH] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
 
 static std::pair<double, double> cur_coord(41.0f, -86.0f);
 
+static sensor_msgs::ImageConstPtr& img_msg;
+
 /*
 *  Convert the floating point series to strings to publish to micro
 */
@@ -68,6 +75,16 @@ void convertPubMsg() {
     pub_msg.data += "}";
 }
 
+/*
+* Take in the lidar map and update stored image
+*/
+void LocalMapCallback(const sensor_msgs::ImageConstPtr& msg) {
+    try {
+        img_msg = msg;
+    } catch(cv_bridge::Exception& e) {
+        ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
+    }
+}
 
 /*
 *  Store the most recent heading from the EKF until a filtered NavSatFix message is received
@@ -160,7 +177,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
             x = 50;
             y = 25;
         }
-        LocalOp::addMap(x, y);
+        LocalOp::addMap(x, y, img_msg);
         std::shared_ptr<Node> n = LocalOp::m->AStarSearch();
         float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
         float dy = LocalOp::m->end->x_index * 0.1f;
@@ -202,6 +219,7 @@ int main(int argc, char **argv)
     ros::Subscriber ekf_pos_sub = nh.subscribe("/ekf/filtered", 1000, EKFPosCallback);
     ros::Subscriber ekf_heading_sub = nh.subscribe("/ekf/imu/data", 1000, EKFHeadingCallback);
     ros::Subscriber gpvtg_sub = nh.subscribe("rtk_gpvtg", 1000, gpvtgCallback);
+    ros::Subscriber local_map = nh.subscribe("perception/map", 1000, LocalMapCallback);
     auto start_landmark = std::chrono::system_clock::now();
     auto cur_time = start_landmark;
     std::chrono::duration<double> elapsed_time;
