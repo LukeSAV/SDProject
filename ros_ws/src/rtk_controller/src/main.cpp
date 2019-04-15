@@ -132,7 +132,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
         std::cout << "Angle delta: " << angle_delta << std::endl;
 
         // Adjust endpoint if an obstacle is in the way
-        int x = 0;
+        /*int x = 0;
         int y = 0;
         if(angle_delta != 0.0f) {
             float b = 25.0f;
@@ -167,7 +167,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
         if(angle_delta < 0) {
             angle_delta += 2.0f * pi;
         }
-        
+        */ 
         // Project points along line to next waypoint for 8 * 0.6 meters (4.8 meter projection)
         for(int i = 0; i < 8; i++) { 
             float new_x = 0.6f * (i + 1) * sin(angle_delta);
@@ -210,7 +210,7 @@ int main(int argc, char **argv)
     next_waypoint_key = std::next(MapData::path_map.begin())->first;
 
     // Generate map and find shortest path to end
-    float angle_delta = 5.4f;
+    /*float angle_delta = 5.4f;
     int x = 0;
     int y = 0;
     if(angle_delta != 0.0f) {
@@ -250,15 +250,15 @@ int main(int argc, char **argv)
     if(angle_delta < 0) {
         angle_delta += 2.0f * pi;
     }
-    std::cout << "New angle delta: " << angle_delta << std::endl;
+    std::cout << "New angle delta: " << angle_delta << std::endl;*/
 
     // Poll for EKF messages and publish path points
     ros::Rate r(10);
     last_ekf_received_time = std::chrono::system_clock::now();
 
     // Spin off thread to run glut window
-    GLDebug::init(argc, argv);
-    std::thread t1(glutMainLoop);
+    /*GLDebug::init(argc, argv);
+    std::thread t1(glutMainLoop);*/
 
     while(ros::ok()) {
         cur_time = std::chrono::system_clock::now();
@@ -284,5 +284,5 @@ int main(int argc, char **argv)
         r.sleep();
     }
 
-    t1.join();
+    //t1.join();
 }
