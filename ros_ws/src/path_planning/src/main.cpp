@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
     state_sub = nh.subscribe<std_msgs::String>("state", 100, pathCallback);
 
     GLDebug::init(argc, argv);
-    LocalOp::addMap(50, 25);
+    LocalOp::addMap(30, 12);
     std::shared_ptr<Node> n = LocalOp::m->AStarSearch();
     
     glutMainLoop();
