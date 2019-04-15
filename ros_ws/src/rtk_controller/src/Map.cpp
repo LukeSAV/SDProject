@@ -188,27 +188,22 @@ void Map::ApplyObstacles() {
     obstacle_grid(6, 0) = 128;
     obstacle_grid(7, 0) = 128;
     obstacle_grid(8, 0) = 128;
-
     obstacle_grid(9, 0) = 128;
     obstacle_grid(10, 0) = 128;
     obstacle_grid(11, 0) = 128;
     obstacle_grid(12, 0) = 128;
     obstacle_grid(13, 0) = 128;
-
     obstacle_grid(14, 0) = 128;
     obstacle_grid(15, 0) = 128;
     obstacle_grid(16, 0) = 128;
     obstacle_grid(17, 0) = 128;
     obstacle_grid(18, 0) = 128;
-
     obstacle_grid(19, 0) = 128;
     obstacle_grid(20, 0) = 128;
     obstacle_grid(21, 0) = 128;
-
     obstacle_grid(22, 0) = 128;
     obstacle_grid(23, 0) = 128;
     obstacle_grid(24, 0) = 128;
-    //
     obstacle_grid(25, 0) = 128;
     obstacle_grid(26, 0) = 128;
     obstacle_grid(27, 0) = 128;
@@ -235,4 +230,58 @@ void Map::ApplyObstacles() {
     obstacle_grid(48, 0) = 128;
     obstacle_grid(49, 0) = 128;
     obstacle_grid(50, 0) = 128;
+
+    obstacle_grid(50, 0) = 128;
+    obstacle_grid(50, 1) = 128;
+    obstacle_grid(50, 2) = 128;
+    obstacle_grid(50, 3) = 128;
+    obstacle_grid(50, 4) = 128;
+    obstacle_grid(50, 5) = 128;
+    obstacle_grid(50, 6) = 128;
+    obstacle_grid(50, 7) = 128;
+    obstacle_grid(50, 8) = 128;
+    obstacle_grid(50, 9) = 128;
+    obstacle_grid(50, 10) = 128;
+    obstacle_grid(50, 11) = 128;
+    obstacle_grid(50, 12) = 128;
+    obstacle_grid(50, 13) = 128;
+    obstacle_grid(50, 14) = 128;
+    obstacle_grid(50, 15) = 128;
+    obstacle_grid(50, 16) = 128;
+    obstacle_grid(50, 17) = 128;
+    obstacle_grid(50, 18) = 128;
+    obstacle_grid(50, 19) = 128;
+    obstacle_grid(50, 20) = 128;
+    obstacle_grid(50, 21) = 128;
+    obstacle_grid(50, 22) = 128;
+    obstacle_grid(50, 23) = 128;
+    obstacle_grid(50, 24) = 128;
+    obstacle_grid(50, 25) = 128;
+    obstacle_grid(50, 26) = 128;
+    obstacle_grid(50, 27) = 128;
+    obstacle_grid(50, 28) = 128;
+    obstacle_grid(50, 29) = 128;
+    obstacle_grid(50, 30) = 128;
+    obstacle_grid(50, 31) = 128;
+    obstacle_grid(50, 32) = 128;
+    obstacle_grid(50, 33) = 128;
+    obstacle_grid(50, 34) = 128;
+    obstacle_grid(50, 35) = 128;
+    obstacle_grid(50, 36) = 128;
+    obstacle_grid(50, 37) = 128;
+    obstacle_grid(50, 38) = 128;
+    obstacle_grid(50, 39) = 128;
+    obstacle_grid(50, 40) = 128;
+    obstacle_grid(50, 41) = 128;
+    obstacle_grid(50, 42) = 128;
+    obstacle_grid(50, 43) = 128;
+    obstacle_grid(50, 44) = 128;
+    obstacle_grid(50, 45) = 128;
+    obstacle_grid(50, 46) = 128;
+    obstacle_grid(50, 47) = 128;
+    obstacle_grid(50, 48) = 128;
+    obstacle_grid(50, 49) = 128;
+    obstacle_grid(50, 50) = 128;
+
+
 }
