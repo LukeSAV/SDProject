@@ -11,3 +11,4 @@ srv_gen/
 *.pyc
 *~
 *.o
+scrap/
