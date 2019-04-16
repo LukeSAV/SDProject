@@ -43,6 +43,7 @@
 
 #define AVERAGE_SPEED 0.5f //Average human walking speed is about 1.4 m/s
 #define ACCEL_2 2
+#define DECEL_2 1
 #define MAX_TORQUE 60
 
 enum Encoders{RECEIVE, NO_RECEIVE};
@@ -137,10 +138,12 @@ float new_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 float new_points_y[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
 /* Current working points */
-float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0,  0.0};
+//float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+//float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0,  0.0};
 //float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 //float points_y[] = {3.0,  5.0,  7.0,  9.0, 11.0, 13.0,  15.0,  17.0};
+float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+float points_y[] = {1.0,  2.0,  3.0,  4.0, 5.0, 6.0,  7.0,  8.0};
 
 float goal_x = 0.0;
 float goal_y = 0.0;
@@ -194,7 +197,7 @@ int main(void) {
 	nsWait(100000000);
 
 	bool drive_enable = true;
-	float32_t diff_t = 0.05;
+	float32_t diff_t = 0.2;
 	//float32_t diff_t = 0.10;
 
 	for(;;) {
@@ -219,7 +222,7 @@ int main(void) {
 				//diff_t = total_time - last_used_time;
 				//last_used_time = total_time;
 
-				SetMotors(encoder_diff_l, encoder_diff_r, diff_t);
+				SetMotors2(encoder_diff_l, encoder_diff_r, diff_t);
 				PointUpdate(encoder_diff_l, encoder_diff_r);
 			}
 			else {
@@ -264,7 +267,7 @@ int main(void) {
 			Drive(left_direction, left_speed, right_direction, right_speed);
 		}
 
-		nsWait(50000000);
+		nsWait(200000000);
 		//nsWait(50000000);
 		loop_count++;
 	}
@@ -1108,9 +1111,9 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 			accel_fail_count++;
 		}
 	}
-	else if( v_c > AVERAGE_SPEED + 0.2f) {		// The 0.2f is so we are not constantly accel/decel, favors accel
+	else if( v_c > AVERAGE_SPEED + 0.6f) {		// The 0.2f is so we are not constantly accel/decel, favors accel
 		decel_flag = true;
-		v_t -= ACCEL_2;
+		v_t -= DECEL_2;
 		if(v_t < 0) {
 			v_t = 0;
 			decel_fail_count--;
@@ -1131,8 +1134,8 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 		return;
 	}
 */
-	int8_t v_l = (int) (v_t * (1.0f + VEHICLE_WIDTH * goal_x / LOOK_AHEAD_SQ));
-	int8_t v_r = (int) (v_t * (1.0f - VEHICLE_WIDTH * goal_x / LOOK_AHEAD_SQ));
+	int8_t v_l = (int) (v_t * (1.0f + VEHICLE_WIDTH * goal_x * 1.1f / LOOK_AHEAD_SQ));
+	int8_t v_r = (int) (v_t * (1.0f - VEHICLE_WIDTH * goal_x  * 1.1f / LOOK_AHEAD_SQ));
 
 	if(v_l > MAX_TORQUE) {
 		v_r -= v_l - MAX_TORQUE;
@@ -1149,6 +1152,11 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 
 	left_speed = v_l; // Current left speed to be requested
 	right_speed = v_r; // Current right speed to be requested
+
+	if(left_speed == 0 && right_speed == 0) {
+		int idx = 0;
+		idx += 1;
+	}
 
 	Drive(left_direction, left_speed, right_direction, right_speed * L_R_BIAS);
 	return;
