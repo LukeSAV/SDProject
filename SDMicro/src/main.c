@@ -939,32 +939,38 @@ bool find_goal() {
 			//TODO Insert Arrival Flag Update?
 			goal_x = 0.0f;
 			goal_y = 0.0f;
-			Drive(FORWARD, 0, FORWARD, 0);
+			// Drive(FORWARD, 0, FORWARD, 0); -- this is redundant
 			return false;
 		}
 	}
+	// If the minimum distance is greater than the lookahead distance
 	else {
-		float decision_dist = distance_squared(points_x[min_idx], points_y[min_idx], points_x[min_idx + 1], points_y[min_idx + 1]);
-		if(dist_array[min_idx + 1] > decision_dist) {
-			if(min_idx != 0) {
-				target_1.x = points_x[min_idx - 1];
-				target_1.y = points_y[min_idx - 1];
-				target_2.x = points_x[min_idx];
-				target_2.y = points_y[min_idx];
-			}
-			else {
-				target_1.x = points_x[0];
-				target_1.y = points_y[0];
-				target_2.x = points_x[1];
-				target_2.y = points_y[1];
-			}
-		}
-		else {
-			target_1.x = points_x[min_idx];
-			target_1.y = points_y[min_idx];
-			target_2.x = points_x[min_idx + 1];
-			target_2.y = points_y[min_idx + 1];
-		}
+		return false;
+		//float decision_dist =
+		//		distance_squared(points_x[min_idx], points_y[min_idx],
+		//				points_x[min_idx + 1], points_y[min_idx + 1]);
+
+		//// I'm curious with what he's doing here
+		//if(dist_array[min_idx + 1] > decision_dist) {
+		//	if(min_idx != 0) {
+		//		target_1.x = points_x[min_idx - 1];
+		//		target_1.y = points_y[min_idx - 1];
+		//		target_2.x = points_x[min_idx];
+		//		target_2.y = points_y[min_idx];
+		//	}
+		//	else {
+		//		target_1.x = points_x[0];
+		//		target_1.y = points_y[0];
+		//		target_2.x = points_x[1];
+		//		target_2.y = points_y[1];
+		//	}
+		//}
+		//else {
+		//	target_1.x = points_x[min_idx];
+		//	target_1.y = points_y[min_idx];
+		//	target_2.x = points_x[min_idx + 1];
+		//	target_2.y = points_y[min_idx + 1];
+		//}
 	}
 
 	//Solve Equations of Line 1 and Line 2 from Target 1 and Target 2
@@ -977,15 +983,16 @@ bool find_goal() {
 	float b_1 = target_2.y - slope_1 * target_2.x;
 
 	//Locate X-Coordinate of Goal Point
-	target_1.x = b_1 / (-2.0 * slope_1);
+	target_1.x = b_1 * slope_1 / ( -1 - slope_1 * slope_1);
 	target_1.y = slope_1 * target_1.x + b_1;
 
+	// This should not be the case
 	//If intersected point lies beyond Look Ahead, Robot is very off course. Set course for nearest forward point
-	if(distance_squared(0.0, 0.0, target_1.x, target_1.y) > LOOK_AHEAD_SQ ) {
-		goal_x = target_2.x;
-		goal_y = target_2.y;
-		return true;
-	}
+	//if(distance_squared(0.0, 0.0, target_1.x, target_1.y) > LOOK_AHEAD_SQ ) {
+	//	goal_x = target_2.x;
+	//	goal_y = target_2.y;
+	//	return true;
+	//}
 
 	Point temp_point;
 	for(int idx = 0; idx < RESOLUTION; idx++) {
