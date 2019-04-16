@@ -40,6 +40,11 @@
 #define MAX_TURN 30
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
+
+#define AVERAGE_SPEED 0.5f //Average human walking speed is about 1.4 m/s
+#define ACCEL_2 2
+#define MAX_TORQUE 60
+
 enum Encoders{RECEIVE, NO_RECEIVE};
 enum Direction{FORWARD, REVERSE};
 enum LastMotorSent{LEFT, RIGHT};
@@ -159,12 +164,13 @@ static void Cmd(char b);
 static void Data(char b);
 static void DispString(char* data);
 static void SendEncoderCount();
-static void nsWait(int t);
+static void nsWait(uint64_t t);
 
 bool find_goal();
 float distance_squared(float x1, float y1, float x2, float y2);
 void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void PointUpdate (uint32_t diff_l, uint32_t diff_r);
+void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 
 int main(void) {
 	ADCInit();
@@ -890,7 +896,7 @@ static void SPIInit() {
 *	Wait specified number of microseconds
 *
 **************************************************************************/
-void nsWait(int t) {
+void nsWait(uint64_t t) {
     asm("       mov r0,%0\n"
         "repeat:\n"
         "       sub r0,#83\n"
@@ -1053,9 +1059,6 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 		return;
 	}
 */
-	//4_13 Afternoon Testing
-	//if(v_c < NORMAL_SPEED)v_c += ACCEL;
-	//if(v_c > NORMAL_SPEED)v_c -= ACCEL;
 
 	//Allow negative for now, don't want to have to worry about overflow later
 	int8_t v_l = (int) (v_c * (1.0f + VEHICLE_WIDTH * goal_x / LOOK_AHEAD_SQ));
@@ -1083,3 +1086,63 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	return;
 }
 
+void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
+	float v_c = ((float)diff_l + (float)diff_r) * TIC_LENGTH / 2.00f / diff_t;	//  m/s
+	float v_t = (left_speed + right_speed) / 2.0f;								// Torque
+
+	bool accel_flag = false;
+	bool decel_flag = false;
+
+	if(v_c < AVERAGE_SPEED) {
+		accel_flag = true;
+		v_t += ACCEL_2;
+		if(v_t >= MAX_TORQUE) {
+			v_t = MAX_TORQUE;
+			accel_fail_count++;
+		}
+	}
+	else if( v_c > AVERAGE_SPEED + 0.2f) {		// The 0.2f is so we are not constantly accel/decel, favors accel
+		decel_flag = true;
+		v_t -= ACCEL_2;
+		if(v_t < 0) {
+			v_t = 0;
+			decel_fail_count--;
+		}
+
+	}
+
+	if(!accel_flag) {
+		accel_fail_count = 0;
+	}
+	if(!decel_flag) {
+		decel_fail_count = 0;
+	}
+
+/*	TODO Need some way to recover after COUNT exceeded
+	if(accel_fail_count >= MAX_MOTION_FAILURE_COUNT || decel_fail_count >= MAX_MOTION_FAILURE_COUNT ) {
+		Drive(left_direction, 0, right_direction, 0);
+		return;
+	}
+*/
+	int8_t v_l = (int) (v_t * (1.0f + VEHICLE_WIDTH * goal_x / LOOK_AHEAD_SQ));
+	int8_t v_r = (int) (v_t * (1.0f - VEHICLE_WIDTH * goal_x / LOOK_AHEAD_SQ));
+
+	if(v_l > MAX_TORQUE) {
+		v_r -= v_l - MAX_TORQUE;
+		v_l = MAX_TORQUE;
+	}
+	if(v_r > MAX_TORQUE) {
+		v_l -= v_r - MAX_TORQUE;
+		v_r = MAX_TORQUE;
+	}
+	if( (v_l - v_r) > MAX_TURN) v_l -= v_l - v_r - MAX_TURN;
+	if( (v_r - v_l) > MAX_TURN) v_r -= v_r - v_l - MAX_TURN;
+	if(v_l < 0) v_l = 0;
+	if(v_r < 0) v_r = 0;
+
+	left_speed = v_l; // Current left speed to be requested
+	right_speed = v_r; // Current right speed to be requested
+
+	Drive(left_direction, left_speed, right_direction, right_speed * L_R_BIAS);
+	return;
+}
