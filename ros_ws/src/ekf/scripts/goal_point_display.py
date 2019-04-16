@@ -40,7 +40,7 @@ def ekf_filtered(nav_msg):
   prev_point = None #This should be even
 
   if cmd_string_refreshed:
-    for point in cmd_string[3:-1].split(",")[-2::]:
+    for point in cmd_string[3:-1].split(","):
       if not odd:
         prev_point = float(point)
       if odd:
@@ -51,7 +51,9 @@ def ekf_filtered(nav_msg):
         path_point_msg.latitude = lat_adj + nav_msg.latitude
         path_point_msg.longitude = long_adj + nav_msg.longitude
 
+        path_point_msg.header.frame_id = 'map'
         # Tell mapviz what the path point was
+        path_point_msg.header.stamp = rospy.Time.now()
         cmd_pub.publish(path_point_msg)
       odd = not odd #Only output on the second point
     cmd_string_refreshed = False
@@ -62,6 +64,9 @@ def ekf_filtered(nav_msg):
   print("Troy's Points: " + str(x) + "," +  str(y))
   lat_adj, long_adj = adj_points(x,y)
   goal_point_msg.latitude = nav_msg.latitude + lat_adj
+
+  goal_point_msg.header.frame_id = 'map'
+  goal_point_msg.header.stamp = rospy.Time.now()
   goal_point_msg.longitude= nav_msg.longitude + long_adj
   pub.publish(goal_point_msg)
 
@@ -92,6 +97,4 @@ if __name__ == "__main__":
   cmd_pub = rospy.Publisher("/path_points", NavSatFix, queue_size = 10)
     
 
-  r = rospy.Rate(10)
-  while not rospy.is_shutdown():
-    r.sleep()
+  rospy.spin()
