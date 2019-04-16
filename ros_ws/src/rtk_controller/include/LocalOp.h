@@ -13,5 +13,5 @@ public:
     virtual ~LocalOp();
     static std::shared_ptr<Map> m;
     static void addMap(int end_x_index, int end_y_index);
-    static void addMap(int end_x_index, int end_y_index, std_msgs::ImageConstPtr& img);
+    static void addMap(int end_x_index, int end_y_index, sensor_msgs::ImageConstPtr& img);
 };

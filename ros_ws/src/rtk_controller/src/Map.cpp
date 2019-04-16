@@ -10,7 +10,6 @@
 #include <image_transport/image_transport.h>
 
 Map::Map(int x_index, int y_index) : grid(boost::numeric::ublas::matrix<std::shared_ptr<Node>>(MAP_SIZE, MAP_SIZE)), obstacle_grid(boost::numeric::ublas::matrix<int>(MAP_SIZE, MAP_SIZE)) {
-    ApplyObstacles();
     for(unsigned int i = 0; i < MAP_SIZE; i++) {
         for(unsigned int j = 0; j < MAP_SIZE; j++) {
             std::shared_ptr<Node> next_node(new Node);
@@ -18,11 +17,11 @@ Map::Map(int x_index, int y_index) : grid(boost::numeric::ublas::matrix<std::sha
             grid(i, j)->H = sqrt((i - x_index) * (i - x_index) + (j - y_index) * (j - y_index)) + obstacle_grid(i, j); // Initialize heuristic to be the sum of the x and y deltas to the final point
             grid(i, j)->x_index = i;
             grid(i, j)->y_index = j;
+            obstacle_grid(i, j) = 0;
         }
     }
     grid(0, (MAP_SIZE - 1) / 2)->G = 0; // Set the first point to have an initial cost of 0
     FixEndpoint(x_index, y_index);
-    //end = grid(x_index, y_index);
 }
 
 Map::Map(int x_index, int y_index, sensor_msgs::ImageConstPtr& img) : grid(boost::numeric::ublas::matrix<std::shared_ptr<Node>>(MAP_SIZE, MAP_SIZE)), obstacle_grid(boost::numeric::ublas::matrix<int>(MAP_SIZE, MAP_SIZE)) {
@@ -38,7 +37,6 @@ Map::Map(int x_index, int y_index, sensor_msgs::ImageConstPtr& img) : grid(boost
     }
     grid(0, (MAP_SIZE - 1) / 2)->G = 0; // Set the first point to have an initial cost of 0
     FixEndpoint(x_index, y_index);
-    //end = grid(x_index, y_index);
 }
 
 Map::~Map() {
@@ -94,8 +92,6 @@ void Map::FixEndpoint(int x_index, int y_index) {
     std::pair<int, int> left_point = std::pair<int, int>(x_index, y_index);
     std::pair<int, int> right_point = std::pair<int, int>(x_index, y_index);
     while(true) {
-        std::cout << "Left: " <<  left_point.first << "," << left_point.second << std::endl;
-        std::cout << "Right: " <<  right_point.first << "," << right_point.second << std::endl;
         if(!left_complete) {
             if(obstacle_grid(left_point.first, left_point.second) > 10) { // Desired endpoint occupied, choose another one
                 left_point = CycleMapLeft(left_point.first, left_point.second);
@@ -124,7 +120,6 @@ void Map::FixEndpoint(int x_index, int y_index) {
             break;
         }
     }
-    std::cout << x_index << "," << y_index << std::endl;
     end = grid(x_index, y_index);
 }
 
@@ -141,6 +136,7 @@ std::shared_ptr<Node> Map::AStarSearch() {
     std::set<std::shared_ptr<Node>> pathSet; // Nodes in the final path
     openSet.insert(grid(0, (MAP_SIZE - 1) / 2)); // Add the first node to the set of nodes to be evaluated
     
+    path_length = 0;
     while(!openSet.empty()) {
         std::shared_ptr<Node> min_node; // Least cost node in the open set
         int min_distance = -1;
@@ -154,7 +150,7 @@ std::shared_ptr<Node> Map::AStarSearch() {
         openSet.erase(min_node); 
 
         if(min_node == end) { // Destination reached
-            std::cout << "Destination reached" << std::endl;
+            ROS_INFO("A* path found");
             return min_node; // Returning last node 
         }
 
@@ -192,10 +188,10 @@ std::shared_ptr<Node> Map::AStarSearch() {
 }
 
 void Map::ApplyObstacles(sensor_msgs::ImageConstPtr& msg) {
-    std::cout << msg->step << std::endl;
     for(unsigned int i = 0; i < msg->height; i++) {
         for(unsigned int j = 0; j < msg->width; j++) {
-
+            int intensity = msg->data[i * msg->step + j * msg->step / msg->width];
+            obstacle_grid(50 - i, 50 - j) = intensity / 2;
         }
     }
 }

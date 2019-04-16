@@ -25,6 +25,7 @@ public:
     std::pair<int, int> CycleMapLeft(int x_index, int y_index);
 
     static bool Compare(std::shared_ptr<Node>, std::shared_ptr<Node>);
+    int path_length;
 
     boost::numeric::ublas::matrix<std::shared_ptr<Node>> grid; // Grid of nodes
     boost::numeric::ublas::matrix<int> obstacle_grid; // Grid of obstacle weights (0-128)

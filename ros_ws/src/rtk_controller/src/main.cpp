@@ -32,6 +32,18 @@
 #define ACCEPTED_DISTANCE_TO_WAYPOINT 5
 #define SERIES_LENGTH 8
 
+#ifndef _USE_OBSTACLE_MAP
+#define _USE_OBSTACLE_MAP 
+#endif
+
+#ifndef _USE_A_STAR_INTERPOLATION
+#define _USE_A_STAR_INTERPOLATION 
+#endif
+
+#ifndef _USE_OPEN_GL
+#define _USE_OPEN_GL
+#endif
+
 static const float pi = 3.1415927;
 static ros::Publisher cmd_pub;
 static ros::Publisher wpt_pub;
@@ -55,7 +67,7 @@ static float y_series[SERIES_LENGTH] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
 
 static std::pair<double, double> cur_coord(41.0f, -86.0f);
 
-static sensor_msgs::ImageConstPtr& img_msg;
+static sensor_msgs::ImageConstPtr img_msg;
 
 /*
 *  Convert the floating point series to strings to publish to micro
@@ -105,7 +117,6 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
     }
     time_last_position_series_sent = std::chrono::system_clock::now();
 
-    std::pair<double, double> cur_coord(msg->latitude, msg->longitude);
     cur_coord.first = msg->latitude;
     cur_coord.second = msg->longitude;
 
@@ -139,16 +150,12 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
         wpt_pub.publish(wpt_msg);
 
         std::cout.precision(10);
-        std::cout << "Current robot coordinates: " << cur_coord.first << ", " << cur_coord.second << std::endl;
-        std::cout << "Next waypoint coordinates: " << next_wpt.first << ", " << next_wpt.second << std::endl;
         float angle_delta = angle - cur_heading_ekf;
         if(angle_delta > pi / 2.0f || angle_delta < -pi / 2.0f) {
-            ROS_ERROR("INVALID HEADING");
+            ROS_ERROR("INVALID HEADING - Current EKF: %f, Current Map: %f", cur_heading_ekf, angle);
             return;
         }
-        std::cout << "Angle delta: " << angle_delta << std::endl;
-
-        // Adjust endpoint if an obstacle is in the way
+        // Obtain a desired endpoint based on the heading to the next waypoint
         int x = 0;
         int y = 0;
         if(angle_delta != 0.0f) {
@@ -172,32 +179,72 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
             int temp_y = y;
             y = 50 - x;
             x = temp_y;
-
         } else {
             x = 50;
             y = 25;
         }
-        LocalOp::addMap(x, y, img_msg);
+
+        #ifdef _USE_OBSTACLE_MAP
+            LocalOp::addMap(x, y, img_msg);
+        #else
+            LocalOp::addMap(x, y);
+        #endif
+
         std::shared_ptr<Node> n = LocalOp::m->AStarSearch();
-        float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
-        float dy = LocalOp::m->end->x_index * 0.1f;
-        angle_delta = pi / 2.0f - atan2(dy, dx);
-        if(angle_delta < 0.0f) {
-            angle_delta += 2.0f * pi;
+        if(n == NULL) {
+            ROS_ERROR("Could not reach destination");
+            return;
         }
-        std::cout << "New angle delta: " << angle_delta << std::endl;
-         
-        // Project points along line to next waypoint for 8 * 0.6 meters (4.8 meter projection)
-        for(int i = 0; i < 8; i++) { 
-            float new_x = 0.6f * (i + 1) * sin(angle_delta);
-            float new_y = 0.6f * (i + 1) * cos(angle_delta);
-            x_series[i] = new_x;
-            y_series[i] = new_y;
-            if(new_y < 0.0f) {
-                ROS_ERROR("MISSED WAYPOINT");
-                return;
+        #ifdef _USE_A_STAR_INTERPOLATION
+            std::shared_ptr<Node> cur_node = n;
+            int path_length = 0;
+            while(cur_node) {
+                cur_node = cur_node->prevNode;
+                path_length++;
             }
-        }
+            int path_unit_step = path_length / 8;
+            if(path_unit_step < 1) {
+                ROS_ERROR("Interpolated points in A* algorithm were incorrect");
+                return;
+            } else {
+                std::shared_ptr<Node> cur_node = n;
+                for(unsigned int i = 0; i < 8; i++) {
+                    if(cur_node) {
+                        x_series[i] = (float)(25 - cur_node->y_index) * 0.1f;
+                        y_series[i] = (float)(cur_node->x_index) * 0.1f;
+                        int step = path_unit_step;
+                        while(step > 0) {
+                            cur_node = cur_node->prevNode;
+                            step--;
+                        }
+                    } else { 
+                        ROS_ERROR("Problem tracing back A* path");
+                        break;
+                    }
+                }
+                
+            }
+
+        #else
+            float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
+            float dy = LocalOp::m->end->x_index * 0.1f;
+            angle_delta = pi / 2.0f - atan2(dy, dx);
+            if(angle_delta < 0.0f) {
+                angle_delta += 2.0f * pi;
+            }
+            
+            // Project points along line to next waypoint for 8 * 0.6 meters (4.8 meter projection)
+            for(int i = 0; i < 8; i++) { 
+                float new_x = 0.6f * (i + 1) * sin(angle_delta);
+                float new_y = 0.6f * (i + 1) * cos(angle_delta);
+                x_series[i] = new_x;
+                y_series[i] = new_y;
+                if(new_y < 0.0f) {
+                    ROS_ERROR("MISSED WAYPOINT");
+                    return;
+                }
+            }
+        #endif
         convertPubMsg(); // Convert the x_series and y_series points to a string to send to the microcontroller
         cmd_pub.publish(pub_msg);
     } catch(std::out_of_range& eor) {
@@ -229,57 +276,17 @@ int main(int argc, char **argv)
     prev_waypoint_key = MapData::path_map.begin()->first;
     next_waypoint_key = std::next(MapData::path_map.begin())->first;
 
-    // Generate map and find shortest path to end
-    /*float angle_delta = 6.0f;
-    int x = 0;
-    int y = 0;
-    if(angle_delta != 0.0f) {
-        float b = 25.0f;
-        float m = 1.0f / tan(angle_delta);
-
-        float y_0 = (0.0f - b) * m;
-        float y_50 = (50.0f - b) * m;
-        float x_50 = (50.0f / m) + b;
-
-        if(y_0 <= 50.0f && y_0 >= 0) {
-            x = 0; 
-            y = y_0;
-        } else if(y_50 <= 50 && y_50 >= 0) {
-            x = 50;
-            y = y_50;
-        } else if(x_50 >= 0 && x_50 <= 50) {
-            x = x_50;
-            y = 50;
-        }
-        int temp_y = y;
-        y = 50 - x;
-        x = temp_y;
-
-    } else {
-        x = 50;
-        y = 25;
-    }
-    LocalOp::addMap(x, y);
-    std::shared_ptr<Node> n = LocalOp::m->AStarSearch();
-
-    std::cout << "x: " << LocalOp::m->end->x_index << " y: " << LocalOp::m->end->y_index << std::endl;
-    float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
-    float dy = LocalOp::m->end->x_index * 0.1f;
-    std::cout << "dx: " << dx << " dy: " << dy << std::endl;
-    angle_delta = pi / 2.0f - atan2(dy, dx);
-    if(angle_delta < 0) {
-        angle_delta += 2.0f * pi;
-    }
-    std::cout << "New angle delta: " << angle_delta << std::endl;*/
-    //
-
     // Poll for EKF messages and publish path points
     ros::Rate r(10);
     last_ekf_received_time = std::chrono::system_clock::now();
 
+    LocalOp::addMap(50, 25);
+
     // Spin off thread to run glut window
-    /*GLDebug::init(argc, argv);
-    std::thread t1(glutMainLoop);*/
+    #ifdef _USE_OPEN_GL
+        GLDebug::init(argc, argv);
+        std::thread t1(glutMainLoop);
+    #endif
 
     while(ros::ok()) {
         cur_time = std::chrono::system_clock::now();
@@ -305,5 +312,7 @@ int main(int argc, char **argv)
         r.sleep();
     }
 
-    //t1.join();
+    #ifdef _USE_OPEN_GL
+        t1.join();
+    #endif
 }

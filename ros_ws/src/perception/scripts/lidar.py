@@ -6,6 +6,7 @@ import math
 import numpy as np
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
+from PIL import Image as PILIMG
 
 
 # Make sure Opencv is built for jetson GPU
@@ -42,8 +43,9 @@ def lidar_callback(msg):
   final_img = cv2.circle(final_img, (200, 400), 3, (0, 255, 0))
   final_img = cv2.resize(final_img, (51, 51)) # resizing the image for path planning
   final_img[:,:,0] = cv2.dilate(final_img[:,:,0], kernel3)
+  final_img = np.array(final_img, dtype=np.uint8)
 
-  img_msg = bridge.cv2_to_imgmsg(final_img, encoding="passthrough")
+  img_msg = bridge.cv2_to_imgmsg(final_img, "bgr8")
   img_pub.publish(img_msg)
 
   cv2.namedWindow("Lidar", cv2.WINDOW_NORMAL)
