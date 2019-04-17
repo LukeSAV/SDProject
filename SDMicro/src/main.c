@@ -25,25 +25,23 @@
 #define RESOLUTION 8
 #define LOOK_AHEAD    1.732
 #define LOOK_AHEAD_SQ 3
-//4_13 Afternoon Testing #define NORMAL_SPEED 32
 #define NORMAL_SPEED 25
 #define TIC_LENGTH 0.053086
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
 //#define VELOCITY_EQ_B 9.5862
 #define L_R_BIAS 1.03    	//Multiply to Right Wheel
-//4_13 Afternoon Testing #define ACCEL 2
 #define ACCEL 5
 #define VEHICLE_WIDTH 0.575
-//4_13 Afternoon Testing #define MAX_SPEED 34
 #define MAX_SPEED 60
 #define MAX_TURN 30
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
 
 #define AVERAGE_SPEED 0.5f //Average human walking speed is about 1.4 m/s
-#define ACCEL_2 2
-#define DECEL_2 1
+#define TURN_MULT 1.1f
+#define ACCEL_2 5
+#define DECEL_2 2
 #define MAX_TORQUE 60
 
 enum Encoders{RECEIVE, NO_RECEIVE};
@@ -147,6 +145,8 @@ float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0,  0.0};
 
 float goal_x = 0.0;
 float goal_y = 0.0;
+uint8_t v_t = 0;
+uint32_t zero_count = 0; //DIAGNOSTIC ONLY TODO REMOVE
 
 /* Motor state vars */
 Packet left_packet;
@@ -211,16 +211,11 @@ int main(void) {
 			}
 			drive_enable = find_goal();
 			if(drive_enable) {
-// Why was this here?				nsWait(50000000); // wait 50 ms
 				encoder_diff_l = adc_left_slots - last_used_adc_left_slots;
 				last_used_adc_left_slots = adc_left_slots;
 
 				encoder_diff_r = adc_right_slots - last_used_adc_right_slots;
 				last_used_adc_right_slots = adc_right_slots;
-
-				//diff_t = 0.05;
-				//diff_t = total_time - last_used_time;
-				//last_used_time = total_time;
 
 				SetMotors2(encoder_diff_l, encoder_diff_r, diff_t);
 				PointUpdate(encoder_diff_l, encoder_diff_r);
@@ -228,6 +223,7 @@ int main(void) {
 			else {
 				Drive(left_direction, 0, right_direction, 0);
 			}
+
 			/* Send over goal points to the Jetson */
 			int32_t goal_x_int = goal_x * 100.0f;
 			int32_t goal_y_int = goal_y * 100.0f;
@@ -268,7 +264,6 @@ int main(void) {
 		}
 
 		nsWait(200000000);
-		//nsWait(50000000);
 		loop_count++;
 	}
 }
@@ -415,10 +410,12 @@ static int Drive(enum Direction left_direction, char left_speed_v, enum Directio
 	if(mc_tx_buffer_index != 0) {
 		return 1; // Haven't finished sending the last message
 	}
-	if(left_speed == 0 && right_speed == 0) {
-		int index = 0;
-		index += 1;
+
+	//DIAGNOSTIC ONLY ZERO COUNT TODO REMOVE
+	if(left_speed == 0 || right_speed == 0) {
+		zero_count++;
 	}
+
 	if(left_direction == FORWARD) {
 		left_packet.command = 4;
 	}
@@ -948,42 +945,36 @@ bool find_goal() {
 			}
 		}
 		if(!break_success) {
-			//All next destination points within Look Ahead Distance, case travel
-			//TODO Insert Arrival Flag Update?
+			//All destination points within Look Ahead Distance, cease travel
 			goal_x = 0.0f;
 			goal_y = 0.0f;
-			// Drive(FORWARD, 0, FORWARD, 0); -- this is redundant
 			return false;
 		}
 	}
 	// If the minimum distance is greater than the lookahead distance
 	else {
-		return false;
-		//float decision_dist =
-		//		distance_squared(points_x[min_idx], points_y[min_idx],
-		//				points_x[min_idx + 1], points_y[min_idx + 1]);
+		float decision_dist = distance_squared(points_x[min_idx], points_y[min_idx], points_x[min_idx + 1], points_y[min_idx + 1]);
 
-		//// I'm curious with what he's doing here
-		//if(dist_array[min_idx + 1] > decision_dist) {
-		//	if(min_idx != 0) {
-		//		target_1.x = points_x[min_idx - 1];
-		//		target_1.y = points_y[min_idx - 1];
-		//		target_2.x = points_x[min_idx];
-		//		target_2.y = points_y[min_idx];
-		//	}
-		//	else {
-		//		target_1.x = points_x[0];
-		//		target_1.y = points_y[0];
-		//		target_2.x = points_x[1];
-		//		target_2.y = points_y[1];
-		//	}
-		//}
-		//else {
-		//	target_1.x = points_x[min_idx];
-		//	target_1.y = points_y[min_idx];
-		//	target_2.x = points_x[min_idx + 1];
-		//	target_2.y = points_y[min_idx + 1];
-		//}
+		if(dist_array[min_idx + 1] > decision_dist) {
+			if(min_idx != 0) {
+				target_1.x = points_x[min_idx - 1];
+				target_1.y = points_y[min_idx - 1];
+				target_2.x = points_x[min_idx];
+				target_2.y = points_y[min_idx];
+			}
+			else {
+				target_1.x = points_x[0];
+				target_1.y = points_y[0];
+				target_2.x = points_x[1];
+				target_2.y = points_y[1];
+			}
+		}
+		else {
+			target_1.x = points_x[min_idx];
+			target_1.y = points_y[min_idx];
+			target_2.x = points_x[min_idx + 1];
+			target_2.y = points_y[min_idx + 1];
+		}
 	}
 
 	//Solve Equations of Line 1 and Line 2 from Target 1 and Target 2
@@ -999,13 +990,12 @@ bool find_goal() {
 	target_1.x = b_1 * slope_1 / ( -1 - slope_1 * slope_1);
 	target_1.y = slope_1 * target_1.x + b_1;
 
-	// This should not be the case
 	//If intersected point lies beyond Look Ahead, Robot is very off course. Set course for nearest forward point
-	//if(distance_squared(0.0, 0.0, target_1.x, target_1.y) > LOOK_AHEAD_SQ ) {
-	//	goal_x = target_2.x;
-	//	goal_y = target_2.y;
-	//	return true;
-	//}
+	if(distance_squared(0.0, 0.0, target_1.x, target_1.y) > LOOK_AHEAD_SQ ) {
+		goal_x = target_2.x;
+		goal_y = target_2.y;
+		return true;
+	}
 
 	Point temp_point;
 	for(int idx = 0; idx < RESOLUTION; idx++) {
@@ -1102,27 +1092,19 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 
 void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	float v_c = ((float)diff_l + (float)diff_r) * TIC_LENGTH / 2.00f / diff_t;	//  m/s
-	float v_t = (left_speed + right_speed) / 2.0f;								// Torque
 
-	bool accel_flag = false;
-	bool decel_flag = false;
+//	bool accel_flag = false;
+//	bool decel_flag = false;
 
 	if(v_c < AVERAGE_SPEED) {
-		accel_flag = true;
-		v_t += ACCEL_2;
-		if(v_t >= MAX_TORQUE) {
-			v_t = MAX_TORQUE;
-			accel_fail_count++;
-		}
+//		accel_flag = true;
+		if(v_t < MAX_TORQUE) v_t += ACCEL_2;
+		else accel_fail_count++;
 	}
-	else if( v_c > AVERAGE_SPEED + 0.6f) {		// The 0.2f is so we are not constantly accel/decel, favors accel
-		decel_flag = true;
-		v_t -= DECEL_2;
-		if(v_t < 0) {
-			v_t = 0;
-			decel_fail_count--;
-		}
-
+	else if( v_c > AVERAGE_SPEED + 0.2f) {		// The 0.2f is so we are not constantly accel/decel, favors accel
+//		decel_flag = true;
+		if(v_t > 0) v_t -= DECEL_2;
+		else decel_fail_count--;
 	}
 
 /*	TODO Need some way to recover after COUNT exceeded
@@ -1131,8 +1113,9 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 		return;
 	}
 */
-	int8_t v_l = (int) (v_t * (1.0f + VEHICLE_WIDTH * goal_x / LOOK_AHEAD_SQ));
-	int8_t v_r = (int) (v_t * (1.0f - VEHICLE_WIDTH * goal_x / LOOK_AHEAD_SQ));
+
+	int8_t v_l = (int) (v_t * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
+	int8_t v_r = (int) (v_t * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
 
 	if(v_l > MAX_TORQUE) {
 		v_r -= v_l - MAX_TORQUE;
@@ -1147,9 +1130,10 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	if(v_l < 0) v_l = 0;
 	if(v_r < 0) v_r = 0;
 
+	Drive(left_direction, v_l, right_direction, (int)(v_r * L_R_BIAS));
+
 	left_speed = v_l; // Current left speed to be requested
 	right_speed = v_r; // Current right speed to be requested
 
-	Drive(left_direction, left_speed, right_direction, (int)(right_speed * L_R_BIAS));
 	return;
 }
