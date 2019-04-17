@@ -233,16 +233,43 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                 angle_delta += 2.0f * pi;
             }
             
-            // Project points along line to next waypoint for 8 * 0.6 meters (4.8 meter projection)
-            for(int i = 0; i < 8; i++) { 
-                float new_x = 0.6f * (i + 1) * sin(angle_delta);
-                float new_y = 0.6f * (i + 1) * cos(angle_delta);
-                x_series[i] = new_x;
-                y_series[i] = new_y;
-                if(new_y < 0.0f) {
-                    ROS_ERROR("MISSED WAYPOINT");
-                    return;
+            if(prev_waypoint_key == "") { // In the event that there is no previous waypoint, just draw path between robot and next waypoint
+                // Project points along line to next waypoint for 8 * 0.6 meters (4.8 meter projection)
+                for(int i = 0; i < 8; i++) { 
+                    float new_x = 0.6f * (i + 1) * sin(angle_delta);
+                    float new_y = 0.6f * (i + 1) * cos(angle_delta);
+                    x_series[i] = new_x;
+                    y_series[i] = new_y;
+                    if(new_y < 0.0f) {
+                        ROS_ERROR("MISSED WAYPOINT");
+                        return;
+                    }
                 }
+            }
+            else {
+                auto next_waypoint = MapData::path_map.at(next_waypoint_key);
+                auto prev_waypoint = MapData::path_map.at(prev_waypoint_key);
+                float x_test = (next_waypoint.lon - prev_waypoint.lon) / (next_waypoint.lat - prev_waypoint.lat) * (cur_coord.first - prev_waypoint.lat) + cur_coord.second;
+                if(x_test > 0) {
+                    std::cout << "Left side of line" << std::endl;
+                } else {
+                    std::cout << "Right side of line" << std::endl;
+                }
+                //AWAY
+                float a = prev_waypoint.lat;
+                float b = next_waypoint.lat;
+                float c = next_waypoint.lon;
+                float d = prev_waypoint.lon;
+                float e = cur_coord.second;
+                float f = cur_coord.first;
+                float tan_theta = tan(cur_heading_ekf);
+                //float intersect_pt_lat = (-prev_waypoint.lat * cur_coord.first + next_waypoint.lat * cur_coord.first + cur_coord.second * next_waypoint.lat * tan_theta - cur_coord.second * prev_waypoint.lon * tan_theta - next_waypoint.lat * prev_waypoint.lon * tan_theta + prev_waypoint.lat * next_waypoint.lon * tan_theta) / (next_waypoint.lon * tan_theta - prev_waypoint.lon * tan_theta + next_waypoint.lat - prev_waypoint.lat);
+                //float intersect_pt_lon = (prev_waypoint.lat * next_waypoint.lon - next_waypoint.lat * prev_waypoint.lon - next_waypoint.lon * cur_coord.first + prev_waypoint.lon * cur_coord.first - next_waypoint.lon * cur_coord.second * tan_theta + prev_waypoint.lon * cur_coord.second * tan_theta) / (prev_waypoint.lat - next_waypoint.lat - next_waypoint.lon * tan_theta + prev_waypoint.lon);
+                float intersect_pt_lon = (a * c - b * d - c * f + d * f - c * e * tan_theta + d * e * tan_theta) / (a - b - c * tan_theta + d * tan_theta);
+                std::cout << intersect_pt_lon << std::endl;
+                std::cout << "a: " << a << " b: " << b << " c: " << c << " d: " << d << " e: " << e << " f: " << f << " theta: " << cur_heading_ekf << std::endl;
+                float intersect_pt_lat = (intersect_pt_lon - cur_coord.second) * -tan_theta + cur_coord.first;
+
             }
         #endif
         convertPubMsg(); // Convert the x_series and y_series points to a string to send to the microcontroller
@@ -270,7 +297,7 @@ int main(int argc, char **argv)
     auto start_landmark = std::chrono::system_clock::now();
     auto cur_time = start_landmark;
     std::chrono::duration<double> elapsed_time;
-    xml_reader("/home/nvidia/workspace/SDProject/ros_ws/src/rtk_controller/purdue_mapv1.0_old.xml");
+    xml_reader("/home/luke/SDProject/ros_ws/src/rtk_controller/purdue_mapv1.0_old.xml");
 
     // Initialize frst waypoint
     prev_waypoint_key = MapData::path_map.begin()->first;
