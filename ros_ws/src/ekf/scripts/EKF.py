@@ -78,7 +78,7 @@ class EKF(object):
 
             #Measurement Update
             displacement = math.sqrt(math.pow((gpsX-self.x[0]), 2) + math.pow((gpsY-self.x[1]), 2))
-            if(displacement < 5 or self.elapsed_time < 7):
+            if(displacement < 10 or self.elapsed_time < 7):
               z = numpy.array([gpsX, gpsY, imuHeading, thetaR, thetaL]).transpose()
               self.H = numpy.identity(5)
               self.H[0][0] = 1

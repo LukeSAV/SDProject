@@ -105,7 +105,8 @@ def encoder_callback(encoder_msg):
 
       
   imuHeading = yaw
-  elapsed_time = elapsed_time + 1
+  if(gps_valid):
+    elapsed_time = elapsed_time + 1
 
   if(gps_valid and not state_space_init):
       avg_x = avg_x + 0.1*x
@@ -113,10 +114,10 @@ def encoder_callback(encoder_msg):
       if(elapsed_time >= 10):
         ekf.x[0] = avg_x
         ekf.x[1] = avg_y
-        ekf.x[2] = 2.094
+        ekf.x[2] = 5.4
         yaw_init = yaw
         state_space_init = True
-  imuHeading = (yaw - yaw_init) + 2.094
+  imuHeading = (yaw - yaw_init) + 5.4
   ############# Mike takes the wheel ######
   theta_l = int(encoder_msg.data[2:4])
   theta_r = int(encoder_msg.data[5:7])
