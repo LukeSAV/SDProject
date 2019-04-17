@@ -253,7 +253,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
             else {
                 auto next_waypoint = MapData::path_map.at(next_waypoint_key);
                 auto prev_waypoint = MapData::path_map.at(prev_waypoint_key);
-                float x_test = (next_waypoint.lon - prev_waypoint.lon) / (next_waypoint.lat - prev_waypoint.lat) * (cur_coord.first - prev_waypoint.lat) + cur_coord.second;
+                float x_test = (next_waypoint.lon - prev_waypoint.lon) / (next_waypoint.lat - prev_waypoint.lat) * (cur_coord.first - prev_waypoint.lat) + prev_waypoint.lon; //corrected last term
                 boost::multiprecision::cpp_dec_float_50 a = prev_waypoint.lat;
                 boost::multiprecision::cpp_dec_float_50 b = next_waypoint.lat;
                 boost::multiprecision::cpp_dec_float_50 c = next_waypoint.lon;
@@ -269,7 +269,42 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                 boost::multiprecision::cpp_dec_float_50 f = 40.42921448;
                 boost::multiprecision::cpp_dec_float_50 tan_theta = tan(4.192f);*/
 
-                bool away;
+		bool away;
+		double waypoint_heading = atan2(next_waypoint.lon-prev_waypoint.lon, next_waypoint.lat-prev_waypoint.lat);
+		if(x_test > cur_coord.second) {
+	            std::cout << "Left side of line" << sd::endl;
+		    double heading_diff = acos(cos(waypoint_heading) * cos(cur_heading_ekf) + sin(waypoint_heading)*sin(cur_heading_ekf)); 
+		    if(heading_diff > 0 && heading_diff < pi/2) {
+	                away = true;
+		    }
+		    else if(heading_diff > pi/2 && heading_diff < pi) {
+			away = false;
+		    }
+	            else if(heading_diff > pi && heading_diff < 3*pi/2) {
+			away = true;
+		    }
+	            else {
+			away = false;
+		    }
+		} 
+                else {
+		    std::cout << "Right side of line" << sd::endl;
+		    double heading_diff = acos(cos(waypoint_heading) * cos(cur_heading_ekf) + sin(waypoint_heading)*sin(cur_heading_ekf)); 
+		    if(heading_diff > 0 && heading_diff < pi/2) {
+	                away = false;
+		    }
+		    else if(heading_diff > pi/2 && heading_diff < pi) {
+			away = true;
+		    }
+	            else if(heading_diff > pi && heading_diff < 3*pi/2) {
+			away = false;
+		    }
+	            else {
+			away = true;
+		    }
+		}
+
+                /*bool away;
                 double waypoint heading = atan2(fabs(next_waypoint.lon - prev_waypoint.lon), next_waypoint.lat - prev_waypoint.lat);
                 if(x_test > 0) {
                     std::cout << "Left side of line" << std::endl;
@@ -285,7 +320,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                     } else {
                         away = false;
                     }
-                }
+                }*/
                 //float intersect_pt_lat = (-prev_waypoint.lat * cur_coord.first + next_waypoint.lat * cur_coord.first + cur_coord.second * next_waypoint.lat * tan_theta - cur_coord.second * prev_waypoint.lon * tan_theta - next_waypoint.lat * prev_waypoint.lon * tan_theta + prev_waypoint.lat * next_waypoint.lon * tan_theta) / (next_waypoint.lon * tan_theta - prev_waypoint.lon * tan_theta + next_waypoint.lat - prev_waypoint.lat);
                 //float intersect_pt_lon = (prev_waypoint.lat * next_waypoint.lon - next_waypoint.lat * prev_waypoint.lon - next_waypoint.lon * cur_coord.first + prev_waypoint.lon * cur_coord.first - next_waypoint.lon * cur_coord.second * tan_theta + prev_waypoint.lon * cur_coord.second * tan_theta) / (prev_waypoint.lat - next_waypoint.lat - next_waypoint.lon * tan_theta + prev_waypoint.lon);
                 // AWAY
