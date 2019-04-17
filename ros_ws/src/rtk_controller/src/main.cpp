@@ -253,44 +253,56 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
             else {
                 auto next_waypoint = MapData::path_map.at(next_waypoint_key);
                 auto prev_waypoint = MapData::path_map.at(prev_waypoint_key);
-                float x_test = (next_waypoint.lon - prev_waypoint.lon) / (next_waypoint.lat - prev_waypoint.lat) * (cur_coord.first - prev_waypoint.lat) + cur_coord.second;
-                boost::multiprecision::cpp_dec_float_50 a = prev_waypoint.lat;
+                /*boost::multiprecision::cpp_dec_float_50 a = prev_waypoint.lat;
                 boost::multiprecision::cpp_dec_float_50 b = next_waypoint.lat;
                 boost::multiprecision::cpp_dec_float_50 c = next_waypoint.lon;
                 boost::multiprecision::cpp_dec_float_50 d = prev_waypoint.lon;
                 boost::multiprecision::cpp_dec_float_50 e = cur_coord.second;
                 boost::multiprecision::cpp_dec_float_50 f = cur_coord.first;
-                boost::multiprecision::cpp_dec_float_50 tan_theta = tan(cur_heading_ekf);
-                /*boost::multiprecision::cpp_dec_float_50 a = 40.4291687;
-                boost::multiprecision::cpp_dec_float_50 b = 40.42915344;
-                boost::multiprecision::cpp_dec_float_50 c = -86.91297913;
-                boost::multiprecision::cpp_dec_float_50 d = -86.91295624;
-                boost::multiprecision::cpp_dec_float_50 e = -86.91295624;
-                boost::multiprecision::cpp_dec_float_50 f = 40.42921448;
-                boost::multiprecision::cpp_dec_float_50 tan_theta = tan(4.192f);*/
+                boost::multiprecision::cpp_dec_float_50 tan_theta = tan(cur_heading_ekf);*/
+                boost::multiprecision::cpp_dec_float_50 a = 40.429155;
+                boost::multiprecision::cpp_dec_float_50 b = 40.429053;
+                boost::multiprecision::cpp_dec_float_50 c = -86.91313;
+                boost::multiprecision::cpp_dec_float_50 d = -86.912977;
+                boost::multiprecision::cpp_dec_float_50 e = -86.91297933;
+                boost::multiprecision::cpp_dec_float_50 f = 40.42914998;
+                boost::multiprecision::cpp_dec_float_50 tan_theta = tan(4.30637598f);
+
+                cur_heading_ekf = 4.30637598;
+                double x_test = (c.convert_to<double>() - d.convert_to<double>()) / (b.convert_to<double>() - a.convert_to<double>()) * (f.convert_to<double>() - a.convert_to<double>()) + d.convert_to<double>(); //corrected last term
 
                 bool away;
-                double waypoint_heading = atan2(next_waypoint.lon - prev_waypoint.lon, next_waypoint.lat - prev_waypoint.lat);
+                double waypoint_heading = atan2(c.convert_to<double>() - d.convert_to<double>(), b.convert_to<double>() - a.convert_to<double>());
+
                 if(angle < 0.0f) {
                     angle += 2 * pi;
                 }
-                if(x_test > 0) {
+                if(x_test < cur_coord.second) {
                     std::cout << "Left side of line" << std::endl;
-                    if(cur_heading_ekf < waypoint_heading) {
+                    double heading_diff = acos(cos(waypoint_heading) * cos(cur_heading_ekf) + sin(waypoint_heading)*sin(cur_heading_ekf)); 
+                    if(heading_diff > 0 && heading_diff < pi/2) {
+                        away = true;
+                    } else if(heading_diff > pi/2 && heading_diff < pi) {
+                        away = false;
+                    } else if(heading_diff > pi && heading_diff < 3*pi/2) {
                         away = true;
                     } else {
                         away = false;
                     }
                 } else {
                     std::cout << "Right side of line" << std::endl;
-                    if(cur_heading_ekf > waypoint_heading) {
-                        away = true;
-                    } else {
+                    double heading_diff = acos(cos(waypoint_heading) * cos(cur_heading_ekf) + sin(waypoint_heading)*sin(cur_heading_ekf)); 
+                    if(heading_diff > 0 && heading_diff < pi/2) {
                         away = false;
+                    } else if(heading_diff > pi/2 && heading_diff < pi) {
+                        away = true;
+                    } else if(heading_diff > pi && heading_diff < 3*pi/2) {
+                        away = false;
+                    } else {
+                        away = true;
                     }
                 }
-                //float intersect_pt_lat = (-prev_waypoint.lat * cur_coord.first + next_waypoint.lat * cur_coord.first + cur_coord.second * next_waypoint.lat * tan_theta - cur_coord.second * prev_waypoint.lon * tan_theta - next_waypoint.lat * prev_waypoint.lon * tan_theta + prev_waypoint.lat * next_waypoint.lon * tan_theta) / (next_waypoint.lon * tan_theta - prev_waypoint.lon * tan_theta + next_waypoint.lat - prev_waypoint.lat);
-                //float intersect_pt_lon = (prev_waypoint.lat * next_waypoint.lon - next_waypoint.lat * prev_waypoint.lon - next_waypoint.lon * cur_coord.first + prev_waypoint.lon * cur_coord.first - next_waypoint.lon * cur_coord.second * tan_theta + prev_waypoint.lon * cur_coord.second * tan_theta) / (prev_waypoint.lat - next_waypoint.lat - next_waypoint.lon * tan_theta + prev_waypoint.lon);
+
                 // AWAY
                 boost::multiprecision::cpp_dec_float_50 intersect_pt_lon;
                 boost::multiprecision::cpp_dec_float_50 intersect_pt_lat;
@@ -320,16 +332,13 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
 
                     std::cout << "x coord: " << new_x_rot << " y coord: " << new_y_rot << std::endl;
 
-                    double new_x = new_x_rot - cur_coord.second;
-                    double new_y = new_y_rot - cur_coord.first;
+                    double new_x = new_x_rot - e.convert_to<double>();
+                    double new_y = new_y_rot - f.convert_to<double>();
 
                     double robot_x = new_x * sin(-cur_heading_ekf) * DEGREE_MULTI_FACTOR;
                     double robot_y = new_y * cos(-cur_heading_ekf) * DEGREE_MULTI_FACTOR;
 
-
-
-                    //double new_x = new_x_rot + DEGREE_MULTI_FACTOR * (cur_coord.second - intersect_pt_lon.convert_to<double>());
-                    //double new_y = new_y_rot + DEGREE_MULTI_FACTOR * (cur_coord.first - intersect_pt_lat.convert_to<double>());
+                    std::cout << "x: " << robot_x << " y: " << robot_y << std::endl;
                     
                     //x_series[i] = new_x;
                     //y_series[i] = new_y;
@@ -337,7 +346,6 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                         ROS_ERROR("MISSED WAYPOINT");
                         //return;
                     }*/
-                    std::cout << "x: " << robot_x << " y: " << robot_y << std::endl;
                 }
                 
             }
