@@ -260,15 +260,15 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                 boost::multiprecision::cpp_dec_float_50 e = cur_coord.second;
                 boost::multiprecision::cpp_dec_float_50 f = cur_coord.first;
                 boost::multiprecision::cpp_dec_float_50 tan_theta = tan(cur_heading_ekf);*/
+                cur_heading_ekf = 4.7;
                 boost::multiprecision::cpp_dec_float_50 a = 40.429155;
                 boost::multiprecision::cpp_dec_float_50 b = 40.429053;
                 boost::multiprecision::cpp_dec_float_50 c = -86.91313;
                 boost::multiprecision::cpp_dec_float_50 d = -86.912977;
                 boost::multiprecision::cpp_dec_float_50 e = -86.91297933;
-                boost::multiprecision::cpp_dec_float_50 f = 40.42914998;
-                boost::multiprecision::cpp_dec_float_50 tan_theta = tan(4.30637598f);
+                boost::multiprecision::cpp_dec_float_50 f = 40.42917;
+                boost::multiprecision::cpp_dec_float_50 tan_theta = tan(cur_heading_ekf);
 
-                cur_heading_ekf = 4.30637598;
                 double x_test = (c.convert_to<double>() - d.convert_to<double>()) / (b.convert_to<double>() - a.convert_to<double>()) * (f.convert_to<double>() - a.convert_to<double>()) + d.convert_to<double>(); //corrected last term
 
                 bool away;
@@ -277,7 +277,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                 if(angle < 0.0f) {
                     angle += 2 * pi;
                 }
-                if(x_test < cur_coord.second) {
+                if(x_test < e) {
                     std::cout << "Left side of line" << std::endl;
                     double heading_diff = acos(cos(waypoint_heading) * cos(cur_heading_ekf) + sin(waypoint_heading)*sin(cur_heading_ekf)); 
                     if(heading_diff > 0 && heading_diff < pi/2) {
@@ -327,16 +327,23 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                 std::cout << "Robot heading: " << cur_heading_ekf << " Waypoint heading: " << waypoint_heading << std::endl;
                 // have point of intersection use waypoint heading here to add points on line
                 for(int i = 0; i < 8; i++) { 
-                    double new_x_rot = 0.6f * (i + 1) * sin(waypoint_heading) / DEGREE_MULTI_FACTOR + intersect_pt_lon.convert_to<double>();
+                    // These are the points interpolated along the line in latitude/longitude
+                    double new_x_rot = 0.6f * (i + 1) * sin(waypoint_heading) / DEGREE_MULTI_FACTOR + intersect_pt_lon.convert_to<double>(); 
                     double new_y_rot = 0.6f * (i + 1) * cos(waypoint_heading) / DEGREE_MULTI_FACTOR + intersect_pt_lat.convert_to<double>();
 
                     std::cout << "x coord: " << new_x_rot << " y coord: " << new_y_rot << std::endl;
 
+
+                    // Translation
                     double new_x = new_x_rot - e.convert_to<double>();
                     double new_y = new_y_rot - f.convert_to<double>();
 
-                    double robot_x = new_x * sin(-cur_heading_ekf) * DEGREE_MULTI_FACTOR;
-                    double robot_y = new_y * cos(-cur_heading_ekf) * DEGREE_MULTI_FACTOR;
+
+                    // Rotation
+                    double delta_theta = cur_heading_ekf - waypoint_heading;
+                    double robot_x = -(new_x * cos(delta_theta) + new_y * -sin(delta_theta)) * DEGREE_MULTI_FACTOR;
+                    double robot_y = -(new_x * sin(delta_theta) + new_y * cos(delta_theta)) * DEGREE_MULTI_FACTOR;
+
 
                     std::cout << "x: " << robot_x << " y: " << robot_y << std::endl;
                     
