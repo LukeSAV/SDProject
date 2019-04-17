@@ -273,9 +273,8 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
 
                 bool away;
                 double waypoint_heading = atan2(c.convert_to<double>() - d.convert_to<double>(), b.convert_to<double>() - a.convert_to<double>());
-
-                if(angle < 0.0f) {
-                    angle += 2 * pi;
+                if(waypoint_heading < 0.0f) {
+                    waypoint_heading += 2 * pi;
                 }
                 if(x_test < e) {
                     std::cout << "Left side of line" << std::endl;
