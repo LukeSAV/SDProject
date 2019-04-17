@@ -8,8 +8,6 @@
 #include "../include/MapData.h"
 #include "../include/MapNode.h"
 
-#define DEGREE_MULTI_FACTOR 111139 // Factor by which to multiple a difference in lat/lon degrees to get distance in meters
-
 std::map<std::string, MapNode> MapData::node_map; // Key: Unique identifier for node, Value: MapNode type with relevant data for a single point on the Map
 std::map<std::string, MapNode> MapData::path_map; // Key: Unique identifier for path node, Value: MapNode type with relevant data for a single point on the Map
 std::map<std::string, std::pair<std::vector<std::string>, std::string>> MapData::landmark_map; // Key: Unique identifier string for waypoint, Value: pair - first element = vector of unique node identifier strings, second element = name of waypoint

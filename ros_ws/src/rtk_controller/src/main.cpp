@@ -270,7 +270,10 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                 boost::multiprecision::cpp_dec_float_50 tan_theta = tan(4.192f);*/
 
                 bool away;
-                double waypoint heading = atan2(fabs(next_waypoint.lon - prev_waypoint.lon), next_waypoint.lat - prev_waypoint.lat);
+                double waypoint_heading = atan2(next_waypoint.lon - prev_waypoint.lon, next_waypoint.lat - prev_waypoint.lat);
+                if(angle < 0.0f) {
+                    angle += 2 * pi;
+                }
                 if(x_test > 0) {
                     std::cout << "Left side of line" << std::endl;
                     if(cur_heading_ekf < waypoint_heading) {
@@ -309,7 +312,34 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                     std::cout << intersect_pt_lon << std::endl;
                     std::cout << intersect_pt_lat << std::endl;
                 }
+                std::cout << "Robot heading: " << cur_heading_ekf << " Waypoint heading: " << waypoint_heading << std::endl;
+                // have point of intersection use waypoint heading here to add points on line
+                for(int i = 0; i < 8; i++) { 
+                    double new_x_rot = 0.6f * (i + 1) * sin(waypoint_heading) / DEGREE_MULTI_FACTOR + intersect_pt_lon.convert_to<double>();
+                    double new_y_rot = 0.6f * (i + 1) * cos(waypoint_heading) / DEGREE_MULTI_FACTOR + intersect_pt_lat.convert_to<double>();
 
+                    std::cout << "x coord: " << new_x_rot << " y coord: " << new_y_rot << std::endl;
+
+                    double new_x = new_x_rot - cur_coord.second;
+                    double new_y = new_y_rot - cur_coord.first;
+
+                    double robot_x = new_x * sin(-cur_heading_ekf) * DEGREE_MULTI_FACTOR;
+                    double robot_y = new_y * cos(-cur_heading_ekf) * DEGREE_MULTI_FACTOR;
+
+
+
+                    //double new_x = new_x_rot + DEGREE_MULTI_FACTOR * (cur_coord.second - intersect_pt_lon.convert_to<double>());
+                    //double new_y = new_y_rot + DEGREE_MULTI_FACTOR * (cur_coord.first - intersect_pt_lat.convert_to<double>());
+                    
+                    //x_series[i] = new_x;
+                    //y_series[i] = new_y;
+                    /*if(new_y < 0.0f) {
+                        ROS_ERROR("MISSED WAYPOINT");
+                        //return;
+                    }*/
+                    std::cout << "x: " << robot_x << " y: " << robot_y << std::endl;
+                }
+                
             }
         #endif
         convertPubMsg(); // Convert the x_series and y_series points to a string to send to the microcontroller

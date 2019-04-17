@@ -4,6 +4,9 @@
 #include <utility>
 #include <vector>
 #include "MapNode.h"
+
+#define DEGREE_MULTI_FACTOR 111139 // Factor by which to multiple a difference in lat/lon degrees to get distance in meters
+
 class MapData {
 public: 
 	MapData();
