@@ -33,15 +33,15 @@
 #define SERIES_LENGTH 8
 
 #ifndef _USE_OBSTACLE_MAP
-#define _USE_OBSTACLE_MAP 
+//#define _USE_OBSTACLE_MAP 
 #endif
 
 #ifndef _USE_A_STAR_INTERPOLATION
-#define _USE_A_STAR_INTERPOLATION 
+//#define _USE_A_STAR_INTERPOLATION 
 #endif
 
 #ifndef _USE_OPEN_GL
-#define _USE_OPEN_GL
+//#define _USE_OPEN_GL
 #endif
 
 static const float pi = 3.1415927;
@@ -270,7 +270,7 @@ int main(int argc, char **argv)
     auto start_landmark = std::chrono::system_clock::now();
     auto cur_time = start_landmark;
     std::chrono::duration<double> elapsed_time;
-    xml_reader("/home/luke/SDProject/ros_ws/src/rtk_controller/purdue_mapv1.0_old.xml");
+    xml_reader("/home/nvidia/workspace/SDProject/ros_ws/src/rtk_controller/purdue_mapv1.0_old.xml");
 
     // Initialize frst waypoint
     prev_waypoint_key = MapData::path_map.begin()->first;
