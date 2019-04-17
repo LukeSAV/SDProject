@@ -253,21 +253,21 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
             else {
                 auto next_waypoint = MapData::path_map.at(next_waypoint_key);
                 auto prev_waypoint = MapData::path_map.at(prev_waypoint_key);
-                /*boost::multiprecision::cpp_dec_float_50 a = prev_waypoint.lat;
+                boost::multiprecision::cpp_dec_float_50 a = prev_waypoint.lat;
                 boost::multiprecision::cpp_dec_float_50 b = next_waypoint.lat;
                 boost::multiprecision::cpp_dec_float_50 c = next_waypoint.lon;
                 boost::multiprecision::cpp_dec_float_50 d = prev_waypoint.lon;
                 boost::multiprecision::cpp_dec_float_50 e = cur_coord.second;
                 boost::multiprecision::cpp_dec_float_50 f = cur_coord.first;
-                boost::multiprecision::cpp_dec_float_50 tan_theta = tan(cur_heading_ekf);*/
-                cur_heading_ekf = 4.7;
+                boost::multiprecision::cpp_dec_float_50 tan_theta = tan(cur_heading_ekf);
+                /*cur_heading_ekf = 4.0;
                 boost::multiprecision::cpp_dec_float_50 a = 40.429155;
                 boost::multiprecision::cpp_dec_float_50 b = 40.429053;
                 boost::multiprecision::cpp_dec_float_50 c = -86.91313;
                 boost::multiprecision::cpp_dec_float_50 d = -86.912977;
                 boost::multiprecision::cpp_dec_float_50 e = -86.91297933;
-                boost::multiprecision::cpp_dec_float_50 f = 40.42917;
-                boost::multiprecision::cpp_dec_float_50 tan_theta = tan(cur_heading_ekf);
+                boost::multiprecision::cpp_dec_float_50 f = 40.42914998;
+                boost::multiprecision::cpp_dec_float_50 tan_theta = tan(cur_heading_ekf);*/
 
                 double x_test = (c.convert_to<double>() - d.convert_to<double>()) / (b.convert_to<double>() - a.convert_to<double>()) * (f.convert_to<double>() - a.convert_to<double>()) + d.convert_to<double>(); //corrected last term
 
@@ -276,8 +276,9 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                 if(waypoint_heading < 0.0f) {
                     waypoint_heading += 2 * pi;
                 }
-                if(x_test < e) {
-                    std::cout << "Left side of line" << std::endl;
+                if(x_test > e) {
+                    
+                    std::cout << "Left side of line: " << x_test << std::endl;
                     double heading_diff = acos(cos(waypoint_heading) * cos(cur_heading_ekf) + sin(waypoint_heading)*sin(cur_heading_ekf)); 
                     if(heading_diff > 0 && heading_diff < pi/2) {
                         away = true;
@@ -289,7 +290,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                         away = false;
                     }
                 } else {
-                    std::cout << "Right side of line" << std::endl;
+                    std::cout << "Right side of line: " << x_test << std::endl;
                     double heading_diff = acos(cos(waypoint_heading) * cos(cur_heading_ekf) + sin(waypoint_heading)*sin(cur_heading_ekf)); 
                     if(heading_diff > 0 && heading_diff < pi/2) {
                         away = false;
@@ -339,19 +340,19 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
 
 
                     // Rotation
-                    double delta_theta = cur_heading_ekf - waypoint_heading;
-                    double robot_x = -(new_x * cos(delta_theta) + new_y * -sin(delta_theta)) * DEGREE_MULTI_FACTOR;
-                    double robot_y = -(new_x * sin(delta_theta) + new_y * cos(delta_theta)) * DEGREE_MULTI_FACTOR;
+                    double delta_theta = cur_heading_ekf;
+                    double robot_x = (new_x * cos(delta_theta) - new_y * sin(delta_theta)) * DEGREE_MULTI_FACTOR;
+                    double robot_y = (new_x * sin(delta_theta) + new_y * cos(delta_theta)) * DEGREE_MULTI_FACTOR;
 
 
                     std::cout << "x: " << robot_x << " y: " << robot_y << std::endl;
                     
-                    //x_series[i] = new_x;
-                    //y_series[i] = new_y;
-                    /*if(new_y < 0.0f) {
-                        ROS_ERROR("MISSED WAYPOINT");
-                        //return;
-                    }*/
+                    x_series[i] = robot_x;
+                    y_series[i] = robot_y;
+                    if(robot_y < 0.0f) {
+                        ROS_ERROR("Y value to send to microcontroller is negative");
+                        return;
+                    }
                 }
                 
             }
