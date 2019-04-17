@@ -29,6 +29,10 @@
 #include "GL/freeglut.h"
 #include "GL/gl.h"
 
+#include <boost/math/constants/constants.hpp>
+#include <boost/multiprecision/cpp_dec_float.hpp>
+#include <limits>
+
 #define ACCEPTED_DISTANCE_TO_WAYPOINT 5
 #define SERIES_LENGTH 8
 
@@ -250,41 +254,61 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                 auto next_waypoint = MapData::path_map.at(next_waypoint_key);
                 auto prev_waypoint = MapData::path_map.at(prev_waypoint_key);
                 float x_test = (next_waypoint.lon - prev_waypoint.lon) / (next_waypoint.lat - prev_waypoint.lat) * (cur_coord.first - prev_waypoint.lat) + cur_coord.second;
+                boost::multiprecision::cpp_dec_float_50 a = prev_waypoint.lat;
+                boost::multiprecision::cpp_dec_float_50 b = next_waypoint.lat;
+                boost::multiprecision::cpp_dec_float_50 c = next_waypoint.lon;
+                boost::multiprecision::cpp_dec_float_50 d = prev_waypoint.lon;
+                boost::multiprecision::cpp_dec_float_50 e = cur_coord.second;
+                boost::multiprecision::cpp_dec_float_50 f = cur_coord.first;
+                boost::multiprecision::cpp_dec_float_50 tan_theta = tan(cur_heading_ekf);
+                /*boost::multiprecision::cpp_dec_float_50 a = 40.4291687;
+                boost::multiprecision::cpp_dec_float_50 b = 40.42915344;
+                boost::multiprecision::cpp_dec_float_50 c = -86.91297913;
+                boost::multiprecision::cpp_dec_float_50 d = -86.91295624;
+                boost::multiprecision::cpp_dec_float_50 e = -86.91295624;
+                boost::multiprecision::cpp_dec_float_50 f = 40.42921448;
+                boost::multiprecision::cpp_dec_float_50 tan_theta = tan(4.192f);*/
+
+                bool away;
+                double waypoint heading = atan2(fabs(next_waypoint.lon - prev_waypoint.lon), next_waypoint.lat - prev_waypoint.lat);
                 if(x_test > 0) {
                     std::cout << "Left side of line" << std::endl;
+                    if(cur_heading_ekf < waypoint_heading) {
+                        away = true;
+                    } else {
+                        away = false;
+                    }
                 } else {
                     std::cout << "Right side of line" << std::endl;
+                    if(cur_heading_ekf > waypoint_heading) {
+                        away = true;
+                    } else {
+                        away = false;
+                    }
                 }
-                /*double a = prev_waypoint.lat;
-                double b = next_waypoint.lat;
-                double c = next_waypoint.lon;
-                double d = prev_waypoint.lon;
-                double e = cur_coord.second;
-                double f = cur_coord.first;
-                double tan_theta = tan(cur_heading_ekf);*/
-                double a = 40.4291687;
-                double b = 40.42915344;
-                double c = -86.91297913;
-                double d = -86.91295624;
-                double e = -86.91295624;
-                double f = 40.42921448;
-                double tan_theta = tan(4.192f);
                 //float intersect_pt_lat = (-prev_waypoint.lat * cur_coord.first + next_waypoint.lat * cur_coord.first + cur_coord.second * next_waypoint.lat * tan_theta - cur_coord.second * prev_waypoint.lon * tan_theta - next_waypoint.lat * prev_waypoint.lon * tan_theta + prev_waypoint.lat * next_waypoint.lon * tan_theta) / (next_waypoint.lon * tan_theta - prev_waypoint.lon * tan_theta + next_waypoint.lat - prev_waypoint.lat);
                 //float intersect_pt_lon = (prev_waypoint.lat * next_waypoint.lon - next_waypoint.lat * prev_waypoint.lon - next_waypoint.lon * cur_coord.first + prev_waypoint.lon * cur_coord.first - next_waypoint.lon * cur_coord.second * tan_theta + prev_waypoint.lon * cur_coord.second * tan_theta) / (prev_waypoint.lat - next_waypoint.lat - next_waypoint.lon * tan_theta + prev_waypoint.lon);
                 // AWAY
-                double intersect_pt_lon_away = (a * c - b * d - c * f + d * f - c * e * tan_theta + d * e * tan_theta) / (a - b - c * tan_theta + d * tan_theta);
+                boost::multiprecision::cpp_dec_float_50 intersect_pt_lon;
+                boost::multiprecision::cpp_dec_float_50 intersect_pt_lat;
                 std::cout << std::setprecision(10);
-                std::cout << intersect_pt_lon_away << std::endl;
-                std::cout << "a: " << a << " b: " << b << " c: " << c << " d: " << d << " e: " << e << " f: " << f << " theta: " << cur_heading_ekf << std::endl;
-                double intersect_pt_lat_away = (a * f - b * f - a * c * tan_theta + a * e * tan_theta + b * d * tan_theta - b * e * tan_theta) / (a - b - c * tan_theta + d * tan_theta);
-                std::cout << intersect_pt_lat_away << std::endl;
-                // TOWARD
-                double toward_denom = (a * a - 2 * a * b + b * b + c * c - 2 * c * d + d * d);
-                double intersect_pt_lon_toward = (a * a * c - a * b * c - a * b * d - f * a * c + f * a * d + b * b * d + f * b * c - f * b * d + e * c * c - 2 * e * c * d + e * d * d) / toward_denom;
-                double intersect_pt_lat_toward = (f * a * a - 2 * f * a * b + a * c * c - a * c * d - e * a * c + e * a * d + f * b * b - b * c * d + e * b * c + b * d * d - e * b * d) / toward_denom;
-                std::cout << "Toward" << std::endl;
-                std::cout << intersect_pt_lon_toward << std::endl;
-                std::cout << intersect_pt_lat_toward << std::endl;
+                if(away) {
+                    std::cout << "a: " << a << " b: " << b << " c: " << c << " d: " << d << " e: " << e << " f: " << f << " theta: " << cur_heading_ekf << std::endl;
+                    intersect_pt_lon = (a * c - b * d - c * f + d * f - c * e * tan_theta + d * e * tan_theta) / (a - b - c * tan_theta + d * tan_theta);
+                    intersect_pt_lat = (a * f - b * f - a * c * tan_theta + a * e * tan_theta + b * d * tan_theta - b * e * tan_theta) / (a - b - c * tan_theta + d * tan_theta);
+                    std::cout << "Away" << std::endl;
+                    std::cout << intersect_pt_lon << std::endl;
+                    std::cout << intersect_pt_lat << std::endl;
+                } else {
+                    // TOWARD
+                    std::cout << "a: " << a << " b: " << b << " c: " << c << " d: " << d << " e: " << e << " f: " << f << " theta: " << cur_heading_ekf << std::endl;
+                    boost::multiprecision::cpp_dec_float_50 toward_denom = boost::multiprecision::cpp_dec_float_50(a * a - 2 * a * b + b * b + c * c - 2 * c * d + d * d);
+                    intersect_pt_lon = boost::multiprecision::cpp_dec_float_50(a * a * c - a * b * c - a * b * d - f * a * c + f * a * d + b * b * d + f * b * c - f * b * d + e * c * c - 2 * e * c * d + e * d * d) / toward_denom;
+                    intersect_pt_lat = boost::multiprecision::cpp_dec_float_50(f * a * a - 2 * f * a * b + a * c * c - a * c * d - e * a * c + e * a * d + f * b * b - b * c * d + e * b * c + b * d * d - e * b * d) / toward_denom;
+                    std::cout << "Toward" << std::endl;
+                    std::cout << intersect_pt_lon << std::endl;
+                    std::cout << intersect_pt_lat << std::endl;
+                }
 
             }
         #endif
