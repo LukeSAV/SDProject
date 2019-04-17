@@ -107,15 +107,32 @@ def listener():
     rospy.Timer(rospy.Duration(0.1), outputTimerCallback)
     rospy.Timer(rospy.Duration(1.0), joystickTimeoutCallback)
     enc_pub = rospy.Publisher("/encoder", String, queue_size=2)
+    control_pub = rospy.Publisher("/goal_string", String, queue_size=10)
 
-    sync()
-
+    sync() # Align with ending message
     while not rospy.core.is_shutdown():
-        enc_data = ser.read(8)	 # Number of bytes from the microcontroller
-        if enc_data[-1] != r'}':
-            sync()
+        packet_indicator = ser.read(2)	 # Number of bytes from the microcontroller
+
+        # Encoder packet from the microcontroller
+        if packet_indicator == r'{E':
+          enc_data = ser.read_until(r'}')
+          if len(enc_data) != 6:
+            print("Missed message encoder")
+            continue
+          enc_pub.publish(String(str(packet_indicator + enc_data)))
+
+        # Control algorithm output from the microcontroller
+        if packet_indicator == r'{C':
+          control_data = ser.read_until(r'}') 
+          if len(control_data) != 10:
+            print("Missed message goal")
+            continue
+          control_pub.publish(String(str(packet_indicator + control_data)))
+
+
+        # Failed Sync routine
         else:
-            enc_pub.publish(String(str(enc_data)))
+          ser.read_until('}')
 
 
 if __name__ == '__main__':
