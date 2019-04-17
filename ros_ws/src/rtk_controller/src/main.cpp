@@ -255,20 +255,36 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                 } else {
                     std::cout << "Right side of line" << std::endl;
                 }
-                //AWAY
-                float a = prev_waypoint.lat;
-                float b = next_waypoint.lat;
-                float c = next_waypoint.lon;
-                float d = prev_waypoint.lon;
-                float e = cur_coord.second;
-                float f = cur_coord.first;
-                float tan_theta = tan(cur_heading_ekf);
+                /*double a = prev_waypoint.lat;
+                double b = next_waypoint.lat;
+                double c = next_waypoint.lon;
+                double d = prev_waypoint.lon;
+                double e = cur_coord.second;
+                double f = cur_coord.first;
+                double tan_theta = tan(cur_heading_ekf);*/
+                double a = 40.4291687;
+                double b = 40.42915344;
+                double c = -86.91297913;
+                double d = -86.91295624;
+                double e = -86.91295624;
+                double f = 40.42921448;
+                double tan_theta = tan(4.192f);
                 //float intersect_pt_lat = (-prev_waypoint.lat * cur_coord.first + next_waypoint.lat * cur_coord.first + cur_coord.second * next_waypoint.lat * tan_theta - cur_coord.second * prev_waypoint.lon * tan_theta - next_waypoint.lat * prev_waypoint.lon * tan_theta + prev_waypoint.lat * next_waypoint.lon * tan_theta) / (next_waypoint.lon * tan_theta - prev_waypoint.lon * tan_theta + next_waypoint.lat - prev_waypoint.lat);
                 //float intersect_pt_lon = (prev_waypoint.lat * next_waypoint.lon - next_waypoint.lat * prev_waypoint.lon - next_waypoint.lon * cur_coord.first + prev_waypoint.lon * cur_coord.first - next_waypoint.lon * cur_coord.second * tan_theta + prev_waypoint.lon * cur_coord.second * tan_theta) / (prev_waypoint.lat - next_waypoint.lat - next_waypoint.lon * tan_theta + prev_waypoint.lon);
-                float intersect_pt_lon = (a * c - b * d - c * f + d * f - c * e * tan_theta + d * e * tan_theta) / (a - b - c * tan_theta + d * tan_theta);
-                std::cout << intersect_pt_lon << std::endl;
+                // AWAY
+                double intersect_pt_lon_away = (a * c - b * d - c * f + d * f - c * e * tan_theta + d * e * tan_theta) / (a - b - c * tan_theta + d * tan_theta);
+                std::cout << std::setprecision(10);
+                std::cout << intersect_pt_lon_away << std::endl;
                 std::cout << "a: " << a << " b: " << b << " c: " << c << " d: " << d << " e: " << e << " f: " << f << " theta: " << cur_heading_ekf << std::endl;
-                float intersect_pt_lat = (intersect_pt_lon - cur_coord.second) * -tan_theta + cur_coord.first;
+                double intersect_pt_lat_away = (a * f - b * f - a * c * tan_theta + a * e * tan_theta + b * d * tan_theta - b * e * tan_theta) / (a - b - c * tan_theta + d * tan_theta);
+                std::cout << intersect_pt_lat_away << std::endl;
+                // TOWARD
+                double toward_denom = (a * a - 2 * a * b + b * b + c * c - 2 * c * d + d * d);
+                double intersect_pt_lon_toward = (a * a * c - a * b * c - a * b * d - f * a * c + f * a * d + b * b * d + f * b * c - f * b * d + e * c * c - 2 * e * c * d + e * d * d) / toward_denom;
+                double intersect_pt_lat_toward = (f * a * a - 2 * f * a * b + a * c * c - a * c * d - e * a * c + e * a * d + f * b * b - b * c * d + e * b * c + b * d * d - e * b * d) / toward_denom;
+                std::cout << "Toward" << std::endl;
+                std::cout << intersect_pt_lon_toward << std::endl;
+                std::cout << intersect_pt_lat_toward << std::endl;
 
             }
         #endif
