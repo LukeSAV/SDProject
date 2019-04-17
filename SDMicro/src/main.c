@@ -138,12 +138,12 @@ float new_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 float new_points_y[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
 /* Current working points */
-//float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-//float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0,  0.0};
+float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0,  0.0};
 //float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 //float points_y[] = {3.0,  5.0,  7.0,  9.0, 11.0, 13.0,  15.0,  17.0};
-float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-float points_y[] = {1.0,  2.0,  3.0,  4.0, 5.0, 6.0,  7.0,  8.0};
+//float points_x[] = {0.4, 0.56, 0.86, 0.94, 1.06, 1.23, 1.33, 1.4};
+//float points_y[] = {0.6,  1.2,  1.8,  2.4, 3.0, 3.6,  4.2,  4.8};
 
 float goal_x = 0.0;
 float goal_y = 0.0;
@@ -339,7 +339,7 @@ static void nextMode() {
 /*
  * Decode the remote controller message from the Jetson and set desired wheel speed.
  */
-static void decodeControllerMsg() {
+/*static void decodeControllerMsg() {
 	time_since_last_jetson_msg = 0;
 	left_speed = (last_message[5] - 48) + (last_message[4] - 48) * 10 + (last_message[3] - 48) * 100;
 	right_speed = (last_message[10] - 48) + (last_message[9] - 48) * 10 + (last_message[8] - 48) * 100;
@@ -353,7 +353,7 @@ static void decodeControllerMsg() {
 	} else if(last_message[7] == '-') {
 		right_direction = REVERSE;
 	}
-}
+}*/
 
 /*
  *  Decodes the points message sent from the Jetson
@@ -381,7 +381,7 @@ static void decodeJetsonString() {
 		decodePointUpdateMsg();
 		break;
 	case 'C': // Remote controller feedback
-		decodeControllerMsg();
+		//decodeControllerMsg();
 		break;
 	case 'M': // Mode swtich
 		nextMode();
@@ -411,9 +411,13 @@ static void decodeJetsonString() {
 *	Returns 1 if still sending the previous command, 0 otherwise.
 *
 **************************************************************************/
-static int Drive(enum Direction left_direction, char left_speed, enum Direction right_direction, char right_speed) {
+static int Drive(enum Direction left_direction, char left_speed_v, enum Direction right_direction, char right_speed_v) {
 	if(mc_tx_buffer_index != 0) {
 		return 1; // Haven't finished sending the last message
+	}
+	if(left_speed == 0 && right_speed == 0) {
+		int index = 0;
+		index += 1;
 	}
 	if(left_direction == FORWARD) {
 		left_packet.command = 4;
@@ -427,8 +431,8 @@ static int Drive(enum Direction left_direction, char left_speed, enum Direction 
 	else if(right_direction == REVERSE) {
 		right_packet.command = 1;
 	}
-	left_packet.data = left_speed;
-	right_packet.data = right_speed;
+	left_packet.data = left_speed_v;
+	right_packet.data = right_speed_v;
 
 	left_packet.checksum = (left_packet.address + left_packet.command + left_packet.data) & 127;
 	right_packet.checksum = (right_packet.address + right_packet.command + right_packet.data) & 127;
@@ -1121,21 +1125,14 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 
 	}
 
-	if(!accel_flag) {
-		accel_fail_count = 0;
-	}
-	if(!decel_flag) {
-		decel_fail_count = 0;
-	}
-
 /*	TODO Need some way to recover after COUNT exceeded
 	if(accel_fail_count >= MAX_MOTION_FAILURE_COUNT || decel_fail_count >= MAX_MOTION_FAILURE_COUNT ) {
 		Drive(left_direction, 0, right_direction, 0);
 		return;
 	}
 */
-	int8_t v_l = (int) (v_t * (1.0f + VEHICLE_WIDTH * goal_x * 1.1f / LOOK_AHEAD_SQ));
-	int8_t v_r = (int) (v_t * (1.0f - VEHICLE_WIDTH * goal_x  * 1.1f / LOOK_AHEAD_SQ));
+	int8_t v_l = (int) (v_t * (1.0f + VEHICLE_WIDTH * goal_x / LOOK_AHEAD_SQ));
+	int8_t v_r = (int) (v_t * (1.0f - VEHICLE_WIDTH * goal_x / LOOK_AHEAD_SQ));
 
 	if(v_l > MAX_TORQUE) {
 		v_r -= v_l - MAX_TORQUE;
@@ -1153,11 +1150,6 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	left_speed = v_l; // Current left speed to be requested
 	right_speed = v_r; // Current right speed to be requested
 
-	if(left_speed == 0 && right_speed == 0) {
-		int idx = 0;
-		idx += 1;
-	}
-
-	Drive(left_direction, left_speed, right_direction, right_speed * L_R_BIAS);
+	Drive(left_direction, left_speed, right_direction, (int)(right_speed * L_R_BIAS));
 	return;
 }
