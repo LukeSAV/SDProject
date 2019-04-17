@@ -1,0 +1,1988 @@
+[33mcommit b2420531b4c9fd2d1d97b193c26b5ec404f3ea4b[m
+Merge: f22716c 3654a72
+Author: Michael Karrs <michaelkarrs@gmail.com>
+Date:   Wed Apr 17 11:32:10 2019 -0700
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit f22716c2da073f7b96c43651d0f770530d535130[m
+Author: Michael Karrs <michaelkarrs@gmail.com>
+Date:   Wed Apr 17 11:32:02 2019 -0700
+
+    EKF changes
+
+[33mcommit 3654a7256f04796fc672e42626b9f81ef8d270cd[m
+Merge: 4de5307 510d645
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Wed Apr 17 13:34:19 2019 -0400
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit 4de5307e9381c112263c9dc277f0a877946c082f[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Wed Apr 17 13:33:52 2019 -0400
+
+    SetMotors2 changes
+
+[33mcommit 510d645a2df0fa421ba6ac23342cae22e8ab5178[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Apr 17 13:29:52 2019 -0400
+
+    Updating with mikes fixes
+
+[33mcommit 2320efe85811e6cd8a956a685de72fb94b5aa426[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Apr 17 11:33:19 2019 -0400
+
+    Fixing angle
+
+[33mcommit 9ab35ed4b336768eafcf3973f6ac4f0315dea4b1[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Apr 17 11:23:57 2019 -0400
+
+    Nearly working path point projection
+
+[33mcommit 285ac7d8d4ead2d276423c0d2a0d9c3927152141[m
+Merge: 1e4fba8 257717d
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Apr 17 10:33:10 2019 -0400
+
+    Fixing side of line calc
+
+[33mcommit 1e4fba8d6d5c153379ac35129247581d9b402e03[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Apr 17 10:02:14 2019 -0400
+
+    Adding IMPROVED transforms
+
+[33mcommit 257717dfe678ff9ae574927e907d96ab33a14cda[m
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Wed Apr 17 10:01:24 2019 -0400
+
+    New towards and away logic
+
+[33mcommit cde624af074dcb118fd13d5f5c3ce5d3fb25535c[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Apr 17 02:40:30 2019 -0400
+
+    almost
+
+[33mcommit 618f6c844d2471adc16a4b85190f2d6217c73ec3[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Apr 17 02:04:00 2019 -0400
+
+    More broken code veyh tired asend help
+
+[33mcommit f950de43c4981307801061d5de1a8fe5b5ad790e[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Apr 17 01:13:29 2019 -0400
+
+    Broken calculations for waypoint navigation
+
+[33mcommit 5aa7f953397fba95bbbbba25cd77717f79c05257[m
+Merge: fa502b3 ea4a137
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Apr 16 21:20:08 2019 -0400
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit fa502b37b43e7666fd8c016c5332afc0ba8cb434[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Apr 16 21:19:41 2019 -0400
+
+    Adding on the fly changes during testing
+
+[33mcommit ea4a13752c86d5caffacdaf15c5299d5694dc808[m
+Author: nvidia <nvidia>
+Date:   Tue Apr 16 21:18:54 2019 -0400
+
+    Updating on the fly changes
+
+[33mcommit 5d5a0153ab91fc7c5b9f9b7cd363f13b8477582e[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Apr 16 09:07:51 2019 -0400
+
+    Changes to get the robot moving
+
+[33mcommit 93991e7eddeac5af531e895ed999cfbd8b230b10[m
+Merge: 567ab08 7b6a608
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Tue Apr 16 07:43:26 2019 -0400
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit 567ab084fa816fbc72f48a7f36b5cc70691d79c7[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Tue Apr 16 07:42:58 2019 -0400
+
+    SetMotors2
+
+[33mcommit 7b6a608663d521f2479468962dc7e71ca8a03b5b[m
+Merge: a28f512 f650135
+Author: keith <kcaylwin@gmail.com>
+Date:   Mon Apr 15 23:42:04 2019 -0400
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit a28f51253eafc224671b88515d7b85410fb8345f[m
+Author: keith <kcaylwin@gmail.com>
+Date:   Mon Apr 15 23:42:00 2019 -0400
+
+    Fixed a slope calculation and removed some hairy logic
+
+[33mcommit f650135d741f44cd71ed1218416906c187dc7c6e[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Mon Apr 15 20:22:46 2019 -0400
+
+    Added path traceback with A* in addition to linear interpolation for testing
+
+[33mcommit f161eaa143fe1ac25e2fc65dc6113ccb32d4e4c3[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Mon Apr 15 15:36:21 2019 -0400
+
+    Updating rtk controller code with new image
+
+[33mcommit d42ec37454ee10a4fe8cc1d41b9e5116d57806bc[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Mon Apr 15 11:19:50 2019 -0400
+
+    Minor fixes to obstacle avoidance code
+
+[33mcommit ba415c8a83bc2afdf1e7f9c6fc7fb3d2ce1dcc1b[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Apr 14 20:20:34 2019 -0400
+
+    Updating rtk_controller to ignore lidar data for now
+
+[33mcommit 51ac2465176368cd7d12f5d40b0d546fa0b14cf8[m
+Merge: 43c43e5 54f2578
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Sun Apr 14 20:00:11 2019 -0400
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit 43c43e58e1f9a4f045774e1e8055ebccc6c31524[m
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Sun Apr 14 19:59:22 2019 -0400
+
+    Changed accuracy of goal_point_display
+
+[33mcommit 54f25787d8bf68989fa561cd991efa64d8da3e55[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Apr 14 19:42:18 2019 -0400
+
+    Fixing issues with object avoidance map
+
+[33mcommit 6abf0e8bf33951c2288120dd5052f9db6ac15700[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Apr 14 18:11:26 2019 -0400
+
+    Merging path planning with rtk_controller and getting waypoint intersection with grid edge
+
+[33mcommit 42dad80220f1c6ce30e1ffa652d57a675a91e7b6[m
+Merge: b397338 7cfb683
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Sun Apr 14 16:19:23 2019 -0400
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit b3973387478660b0546f4bf5b58dba28f03bbc33[m
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Sun Apr 14 16:19:17 2019 -0400
+
+    Created file to display goal points
+
+[33mcommit 7cfb683911445f8cfd040101aac38d76b0e1aec9[m
+Merge: 7236f30 1990928
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sat Apr 13 21:38:18 2019 -0400
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit 7236f30fe9cb8abc9d084534266e251458faae59[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sat Apr 13 21:37:54 2019 -0400
+
+    Changes during testing
+
+[33mcommit 19909280df305169da0dcb686c26de419a7314a6[m
+Merge: f864e30 b90c45d
+Author: nvidia <nvidia>
+Date:   Sat Apr 13 21:36:32 2019 -0400
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit f864e303b3b3f96b70865b131b4c3d4bd6e40db0[m
+Author: nvidia <nvidia>
+Date:   Sat Apr 13 21:36:19 2019 -0400
+
+    Changes during testing
+
+[33mcommit b90c45db2837a40536113bd0ece9a7648234e1b7[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Sat Apr 13 19:39:55 2019 -0400
+
+    Fixing string formatting
+
+[33mcommit e7ad85347087399fc0702fcf6d9a7aa8915414ea[m
+Merge: 79d2b15 5d6fb01
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Sat Apr 13 19:23:10 2019 -0400
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit 79d2b1575872f4083e8be69652ebfd26d211b262[m
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Sat Apr 13 19:23:03 2019 -0400
+
+    Added support for reading goal point data, added support for plotting goal point data
+
+[33mcommit 5d6fb01b53afd5a8d54acb5d7e02d2ab1be900ee[m
+Merge: 1ffc994 ee23164
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Sat Apr 13 19:12:46 2019 -0400
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit 1ffc99447142a3f4b54bd31b1878a7eff4467464[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Sat Apr 13 19:12:21 2019 -0400
+
+    Updating control algorithm to improve performance on grades
+
+[33mcommit ee231640308f5c782c337080992a379a6515fff5[m
+Merge: 5af3f2e 7c2a17b
+Author: Michael Karrs <michaelkarrs@gmail.com>
+Date:   Sat Apr 13 15:38:10 2019 -0700
+
+    added IMU covariance changes
+
+[33mcommit 5af3f2e71e721516021d2521aecfff4e58f91767[m
+Author: Michael Karrs <michaelkarrs@gmail.com>
+Date:   Sat Apr 13 15:29:08 2019 -0700
+
+    stuff
+
+[33mcommit 7c2a17b381ce140ec3e3533f64e9546a88f7f9a6[m
+Author: nvidia <nvidia>
+Date:   Sat Apr 13 15:20:09 2019 -0400
+
+    Testing changes
+
+[33mcommit 838b19567bb6d938ff548ace09395094e09b36bb[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sat Apr 13 12:22:26 2019 -0400
+
+    Updating remainder of points on the MSEE to Hovde route
+
+[33mcommit b7c3d76eba05312b8969ea73ca8653757a4e6f3e[m
+Merge: 2c05d64 cb2627d
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Fri Apr 12 21:24:06 2019 -0400
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit 2c05d64373ba4026f9d998b0a381678fd22e28d0[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Fri Apr 12 21:24:02 2019 -0400
+
+    Mike's EKF fixes
+
+[33mcommit cb2627da1fb6bd99d4354ec8fbf8e216c32dea20[m
+Author: nvidia <nvidia>
+Date:   Fri Apr 12 21:21:12 2019 -0400
+
+    Changes made while testing
+
+[33mcommit ccc4bb7926165acb3be872f41612ac79628f9767[m
+Author: nvidia <nvidia>
+Date:   Fri Apr 12 17:43:19 2019 -0400
+
+    Fixing merge conflicts
+
+[33mcommit 63f979425b394a88e052dd1cea8133226280aae4[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Thu Apr 11 21:08:06 2019 -0400
+
+    Updating serial manager to support sending points to microcontroller
+
+[33mcommit 692d759623dfcc9b00af16e1ca72b4fa8b9818a0[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Thu Apr 11 21:01:03 2019 -0400
+
+    Updating microcontroller to support point updates from Jetson
+
+[33mcommit f3db867bd6a8a6304ff1c8065c2c7dbc97cf468b[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Thu Apr 11 16:34:11 2019 -0400
+
+    Fixing initial EKF heading and broadcasting points for control algorithm
+
+[33mcommit cf2d1b7e534adb82c8be1bdc4857220228b30d47[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Apr 10 23:18:49 2019 -0400
+
+    Made modifications to support waypoint navigation - still need to update and send points
+
+[33mcommit eed87a8acfd2129676c5f7ab77be081b175111ad[m
+Merge: 3e39182 03c8c11
+Author: Michael Karrs <michaelkarrs@gmail.com>
+Date:   Wed Apr 10 08:54:51 2019 -0700
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit 3e39182122722e9319660f77619d56d258b5239b[m
+Author: Michael Karrs <michaelkarrs@gmail.com>
+Date:   Wed Apr 10 08:54:05 2019 -0700
+
+    latest ekf_node
+
+[33mcommit 03c8c1172e5c227e8f19130c9761493315d323dd[m
+Merge: cf38ee6 c5cec5a
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Apr 7 20:35:08 2019 -0400
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit cf38ee60b4d6daea75d8ff41d4785d06cffea7d7[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Apr 7 20:35:02 2019 -0400
+
+    Updating control algorithm while testing outside
+
+[33mcommit c5cec5a478d5409b265fc06aba3c04974dd6fab9[m
+Merge: b7042c8 4d1b912
+Author: Michael Karrs <michaelkarrs@gmail.com>
+Date:   Sun Apr 7 11:01:59 2019 -0700
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit b7042c8f6117c10f02fc033596b02eed33d70000[m
+Author: Michael Karrs <michaelkarrs@gmail.com>
+Date:   Sun Apr 7 11:00:22 2019 -0700
+
+    EKF Node
+
+[33mcommit 4d1b9125eeaa87356371e83fa6fc3033397b73de[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Apr 7 13:57:38 2019 -0400
+
+    Enabling control algorithm
+
+[33mcommit 654278aa78177e0a21d9b06242229ee655a47f2f[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Apr 7 13:55:11 2019 -0400
+
+    More control algorithm fixes
+
+[33mcommit a26db389b4a27d1853e22aecf4a3adedb363b76f[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Apr 7 12:39:43 2019 -0400
+
+    Further updating control algorithm
+
+[33mcommit 380b4e9e2235bb63a2619dacb227ace3c5d3f343[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Apr 7 12:22:57 2019 -0400
+
+    More fixes to control algorithm
+
+[33mcommit f487f11a00137d768690a55b5d35e8460e4186f2[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Apr 7 00:06:14 2019 -0400
+
+    Idk
+
+[33mcommit 471a837dd31784efde372975acacb31d3e0418aa[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Sat Apr 6 19:02:48 2019 -0400
+
+    Changes to pointupdate function
+
+[33mcommit ecdf776e538d545ae4814086ec3a7f4add11c2f2[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Sat Apr 6 16:09:11 2019 -0400
+
+    Fixing divide by zero error if x point doesn't change
+
+[33mcommit cf7826e247692daca5730a2684eec0749675ad2e[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Sat Apr 6 15:50:53 2019 -0400
+
+    Updating control algorithm
+
+[33mcommit 977380156c8decc72fcf327ef73e0492db01935f[m
+Merge: a4aee8c 65de1c6
+Author: Michael Karrs <michaelkarrs@gmail.com>
+Date:   Fri Apr 5 19:32:04 2019 -0700
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit a4aee8c7851073aa329446eb96d04cb83a116264[m
+Author: Michael Karrs <michaelkarrs@gmail.com>
+Date:   Fri Apr 5 19:31:43 2019 -0700
+
+    EKF
+
+[33mcommit 65de1c6119cf7a888b43844edc3fc516e2134a3a[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Fri Apr 5 19:53:15 2019 -0400
+
+    Debug changes to the control algorithm
+
+[33mcommit e1f3b7f08e9638e501d79b02a771a9f166abed15[m
+Merge: 4b62980 936465b
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Fri Apr 5 18:21:07 2019 -0400
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit 4b62980f725c6321437807c9d0078bcff30d7799[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Fri Apr 5 18:20:40 2019 -0400
+
+    Integrating control planning into microcontroller source
+
+[33mcommit 936465bc32a16d2c8f46604ae0ccf77aeb7776de[m
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Wed Apr 3 16:44:32 2019 -0400
+
+    Added launchfile for map viz
+
+[33mcommit 6c8882430f19f6fb49e40f6333d206fbe98641e0[m
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Wed Apr 3 13:33:19 2019 -0400
+
+    EKF Updates
+
+[33mcommit 91f0834e5475a336546ec34aa2463000b338a844[m
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Wed Apr 3 12:47:28 2019 -0400
+
+    Ekf modifications
+
+[33mcommit c9bb159a61b0291450c9c0efd6f28d8141749daa[m
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Wed Apr 3 12:01:55 2019 -0400
+
+    EKF Updates
+
+[33mcommit b5df4525f9b8cfe69dfcd4217520ef22d6c07b33[m
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Wed Apr 3 11:25:34 2019 -0400
+
+    Working on Ekf_node
+
+[33mcommit cbb785f61959dbefba10b96580356f43d388c577[m
+Merge: 689985e 61c61f8
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Wed Apr 3 11:10:20 2019 -0400
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit 689985e89da41cfcdd50d95d74163b6f8aac4760[m
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Wed Apr 3 11:10:02 2019 -0400
+
+    Updates to EKF
+
+[33mcommit 61c61f836601a7d9b00a2622d8aa928efb3dac02[m
+Merge: 63554a3 fd07cfc
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Apr 3 09:30:20 2019 -0400
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit 63554a32807591bbf10af49f91e3ca900419a683[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Apr 3 09:30:13 2019 -0400
+
+    Adding code to move the robot in a straight line using encoders only
+
+[33mcommit fd07cfc70f04ff9abbf3a912c2484d2b7993b952[m
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Tue Apr 2 20:52:02 2019 -0400
+
+    udpated ekf_node part 2
+
+[33mcommit 55093216a6397583c382ffe6476202257c7f3dcf[m
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Tue Apr 2 20:51:23 2019 -0400
+
+    udpated ekf_node
+
+[33mcommit a96783b991a8730c1279c2c422c8f89568130e19[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Mon Apr 1 19:39:12 2019 -0400
+
+    Updating to support multithreaded NTRIP service
+
+[33mcommit 9ead5ea46a551cc0da9399c7b258a0b85b6a27f5[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Mon Apr 1 13:43:14 2019 -0400
+
+    Fixing main to reduce ultrasonic polling cost and increasing baud rate between Jetson and micro
+
+[33mcommit a009170bf3404bce41bc7af4b3e774201edef271[m
+Author: nvidia <nvidia>
+Date:   Mon Apr 1 13:40:44 2019 -0400
+
+    Fixing serial timeout and adding firebase module to launch file
+
+[33mcommit ac6f4b3a9e49965bb4399ab47be6a2de0918bf90[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Mon Apr 1 11:11:47 2019 -0400
+
+    Updating firebase manager to publish delivery request information
+
+[33mcommit d54eaeee2e06c78d95970dead55c116806ffe991[m
+Merge: fa1233f b5e1148
+Author: nvidia <nvidia>
+Date:   Sun Mar 31 20:02:46 2019 -0400
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit fa1233ff97fba6a78394e4e4e941f3a009db0698[m
+Author: nvidia <nvidia>
+Date:   Sun Mar 31 20:02:37 2019 -0400
+
+    Updating main.launch file and adding serial hotfixes
+
+[33mcommit b5e11481f10707a411be599e4970c11c8eaa262d[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Mar 31 12:27:24 2019 -0400
+
+    Making further improvements to the microcontroller code
+
+[33mcommit bca246d2c7d6c4dd7eec2d1b2018731752bbf33f[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Mar 31 00:21:52 2019 -0400
+
+    Some fixes to USART comms to Jetson
+
+[33mcommit 17438ce07b4720a5e24b4e9ef63593a3f2097345[m
+Merge: 38ab43a 6982fd5
+Author: nvidia <nvidia>
+Date:   Sat Mar 30 12:30:51 2019 -0400
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit 38ab43a8f2b18dd62cfaccdebf2b760264ddcb42[m
+Author: nvidia <nvidia>
+Date:   Sat Mar 30 12:30:43 2019 -0400
+
+    Changed IMU support, added serial support from microcontroller
+
+[33mcommit 6982fd5bd23fc7c780f5dfe153ca296fe27b911e[m
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Fri Mar 29 20:12:23 2019 -0400
+
+    Removed swap files from git ignore
+
+[33mcommit d004e8e23064c13977e93bb2a583fbcfaae98d8a[m
+Merge: c1c4ab6 4d8b871
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Fri Mar 29 20:07:15 2019 -0400
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit c1c4ab61d2278b31736be3b7a8314789d2afe31d[m
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Fri Mar 29 20:07:08 2019 -0400
+
+    Added a structure to the ekf node
+
+[33mcommit 4d8b8715cf0eb4e83fbc4ff0d8ce9ac6f69b0f5c[m
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Fri Mar 29 18:35:46 2019 -0400
+
+    Python EKF files
+
+[33mcommit 4217ea4dd4529bc19d13a0ba528486a77a38ad09[m
+Merge: 2e5d251 17354c1
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Fri Mar 29 18:21:05 2019 -0400
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit 2e5d251e2c2dbac8e4d5a183eb095a60a3027bad[m
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Fri Mar 29 18:18:46 2019 -0400
+
+    Added perception node
+
+[33mcommit b4d14fcba2cd936485e016b65405e9f1ed456cd4[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Thu Feb 28 14:42:14 2019 -0500
+
+    Increased trace width and added backup switching regulator support circuitry
+
+[33mcommit f82666dff2d3f43fc3c73d7d409a4a8d25e21963[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Thu Feb 28 12:15:30 2019 -0500
+
+    Fixed GPIO headers, USB pull downs, caps at input and output of regulator
+
+[33mcommit 7629173d260ee083ce4f4aac2dbd930465c4d6a6[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Wed Feb 27 21:08:35 2019 -0500
+
+    Fixing trace width on sabertooth ground
+
+[33mcommit d0cb0eaa3de3f3f255bc8e9e526650fb511f9e75[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Wed Feb 27 20:52:54 2019 -0500
+
+    Fixed motor controller circuit
+
+[33mcommit 35887e09d14a1a6247d9bcac15c8043357928cc5[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Wed Feb 27 20:16:42 2019 -0500
+
+    Adding lidar to regulated 5V on board
+
+[33mcommit b70d4b8162e23dd4f5dbf1410bf77ea1b0a6d0a2[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Wed Feb 27 18:25:13 2019 -0500
+
+    AAdding decoupling capacitors for design review
+
+[33mcommit 8b09b8df7ee538398c4c9bbec97d350b75235f41[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Wed Feb 27 13:10:05 2019 -0500
+
+    Fixing trace angle to ADC power
+
+[33mcommit 3212916e54fd7662636b212dba7931ba004b871c[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Tue Feb 26 23:34:47 2019 -0500
+
+    Fixing trace widths and net names
+
+[33mcommit 5b8e5937e7053647b967cc6c2b9278cec38cd512[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Feb 26 21:45:22 2019 -0500
+
+    Minor trace fix
+
+[33mcommit d48238fe60a11b33d6d408af3a1afb8c4a3a0cdc[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Feb 26 21:39:03 2019 -0500
+
+    Fixing ground trace width
+
+[33mcommit 39986ad5d359dfcda6f63a9f676a7f2534f21c98[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Feb 26 21:36:33 2019 -0500
+
+    More trace cleanup
+
+[33mcommit 127caa327c947ca8f754742789e224052e225a86[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Feb 26 21:28:43 2019 -0500
+
+    Adding diode for lidar protection
+
+[33mcommit 15a35b12af190f2d28050f98f418159313193fd8[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Feb 26 20:00:49 2019 -0500
+
+    Updating iOS app to reflect firebase changes
+
+[33mcommit db49f7166686a8a699f0c08ca2ea1d4109538be4[m
+Merge: 54de42a 2d9d160
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Feb 26 18:04:55 2019 -0500
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit 54de42af04b821465e5a59b72dde5c5faef00a2b[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Feb 26 18:04:48 2019 -0500
+
+    Improvements to the rtk client, controller, and firebase manager. Using NavSatFix for GPGGA message and custom message for GPVTG message
+
+[33mcommit 2d9d16073a84e141287e2a407a428250ffcdb992[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Tue Feb 26 13:58:55 2019 -0500
+
+    Updating README to reflect current ROS workspace state
+
+[33mcommit 45268e3113ea8b7fb6f2587c79eca5484293ef4c[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Mon Feb 25 20:06:07 2019 -0500
+
+    Removing unecesary calculation
+
+[33mcommit ae1e8697619de1c1f5b22b7be07e722b577188ee[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Mon Feb 25 10:18:00 2019 -0500
+
+    Updating board number and silkscreen layers for second order
+
+[33mcommit 4794d7d3754159c6bf39d13e5c7546638db5800f[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sun Feb 24 23:44:21 2019 -0500
+
+    Added ground planes to top and bottom for ordering
+
+[33mcommit 1a80d4f6af820772bac3a1a6005ade094e946d2f[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sun Feb 24 23:19:40 2019 -0500
+
+    Moving labels to correct layer for silkscreen and added a view more descriptive labels
+
+[33mcommit b6ba72692c7284424546dbf0ca6a529c0b1af0ac[m
+Author: keith <kcaylwin@gmail.com>
+Date:   Sun Feb 24 13:37:08 2019 -0500
+
+    Added text to the PTC reset fuse
+
+[33mcommit 8c2145cc8549d26fef44823cfd04691be0d1b26b[m
+Author: keith <kcaylwin@gmail.com>
+Date:   Sun Feb 24 13:20:26 2019 -0500
+
+    Added a resettable fuse to the boards
+
+[33mcommit 3b8403120dd5b69d58b379f7f0913bbb9a47ea77[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sat Feb 23 14:04:28 2019 -0500
+
+    Cleaning up routing and labels for design review
+
+[33mcommit b78d2a4faaab0f01eff46988743c7c1ddb40a4b0[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Fri Feb 22 19:32:36 2019 -0500
+
+    Added indicator LEDs to board and cleaned up iOS assets
+
+[33mcommit d1aa41104449685e9914374f402de4db5d3991f9[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Fri Feb 22 12:33:22 2019 -0500
+
+    Updating encoder board to fix clearance issues and voltage level
+
+[33mcommit c1bbeac29f085595a1bf3c05be1102fc36662733[m
+Merge: d9b1d6c 7b65cb8
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Fri Feb 22 11:08:18 2019 -0500
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit d9b1d6ce4d5e2cee527b4f63011a488ec62119b4[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Fri Feb 22 11:00:52 2019 -0500
+
+    Added pullup resistors for SDA and SCL
+
+[33mcommit 7b65cb8a206628e1ca30ca4f7521565dc2d1e81d[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Fri Feb 22 10:04:08 2019 -0500
+
+    Minor routing fixes
+
+[33mcommit 93233fda81bfb28fd0cecde9628f6dfcbeafe52d[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Thu Feb 21 23:07:15 2019 -0500
+
+    More minor trace improvements
+
+[33mcommit 952bac7d951b119d9432230f2937b1ecc01b5d74[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Thu Feb 21 18:07:29 2019 -0500
+
+    More improvements on trace widths, orientations
+
+[33mcommit c3c27449530e4953acf449f3d150a97b47063cec[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Thu Feb 21 17:17:01 2019 -0500
+
+    Minor routing improvements and net naming
+
+[33mcommit b1d4faa90a715cf2f73d4b16b9b6f1364acf2c5c[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Thu Feb 21 13:04:13 2019 -0500
+
+    More routing and naming improvements
+
+[33mcommit ab69f179a515c49957476380a2d9e059d847f53d[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Thu Feb 21 12:47:49 2019 -0500
+
+    Fixed minor routing problems
+
+[33mcommit bfdbc462bec1627581ed01d3145bf41d24e06937[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Wed Feb 20 21:10:16 2019 -0500
+
+    Fixing IMU traces and adding descriptive net names
+
+[33mcommit bee447ef2a9aa5356e6c067119da4e6c6bf90dc9[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Wed Feb 20 21:09:41 2019 -0500
+
+    Fixing IMU traces and adding descriptive net names
+
+[33mcommit 06b9b0b5024ef3aa665b0134dbb4dd1c33550dc2[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Feb 20 14:36:44 2019 -0500
+
+    Routed headers for IMU backup
+
+[33mcommit 1c8d9c786007a185a591f4aa7edd78a4550e2ba7[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Feb 20 13:13:28 2019 -0500
+
+    Fixing board routing and adding reset pin per Todd's suggestions
+
+[33mcommit 0e55edf23a1b48af58282b2909f7b3fadb501d96[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Feb 20 11:44:06 2019 -0500
+
+    Fixing ground trace under antenna
+
+[33mcommit 3a1dd7a11522bce1069e28a5419205d0f7149075[m
+Merge: 943e8c8 228c891
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Tue Feb 19 19:30:31 2019 -0500
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit 943e8c83c4d744ae5ade4a57ae7fdcd40f29b0d7[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Tue Feb 19 19:29:56 2019 -0500
+
+    Adding CAAM outputs
+
+[33mcommit 228c8916caca86935f63705c8ef1e873807cca74[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Feb 19 13:10:53 2019 -0500
+
+    Minor routing improvements
+
+[33mcommit a186934be2ef39685206e9bd349c8b38a0ea94a4[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Feb 19 12:59:42 2019 -0500
+
+    Routed decoupling caps closer to micro and added vias for extra GPIO
+
+[33mcommit 60f11e09a9c9430702180aa26a4c683fb13f19fa[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Feb 19 12:06:26 2019 -0500
+
+    Latest micro code
+
+[33mcommit 3dc076164778ed3b2dc6b43f302f4af9da052288[m
+Author: Keith Aylwin <kaylwin@purdue.edu>
+Date:   Mon Feb 18 21:40:30 2019 -0500
+
+    Moved two vias
+
+[33mcommit e7cc67f98d594e0ac5c653afacd5d9fe4fec95f9[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Mon Feb 18 17:27:00 2019 -0500
+
+    Fixed labelling sizes and locations
+
+[33mcommit ac9afde118e8705c9e8475c12930a095a6207719[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Mon Feb 18 17:09:32 2019 -0500
+
+    Increasing +3V3 width to micro
+
+[33mcommit 40c694c1450dfaeb48a64b74c799560783ae38ac[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Mon Feb 18 16:47:36 2019 -0500
+
+    Fixed board to adhere to DRC's and fixed schematic to adhere to ERC's
+
+[33mcommit 21bc4952d940f3ef2d04b82a46a32e1018c32f93[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Mon Feb 18 15:54:40 2019 -0500
+
+    Cleaned up ground trace
+
+[33mcommit 8d53dbcc003c444a3021318f7eb5764e5c27181c[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Mon Feb 18 15:51:02 2019 -0500
+
+    Made improvements to routing, labelling, and added test vias
+
+[33mcommit 10303f511b5f6c64d703e073c008d28cbe8252a6[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Mon Feb 18 13:34:09 2019 -0500
+
+    Completed routing and awaiting review
+
+[33mcommit e8e8340befdcaf9092c87ea666e6a2bfe5a1f4b5[m
+Author: Keith Aylwin <kaylwin@purdue.edu>
+Date:   Sun Feb 17 13:14:46 2019 -0500
+
+    Routed power, routed encoders, routed ultrasonics, and logic level converters
+
+[33mcommit 129dd5e550f6ac78a7e46bf96223ba2ab001eb9e[m
+Author: Keith Aylwin <kaylwin@purdue.edu>
+Date:   Sun Feb 17 01:41:12 2019 -0500
+
+    Started routing
+
+[33mcommit 91967ec56fddab79175b3a108e53bef6d8a73691[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sat Feb 16 21:46:36 2019 -0500
+
+    Further improvements on main PCB
+
+[33mcommit 73cbd87030814cf11ad9709167d517141743e332[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sat Feb 16 21:33:21 2019 -0500
+
+    Cleaning up layout on main PCB
+
+[33mcommit 071b45288980d6f67610331204125f27180bedb9[m
+Author: Keith Aylwin <kaylwin@purdue.edu>
+Date:   Sat Feb 16 18:19:49 2019 -0500
+
+    Initial layout of main components
+
+[33mcommit 63aa361dbb76ec1723f2667ad252d8e72e5af356[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sat Feb 16 17:11:07 2019 -0500
+
+    Fixing UART converter
+
+[33mcommit 68e2c806cf7e57e3fdee4c6b4f9a94efaa7bc1d5[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sat Feb 16 15:33:01 2019 -0500
+
+    Cleaning up UART converter schematic
+
+[33mcommit 404340381a15be3a9bb207119c9bf0070f21284a[m
+Author: Keith Aylwin <kaylwin@purdue.edu>
+Date:   Sat Feb 16 11:51:01 2019 -0500
+
+    Continued finishing the Schematic for the board
+
+[33mcommit 4b424d6d5a65c3acbb29c3ed7b45f93d142d72d9[m
+Author: Keith Aylwin <kaylwin@purdue.edu>
+Date:   Fri Feb 15 22:01:41 2019 -0500
+
+    First major layout session. Fixed up wanrings in GPS_UART module in the sensor module, and in the microcontroller module
+
+[33mcommit 01464dda7fabd200292f824aab704843f5cf73b0[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Fri Feb 15 19:57:30 2019 -0500
+
+    Restoring main library
+
+[33mcommit 32141d22d65cf35d5da50b06f06533687703691c[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Fri Feb 15 16:37:50 2019 -0500
+
+    Connected JSTs and arranged them in schematic
+
+[33mcommit 72f2ff71decf3242ef08480c774041eabdc83552[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Fri Feb 15 15:47:59 2019 -0500
+
+    Adding microcontroller to project
+
+[33mcommit 0a759d27c6b2e05707273ffa0cd55bd6b9171b5b[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Feb 13 20:58:23 2019 -0500
+
+    Updating A* algorithm and adding openGL to debug
+
+[33mcommit fd03204e890940de95a26a01e348f74c067926ae[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Feb 13 15:24:09 2019 -0500
+
+    Making separate package for serial comms and adding path planning package
+
+[33mcommit fc6d942b26dc2c7db2314ef25857e6b21f2acf14[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Wed Feb 13 14:21:59 2019 -0500
+
+    Updated microcontroller code with SPI interface
+
+[33mcommit 8c7649f569e1323e5bf1f365086d4ea0f18797b7[m
+Merge: a6f5ae5 fc249da
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Wed Feb 13 14:21:16 2019 -0500
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit fc249da66871724886b582cf924fc589a2b28d98[m
+Merge: c4c2863 25b7666
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Feb 13 12:15:56 2019 -0500
+
+    Merging libraries
+
+[33mcommit 25b7666ec2999a9637b9cc7b792d2cec6fcf674d[m
+Author: Keith Aylwin <kaylwin@purdue.edu>
+Date:   Tue Feb 12 12:29:43 2019 -0500
+
+    Merged libraries
+
+[33mcommit a6f5ae5c5a109ef1147a468d8b8cd8fd8bfae2bf[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sun Feb 10 20:19:24 2019 -0500
+
+    Adding SPI
+
+[33mcommit c4c2863f7defd76e572065c18325b024040dd006[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Feb 10 14:31:28 2019 -0500
+
+    Updating parts library for IMU
+
+[33mcommit 3591aa956af9e31e4dd64f1b9d7e3a32c6c8b768[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sun Feb 10 13:54:23 2019 -0500
+
+    Updating drive function
+
+[33mcommit bbe219776fa9c56865d8bfb1f0203b5a81d1df1f[m
+Merge: 195a24e 4f723d7
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sun Feb 10 13:02:45 2019 -0500
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit 195a24eaacd488a00023224e2205663c39bc9da4[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sun Feb 10 13:02:32 2019 -0500
+
+    UART for packetized mode on motor controller now working
+
+[33mcommit 4f723d7e20f9ffae2a582c9567c3fe3fa601bbf5[m
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Sat Feb 9 20:08:54 2019 -0500
+
+    COnnector components library
+
+[33mcommit a3f54a062602fcf8803283d694e81ceafb91bcaa[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sat Feb 9 17:05:55 2019 -0500
+
+    Updating for packetized serial mode on motor controller
+
+[33mcommit fade40a62ba30788425852c0c4bac9b1237a3fc0[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Fri Feb 8 12:19:21 2019 -0500
+
+    Fixing mirrored FTDI on reverse of board
+
+[33mcommit 77f26497424c1d71418b1185bb6daed35ab26990[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Fri Feb 8 11:58:23 2019 -0500
+
+    Updating current board for review
+
+[33mcommit 35c15d28105b86162b0e80ab104076ff18fb3682[m
+Merge: 3ce88b6 6fa1087
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Thu Feb 7 19:49:31 2019 -0500
+
+    Removing settings
+
+[33mcommit 3ce88b6b004ab8c204d95a089d80934d127d9050[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Thu Feb 7 19:48:34 2019 -0500
+
+    Updating boaard file and removing settings from git
+
+[33mcommit 6fa10872b1de8b0fe135ff8f64207875aea178d8[m
+Merge: 1d85473 4cd9c1b
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Thu Feb 7 19:46:04 2019 -0500
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit 1d85473e2e7779333966b4bebe294d8a7f36dfd2[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Thu Feb 7 19:45:49 2019 -0500
+
+    Updating microcontroller code to enable ultrasonics
+
+[33mcommit 4cd9c1b77947f9fe4e2d69ea1d982f5786722e1a[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Thu Feb 7 16:30:30 2019 -0500
+
+    Cleaning up PCB folders aand updating proper dimensioned GPS chip
+
+[33mcommit 4adda7ec4630bf45b14891b1ba1ebec23695a4f8[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Thu Feb 7 15:31:34 2019 -0500
+
+    Fixing NS-HP-GL library and importing footprint to main PCB
+
+[33mcommit 1b9e27d558e9dc481930bdcdcdea68f0e321e9e4[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Thu Feb 7 09:46:50 2019 -0500
+
+    Adding miniusb UART converter and updating main to include IMU
+
+[33mcommit d938eb03be2d3a0275cac29ba59595380fa545bb[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Wed Feb 6 22:06:30 2019 -0500
+
+    Adding better UART breakout board
+
+[33mcommit 7c618f3a50e7c5a6c88e349cc622d5576ca39428[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Wed Feb 6 21:38:30 2019 -0500
+
+    Adding PCB with UART converter components
+
+[33mcommit 067552c3b8730afdcab6d09b8750f5b219ad9c1a[m
+Author: Luke Armbruster <LukeSAV@users.noreply.github.com>
+Date:   Wed Feb 6 19:06:18 2019 -0500
+
+    Lib and schematics for NS-HP-GL breakout board footprint
+
+[33mcommit cd25cb9945e3d0e5f45f3dd653cbdbad873136e6[m
+Author: Luke Armbruster <LukeSAV@users.noreply.github.com>
+Date:   Wed Feb 6 15:42:20 2019 -0500
+
+    Adding USB to UART schematic and library
+
+[33mcommit 49820793850c943a65e9a796a132d2315d633dd0[m
+Author: Luke Armbruster <LukeSAV@users.noreply.github.com>
+Date:   Wed Feb 6 15:17:36 2019 -0500
+
+    Library with IMU parts footprint
+
+[33mcommit 861ca2eec0b4d6037e0e46fe85e112c1656313e6[m
+Merge: 207c348 0c8dbcd
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Feb 5 20:56:40 2019 -0500
+
+    Removing unnecessary microcontroller files
+
+[33mcommit 0c8dbcd002f9ce00179e3df072f8b5766da0814c[m
+Author: Jetson <None>
+Date:   Sun Feb 3 21:33:24 2019 -0500
+
+    First outside test changes
+
+[33mcommit f5f8a53b357cd9af421f5708ba7fd2de349d1226[m
+Author: kaylwin <kaylwin@purdue.edu>
+Date:   Sun Feb 3 18:30:13 2019 -0500
+
+    Added rplidar
+
+[33mcommit 3dce7bebaf4d80c3dd402184127df21977f1d734[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Feb 3 14:51:13 2019 -0500
+
+    Updating main launch file
+
+[33mcommit ec77c84daa68e0770672405911e7187b1dac36c8[m
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Sat Feb 2 23:32:24 2019 -0500
+
+    Fixed Q matrix
+
+[33mcommit c36d757edcf2393385107c4add7bf4f095275721[m
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Sat Feb 2 21:21:11 2019 -0500
+
+    Simple Kalman Filter for GPS Data
+
+[33mcommit 90a663a78a30e5d7f9d07b92600a8d6e7510b507[m
+Author: keith <kcaylwin@gmail.com>
+Date:   Sat Feb 2 20:07:07 2019 -0500
+
+    Added the gps generator to check EKF
+
+[33mcommit 8edd5b4ba6d490e70b2bd884521666bd28646842[m
+Merge: 79ea7bd c2bfda6
+Author: keith <kcaylwin@gmail.com>
+Date:   Sat Feb 2 20:05:57 2019 -0500
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit 79ea7bd81ec2270c076e509724f69fbb768c63ca[m
+Author: keith <kcaylwin@gmail.com>
+Date:   Sat Feb 2 20:05:51 2019 -0500
+
+    Cleaned up old, dead projects
+
+[33mcommit c2bfda6df52dd24abf111512597e11076830bc18[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Feb 3 01:04:25 2019 +0000
+
+    Removing unnecessary serial write from rtk manager
+
+[33mcommit e1c190cb57ce498649ee75d916fc1061e1ddfa07[m
+Merge: b1862c0 a4bbbd8
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Feb 3 00:49:13 2019 +0000
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit b1862c0c856723e0c4153796c2a1312dac22a720[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Feb 3 00:49:07 2019 +0000
+
+    Minor changes to the rtk controller
+
+[33mcommit 207c348601686e28a17d1a858d075bf88914d9d0[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sat Feb 2 19:11:17 2019 -0500
+
+    Adjusting voltage range for encoders
+
+[33mcommit a4bbbd8338f764ea56cf046a1f540d5a7993b74a[m
+Merge: 29f0304 0edfe72
+Author: Jetson <None>
+Date:   Sat Feb 2 16:40:57 2019 -0500
+
+    Fixing merge conflict
+
+[33mcommit 29f03045f2fe1754ae23acdc99a0038f9bb8d7f6[m
+Author: Jetson <None>
+Date:   Sat Feb 2 16:38:00 2019 -0500
+
+    Fixing rc callback
+
+[33mcommit 0edfe723bf1b225f83cb42e241f955f9be5bd6ad[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Wed Jan 30 23:51:42 2019 -0500
+
+    Adding code for ultrasonic support
+
+[33mcommit 57ccd2b5b347bd22d0aeb7e38d76f7c3b29d0f6f[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Jan 29 13:12:30 2019 -0500
+
+    Beginning support for ultrasonic interrupts
+
+[33mcommit 2b2181a10293e19753d668dfc5bd90224e2032e6[m
+Author: Luke Armbruster <LukeSAV@users.noreply.github.com>
+Date:   Sun Jan 27 14:49:39 2019 -0500
+
+    Adding readme
+
+[33mcommit 3781b77eea341f35521ab1c384471dd3d0de43a0[m
+Merge: 0ba14b9 ed72110
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sun Jan 27 14:30:25 2019 -0500
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit 0ba14b992f30de8031d491be5aeb8ae6ee4277db[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sun Jan 27 13:45:50 2019 -0500
+
+    Adding proper interrupts for UART tx/rx
+
+[33mcommit ed7211031a7d10acea9d883d9991749f7898145c[m
+Author: Luke Armbruster <LukeSAV@users.noreply.github.com>
+Date:   Sat Jan 26 19:35:33 2019 -0500
+
+    Updating README for ROS workspace
+
+[33mcommit 154eaa1db139d5df3dc272b79ba383b2a081b057[m
+Merge: 1d46743 4b5f6f4
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sat Jan 26 12:12:17 2019 -0500
+
+    Updating microcontroller project for UART RX
+
+[33mcommit 1d467435f2c7ba0d52575c3c081d5ebc010fbbe0[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sat Jan 26 12:08:07 2019 -0500
+
+    Adding UART receive interrupts for the micro project.
+
+[33mcommit 4b5f6f44ef81ef121be4d18d0fb259f963bf7739[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Thu Jan 24 12:21:43 2019 -0500
+
+    Fixing rc_manager and pushing latest iOS code
+
+[33mcommit 0db7797da178526a1860ec83d1dbb8e1fb725dd1[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Wed Jan 23 20:37:09 2019 -0500
+
+    Formatting fixes
+
+[33mcommit 3237dfa67af31608a673f418e6afaea23dc666e8[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Wed Jan 23 20:20:05 2019 -0500
+
+    Adding micro project to repo
+
+[33mcommit ecd9bae22bceca2aa0ded2b6e6463755d6a96cf8[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Mon Jan 21 17:32:34 2019 +0000
+
+    Removing unnecessary joystick driver causing problems on lubuntu for rPi
+
+[33mcommit bdb6d05ee61eb58488473b17ed01dc156c8daaa7[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Mon Jan 21 12:30:23 2019 -0500
+
+    Updating firebase manager to push more info for phone app use
+
+[33mcommit 0dbfd85a546f7be13ba7df484105104a85bf31f8[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Jan 20 19:05:44 2019 -0500
+
+    Adding waypoint navigation updates and map near my apartment
+
+[33mcommit c7d907411c984a42a977550c4371b300531857c8[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Thu Jan 17 19:59:25 2019 -0500
+
+    Adding some basic logic to GPS controller
+
+[33mcommit 5897ddd7431a3785c8a5512fc822ca31571e0c44[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Wed Jan 16 22:26:55 2019 -0500
+
+    Moved waypoint/landmark calculations out of the ntrip client and started functionality to support GPS driven navigation
+
+[33mcommit 57d5e728c24963433dac7bafc681471da42a0306[m
+Merge: a4f5f19 e9e97b8
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Jan 15 22:46:43 2019 -0500
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit a4f5f193661ba420f5949607981ed569f7723d04[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Jan 15 22:46:33 2019 -0500
+
+    Fixed issue in ntrip client where caster disconnects and doesn't recover. Added controller package to handle basic navigation
+
+[33mcommit e9e97b81009cd1eb6827531d976ecaa82eb105af[m
+Author: Luke Armbruster <LukeSAV@users.noreply.github.com>
+Date:   Mon Jan 14 21:31:46 2019 -0500
+
+    Updating map to include path from MSEE to Hovde
+
+[33mcommit bb814099aeb7f212fe4b92a47c796460debc92ae[m
+Merge: dbce072 262ef23
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Mon Jan 14 19:18:03 2019 -0500
+
+    Merge branch 'master' into luke
+
+[33mcommit dbce0726dd07b0597245e4964709f3ee4dac06d7[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Fri Jan 11 17:54:23 2019 -0500
+
+    Adding serial capability
+
+[33mcommit 53cbdac3b65c1ec43eac4f16c9a650371ac0318e[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Fri Jan 11 15:31:52 2019 -0500
+
+    Adding to package to subscribe to joystick output
+
+[33mcommit 262ef231b315ebe2d7cd656fdcff9026be86ca87[m
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Wed Jan 9 19:22:50 2019 -0500
+
+    Optical Encoder PCB updates. Awaits peer review and shipment
+
+[33mcommit 8e9b6e968935f634e83656ba357aac84eabd468d[m
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Tue Jan 8 22:15:46 2019 -0500
+
+    Optical Encoer Diagram
+
+[33mcommit 0317ca0dbe31f7c1e0b7468e7178e9f91ca2101e[m
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Tue Jan 8 21:03:17 2019 -0500
+
+    "added Libraries for JST connectors"
+
+[33mcommit 5fef4df49cbc7306aa11a0fa338d148b7976e64f[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Jan 8 17:26:06 2019 -0500
+
+    Adding joystick files
+
+[33mcommit 39e62d80fe0bc12e2c737594a551e4ba4eae5ab0[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Jan 8 17:00:32 2019 -0500
+
+    Adding DS4 ROS driver and package to support motor control output
+
+[33mcommit 7626e333c3fb5e6da7fbc1643117cfdd366858d1[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Mon Jan 7 20:44:37 2019 -0500
+
+    Adding nearest landmark feature and cleaning up class for defined robot paths
+
+[33mcommit 4031204248776317f6d13c021a0f2a73ada478f6[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Mon Jan 7 15:31:52 2019 -0500
+
+    Updating class structure to support nearest landmark/path detection
+
+[33mcommit 95579a89bd9be367341575c0e33f92774abac061[m
+Merge: 28d8f53 3ee16a2
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sat Jan 5 21:31:09 2019 -0500
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit 28d8f5323703be6bc3fb68be02d461209a4fa7c8[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sat Jan 5 21:31:02 2019 -0500
+
+    Updating UI elements and adding support for pin following user/robot locations. Cleaned up firebase code
+
+[33mcommit 3ee16a2484c0cf9b4881596e2dc072f930197adb[m
+Author: Jetson <None>
+Date:   Sat Jan 5 15:14:41 2019 -0500
+
+    Updating naming convention of pub/sub to match readme. BUG: Noticed bug where an invalid GPGGA message is being passed when the GPS first has power applied to it. Double check the string comparison for an invalid GPGGA message.
+
+[33mcommit 8412a71176bd5025ded484dab99221f37ab40088[m
+Author: Luke Armbruster <LukeSAV@users.noreply.github.com>
+Date:   Fri Jan 4 18:20:14 2019 -0500
+
+    Update README.md
+
+[33mcommit ae35007bd1f56761f6eda63885b97bc58e0b25e6[m
+Author: Luke Armbruster <LukeSAV@users.noreply.github.com>
+Date:   Fri Jan 4 18:19:15 2019 -0500
+
+    Add files via upload
+    
+    Adding readme file with skeleton format and updates on what I've worked on so far.
+
+[33mcommit cd262a0d324a53bf5e8131916ce4eee7b535ffda[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Fri Jan 4 17:58:21 2019 -0500
+
+    Updating UI
+
+[33mcommit 706ab38730f2a13e0fdc2fe45503394c7472f056[m
+Merge: 716528b d399461
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Fri Jan 4 17:06:25 2019 -0500
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit 716528ba37d4046da2f906a20cfbb5c185675667[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Fri Jan 4 17:06:18 2019 -0500
+
+    Changes to icon sets and implementation of core functionality to app navigation.
+
+[33mcommit d3994616011a248974fd97b9c5ad430ce05ac8e3[m
+Author: Jetson <None>
+Date:   Thu Jan 3 20:19:15 2019 -0500
+
+    Added package to push data to firebase. Currently subscribed to the rtk topic and pushes the string to the database
+
+[33mcommit f8eb9e929485027f6c010b7503df56e769b489b9[m
+Author: Jetson <None>
+Date:   Thu Jan 3 19:01:42 2019 -0500
+
+    Cleaning up directory and updating gitignore
+
+[33mcommit 0af4371799ba40f27287703fe5dadfc5734eb680[m
+Author: Jetson <None>
+Date:   Thu Jan 3 18:59:01 2019 -0500
+
+    Updated RTK code to work on Jetson over single USB connection and publish GPS position.
+
+[33mcommit eb2897c7b3d4566855c5c5fec9997ae1c8ea0e4f[m
+Author: Jetson <None>
+Date:   Thu Jan 3 17:21:26 2019 -0500
+
+    Setting up ROS workspace. Moved over GPS code and got it to build. Still needs modifications for Jetson
+
+[33mcommit 2bdb2b3bafe032320f0e019d374615075daa4b60[m
+Author: sirkeith <kaylwin95@gmail.com>
+Date:   Mon Dec 31 17:19:54 2018 -0800
+
+    Order placed to OSH Park
+
+[33mcommit d403c71b8d4926e9d2d3d982835d6193b1500ed9[m
+Author: sirkeith <kaylwin95@gmail.com>
+Date:   Mon Dec 31 15:30:00 2018 -0800
+
+    LED and silkscreen Aded
+
+[33mcommit 446170e92da79ba594ca0ecdcdfa130c445a72de[m
+Author: sirkeith <kaylwin95@gmail.com>
+Date:   Mon Dec 31 12:18:16 2018 -0800
+
+    Added a fuse and impedance matched clock signals
+
+[33mcommit f11b0da0b1c6ada36cb46b9aca12f6cf0456ba9e[m
+Author: sirkeith <kaylwin95@gmail.com>
+Date:   Sun Dec 30 23:32:20 2018 -0800
+
+    DRC changes
+
+[33mcommit e79e19b96fd6ebcd88b84da74efc7bb78cde9cd4[m
+Author: sirkeith <kaylwin95@gmail.com>
+Date:   Sun Dec 30 23:18:43 2018 -0800
+
+    Design rules check out
+
+[33mcommit 1002f48aaa61d44e58a90ec8552ecc36775005dd[m
+Author: sirkeith <kaylwin95@gmail.com>
+Date:   Sun Dec 30 22:24:48 2018 -0800
+
+    All wires traced but ground plane is not complete
+
+[33mcommit 2ca1494110b884caa226e16af398fac31d350d4f[m
+Author: sirkeith <kaylwin95@gmail.com>
+Date:   Sun Dec 30 17:27:40 2018 -0800
+
+    Created initial board schematic
+
+[33mcommit 1eda045fc7cc69e28bf444ed23a880ce8ef242f4[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Dec 23 23:37:00 2018 -0500
+
+    Added basic functionality to app for hailing device
+
+[33mcommit 84564470d1be9d84d487cd36082d583b9fd08d17[m
+Merge: fb601d1 f851b6d
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Dec 23 15:27:33 2018 -0500
+
+    Fixing merge conflicts
+
+[33mcommit fb601d13342ac6444460e9510d7dc34f9dad1fbd[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Dec 23 15:23:07 2018 -0500
+
+    Updating to working iOS application
+
+[33mcommit f851b6d0a30826bea27668e6f8a06f025476b150[m
+Author: keith <kcaylwin@gmail.com>
+Date:   Sat Sep 22 12:53:06 2018 -0400
+
+    Initializing for ground plane detection
+
+[33mcommit 972cd7aa464cd01e39a78069cfe2468ba055f97d[m
+Merge: 7a7cdd1 4c65f55
+Author: keith <kcaylwin@gmail.com>
+Date:   Sun May 6 11:22:55 2018 -0700
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit 7a7cdd13ff710ce3230be7afc44f5f7791490d52[m
+Author: keith <kcaylwin@gmail.com>
+Date:   Sun May 6 11:22:47 2018 -0700
+
+    Added foundations for a ground detector and a sample project for the sabertooth motor controller
+
+[33mcommit 4c65f559a20e8f005f54e6bcc76ccd58de1c6ecb[m
+Author: Luke Armbruster <luke@Lukes-MacBook-Pro.local>
+Date:   Wed Apr 18 21:18:46 2018 -0400
+
+    Adding the motor controller source
+
+[33mcommit b932c433a365b3d5627f1ecfaf736c83e30f397d[m
+Author: Luke Armbruster <luke@Lukes-MacBook-Pro.local>
+Date:   Wed Apr 18 21:14:54 2018 -0400
+
+    Added images and modifications to phone app
+
+[33mcommit 0b1d6696a0956487d83c529d84c19ca4768a7c30[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sun Apr 1 20:13:08 2018 -0400
+
+    Fixed timer continuing when going back from second controller to first
+
+[33mcommit d6e4a8c35fa66375295a8541590939153eac1fe0[m
+Author: Luke Armbruster <luke@lukes-macbook-pro.local>
+Date:   Wed Mar 28 20:49:45 2018 -0400
+
+    Added stock photo to remove build time warning
+
+[33mcommit 7ef1560e494b0b8dfeb1944270965571381ee432[m
+Author: Luke Armbruster <luke@lukes-macbook-pro.local>
+Date:   Wed Mar 28 20:44:03 2018 -0400
+
+    Fixed Luke's broken code for phone app
+
+[33mcommit 771def0e9b7636bef29741ffab68a99b54a4179e[m
+Author: Luke Armbruster <luke@lukes-macbook-pro.local>
+Date:   Wed Mar 28 20:33:08 2018 -0400
+
+    Added functionality for watchOS. Sends sync pulses now to tell the Arduino it is still connected.
+
+[33mcommit e3c50ad469a47d8d7296d215ec5a2e517f72b7c1[m
+Author: Luke Armbruster <luke@lukes-macbook-pro.local>
+Date:   Mon Mar 26 21:30:40 2018 -0400
+
+    Added joystick controller to move robot and stop button
+
+[33mcommit 93c5b3859db4e1464d0958d23cbb03869e9fc2ea[m
+Author: keith <kcaylwin@gmail.com>
+Date:   Sat Mar 24 20:08:57 2018 -0400
+
+    Added support for Pods'
+
+[33mcommit 6313750a23ee2d99cec354c134e2a6aee7e67d93[m
+Author: keith <kcaylwin@gmail.com>
+Date:   Sat Mar 24 19:48:28 2018 -0400
+
+    Totally forgot
+
+[33mcommit 5b7eb2ef4a63783a18ea47765203c1c25167cabd[m
+Author: Luke Armbruster <luke@lukes-macbook-pro.local>
+Date:   Sun Mar 25 13:56:27 2018 -0400
+
+    Added shorter bounds to slider controls
+
+[33mcommit bd10a2193f94f976b4e3ee016ea7876486d48448[m
+Author: Luke Armbruster <luke@lukes-macbook-pro.local>
+Date:   Sat Mar 24 19:43:23 2018 -0400
+
+    Added sliders for left/right control
+
+[33mcommit cac85008a110791cdd02e1945f9198bfd8147070[m
+Merge: 277e197 db8199c
+Author: Luke Armbruster <luke@Lukes-MacBook-Pro.local>
+Date:   Thu Mar 22 19:35:53 2018 -0400
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 277e1976ab1402d396b7583a543aa6a2f9b7f2c6[m
+Author: Luke Armbruster <luke@lukes-macbook-pro.local>
+Date:   Thu Mar 22 19:35:38 2018 -0400
+
+    Idk
+
+[33mcommit db8199cebdfca4b68ed7bc1b47723a907e886521[m
+Author: keith <kcaylwin@gmail.com>
+Date:   Sat Feb 10 21:09:28 2018 -0500
+
+    Added balance desktop and began merging code
+
+[33mcommit 88f68856637dd3ec3c56bd750f75001be0c69d75[m
+Author: keith <kcaylwin@gmail.com>
+Date:   Sat Feb 10 18:09:02 2018 -0500
+
+    Added new self balancing file
+
+[33mcommit d6961603993f77ba4c8b0b8a4931f410b9b18898[m
+Author: Keith Aylwin <kaylwin@purdue.edu>
+Date:   Sat Feb 10 17:47:14 2018 -0500
+
+    Added support for receiving instructions to arduino module
+
+[33mcommit 4cb38c08b2b81916305bb0fb21c363e498affcbc[m
+Author: Keith Aylwin <kaylwin@purdue.edu>
+Date:   Fri Feb 9 23:32:12 2018 -0500
+
+    Now can connect to HC 05 module
+
+[33mcommit a5fdd692f028730d473e1f136dad6216b124a096[m
+Author: Keith Aylwin <kaylwin@purdue.edu>
+Date:   Fri Feb 9 22:47:23 2018 -0500
+
+    Restructured source into IOS and BluetoothTuner. Added useful.gitignore
+
+[33mcommit 4b130cfa509fd321c194dc254fadae967808cf7f[m
+Author: Luke Armbruster <luke@lukes-macbook-pro.local>
+Date:   Tue Feb 6 19:55:56 2018 -0500
+
+    Added serial output from bluetooth to control motor wheels
+
+[33mcommit cca15368b0d8aed12141cf4a479348a0fd9c4992[m
+Author: Luke Armbruster <luke@lukes-macbook-pro.local>
+Date:   Sat Feb 3 16:12:18 2018 -0500
+
+    Added motor controls for left/right buttons
+
+[33mcommit 7aed8bb8979f1d53ead669b5ff6e80eefb5ebe4d[m
+Author: Luke Armbruster <luke@lukes-macbook-pro.local>
+Date:   Sat Feb 3 14:05:43 2018 -0500
+
+    Added functionality to connect to bluetooth device. Added segue to controller screen.
+
+[33mcommit 0e9c795e36327b6b1cee4aa2a7c32b4c7bdf1cd1[m
+Author: Luke Armbruster <luke@lukes-macbook-pro.local>
+Date:   Sat Jan 27 21:00:12 2018 -0500
+
+    Fixed formatting in landscape mode for main storyboard
+
+[33mcommit dc533d0d86838ea06ad69490748400c5fb4cf2ec[m
+Author: Luke Armbruster <luke@lukes-macbook-pro.local>
+Date:   Sat Jan 27 20:44:26 2018 -0500
+
+    First commit
+
+[33mcommit c163d05a7880a3f24b558dd6329ac09be64b4e0e[m
+Author: Luke Armbruster <luke@lukes-macbook-pro.local>
+Date:   Sat Jan 27 20:22:00 2018 -0500
+
+    First commit
+
+[33mcommit 3bbcb44e068b0d46c757737f677cf91e11c3d35a[m
+Author: Luke Armbruster <luke@lukes-macbook-pro.local>
+Date:   Sat Jan 27 16:18:32 2018 -0500
+
+    Initial Commit
+
+[33mcommit 792a56f385fffc20c5dc296f96b4e10ca8b34c51[m
+Author: = <=>
+Date:   Thu Feb 11 11:47:14 2016 -0500
+
+    Serial Manager
+
+[33mcommit 17354c1bdc758afe0e3c97a6c4d35016e349ae97[m
+Merge: fe100de 7171e47
+Author: nvidia <nvidia>
+Date:   Thu Feb 11 11:35:17 2016 -0500
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit 7171e47262fbacf939c59dc37a441ce538cd6533[m
+Merge: a8d5571 f705c1d
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Fri Mar 29 16:15:12 2019 -0400
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit a8d5571f6bbe5c6f268cccc08fe9a78a9866464b[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Fri Mar 29 16:15:08 2019 -0400
+
+    Fixing UART communication logic
+
+[33mcommit f705c1d3594f7cc8e00e71a69791fede1f076e3e[m
+Merge: 4a09c21 1bb80bc
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Thu Mar 28 22:42:41 2019 -0400
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit 4a09c217fb998d3fb72e7be691bbfd521a8d493d[m
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Thu Mar 28 22:41:42 2019 -0400
+
+    EKF Python files
+
+[33mcommit 1bb80bc5a2a45952a2546002ed272cd1340385f8[m
+Merge: 8b100d2 817dfa7
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Wed Mar 27 17:27:09 2019 -0400
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit 8b100d2500ef85adde53631c381a041ec6aae098[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Wed Mar 27 17:27:04 2019 -0400
+
+    Adding additional screen info
+
+[33mcommit fc36c1bc5d113e85317c7911400ac33d96a6ffa4[m
+Merge: 412112a 817dfa7
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Sat Mar 23 21:45:13 2019 -0400
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit 817dfa786243c3245ffbdd355a9875926cd33587[m
+Merge: 4e96090 51ca671
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Fri Mar 22 15:25:27 2019 -0400
+
+    Merge branch 'master' of github.com:LukeSAV/SDProject
+
+[33mcommit 4e9609012dfeefd3e25c2e9df79b07e69c652b64[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Fri Mar 22 15:25:15 2019 -0400
+
+    Integrating local and global navigation
+
+[33mcommit 51ca6713b2df7aba2fff5ea1fd5c6964eb239c32[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Mar 19 17:23:33 2019 -0400
+
+    UI improvements to iOS application
+
+[33mcommit 8a0998e7c557662116c0d0d67cda99e032bcbfe7[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sat Mar 16 13:15:28 2019 -0400
+
+    Adding debug code for micro
+
+[33mcommit 00890a386b69c3b1c5a27d3b452259e96df33edb[m
+Author: Jetson <None>
+Date:   Thu Mar 14 13:01:26 2019 -0400
+
+    Added package for EKF
+
+[33mcommit 9aaa6f4298ca590a14bda8d5f3ca6768f16dddd3[m
+Author: Jetson <None>
+Date:   Thu Mar 14 12:52:10 2019 -0400
+
+    Adding BNO055 imu driver
+
+[33mcommit 92a27673dae9ddc1017ad204382d7f2723a8d748[m
+Author: Jetson <None>
+Date:   Wed Mar 13 14:20:21 2019 -0400
+
+    Fixing problem with message generation for rtk node
+
+[33mcommit a8f2397b82fe68d17821c0ffcd1ed1eaac393183[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Mon Mar 11 14:30:44 2019 -0400
+
+    Improving A* search
+
+[33mcommit 669eba19a52a19093eb16a4677a9b08672c06c37[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Sun Mar 10 16:18:23 2019 -0400
+
+    Test serial functionality
+
+[33mcommit 412112ab18f49a7c38bda63fd16a736ea9ff31b1[m
+Merge: 0b835c9 721bcda
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Wed Mar 6 12:21:22 2019 -0500
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit 721bcda944c217b0ba3727988be0590862026968[m
+Author: Luke Armbruster <larmbru@purdue.edu>
+Date:   Tue Mar 5 15:39:24 2019 -0500
+
+    Updating with latest PCB submission
+
+[33mcommit ee5ca0afb313b4b9ca6d600048c4e849184f56c0[m
+Author: Keith Aylwin <kaylwin@purdue.edu>
+Date:   Mon Mar 4 23:53:33 2019 -0500
+
+    Added some mounting holes
+
+[33mcommit 81a144c1807851e8a106c6cfd00900fcf66c2514[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Mon Mar 4 23:37:54 2019 -0500
+
+    Moving a couple traces close to pads
+
+[33mcommit 5cda4885a13db67d5414c9ba6267e814c30ccf26[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Mon Mar 4 23:31:56 2019 -0500
+
+    Minor trace routing changes
+
+[33mcommit efc890ad35723d7562a42024304de1dacb92541f[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Mon Mar 4 23:08:13 2019 -0500
+
+    Routed crowbar circuit
+
+[33mcommit 09243316f2f22cd910f88f7689bbc91c7dc6fb3b[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Mon Mar 4 15:26:52 2019 -0500
+
+    Added a TL431 and Thyristor
+
+[33mcommit 4ad4c57cd6eaa4b0b851ee24606d5340881dd041[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Mon Mar 4 14:13:09 2019 -0500
+
+    Moving some traces for final design
+
+[33mcommit a4928fb3d40e355c872cb2cad278cffc1b53db6e[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Sat Mar 2 20:05:00 2019 -0500
+
+    Connecting 5V line for display IC
+
+[33mcommit 7025706751a62ad7eb27cae518cd613962d64918[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sat Mar 2 17:06:49 2019 -0500
+
+    Adding decoupling cap at 3V into logic converter
+
+[33mcommit c1cb835557ba5f808bc85cce39d0480e27e3a361[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sat Mar 2 17:05:06 2019 -0500
+
+    Adding decoupling cap at 3V into logic converter
+
+[33mcommit 829ff375a1628c9c6b7962d9567fbb39c26b8480[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sat Mar 2 17:01:06 2019 -0500
+
+    Fixing logic converter circuit
+
+[33mcommit 2cb8d3ac9d530486586c235cb0bcf90671a7d36e[m
+Author: Luke Armbruster <luke_armbruster@live.com>
+Date:   Sat Mar 2 16:24:18 2019 -0500
+
+    Minor spacing changes
+
+[33mcommit a97c71815064c3cde42536d8e94b528e0d20de54[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Fri Mar 1 20:16:55 2019 -0500
+
+    Finished moving encoders and reset pin
+
+[33mcommit ec0487bf8794d74d2bd8ae6ba87b1a1dc203c053[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Fri Mar 1 15:23:29 2019 -0500
+
+    Alright re routed nRST, Destroyed the ultrasonic routing
+
+[33mcommit bf275c2ce39b1f266dee2fc7473cb28755dedeae[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Fri Mar 1 13:49:41 2019 -0500
+
+    More luke changes
+
+[33mcommit 0af4d82e21f655daa3e0393c35b81b7080448e4f[m
+Author: Admin account <Keithsbadcode@hotmail.com>
+Date:   Fri Mar 1 12:19:10 2019 -0500
+
+    Fixing GPIO pin bank
+
+[33mcommit 0b835c9caad08179ed67ed010684cf15020a7fa2[m
+Merge: d4653ad b6ba726
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Sun Feb 24 14:03:30 2019 -0500
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit d4653ad8840965f9e1e4c7ed9f9e31ba190c7595[m
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Sun Feb 24 13:55:44 2019 -0500
+
+    EKF
+
+[33mcommit 7bcfcee610b28a3411885b71499c8d68c3f42b6c[m
+Merge: b1d7c61 3a1dd7a
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Wed Feb 20 11:43:19 2019 -0500
+
+    Merge branch 'master' of https://github.com/LukeSAV/SDProject
+
+[33mcommit b1d7c61b7d82a5add69259623aa53c7b1fd8dc49[m
+Author: Michael Karrs <mkarrs@purdue.edu>
+Date:   Wed Feb 20 11:42:15 2019 -0500
+
+    Added equations to generate path from two wheel positions
+
+[33mcommit fe100de91dd974f2c697b1b02302f536b8317476[m
+Author: nvidia <nvidia>
+Date:   Thu Feb 11 11:34:39 2016 -0500
+
+    Fixing serial transmission to micro
+
+[33mcommit c9915acfe29771394cad016012480c6c01b75916[m
+Author: nvidia <nvidia>
+Date:   Wed Mar 27 14:42:47 2019 -0400
+
+    adding IMU driver and updating serial manager for jetson
