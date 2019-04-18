@@ -1,0 +1,3 @@
+<launch>
+    <node name="serial_manager" pkg="serial" type="serial_manager.py" output="screen"/>
+</launch>

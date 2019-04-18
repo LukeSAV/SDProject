@@ -26,24 +26,24 @@ class EKF(object):
     def update_gps_cov(self, satStatus):
         #asusming x and y have the same covariance and no cross-covariance
         if(satStatus == 1):
-          self.R[0][0] = 400
-          self.R[1][1] = 400
-        elif(satStatus == 2):
           self.R[0][0] = 100
           self.R[1][1] = 100
+        elif(satStatus == 2):
+          self.R[0][0] = 9
+          self.R[1][1] = 9
         elif(satStatus == 3):
-          self.R[0][0] = 50
-          self.R[1][1] = 50
-        elif(satStatus == 4):
           self.R[0][0] = 10
           self.R[1][1] = 10
+        elif(satStatus == 4):
+          self.R[0][0] = 1
+          self.R[1][1] = 1
         elif(satStatus == 5):
-          self.R[0][0] = 20
-          self.R[1][1] = 20
+          self.R[0][0] = 5
+          self.R[1][1] = 5
 
         if(self.elapsed_time < 7):
-          self.R[0][0] = 4000
-          self.R[1][1] = 4000
+          self.R[0][0] = 400
+          self.R[1][1] = 400
 
 
     def update_imu_cov(self, cov):
@@ -78,7 +78,7 @@ class EKF(object):
 
             #Measurement Update
             displacement = math.sqrt(math.pow((gpsX-self.x[0]), 2) + math.pow((gpsY-self.x[1]), 2))
-            if(displacement < 5 or self.elapsed_time < 7):
+            if(displacement < 10 or self.elapsed_time < 7):
               z = numpy.array([gpsX, gpsY, imuHeading, thetaR, thetaL]).transpose()
               self.H = numpy.identity(5)
               self.H[0][0] = 1

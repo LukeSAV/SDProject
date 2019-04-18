@@ -9,17 +9,14 @@
     <!-- EKF -->
     <node name="ekf_node" pkg="ekf" type="ekf_node.py" output="screen"/>
 
-    <!-- Joystick controller -->
-	<node name="joy_node" pkg="joy" type="joy_node" output="screen"/>
-
     <!-- Serial Manager -->
     <node name="serial_manager" pkg="serial" type="serial_manager.py" output="screen"/>
 
     <!-- Lidar -->
-	<include file="../src/rplidar_ros/launch/rplidar.launch"/>
+	<include file="/home/nvidia/workspace/SDProject/ros_ws/src/rplidar_ros/launch/rplidar.launch"/>
 
     <!-- IMU -->
-    <include file="imu.launch"/>
+    <include file="/home/nvidia/workspace/SDProject/ros_ws/launch/imu.launch"/>
 
     <!-- Firebase -->
     <node name="fb_node" pkg="fb" type="fb_manager.py" output="screen"/>

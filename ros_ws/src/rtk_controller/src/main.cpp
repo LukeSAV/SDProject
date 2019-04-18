@@ -407,7 +407,7 @@ int main(int argc, char **argv)
     auto start_landmark = std::chrono::system_clock::now();
     auto cur_time = start_landmark;
     std::chrono::duration<double> elapsed_time;
-    xml_reader("/home/luke/SDProject/ros_ws/src/rtk_controller/purdue_mapv1.0_old.xml");
+    xml_reader("/home/nvidia/workspace/SDProject/ros_ws/src/rtk_controller/purdue_mapv1.0_old.xml");
 
     // Initialize frst waypoint
     prev_waypoint_key = MapData::path_map.begin()->first;

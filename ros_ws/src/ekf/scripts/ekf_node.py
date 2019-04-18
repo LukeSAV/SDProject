@@ -1,10 +1,12 @@
 #! /usr/bin/python
 import rospy,tf
+import time
 from sensor_msgs.msg import NavSatFix, Imu
 from std_msgs.msg import String
 from threading import Lock
 from copy import deepcopy, copy
 from EKF import EKF
+
 
 
 
@@ -35,6 +37,8 @@ init_gps_meas = NavSatFix()
 init_imu_meas = Imu()
 
 elapsed_time = 0
+time_init = 0
+last_time = 0
 avg_x = 0
 avg_y = 0
 
@@ -48,7 +52,7 @@ seq = 0
 sec = 0
 nsec = 0
 
-r = rospy.Publisher("/ekf/filtered", NavSatFix, queue_size = 2)
+r = rospy.Publisher("/ekf/sim_filtered", NavSatFix, queue_size = 2)
 r2 = rospy.Publisher("/ekf/imu/data", Imu, queue_size = 2)
 
 # TODO what is the default orientation?
@@ -69,7 +73,7 @@ def imu_callback(imu_msg):
 
 def encoder_callback(encoder_msg):
   global gps_updated
-  global ekf, state_space_init, yaw_init, elapsed_time, avg_x, avg_y
+  global ekf, state_space_init, yaw_init, elapsed_time, time_init, last_time, avg_x, avg_y
   global fitlered_lat, filtered_lon
   global seq, sec, nsec
   gps_lock.acquire()
@@ -84,8 +88,12 @@ def encoder_callback(encoder_msg):
 
   enc_updated = True
 
+  #print("time.time() time: " + str(float(time.time())))
   purdue_fountain = (40.428642, -86.913776) 
   
+  if time_init == 0:
+    time_init = time.time()
+    last_time = time.time()
   if gps_valid:
     # y is north, x is east
     lat_lon = (gps_meas.latitude, gps_meas.longitude)
@@ -105,15 +113,12 @@ def encoder_callback(encoder_msg):
 
       
   imuHeading = yaw
-  if(gps_valid):
-    elapsed_time = elapsed_time + 1
+  elapsed_time = time.time() - time_init
 
   if(gps_valid and not state_space_init):
-      avg_x = avg_x + 0.1*x
-      avg_y = avg_y + 0.1*y
-      if(elapsed_time >= 10):
-        ekf.x[0] = avg_x
-        ekf.x[1] = avg_y
+      if(elapsed_time >= 0):
+        ekf.x[1] = (40.429167-purdue_fountain[0])*111139
+        ekf.x[0] = (-86.912957-purdue_fountain[1])*111139
         ekf.x[2] = 2.094
         yaw_init = yaw
         state_space_init = True
@@ -129,9 +134,15 @@ def encoder_callback(encoder_msg):
   ekf.update_imu_cov(0.01+0.005*elapsed_time)
 
   if(gps_valid and state_space_init):
-      ekf.step(0.2, x, y, imuHeading, theta_l, theta_r)
+      timestep = time.time()-last_time
+      print("Timestep: " + str(timestep))
+      last_time = time.time()
+      ekf.step(timestep, x, y, imuHeading, theta_l, theta_r)
   elif (state_space_init):
-      ekf.step(0.2, imuHeading, theta_l, theta_r)
+      timestep = time.time()-last_time
+      print("Timestep: " + str(timestep))
+      last_time = time.time()
+      ekf.step(timestep, imuHeading, theta_l, theta_r)
   
   if(state_space_init):
     #print("FILETERED OUTPUT:")
@@ -146,13 +157,14 @@ def encoder_callback(encoder_msg):
     filtered_nsf.longitude = ekf.x[0] / 111139 + purdue_fountain[1]
     filtered_nsf.latitude  = ekf.x[1] / 111139 + purdue_fountain[0]
 
+
     seq = seq+1
     filtered_nsf.header.seq = seq
     filtered_nsf.header.stamp = gps_meas.header.stamp
     filtered_nsf.header.frame_id = gps_meas.header.frame_id
     
-    #print("Filtered Lat: " + str(float(filtered_nsf.latitude)))
-    #print("Filtered Lon: " + str(float(filtered_nsf.longitude)))
+    print("Filtered Lat: " + str(float(filtered_nsf.latitude)))
+    print("Filtered Lon: " + str(float(filtered_nsf.longitude)))
   
     r.publish(filtered_nsf)
 
