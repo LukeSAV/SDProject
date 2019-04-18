@@ -47,7 +47,7 @@
 enum Encoders{RECEIVE, NO_RECEIVE};
 enum Direction{FORWARD, REVERSE};
 enum LastMotorSent{LEFT, RIGHT};
-enum DisplayMode{START=0, ULTRASONICS=1, ENCODERS=2, DELIVERY=3, CHANGE_MODE=4, END=5};
+enum DisplayMode{START=0, ULTRASONICS=1, ENCODERS=2, DELIVERY=3, END=4};
 typedef struct {
 	char address;
 	char command;
@@ -130,14 +130,15 @@ static uint8_t  decel_fail_count = 0;
 
 static bool use_ps4_controller = false;
 bool new_points_ready = false;
+static uint16_t time_since_screen_change = 0;
 
 /* New points from Jetson */
 float new_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 float new_points_y[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
 /* Current working points */
-float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0,  0.0};
+float points_x[] = {0.0, 0.0, -1.0, -2.0, -3.0, -4.0, -5.0, -6.0};
+float points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 6.0,  7.0,  8.0};
 //float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 //float points_y[] = {3.0,  5.0,  7.0,  9.0, 11.0, 13.0,  15.0,  17.0};
 //float points_x[] = {0.4, 0.56, 0.86, 0.94, 1.06, 1.23, 1.33, 1.4};
@@ -210,6 +211,9 @@ int main(void) {
 				new_points_ready = false;
 			}
 			drive_enable = find_goal();
+			if(!delivery_requested) { // If the delivery has not been requested from the Jetson, don't drive
+				drive_enable = false;
+			}
 			if(drive_enable) {
 				encoder_diff_l = adc_left_slots - last_used_adc_left_slots;
 				last_used_adc_left_slots = adc_left_slots;
@@ -388,11 +392,11 @@ static void decodeJetsonString() {
 		delivery_requested = 1;
 		break;
 	case 'S': // Switch modes for controller requested
-		if(current_mode == CHANGE_MODE) {
+		/*if(current_mode == CHANGE_MODE) {
 			use_ps4_controller = !use_ps4_controller;
 			left_speed = 0;
 			right_speed = 0;
-		}
+		}*/
 		break;
 	default:
 		break;
@@ -594,6 +598,13 @@ void TIM14_IRQHandler() {
 	elapsed_response_time = 0;
 
 	/* Update Display */
+	if(time_since_screen_change > 15) {
+		time_since_screen_change = 0;
+		nextMode();
+	}
+	else {
+		time_since_screen_change++;
+	}
 	if(disp_count >= 5) { // Update the display every second
 		Cmd(0x01); // clear entire display
 		nsWait(6200000); // clear takes 6.2ms to complete
@@ -611,7 +622,7 @@ void TIM14_IRQHandler() {
 				distance /= 10;
 			}
 			data_loc = 8;
-			distance = us3_distance;
+			distance = us1_distance;
 			while(distance > 0) {
 				int num_to_disp = distance % 10;
 				out_data[data_loc] = num_to_disp + 48;
@@ -619,7 +630,7 @@ void TIM14_IRQHandler() {
 				distance /= 10;
 			}
 			data_loc = 13;
-			distance = us1_distance;
+			distance = us3_distance;
 			while(distance > 0) {
 				int num_to_disp = distance % 10;
 				out_data[data_loc] = num_to_disp + 48;
@@ -652,7 +663,7 @@ void TIM14_IRQHandler() {
 				char out_data[16] = {'N', 'O', ' ', 'D', 'E', 'L', 'I', 'V', 'E', 'R', 'Y', ' ', ' ', ' ', ' ', ' '};
 				DispString(out_data);
 			}
-		} else if(current_mode == CHANGE_MODE) {
+		} /*else if(current_mode == CHANGE_MODE) {
 			if(use_ps4_controller) {
 				char out_data[13] = {'B', 'T', ' ', 'C', 'O', 'N', 'T', 'R', 'O', 'L', 'L', 'E', 'R'};
 				DispString(out_data);
@@ -661,7 +672,7 @@ void TIM14_IRQHandler() {
 				char out_data[10] = {'A', 'U', 'T', 'O', 'N', 'O', 'M', 'O', 'U', 'S'};
 				DispString(out_data);
 			}
-		}
+		}*/
 		disp_count = 0;
 	}
 	disp_count++;
