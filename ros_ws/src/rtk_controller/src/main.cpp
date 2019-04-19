@@ -235,7 +235,8 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
             }
 
         #else
-            #ifndef _USE_STRAIGHT_LINE
+            #ifdef _USE_STRAIGHT_LINE
+                //Use old way of targeting waypoints
                 float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
                 float dy = LocalOp::m->end->x_index * 0.1f;
                 angle_delta = pi / 2.0f - atan2(dy, dx);
