@@ -194,7 +194,7 @@ class MapMainController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         self.drawPin(pinType: MapMainSettings.mapMainSettings.destinationPin!, waypoint: destinationLoc)
         
         let nextWaypointLoc = Waypoint(coordinate: DeliveryInformation.deliveryInformation.nextWaypointCoord ?? defaultCoord, image: MapMainSettings.mapMainSettings.nextWaypointPin!)
-        self.drawPin(pinType: MapMainSettings.mapMainSettings.nextWaypointPin!, waypoint: nextWaypointLoc)
+        //self.drawPin(pinType: MapMainSettings.mapMainSettings.nextWaypointPin!, waypoint: nextWaypointLoc)
         
         centerMap()
         

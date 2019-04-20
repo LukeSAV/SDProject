@@ -21,18 +21,26 @@ class DeliverySettingsController: UIViewController {
     var syncTimer: Timer!
     
     private func disableDeliveryBtn() {
-        deliverBtn.isEnabled = false
-        deliverBtn.alpha = 0.5
+        //deliverBtn.isEnabled = false
+        deliverBtn.alpha = 1.0
+        deliverBtn.setTitle("STOP DELIVERY", for: .normal)
     }
     
     private func enableDeliveryBtn() {
-        deliverBtn.isEnabled = true
+        //deliverBtn.isEnabled = true
         deliverBtn.alpha = 1.0
+        deliverBtn.setTitle("DELIVER", for: .normal)
+
     }
     
     @IBAction func deliverBtn(_ sender: UIButton) {
-        disableDeliveryBtn()
-        ref.updateChildValues(["Delivery Requested" : true]) // Signal the device user requests delivery
+        if DeliveryInformation.deliveryInformation.delivering {
+            enableDeliveryBtn()
+        } else {
+            disableDeliveryBtn()
+        }
+        ref.updateChildValues(["Delivery Requested" : !DeliveryInformation.deliveryInformation.delivering]) // Signal the device user requests delivery
+        DeliveryInformation.deliveryInformation.delivering = !DeliveryInformation.deliveryInformation.delivering
     }
     
     private func handleViewingEvents() {

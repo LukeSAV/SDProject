@@ -15,8 +15,8 @@
 #include "arm_math.h"
 #include "stdbool.h"
 
-#define IR_RECEIVE_MAX 1200
-#define IR_NO_RECEIVE_MIN 2600
+#define IR_RECEIVE_MAX 500
+#define IR_NO_RECEIVE_MIN 2800
 #define RX_BUFFER_MAX 100
 #define TX_BUFFER_MAX 100
 #define MC_ADDRESS 130
@@ -25,29 +25,28 @@
 #define RESOLUTION 8
 #define LOOK_AHEAD    1.732
 #define LOOK_AHEAD_SQ 3
-#define NORMAL_SPEED 25
+#define NORMAL_SPEED 20
 #define TIC_LENGTH 0.053086
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
 //#define VELOCITY_EQ_B 9.5862
-#define L_R_BIAS 1.03    	//Multiply to Right Wheel
-#define ACCEL 5
+#define L_R_BIAS 1.3    	//Multiply to Right Wheel
+#define ACCEL 2
 #define VEHICLE_WIDTH 0.575
-#define MAX_SPEED 60
-#define MAX_TURN 30
+#define MAX_SPEED 24
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
-
-#define AVERAGE_SPEED 0.5f //Average human walking speed is about 1.4 m/s
-#define TURN_MULT 1.1f
-#define ACCEL_2 5
+#define MAX_TURN 30//30
+#define AVERAGE_SPEED 0.1f //Average human walking speed is about 1.4 m/s // .15
+#define TURN_MULT 3.0 // 3
+#define ACCEL_2 3
 #define DECEL_2 2
-#define MAX_TORQUE 60
+#define MAX_TORQUE 30
 
 enum Encoders{RECEIVE, NO_RECEIVE};
 enum Direction{FORWARD, REVERSE};
 enum LastMotorSent{LEFT, RIGHT};
-enum DisplayMode{START=0, ULTRASONICS=1, ENCODERS=2, DELIVERY=3, END=4};
+enum DisplayMode{START=0, ULTRASONICS=1, ENCODERS=2, DELIVERY=3, JETSON=4, END=5};
 typedef struct {
 	char address;
 	char command;
@@ -77,6 +76,9 @@ static uint32_t adc1_val = 0; // Current ADC channel 1 reading
 
 static uint32_t adc_left_slots = 0; // Number of times a reading on ADC channel 0 has crossed the threshold - right
 static uint32_t adc_right_slots = 0; // Number of times a reading on ADC channel 1 has crossed the threshold - left
+
+static uint32_t adc_left_same_counter = 0;
+static uint32_t adc_right_same_counter = 0;
 
 static uint32_t last_used_adc_left_slots = 0; // Right
 static uint32_t last_used_adc_right_slots = 0; // Left
@@ -118,7 +120,7 @@ static uint8_t disp_count = 0;
 
 static uint16_t time_since_last_jetson_msg = 0; // Time in milliseconds since last message was received from jetson
 
-static uint8_t delivery_requested = 0; // Indication that delivery was requested has been received from Jetson
+static uint8_t delivery_requested = 1; // Indication that delivery was requested has been received from Jetson
 
 /* Control Algorithm Variables */
 static uint32_t encoder_diff_l;
@@ -128,7 +130,7 @@ static uint8_t  decel_count = 1;
 static uint8_t  accel_fail_count = 0;
 static uint8_t  decel_fail_count = 0;
 
-static bool use_ps4_controller = false;
+static bool jetson_connected = false;
 bool new_points_ready = false;
 static uint16_t time_since_screen_change = 0;
 
@@ -137,10 +139,13 @@ float new_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 float new_points_y[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
 /* Current working points */
-float points_x[] = {0.0, 0.0, -1.0, -2.0, -3.0, -4.0, -5.0, -6.0};
-float points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 6.0,  7.0,  8.0};
+float orig_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.4};
+float orig_points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 6.0,  7.0,  8.4};
+
+float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+float points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 7.0,  8.4,  8.4};
 //float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-//float points_y[] = {3.0,  5.0,  7.0,  9.0, 11.0, 13.0,  15.0,  17.0};
+//float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
 //float points_x[] = {0.4, 0.56, 0.86, 0.94, 1.06, 1.23, 1.33, 1.4};
 //float points_y[] = {0.6,  1.2,  1.8,  2.4, 3.0, 3.6,  4.2,  4.8};
 
@@ -156,6 +161,9 @@ Packet right_packet;
 /* Vars for debugging */
 uint16_t num_chars_received = 0;
 uint32_t loop_count = 0;
+
+int int_count = 0;
+int total_int_count = 0;
 
 static void decodeJetsonString();
 
@@ -175,6 +183,7 @@ float distance_squared(float x1, float y1, float x2, float y2);
 void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void PointUpdate (uint32_t diff_l, uint32_t diff_r);
 void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
+void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 
 int main(void) {
 	ADCInit();
@@ -198,76 +207,72 @@ int main(void) {
 	nsWait(100000000);
 
 	bool drive_enable = true;
-	float32_t diff_t = 0.2;
+	float32_t diff_t = 0.1;
 	//float32_t diff_t = 0.10;
 
 	for(;;) {
-		if(!use_ps4_controller) {
-			if(new_points_ready) {
-				memcpy(points_x, new_points_x, sizeof(float) * 8);
-				memcpy(points_y, new_points_y, sizeof(float) * 8);
-				memset(new_points_x, 0.0f, sizeof(float) * 8);
-				memset(new_points_y, 0.0f, sizeof(float) * 8);
-				new_points_ready = false;
-			}
-			drive_enable = find_goal();
-			if(!delivery_requested) { // If the delivery has not been requested from the Jetson, don't drive
-				drive_enable = false;
-			}
-			if(drive_enable) {
-				encoder_diff_l = adc_left_slots - last_used_adc_left_slots;
-				last_used_adc_left_slots = adc_left_slots;
+		if(new_points_ready) {
+			memcpy(points_x, new_points_x, sizeof(float) * 8);
+			memcpy(points_y, new_points_y, sizeof(float) * 8);
+			memset(new_points_x, 0.0f, sizeof(float) * 8);
+			memset(new_points_y, 0.0f, sizeof(float) * 8);
+			new_points_ready = false;
+		}
+		drive_enable = find_goal();
+		if(!delivery_requested) { // If the delivery has not been requested from the Jetson, don't drive
+			drive_enable = false;
+		}
+		if(drive_enable) {
+			encoder_diff_l = adc_left_slots - last_used_adc_left_slots;
+			last_used_adc_left_slots = adc_left_slots;
 
-				encoder_diff_r = adc_right_slots - last_used_adc_right_slots;
-				last_used_adc_right_slots = adc_right_slots;
+			encoder_diff_r = adc_right_slots - last_used_adc_right_slots;
+			last_used_adc_right_slots = adc_right_slots;
 
-				SetMotors2(encoder_diff_l, encoder_diff_r, diff_t);
-				PointUpdate(encoder_diff_l, encoder_diff_r);
-			}
-			else {
-				Drive(left_direction, 0, right_direction, 0);
-			}
-
-			/* Send over goal points to the Jetson */
-			int32_t goal_x_int = goal_x * 100.0f;
-			int32_t goal_y_int = goal_y * 100.0f;
-			if(jetson_tx_buffer_index == 0) {
-				jetson_tx_buffer[0] = '{';
-				jetson_tx_buffer[1] = 'C';
-				if(goal_x_int < 0) {
-					jetson_tx_buffer[2] = '-';
-					goal_x_int *= -1.0f;
-				} else {
-					jetson_tx_buffer[2] = '+';
-				}
-				for(int i = 0; i < 3; i++) {
-					char digit = goal_x_int % 10 + '0';
-					goal_x_int /= 10;
-					jetson_tx_buffer[3 + i] = digit;
-				}
-				jetson_tx_buffer[6] = ',';
-				if(goal_x_int < 0) {
-					jetson_tx_buffer[7] = '-';
-					goal_y_int *= -1.0f;
-				} else {
-					jetson_tx_buffer[7] = '+';
-				}
-				for(int i = 0; i < 3; i++) {
-					char digit = goal_y_int % 10 + '0';
-					goal_y_int /= 10;
-					jetson_tx_buffer[8 + i] = digit;
-				}
-				jetson_tx_buffer[11] = '}';
-				USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
-			}
-		} else {
-			if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
-				left_speed = right_speed = 0;
-			}
-			Drive(left_direction, left_speed, right_direction, right_speed);
+			SetMotors2(encoder_diff_l, encoder_diff_r, diff_t);
+			PointUpdate(encoder_diff_l, encoder_diff_r);
+		}
+		else {
+			Drive(left_direction, 0, right_direction, 0);
 		}
 
-		nsWait(200000000);
+		/* Send over goal points to the Jetson */
+		int32_t goal_x_int = goal_x * 100.0f;
+		int32_t goal_y_int = goal_y * 100.0f;
+		if(jetson_tx_buffer_index == 0) {
+			jetson_tx_buffer[0] = '{';
+			jetson_tx_buffer[1] = 'C';
+			if(goal_x_int < 0) {
+				jetson_tx_buffer[2] = '-';
+				goal_x_int *= -1.0f;
+			} else {
+				jetson_tx_buffer[2] = '+';
+			}
+			for(int i = 0; i < 3; i++) {
+				char digit = goal_x_int % 10 + '0';
+				goal_x_int /= 10;
+				jetson_tx_buffer[3 + i] = digit;
+			}
+			jetson_tx_buffer[6] = ',';
+			if(goal_x_int < 0) {
+				jetson_tx_buffer[7] = '-';
+				goal_y_int *= -1.0f;
+			} else {
+				jetson_tx_buffer[7] = '+';
+			}
+			for(int i = 0; i < 3; i++) {
+				char digit = goal_y_int % 10 + '0';
+				goal_y_int /= 10;
+				jetson_tx_buffer[8 + i] = digit;
+			}
+			jetson_tx_buffer[11] = '}';
+			USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
+		}
+
+		//for(unsigned int i = 0; i < 10; i++) {
+			nsWait(50000000);
+			nsWait(50000000);
+		//}
 		loop_count++;
 	}
 }
@@ -389,6 +394,11 @@ static void decodeJetsonString() {
 		delivery_requested = 0;
 		break;
 	case 'D': // Delivery request received
+		// Reassign points for continuous testing
+		/*for(unsigned int i = 0; i < 8; i++) {
+			points_x[i] = orig_points_x[i];
+			points_y[i] = orig_points_y[i];
+		}*/
 		delivery_requested = 1;
 		break;
 	case 'S': // Switch modes for controller requested
@@ -414,9 +424,11 @@ static int Drive(enum Direction left_direction, char left_speed_v, enum Directio
 	if(mc_tx_buffer_index != 0) {
 		return 1; // Haven't finished sending the last message
 	}
+	printf("%d", left_speed_v);
+	printf("%d", right_speed_v);
 
 	//DIAGNOSTIC ONLY ZERO COUNT TODO REMOVE
-	if(left_speed == 0 || right_speed == 0) {
+	if(left_speed_v == 0 || right_speed_v == 0) {
 		zero_count++;
 	}
 
@@ -460,6 +472,7 @@ static int Drive(enum Direction left_direction, char left_speed_v, enum Directio
 *
 **************************************************************************/
 void TIM2_IRQHandler() {
+	total_int_count++;
 	TIM2->SR &= 0x00;	// Clear the IRQ flag
 
 	ADC1->CHSELR = 0;                 		// Deselect ADC Channels
@@ -494,12 +507,22 @@ void TIM2_IRQHandler() {
 	}
 
 	if(adc0_state != prev_adc0_state) {
-		adc_left_slots++;
+		if(adc_left_same_counter > 1) {
+			adc_left_slots++;
+		}
 		prev_adc0_state = adc0_state;
+		adc_left_same_counter = 0;
+	} else {
+		adc_left_same_counter++;
 	}
 	if(adc1_state != prev_adc1_state) {
-		adc_right_slots++;
+		if(adc_right_same_counter > 1) {
+			adc_right_slots++;
+		}
 		prev_adc1_state = adc1_state;
+		adc_right_same_counter = 0;
+	} else {
+		adc_right_same_counter++;
 	}
 }
 
@@ -526,6 +549,7 @@ void USART1_IRQHandler() {
 			}
 			rx_buffer[rx_buffer_index++] = in_char;
 			if(in_char == '}') {
+				jetson_connected = true;
 				memcpy(last_message, rx_buffer, rx_buffer_index * sizeof(char)); // Copy completed message to memory
 				memset(rx_buffer, '\0', RX_BUFFER_MAX); // Clear buffer
 				decodeJetsonString();
@@ -663,7 +687,16 @@ void TIM14_IRQHandler() {
 				char out_data[16] = {'N', 'O', ' ', 'D', 'E', 'L', 'I', 'V', 'E', 'R', 'Y', ' ', ' ', ' ', ' ', ' '};
 				DispString(out_data);
 			}
-		} /*else if(current_mode == CHANGE_MODE) {
+		} else if(current_mode == JETSON) {
+			if(jetson_connected) {
+				char out_data[16] = {'J', 'E', 'T', 'S', 'O', 'N', ' ', 'O', 'N', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
+				DispString(out_data);
+			} else {
+				char out_data[16] = {'J', 'E', 'T', 'S', 'O', 'N', ' ', 'O', 'F', 'F', ' ', ' ', ' ', ' ', ' ', ' '};
+				DispString(out_data);
+			}
+		}
+			/*else if(current_mode == CHANGE_MODE) {
 			if(use_ps4_controller) {
 				char out_data[13] = {'B', 'T', ' ', 'C', 'O', 'N', 'T', 'R', 'O', 'L', 'L', 'E', 'R'};
 				DispString(out_data);
@@ -701,7 +734,7 @@ void TIM15_IRQHandler() {
 		us1_started = 1;
 	}
 	else if(us1_started && us1_return) { // Pulse stayed high
-		us1_elapsed_echo_time += 60; // Increment by 60 us
+		us1_elapsed_echo_time += 120; // Increment by 60 us
 	}
 	else if(us1_started && !us1_return) { // Pulse went low
 		us1_started = 0;
@@ -712,7 +745,7 @@ void TIM15_IRQHandler() {
 		us2_started = 1;
 	}
 	else if(us2_started && us2_return) { // Pulse stayed high
-		us2_elapsed_echo_time += 60; // Increment by 60 us
+		us2_elapsed_echo_time += 120; // Increment by 60 us
 	}
 	else if(us2_started && !us2_return) { // Pulse went low
 		us2_started = 0;
@@ -723,7 +756,7 @@ void TIM15_IRQHandler() {
 		us3_started = 1;
 	}
 	else if(us3_started && us3_return) { // Pulse stayed high
-		us3_elapsed_echo_time += 60; // Increment by 60 us
+		us3_elapsed_echo_time += 120; // Increment by 60 us
 	}
 	else if(us3_started && !us3_return) { // Pulse went low
 		us3_started = 0;
@@ -748,7 +781,7 @@ static void ADCInit() {
 	while((ADC1->CR & ADC_CR_ADSTART));   	// Wait for ADCstart to be 0.
 
 	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; // Enable clock for timer 2
-	TIM2->ARR = 96000; 					// Enable interrupt at 2ms
+	TIM2->ARR = 192000; 					// Enable interrupt at 2 ms
 	TIM2->DIER |= 0x01; 				// Update interrupt enable
 	TIM2->CR1 |= 0x01; 					// Enable counter
 	NVIC_SetPriority(TIM2_IRQn, 1); 	// Set ADC interrupt priority
@@ -825,7 +858,7 @@ static void UltrasonicInit() {
 
 	RCC->APB2ENR |= RCC_APB2ENR_TIM15EN; 	// Enable clock to timer
 	TIM15->PSC = 47; 						// Prescale clock to 1MHz
-	TIM15->ARR = 60; 						// Trigger every 60 clock cycles (60 us)
+	TIM15->ARR = 120; 						// Trigger every 60 clock cycles (120 us)
 	TIM15->DIER |= 0x01; 					// Update interrupt enable
 	TIM15->CR1 |= 0x01; 					// Enable counter
 
@@ -1115,7 +1148,7 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	else if( v_c > AVERAGE_SPEED + 0.2f) {		// The 0.2f is so we are not constantly accel/decel, favors accel
 //		decel_flag = true;
 		if(v_t > 0) v_t -= DECEL_2;
-		else decel_fail_count--;
+		else decel_fail_count++;
 	}
 
 /*	TODO Need some way to recover after COUNT exceeded
@@ -1141,10 +1174,18 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	if(v_l < 0) v_l = 0;
 	if(v_r < 0) v_r = 0;
 
-	Drive(left_direction, v_l, right_direction, (int)(v_r * L_R_BIAS));
+	Drive(left_direction, v_l, right_direction, (int)((float)v_r * L_R_BIAS));
 
 	left_speed = v_l; // Current left speed to be requested
 	right_speed = v_r; // Current right speed to be requested
 
 	return;
 }
+
+/*void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
+
+	if(goal_x < 0.0f && goal_x > -0.1f) {
+		if(left_speed < NORMAL_SPEED )
+	}
+	Drive(left_direction, left_speed, right_direction, (int)((float)right_speed * L_R_BIAS));
+}*/
