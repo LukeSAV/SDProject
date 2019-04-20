@@ -15,8 +15,8 @@
 #include "arm_math.h"
 #include "stdbool.h"
 
-#define IR_RECEIVE_MAX 800
-#define IR_NO_RECEIVE_MIN 2800
+#define IR_RECEIVE_MAX 1000
+#define IR_NO_RECEIVE_MIN 3000
 #define RX_BUFFER_MAX 100
 #define TX_BUFFER_MAX 100
 #define MC_ADDRESS 130
@@ -30,18 +30,22 @@
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
 //#define VELOCITY_EQ_B 9.5862
-#define L_R_BIAS 1.15    	//Multiply to Right Wheel
+#define L_R_BIAS 0.95   	//Multiply to Right Wheel
 #define ACCEL 2
 #define VEHICLE_WIDTH 0.575
 #define MAX_SPEED 40
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
-#define MAX_TURN 30//30
-#define AVERAGE_SPEED 0.1f //Average human walking speed is about 1.4 m/s // .15
-#define TURN_MULT 3.0 // 3
-#define ACCEL_2 3
-#define DECEL_2 2
-#define MAX_TORQUE 30
+#define MAX_TURN 20//30
+#define AVERAGE_SPEED 0.3f //Average human walking speed is about 1.4 m/s // .15
+#define TURN_MULT 1.0 // 3
+#define ACCEL_2 1
+#define DECEL_2 1
+#define MAX_TORQUE 26
+
+#ifndef _USE_PID_CONTROLLER
+//#define _USE_PID_CONTROLLER
+#endif
 
 enum Encoders{RECEIVE, NO_RECEIVE};
 enum Direction{FORWARD, REVERSE};
@@ -123,8 +127,8 @@ static uint16_t time_since_last_jetson_msg = 0; // Time in milliseconds since la
 static uint8_t delivery_requested = 1; // Indication that delivery was requested has been received from Jetson
 
 /* Control Algorithm Variables */
-static uint32_t encoder_diff_l;
-static uint32_t encoder_diff_r;
+static uint32_t encoder_diff_l = 0;
+static uint32_t encoder_diff_r = 0;
 static uint8_t  accel_count = 1;
 static uint8_t  decel_count = 1;
 static uint8_t  accel_fail_count = 0;
@@ -136,8 +140,10 @@ static uint16_t time_since_screen_change = 0;
 
 int left_speed_integral[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 int right_speed_integral[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-float k_i = 0.1;
-float k_p = 0.9;
+//int integral_sum; // Positive on left wheel
+
+float k_i = 0.0;
+float k_p = 0.6;
 
 /* New points from Jetson */
 float new_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
@@ -171,6 +177,9 @@ int int_count = 0;
 int total_int_count = 0;
 
 uint8_t motor_cmd_count = 0;
+
+static uint8_t integral_counter = 0;
+
 
 static void decodeJetsonString();
 
@@ -214,8 +223,11 @@ int main(void) {
 	nsWait(100000000);
 
 	bool drive_enable = true;
-	float32_t diff_t = 0.2;
+	float32_t diff_t = 0.1;
 	//float32_t diff_t = 0.10;
+
+	int set_encoder_diff_l = 0;
+	int set_encoder_diff_r = 0;
 
 	for(;;) {
 		if(new_points_ready) {
@@ -230,15 +242,26 @@ int main(void) {
 			drive_enable = false;
 		}
 		if(drive_enable) {
+
 			encoder_diff_l = adc_left_slots - last_used_adc_left_slots;
 			last_used_adc_left_slots = adc_left_slots;
 
 			encoder_diff_r = adc_right_slots - last_used_adc_right_slots;
 			last_used_adc_right_slots = adc_right_slots;
 
-			//SetMotors2(encoder_diff_l, encoder_diff_r, diff_t);
-			//PIMotors(encoder_diff_l, encoder_diff_r);
 			PointUpdate(encoder_diff_l, encoder_diff_r);
+
+			set_encoder_diff_l += encoder_diff_l;
+			set_encoder_diff_r += encoder_diff_r;
+
+			motor_cmd_count++;
+			if(motor_cmd_count >= 1) {
+				//PIMotors(encoder_diff_l, encoder_diff_r);
+				SetMotors2(set_encoder_diff_l, set_encoder_diff_r, diff_t);
+				motor_cmd_count = 0;
+				set_encoder_diff_l = 0;
+				set_encoder_diff_r = 0;
+			}
 		}
 		else {
 			Drive(left_direction, 0, right_direction, 0);
@@ -277,8 +300,6 @@ int main(void) {
 			USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
 		}
 
-		nsWait(50000000);
-		nsWait(50000000);
 		nsWait(50000000);
 		nsWait(50000000);
 		loop_count++;
@@ -432,24 +453,33 @@ static int Drive(enum Direction left_direction_v, int16_t left_speed_v, enum Dir
 	if(mc_tx_buffer_index != 0) {
 		return 1; // Haven't finished sending the last message
 	}
-	float left_speed_integral_avg = 0.0f;
-	float right_speed_integral_avg = 0.0f;
-	for(int i = 0; i < 10; i++) {
-		left_speed_integral_avg += left_speed_integral[i];
-		right_speed_integral_avg += right_speed_integral[i];
-		if(i < 9) {
-			left_speed_integral[i] = left_speed_integral[i + 1];
-			right_speed_integral[i] = right_speed_integral[i + 1];
+	/*
+		float left_speed_integral_avg = 0.0f;
+		float right_speed_integral_avg = 0.0f;
+		bool add_new_integral_term = false;
+		integral_counter++;
+		if(integral_counter >= 2) {
+			add_new_integral_term = true;
+			integral_counter = 0;
 		}
-	}
-	left_speed_integral[9] = left_speed_v;
-	right_speed_integral[9] = right_speed_v;
-	left_speed_integral_avg /= 8.0f;
-	right_speed_integral_avg /= 8.0f;
+		for(int i = 0; i < 10; i++) {
+			left_speed_integral_avg += left_speed_integral[i];
+			right_speed_integral_avg += right_speed_integral[i];
+			if(i < 9 && add_new_integral_term) {
+				left_speed_integral[i] = left_speed_integral[i + 1];
+				right_speed_integral[i] = right_speed_integral[i + 1];
+			}
+		}
+		if(add_new_integral_term) {
+			left_speed_integral[9] = left_speed_v;
+			right_speed_integral[9] = right_speed_v;
+		}
+		left_speed_integral_avg /= 10.0f;
+		right_speed_integral_avg /= 10.0f;
 
-	left_speed_v = k_i * left_speed_integral_avg + k_p * (float)left_speed_v;
-	right_speed_v = k_i * right_speed_integral_avg + k_p * (float)right_speed_v;
-
+		left_speed_v = k_i * left_speed_integral_avg + k_p * (float)left_speed_v;
+		right_speed_v = k_i * right_speed_integral_avg + k_p * (float)right_speed_v;
+	*/
 	if(left_speed_v < 0) {
 		left_speed = -1 * left_speed_v;
 		left_direction = REVERSE;
@@ -637,11 +667,6 @@ void USART2_IRQHandler() {
 *
 **************************************************************************/
 void TIM14_IRQHandler() {
-	motor_cmd_count++;
-	if(motor_cmd_count > 1) {
-		PIMotors(encoder_diff_l, encoder_diff_r);
-		motor_cmd_count = 0;
-	}
 	SendEncoderCount();
 	time_since_last_jetson_msg += 200; // Increment timer for last jetson message
 	/* Run ultrasonic pulse */
@@ -1189,7 +1214,10 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	}
 	else if( v_c > AVERAGE_SPEED + 0.2f) {		// The 0.2f is so we are not constantly accel/decel, favors accel
 //		decel_flag = true;
-		if(v_t > 0) v_t -= DECEL_2;
+		if(v_t > 0) {
+			v_t -= DECEL_2;
+			decel_count++;
+		}
 		else decel_fail_count++;
 	}
 
@@ -1200,22 +1228,27 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	}
 */
 
-	int8_t v_l = (int) (v_t * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
-	int8_t v_r = (int) (v_t * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
+	int8_t v_l = (int) (v_t * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ) + 2);
+	int8_t v_r = (int) (v_t * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ) + 2);
 
 	if(v_l > MAX_TORQUE) {
-		v_r -= v_l - MAX_TORQUE;
+		//v_r -= v_l - MAX_TORQUE;
+		v_r--;
 		v_l = MAX_TORQUE;
 	}
 	if(v_r > MAX_TORQUE) {
-		v_l -= v_r - MAX_TORQUE;
+		//v_l -= v_r - MAX_TORQUE;
+		v_l--;
 		v_r = MAX_TORQUE;
 	}
-	if( (v_l - v_r) > MAX_TURN) v_l -= v_l - v_r - MAX_TURN;
-	if( (v_r - v_l) > MAX_TURN) v_r -= v_r - v_l - MAX_TURN;
+	if( (v_l - v_r) > MAX_TURN) v_l -= (v_l - v_r - MAX_TURN);
+	if( (v_r - v_l) > MAX_TURN) v_r -= (v_r - v_l - MAX_TURN);
 	if(v_l < 0) v_l = 0;
 	if(v_r < 0) v_r = 0;
 
+	if(v_l - v_r > 10) {
+		v_r++;
+	}
 	Drive(left_direction, v_l, right_direction, (int)((float)v_r * L_R_BIAS));
 
 	left_speed = v_l; // Current left speed to be requested
@@ -1223,6 +1256,14 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 
 	return;
 }
+
+
+
+
+
+
+
+
 
 void PIMotors(uint32_t diff_l, uint32_t diff_r) {
 	if(abs(goal_x) < 0.1) {
@@ -1237,7 +1278,7 @@ void PIMotors(uint32_t diff_l, uint32_t diff_r) {
 			Drive(FORWARD, left_speed, FORWARD, right_speed * L_R_BIAS);
 			return;
 		}
-		else {
+		else if(diff_r != 0 && diff_l != 0){
 			left_speed--;
 			right_speed--;
 			Drive(FORWARD, left_speed, FORWARD, right_speed * L_R_BIAS);
@@ -1245,25 +1286,24 @@ void PIMotors(uint32_t diff_l, uint32_t diff_r) {
 		}
 	}
 	if(goal_x < 0.0f) {
-		if(goal_x > -0.5f) {
+		if(goal_x > -0.25f) {
 			right_speed++;
-		} else if(goal_x > -1.0f) {
+		} else if(goal_x > -0.5f) {
 			right_speed++;
-		} else if(goal_x > -1.25f) {
+		} else if(goal_x > -0.75f) {
 			right_speed++;
 		} else {
 			right_speed += 2;
 			left_speed--;
 		}
 	} else {
-		if(goal_x < 0.5f) {
+		if(goal_x < 0.25f) {
 			left_speed++;
-		} else if(goal_x < 1.0f) {
-			left_speed++;
-			right_speed--;
-		} else if(goal_x < 1.25f) {
+		} else if(goal_x < 0.5f) {
 			left_speed++;
 			right_speed--;
+		} else if(goal_x < 0.75f) {
+			left_speed++;
 		} else {
 			left_speed += 2;
 			right_speed--;
@@ -1282,5 +1322,7 @@ void PIMotors(uint32_t diff_l, uint32_t diff_r) {
 	else if(diff_r > diff_l && goal_x > 0) {
 		left_speed += 2;
 	}
+	if((left_speed - right_speed) > MAX_TURN) left_speed -= left_speed - right_speed - MAX_TURN;
+	if((right_speed - left_speed) > MAX_TURN) right_speed -= right_speed - left_speed - MAX_TURN;
 	Drive(FORWARD, left_speed, FORWARD, right_speed * L_R_BIAS);
 }
