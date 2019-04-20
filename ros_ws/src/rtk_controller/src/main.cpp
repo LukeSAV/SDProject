@@ -44,9 +44,14 @@
 //#define _USE_A_STAR_INTERPOLATION 
 #endif
 
+#ifndef _USE_STRAIGHT_LINE
+#define _USE_STRAIGHT_LINE
+#endif
+
 #ifndef _USE_OPEN_GL
 //#define _USE_OPEN_GL
 #endif
+
 
 static const float pi = 3.1415927;
 static ros::Publisher cmd_pub;
@@ -230,14 +235,15 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
             }
 
         #else
-            float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
-            float dy = LocalOp::m->end->x_index * 0.1f;
-            angle_delta = pi / 2.0f - atan2(dy, dx);
-            if(angle_delta < 0.0f) {
-                angle_delta += 2.0f * pi;
-            }
-            
-            if(prev_waypoint_key == "") { // In the event that there is no previous waypoint, just draw path between robot and next waypoint
+            #ifdef _USE_STRAIGHT_LINE
+                //Use old way of targeting waypoints
+                float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
+                float dy = LocalOp::m->end->x_index * 0.1f;
+                angle_delta = pi / 2.0f - atan2(dy, dx);
+                if(angle_delta < 0.0f) {
+                    angle_delta += 2.0f * pi;
+                }
+
                 // Project points along line to next waypoint for 8 * 0.6 meters (4.8 meter projection)
                 for(int i = 0; i < 8; i++) { 
                     float new_x = 0.6f * (i + 1) * sin(angle_delta);
@@ -249,113 +255,133 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                         return;
                     }
                 }
-            }
-            else {
-                auto next_waypoint = MapData::path_map.at(next_waypoint_key);
-                auto prev_waypoint = MapData::path_map.at(prev_waypoint_key);
-                boost::multiprecision::cpp_dec_float_50 a = prev_waypoint.lat;
-                boost::multiprecision::cpp_dec_float_50 b = next_waypoint.lat;
-                boost::multiprecision::cpp_dec_float_50 c = next_waypoint.lon;
-                boost::multiprecision::cpp_dec_float_50 d = prev_waypoint.lon;
-                boost::multiprecision::cpp_dec_float_50 e = cur_coord.second;
-                boost::multiprecision::cpp_dec_float_50 f = cur_coord.first;
-                boost::multiprecision::cpp_dec_float_50 tan_theta = tan(cur_heading_ekf);
-                /*cur_heading_ekf = 4.0;
-                boost::multiprecision::cpp_dec_float_50 a = 40.429155;
-                boost::multiprecision::cpp_dec_float_50 b = 40.429053;
-                boost::multiprecision::cpp_dec_float_50 c = -86.91313;
-                boost::multiprecision::cpp_dec_float_50 d = -86.912977;
-                boost::multiprecision::cpp_dec_float_50 e = -86.91297933;
-                boost::multiprecision::cpp_dec_float_50 f = 40.42914998;
-                boost::multiprecision::cpp_dec_float_50 tan_theta = tan(cur_heading_ekf);*/
-
-                double x_test = (c.convert_to<double>() - d.convert_to<double>()) / (b.convert_to<double>() - a.convert_to<double>()) * (f.convert_to<double>() - a.convert_to<double>()) + d.convert_to<double>(); //corrected last term
-
-                bool away;
-                double waypoint_heading = atan2(c.convert_to<double>() - d.convert_to<double>(), b.convert_to<double>() - a.convert_to<double>());
-                if(waypoint_heading < 0.0f) {
-                    waypoint_heading += 2 * pi;
-                }
-                if(x_test > e) {
-                    
-                    std::cout << "Left side of line: " << x_test << std::endl;
-                    double heading_diff = acos(cos(waypoint_heading) * cos(cur_heading_ekf) + sin(waypoint_heading)*sin(cur_heading_ekf)); 
-                    if(heading_diff > 0 && heading_diff < pi/2) {
-                        away = true;
-                    } else if(heading_diff > pi/2 && heading_diff < pi) {
-                        away = false;
-                    } else if(heading_diff > pi && heading_diff < 3*pi/2) {
-                        away = true;
-                    } else {
-                        away = false;
-                    }
-                } else {
-                    std::cout << "Right side of line: " << x_test << std::endl;
-                    double heading_diff = acos(cos(waypoint_heading) * cos(cur_heading_ekf) + sin(waypoint_heading)*sin(cur_heading_ekf)); 
-                    if(heading_diff > 0 && heading_diff < pi/2) {
-                        away = false;
-                    } else if(heading_diff > pi/2 && heading_diff < pi) {
-                        away = true;
-                    } else if(heading_diff > pi && heading_diff < 3*pi/2) {
-                        away = false;
-                    } else {
-                        away = true;
-                    }
-                }
-
-                // AWAY
-                boost::multiprecision::cpp_dec_float_50 intersect_pt_lon;
-                boost::multiprecision::cpp_dec_float_50 intersect_pt_lat;
-                std::cout << std::setprecision(10);
-                if(away) {
-                    std::cout << "a: " << a << " b: " << b << " c: " << c << " d: " << d << " e: " << e << " f: " << f << " theta: " << cur_heading_ekf << std::endl;
-                    intersect_pt_lon = (a * c - b * d - c * f + d * f - c * e * tan_theta + d * e * tan_theta) / (a - b - c * tan_theta + d * tan_theta);
-                    intersect_pt_lat = (a * f - b * f - a * c * tan_theta + a * e * tan_theta + b * d * tan_theta - b * e * tan_theta) / (a - b - c * tan_theta + d * tan_theta);
-                    std::cout << "Away" << std::endl;
-                    std::cout << intersect_pt_lon << std::endl;
-                    std::cout << intersect_pt_lat << std::endl;
-                } else {
-                    // TOWARD
-                    std::cout << "a: " << a << " b: " << b << " c: " << c << " d: " << d << " e: " << e << " f: " << f << " theta: " << cur_heading_ekf << std::endl;
-                    boost::multiprecision::cpp_dec_float_50 toward_denom = boost::multiprecision::cpp_dec_float_50(a * a - 2 * a * b + b * b + c * c - 2 * c * d + d * d);
-                    intersect_pt_lon = boost::multiprecision::cpp_dec_float_50(a * a * c - a * b * c - a * b * d - f * a * c + f * a * d + b * b * d + f * b * c - f * b * d + e * c * c - 2 * e * c * d + e * d * d) / toward_denom;
-                    intersect_pt_lat = boost::multiprecision::cpp_dec_float_50(f * a * a - 2 * f * a * b + a * c * c - a * c * d - e * a * c + e * a * d + f * b * b - b * c * d + e * b * c + b * d * d - e * b * d) / toward_denom;
-                    std::cout << "Toward" << std::endl;
-                    std::cout << intersect_pt_lon << std::endl;
-                    std::cout << intersect_pt_lat << std::endl;
-                }
-                std::cout << "Robot heading: " << cur_heading_ekf << " Waypoint heading: " << waypoint_heading << std::endl;
-                // have point of intersection use waypoint heading here to add points on line
-                for(int i = 0; i < 8; i++) { 
-                    // These are the points interpolated along the line in latitude/longitude
-                    double new_x_rot = 0.6f * (i + 1) * sin(waypoint_heading) / DEGREE_MULTI_FACTOR + intersect_pt_lon.convert_to<double>(); 
-                    double new_y_rot = 0.6f * (i + 1) * cos(waypoint_heading) / DEGREE_MULTI_FACTOR + intersect_pt_lat.convert_to<double>();
-
-                    std::cout << "x coord: " << new_x_rot << " y coord: " << new_y_rot << std::endl;
-
-
-                    // Translation
-                    double new_x = new_x_rot - e.convert_to<double>();
-                    double new_y = new_y_rot - f.convert_to<double>();
-
-
-                    // Rotation
-                    double delta_theta = cur_heading_ekf;
-                    double robot_x = (new_x * cos(delta_theta) - new_y * sin(delta_theta)) * DEGREE_MULTI_FACTOR;
-                    double robot_y = (new_x * sin(delta_theta) + new_y * cos(delta_theta)) * DEGREE_MULTI_FACTOR;
-
-
-                    std::cout << "x: " << robot_x << " y: " << robot_y << std::endl;
-                    
-                    x_series[i] = robot_x;
-                    y_series[i] = robot_y;
-                    if(robot_y < 0.0f) {
-                        ROS_ERROR("Y value to send to microcontroller is negative");
-                        return;
-                    }
+            #else
+                float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
+                float dy = LocalOp::m->end->x_index * 0.1f;
+                angle_delta = pi / 2.0f - atan2(dy, dx);
+                if(angle_delta < 0.0f) {
+                    angle_delta += 2.0f * pi;
                 }
                 
-            }
+                if(prev_waypoint_key == "") { // In the event that there is no previous waypoint, just draw path between robot and next waypoint
+                    // Project points along line to next waypoint for 8 * 0.6 meters (4.8 meter projection)
+                    for(int i = 0; i < 8; i++) { 
+                        float new_x = 0.6f * (i + 1) * sin(angle_delta);
+                        float new_y = 0.6f * (i + 1) * cos(angle_delta);
+                        x_series[i] = new_x;
+                        y_series[i] = new_y;
+                        if(new_y < 0.0f) {
+                            ROS_ERROR("MISSED WAYPOINT");
+                            return;
+                        }
+                    }
+                }
+                else {
+                    auto next_waypoint = MapData::path_map.at(next_waypoint_key);
+                    auto prev_waypoint = MapData::path_map.at(prev_waypoint_key);
+                    boost::multiprecision::cpp_dec_float_50 a = prev_waypoint.lat;
+                    boost::multiprecision::cpp_dec_float_50 b = next_waypoint.lat;
+                    boost::multiprecision::cpp_dec_float_50 c = next_waypoint.lon;
+                    boost::multiprecision::cpp_dec_float_50 d = prev_waypoint.lon;
+                    boost::multiprecision::cpp_dec_float_50 e = cur_coord.second;
+                    boost::multiprecision::cpp_dec_float_50 f = cur_coord.first;
+                    boost::multiprecision::cpp_dec_float_50 tan_theta = tan(cur_heading_ekf);
+                    /*cur_heading_ekf = 4.0;
+                    boost::multiprecision::cpp_dec_float_50 a = 40.429155;
+                    boost::multiprecision::cpp_dec_float_50 b = 40.429053;
+                    boost::multiprecision::cpp_dec_float_50 c = -86.91313;
+                    boost::multiprecision::cpp_dec_float_50 d = -86.912977;
+                    boost::multiprecision::cpp_dec_float_50 e = -86.91297933;
+                    boost::multiprecision::cpp_dec_float_50 f = 40.42914998;
+                    boost::multiprecision::cpp_dec_float_50 tan_theta = tan(cur_heading_ekf);*/
+
+                    double x_test = (c.convert_to<double>() - d.convert_to<double>()) / (b.convert_to<double>() - a.convert_to<double>()) * (f.convert_to<double>() - a.convert_to<double>()) + d.convert_to<double>(); //corrected last term
+
+                    bool away;
+                    double waypoint_heading = atan2(c.convert_to<double>() - d.convert_to<double>(), b.convert_to<double>() - a.convert_to<double>());
+                    if(waypoint_heading < 0.0f) {
+                        waypoint_heading += 2 * pi;
+                    }
+                    if(x_test > e) {
+                        
+                        std::cout << "Left side of line: " << x_test << std::endl;
+                        double heading_diff = acos(cos(waypoint_heading) * cos(cur_heading_ekf) + sin(waypoint_heading)*sin(cur_heading_ekf)); 
+                        if(heading_diff > 0 && heading_diff < pi/2) {
+                            away = true;
+                        } else if(heading_diff > pi/2 && heading_diff < pi) {
+                            away = false;
+                        } else if(heading_diff > pi && heading_diff < 3*pi/2) {
+                            away = true;
+                        } else {
+                            away = false;
+                        }
+                    } else {
+                        std::cout << "Right side of line: " << x_test << std::endl;
+                        double heading_diff = acos(cos(waypoint_heading) * cos(cur_heading_ekf) + sin(waypoint_heading)*sin(cur_heading_ekf)); 
+                        if(heading_diff > 0 && heading_diff < pi/2) {
+                            away = false;
+                        } else if(heading_diff > pi/2 && heading_diff < pi) {
+                            away = true;
+                        } else if(heading_diff > pi && heading_diff < 3*pi/2) {
+                            away = false;
+                        } else {
+                            away = true;
+                        }
+                    }
+
+                    // AWAY
+                    boost::multiprecision::cpp_dec_float_50 intersect_pt_lon;
+                    boost::multiprecision::cpp_dec_float_50 intersect_pt_lat;
+                    std::cout << std::setprecision(10);
+                    if(away) {
+                        std::cout << "a: " << a << " b: " << b << " c: " << c << " d: " << d << " e: " << e << " f: " << f << " theta: " << cur_heading_ekf << std::endl;
+                        intersect_pt_lon = (a * c - b * d - c * f + d * f - c * e * tan_theta + d * e * tan_theta) / (a - b - c * tan_theta + d * tan_theta);
+                        intersect_pt_lat = (a * f - b * f - a * c * tan_theta + a * e * tan_theta + b * d * tan_theta - b * e * tan_theta) / (a - b - c * tan_theta + d * tan_theta);
+                        std::cout << "Away" << std::endl;
+                        std::cout << intersect_pt_lon << std::endl;
+                        std::cout << intersect_pt_lat << std::endl;
+                    } else {
+                        // TOWARD
+                        std::cout << "a: " << a << " b: " << b << " c: " << c << " d: " << d << " e: " << e << " f: " << f << " theta: " << cur_heading_ekf << std::endl;
+                        boost::multiprecision::cpp_dec_float_50 toward_denom = boost::multiprecision::cpp_dec_float_50(a * a - 2 * a * b + b * b + c * c - 2 * c * d + d * d);
+                        intersect_pt_lon = boost::multiprecision::cpp_dec_float_50(a * a * c - a * b * c - a * b * d - f * a * c + f * a * d + b * b * d + f * b * c - f * b * d + e * c * c - 2 * e * c * d + e * d * d) / toward_denom;
+                        intersect_pt_lat = boost::multiprecision::cpp_dec_float_50(f * a * a - 2 * f * a * b + a * c * c - a * c * d - e * a * c + e * a * d + f * b * b - b * c * d + e * b * c + b * d * d - e * b * d) / toward_denom;
+                        std::cout << "Toward" << std::endl;
+                        std::cout << intersect_pt_lon << std::endl;
+                        std::cout << intersect_pt_lat << std::endl;
+                    }
+                    std::cout << "Robot heading: " << cur_heading_ekf << " Waypoint heading: " << waypoint_heading << std::endl;
+                    // have point of intersection use waypoint heading here to add points on line
+                    for(int i = 0; i < 8; i++) { 
+                        // These are the points interpolated along the line in latitude/longitude
+                        double new_x_rot = 0.6f * (i + 1) * sin(waypoint_heading) / DEGREE_MULTI_FACTOR + intersect_pt_lon.convert_to<double>(); 
+                        double new_y_rot = 0.6f * (i + 1) * cos(waypoint_heading) / DEGREE_MULTI_FACTOR + intersect_pt_lat.convert_to<double>();
+
+                        std::cout << "x coord: " << new_x_rot << " y coord: " << new_y_rot << std::endl;
+
+
+                        // Translation
+                        double new_x = new_x_rot - e.convert_to<double>();
+                        double new_y = new_y_rot - f.convert_to<double>();
+
+
+                        // Rotation
+                        double delta_theta = cur_heading_ekf;
+                        double robot_x = (new_x * cos(delta_theta) - new_y * sin(delta_theta)) * DEGREE_MULTI_FACTOR;
+                        double robot_y = (new_x * sin(delta_theta) + new_y * cos(delta_theta)) * DEGREE_MULTI_FACTOR;
+
+
+                        std::cout << "x: " << robot_x << " y: " << robot_y << std::endl;
+                        
+                        x_series[i] = robot_x;
+                        y_series[i] = robot_y;
+                        if(robot_y < 0.0f) {
+                            ROS_ERROR("Y value to send to microcontroller is negative");
+                            return;
+                        }
+                    }
+                }
+            #endif
         #endif
         convertPubMsg(); // Convert the x_series and y_series points to a string to send to the microcontroller
         cmd_pub.publish(pub_msg);
@@ -382,7 +408,7 @@ int main(int argc, char **argv)
     auto start_landmark = std::chrono::system_clock::now();
     auto cur_time = start_landmark;
     std::chrono::duration<double> elapsed_time;
-    xml_reader("/home/luke/SDProject/ros_ws/src/rtk_controller/purdue_mapv1.0_old.xml");
+    xml_reader("/home/nvidia/workspace/SDProject/ros_ws/src/rtk_controller/purdue_mapv1.0_old.xml");
 
     // Initialize frst waypoint
     prev_waypoint_key = MapData::path_map.begin()->first;

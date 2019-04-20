@@ -81,6 +81,7 @@ enum MODE { HTTP = 1, RTSP = 2, NTRIP1 = 3, AUTO = 4, UDP = 5, END };
 /* */
 std::mutex input_buf_lock;
 static char input_buf[MAXDATASIZE * 2];
+static char buf_to_send[MAXDATASIZE * 2];
 static void handleIPConnection(sockettype sockfd);
 static int numbytes = 0;
 
@@ -244,6 +245,8 @@ static int encode(char *buf, int size, const char *user, const char *pwd)
 	return bytes;
 }
 
+static struct serial rtk_uart; // Serial connection (read/write at 57600)
+
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "rtk_gps_node");
@@ -262,7 +265,6 @@ int main(int argc, char **argv)
 		alarm(ALARMTIME);
 		setargs(&args);
 
-		struct serial rtk_uart; // Serial connection (read/write at 57600)
 		FILE *ser = 0;
 		char nmeabuffer[200] = "$GPGGA,"; // Start string
 		size_t nmeabufpos = 0;
@@ -414,14 +416,16 @@ int main(int argc, char **argv)
 						NMEAData::gpgga_mu.unlock();
 						start = std::chrono::system_clock::now();
 					}
+
+					/*
 					if(numbytes > 0) { // This should be the full blown RTCM3 message
 						alarm(ALARMTIME); // Data has been received, reset the alarm
-						input_buf_lock.lock();
-						SerialWrite(&rtk_uart, input_buf, numbytes);	
+						int bytes_out = numbytes;
+						memcpy(buf_to_send, input_buf, numbytes);
 						numbytes = 0; // All buffer data was written
-						input_buf_lock.unlock();
+						SerialWrite(&rtk_uart, input_buf, bytes_out);	
 					}
-
+					*/
 					memset(read_buf, '\0', sizeof(read_buf)); // Clear the buffer
 					readBytes = SerialRead(&rtk_uart, read_buf, MAXDATASIZE); // Receive any data from the UART hardware buffer
 
@@ -430,7 +434,7 @@ int main(int argc, char **argv)
 					cur_time = std::chrono::system_clock::now();
 					elapsed_time = cur_time - start;
 					//std::cout << elapsed_time.count() << std::endl;
-                    sleep(1);
+					std::this_thread::sleep_for(std::chrono::seconds(1));
 				}
 				ntrip_thread.join();
 			}
@@ -455,7 +459,13 @@ static void handleIPConnection(sockettype sockfd) {
 		input_buf_lock.lock();
 		memcpy(input_buf + numbytes, ip_recv_buf, ip_recv_bytes);
 		numbytes += ip_recv_bytes;
+		if(numbytes > 0) { // This should be the full blown RTCM3 message
+			alarm(ALARMTIME); // Data has been received, reset the alarm
+			SerialWrite(&rtk_uart, ip_recv_buf, numbytes);	
+			numbytes = 0; // All buffer data was written
+		}
 		input_buf_lock.unlock();
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
 
 }
