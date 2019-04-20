@@ -15,7 +15,7 @@
 #include "arm_math.h"
 #include "stdbool.h"
 
-#define IR_RECEIVE_MAX 500
+#define IR_RECEIVE_MAX 800
 #define IR_NO_RECEIVE_MIN 2800
 #define RX_BUFFER_MAX 100
 #define TX_BUFFER_MAX 100
@@ -30,7 +30,7 @@
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
 //#define VELOCITY_EQ_B 9.5862
-#define L_R_BIAS 1.08    	//Multiply to Right Wheel
+#define L_R_BIAS 1.15    	//Multiply to Right Wheel
 #define ACCEL 2
 #define VEHICLE_WIDTH 0.575
 #define MAX_SPEED 40
@@ -136,8 +136,8 @@ static uint16_t time_since_screen_change = 0;
 
 int left_speed_integral[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 int right_speed_integral[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-float k_i = 0.4;
-float k_p = 0.6;
+float k_i = 0.1;
+float k_p = 0.9;
 
 /* New points from Jetson */
 float new_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
@@ -169,6 +169,8 @@ uint32_t loop_count = 0;
 
 int int_count = 0;
 int total_int_count = 0;
+
+uint8_t motor_cmd_count = 0;
 
 static void decodeJetsonString();
 
@@ -235,7 +237,7 @@ int main(void) {
 			last_used_adc_right_slots = adc_right_slots;
 
 			//SetMotors2(encoder_diff_l, encoder_diff_r, diff_t);
-			PIMotors(encoder_diff_l, encoder_diff_r);
+			//PIMotors(encoder_diff_l, encoder_diff_r);
 			PointUpdate(encoder_diff_l, encoder_diff_r);
 		}
 		else {
@@ -275,12 +277,10 @@ int main(void) {
 			USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
 		}
 
-		//for(unsigned int i = 0; i < 10; i++) {
-			nsWait(50000000);
-			nsWait(50000000);
-			nsWait(50000000);
-			nsWait(50000000);
-		//}
+		nsWait(50000000);
+		nsWait(50000000);
+		nsWait(50000000);
+		nsWait(50000000);
 		loop_count++;
 	}
 }
@@ -637,6 +637,11 @@ void USART2_IRQHandler() {
 *
 **************************************************************************/
 void TIM14_IRQHandler() {
+	motor_cmd_count++;
+	if(motor_cmd_count > 1) {
+		PIMotors(encoder_diff_l, encoder_diff_r);
+		motor_cmd_count = 0;
+	}
 	SendEncoderCount();
 	time_since_last_jetson_msg += 200; // Increment timer for last jetson message
 	/* Run ultrasonic pulse */
