@@ -86,8 +86,8 @@ static uint32_t last_used_adc_right_slots = 0; // Left
 static uint32_t last_encoder_left_count_to_jetson = 0;
 static uint32_t last_encoder_right_count_to_jetson = 0;
 
-static uint8_t left_speed = 0; // Current left speed to be requested
-static uint8_t right_speed = 0; // Current right speed to be requested
+static int16_t left_speed = 0; // Current left speed to be requested
+static int16_t right_speed = 0; // Current right speed to be requested
 
 /* UART vars */
 static char last_message[RX_BUFFER_MAX]; // Contains last full string enclosed in curly braces
@@ -183,7 +183,7 @@ float distance_squared(float x1, float y1, float x2, float y2);
 void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void PointUpdate (uint32_t diff_l, uint32_t diff_r);
 void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
-void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
+void PIMotors(uint32_t diff_l, uint32_t diff_r);
 
 int main(void) {
 	ADCInit();
@@ -229,7 +229,8 @@ int main(void) {
 			encoder_diff_r = adc_right_slots - last_used_adc_right_slots;
 			last_used_adc_right_slots = adc_right_slots;
 
-			SetMotors2(encoder_diff_l, encoder_diff_r, diff_t);
+			//SetMotors2(encoder_diff_l, encoder_diff_r, diff_t);
+			PIMotors(encoder_diff_l, encoder_diff_r);
 			PointUpdate(encoder_diff_l, encoder_diff_r);
 		}
 		else {
@@ -420,12 +421,21 @@ static void decodeJetsonString() {
 *	Returns 1 if still sending the previous command, 0 otherwise.
 *
 **************************************************************************/
-static int Drive(enum Direction left_direction, char left_speed_v, enum Direction right_direction, char right_speed_v) {
+static int Drive(enum Direction left_direction, int16_t left_speed_v, enum Direction right_direction, int16_t right_speed_v) {
 	if(mc_tx_buffer_index != 0) {
 		return 1; // Haven't finished sending the last message
 	}
-	printf("%d", left_speed_v);
-	printf("%d", right_speed_v);
+	if(left_speed_v < 0) {
+		left_speed = 0;
+	} else if(left_speed_v > 128) {
+		left_speed_v = 128;
+	}
+	if(right_speed_v < 0) {
+		right_speed = 0;
+	} else if(right_speed_v > 128) {
+		right_speed_v = 128;
+	}
+
 
 	//DIAGNOSTIC ONLY ZERO COUNT TODO REMOVE
 	if(left_speed_v == 0 || right_speed_v == 0) {
@@ -1182,10 +1192,45 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	return;
 }
 
-/*void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
-
-	if(goal_x < 0.0f && goal_x > -0.1f) {
-		if(left_speed < NORMAL_SPEED )
+void PIMotors(uint32_t diff_l, uint32_t diff_r) {
+	if(abs(goal_x) < 0.1) {
+		if(left_speed < NORMAL_SPEED && right_speed < NORMAL_SPEED) {
+			if(right_speed > left_speed) {
+				left_speed = right_speed;
+			} else {
+				right_speed = left_speed;
+			}
+			left_speed++;
+			right_speed++;
+			return;
+		}
 	}
-	Drive(left_direction, left_speed, right_direction, (int)((float)right_speed * L_R_BIAS));
-}*/
+	if(goal_x < 0.0f) {
+		if(goal_x > -0.25f) {
+			right_speed++;
+		} else if(goal_x > -0.5f) {
+			right_speed++;
+			left_speed--;
+		} else if(goal_x > -0.75f) {
+			right_speed += 2;
+			left_speed--;
+		} else {
+			right_speed += 4;
+			left_speed--;
+		}
+	} else {
+		if(goal_x < 0.25f) {
+			left_speed++;
+		} else if(goal_x < 0.5f) {
+			left_speed++;
+			right_speed--;
+		} else if(goal_x < 0.75f) {
+			left_speed += 2;
+			right_speed--;
+		} else {
+			left_speed += 4;
+			right_speed--;
+		}
+	}
+	Drive(FORWARD, left_speed, FORWARD, right_speed);
+}
