@@ -15,8 +15,8 @@
 #include "arm_math.h"
 #include "stdbool.h"
 
-#define IR_RECEIVE_MAX 1000
-#define IR_NO_RECEIVE_MIN 3000
+#define IR_RECEIVE_MAX 400
+#define IR_NO_RECEIVE_MIN 600
 #define RX_BUFFER_MAX 100
 #define TX_BUFFER_MAX 100
 #define MC_ADDRESS 130
@@ -30,18 +30,18 @@
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
 //#define VELOCITY_EQ_B 9.5862
-#define L_R_BIAS 0.95   	//Multiply to Right Wheel
+#define L_R_BIAS 1.1   	//Multiply to Right Wheel
 #define ACCEL 2
 #define VEHICLE_WIDTH 0.575
 #define MAX_SPEED 40
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
-#define MAX_TURN 20//30
-#define AVERAGE_SPEED 0.3f //Average human walking speed is about 1.4 m/s // .15
-#define TURN_MULT 1.0 // 3
+#define MAX_TURN 30//30
+#define AVERAGE_SPEED 0.4f //Average human walking speed is about 1.4 m/s // .15
+#define TURN_MULT 3.0 // 3
 #define ACCEL_2 1
 #define DECEL_2 1
-#define MAX_TORQUE 26
+#define MAX_TORQUE 40
 
 #ifndef _USE_PID_CONTROLLER
 //#define _USE_PID_CONTROLLER
@@ -153,10 +153,10 @@ float new_points_y[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 float orig_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.4};
 float orig_points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 6.0,  7.0,  8.4};
 
-float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-float points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 7.0,  8.4,  8.4};
 //float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-//float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
+//float points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 7.0,  8.4,  8.4};
+float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
 //float points_x[] = {0.4, 0.56, 0.86, 0.94, 1.06, 1.23, 1.33, 1.4};
 //float points_y[] = {0.6,  1.2,  1.8,  2.4, 3.0, 3.6,  4.2,  4.8};
 
@@ -223,7 +223,7 @@ int main(void) {
 	nsWait(100000000);
 
 	bool drive_enable = true;
-	float32_t diff_t = 0.1;
+	float32_t diff_t = 1.0;
 	//float32_t diff_t = 0.10;
 
 	int set_encoder_diff_l = 0;
@@ -255,7 +255,7 @@ int main(void) {
 			set_encoder_diff_r += encoder_diff_r;
 
 			motor_cmd_count++;
-			if(motor_cmd_count >= 1) {
+			if(motor_cmd_count >= 10) {
 				//PIMotors(encoder_diff_l, encoder_diff_r);
 				SetMotors2(set_encoder_diff_l, set_encoder_diff_r, diff_t);
 				motor_cmd_count = 0;
