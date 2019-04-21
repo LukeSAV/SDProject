@@ -1326,3 +1326,53 @@ void PIMotors(uint32_t diff_l, uint32_t diff_r) {
 	if((right_speed - left_speed) > MAX_TURN) right_speed -= right_speed - left_speed - MAX_TURN;
 	Drive(FORWARD, left_speed, FORWARD, right_speed * L_R_BIAS);
 }
+
+
+
+/**************************************************
+ *
+ *  Keith's Control algorithm Tunable Parameters
+ *  
+**************************************************/
+uint8_t old_power_l = 0;
+uint8_t old_power_r = 0;
+
+float last_commanded_vl = 0;
+float last_commanded_vr = 0;
+
+float old_kr = 1.0;
+float old_kl = 1.0;
+
+
+// Velocity deltas can range from 0 to .3 m/s
+// Power can range 0 - 255
+// Want to add corrections by around 25% filtered
+// 255/.3 ~= 765 so delta_velocity * 765 = linearly_scaled_power
+// Want 10 % of that so want 191.25
+
+#define KPL 76.5;
+#define KPR 76.5;
+
+void wheelControl(uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
+	float v_c = ((float)diff_l + (float)diff_r) * TIC_LENGTH / 2.00f / diff_t;	//  m/s
+
+	float measured_vl = (((float) diff_l) * TIC_LENGTH) / diff_t;
+	float measured_vr = (((float) diff_r) * TIC_LENGTH) / diff_t;
+
+	float desired_vl = (AVERAGE_SPEED * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ) + 2);
+	float desired_vr = (AVERAGE_SPEED * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ) + 2);
+
+	// Figure out what the power scale constants will be
+	float kl = (last_commanded_vl - measured_vl)*KPL + old_kl; // TODO: Could add integral constants here
+	float kr = (last_commanded_vl - measured_vl)*KPR + old_kr;
+	old_kl = kl;
+	old_kr = kr;
+
+	// Adjust power outputs as a function of kl and kr
+	power_l = old_power_l + (desired_vl - measured_vl) * kl;
+	power_r = old_power_r + (desired_vr - measured_vr) * kr;
+
+
+
+	Drive(FORWARD, power_l, FORWARD, power_r);
+}
