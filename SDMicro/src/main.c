@@ -15,8 +15,8 @@
 #include "arm_math.h"
 #include "stdbool.h"
 
-#define IR_RECEIVE_MAX 400
-#define IR_NO_RECEIVE_MIN 600
+#define IR_RECEIVE_MAX 1200
+#define IR_NO_RECEIVE_MIN 3000
 #define RX_BUFFER_MAX 100
 #define TX_BUFFER_MAX 100
 #define MC_ADDRESS 130
@@ -30,18 +30,17 @@
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
 //#define VELOCITY_EQ_B 9.5862
-#define L_R_BIAS 1.4   	//Multiply to Right Wheel
+#define L_R_BIAS 1.2   	//Multiply to Right Wheel
 #define ACCEL 2
 #define VEHICLE_WIDTH 0.575
-#define MAX_SPEED 40
+#define MAX_SPEED 30
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
-#define MAX_TURN 30//30
-#define AVERAGE_SPEED 0.3f //Average human walking speed is about 1.4 m/s // .15
-#define TURN_MULT 1.0f // 3
+#define MAX_TURN 15//30
+#define AVERAGE_SPEED 0.2f //Average human walking speed is about 1.4 m/s // .15
 #define ACCEL_2 1
 #define DECEL_2 1
-#define MAX_TORQUE 40
+#define MAX_TORQUE 30
 
 #define KPL 10.0f;
 #define KPR 15.0f;
@@ -66,6 +65,8 @@ typedef struct _Point {
 	float y;
 } Point;
 
+static float TURN_MULT = 1.0f; // 3
+
 /* Display mode info */
 static uint8_t current_mode = ULTRASONICS;
 
@@ -76,7 +77,7 @@ enum Encoders adc0_state = NO_RECEIVE; // Current ADC channel 0 state
 enum Encoders adc1_state = NO_RECEIVE; // Current ADC channel 1 state
 
 enum Direction left_direction = FORWARD;
-enum Direction right_direction = FORWARD;
+enum Direction right_direction = REVERSE;
 
 static uint32_t adc0_val = 0; // Current ADC channel 0 reading
 static uint32_t adc1_val = 0; // Current ADC channel 1 reading
@@ -157,7 +158,7 @@ float orig_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.4};
 float orig_points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 6.0,  7.0,  8.4};
 
 float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-float points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 7.0,  8.4,  8.4};
+float points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 7.0,  8.4,  9.4};
 //float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 //float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
 //float points_x[] = {0.4, 0.56, 0.86, 0.94, 1.06, 1.23, 1.33, 1.4};
@@ -165,6 +166,9 @@ float points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 7.0,  8.4,  8.4};
 
 float goal_x = 0.0;
 float goal_y = 0.0;
+
+float prev_goal_x = 0.0;
+float prev_goal_y = 0.0;
 uint8_t v_t = 0;
 uint32_t zero_count = 0; //DIAGNOSTIC ONLY TODO REMOVE
 
@@ -181,7 +185,7 @@ int total_int_count = 0;
 
 uint8_t motor_cmd_count = 0;
 
-static uint8_t integral_counter = 0;
+//static uint8_t integral_counter = 0;
 
 
 static void decodeJetsonString();
@@ -227,7 +231,7 @@ int main(void) {
 	nsWait(100000000);
 
 	bool drive_enable = true;
-	float32_t diff_t = 0.5f;
+	float32_t diff_t = 0.2f;
 	//float32_t diff_t = 0.10;
 
 	int set_encoder_diff_l = 0;
@@ -257,7 +261,7 @@ int main(void) {
 			set_encoder_diff_r += encoder_diff_r;
 
 			motor_cmd_count++;
-			if(motor_cmd_count >= 5) {
+			if(motor_cmd_count >= 2) {
 				PointUpdate(set_encoder_diff_l, set_encoder_diff_r);
 				//PIMotors(encoder_diff_l, encoder_diff_r);
 				SetMotors2(set_encoder_diff_l, set_encoder_diff_r, diff_t);
@@ -487,15 +491,23 @@ static int Drive(enum Direction left_direction_v, int16_t left_speed_v, enum Dir
 	*/
 	if(left_speed_v < 0) {
 		left_speed = -1 * left_speed_v;
-		left_direction = REVERSE;
-	} else if(left_speed_v > MAX_SPEED) {
-		left_speed_v = MAX_SPEED;
+		if(left_direction_v == FORWARD) {
+			left_direction_v = REVERSE;
+		} else {
+			left_direction_v = FORWARD;
+		}
+	} else if(left_speed_v > 80) {
+		left_speed_v = 80;
 	}
 	if(right_speed_v < 0) {
 		right_speed = -1 * right_speed_v;
-		right_direction = REVERSE;
-	} else if(right_speed_v > MAX_SPEED) {
-		right_speed_v = MAX_SPEED;
+		if(right_direction_v == FORWARD) {
+			right_direction_v = REVERSE;
+		} else {
+			right_direction_v = FORWARD;
+		}
+	} else if(right_speed_v > 80) {
+		right_speed_v = 80;
 	}
 
 
@@ -1208,18 +1220,25 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 
 void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	float v_c = ((float)diff_l + (float)diff_r) * TIC_LENGTH / 2.00f / diff_t;	//  m/s
+	if(goal_x < 0.2 && goal_x > -0.2) {
+		TURN_MULT = 0.1f;
+	} else if(goal_x < 0.5 && goal_x > -0.5) {
+		TURN_MULT = 0.2f;
+	} else {
+		TURN_MULT = 0.4f;
+	}
 
 //	bool accel_flag = false;
-//	bool decel_flag = false;
+	bool decel_flag = false;
 
 	if(v_c < AVERAGE_SPEED) {
 //		accel_flag = true;
 		if(v_t < MAX_TORQUE) v_t += ACCEL_2;
 		else accel_fail_count++;
 	}
-	else if( v_c > AVERAGE_SPEED + 0.2f) {		// The 0.2f is so we are not constantly accel/decel, favors accel
-//		decel_flag = true;
+	else if(v_c > AVERAGE_SPEED + 0.2f) {		// The 0.2f is so we are not constantly accel/decel, favors accel
 		if(v_t > 0) {
+			decel_flag = true;
 			v_t -= DECEL_2;
 			decel_count++;
 		}
@@ -1233,31 +1252,45 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	}
 */
 
-	int8_t v_l = (int) (v_t * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ) + 2);
-	int8_t v_r = (int) (v_t * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ) + 2);
+	int8_t v_l = (int) (v_t * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
+	int8_t v_r = (int) (v_t * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
+
+	if(v_l < v_r) {
+		if(goal_x > prev_goal_x) {
+			prev_goal_x = goal_x;
+			v_t += DECEL_2;
+			Drive(left_direction, left_speed, right_direction, right_speed);
+			return;
+		}
+	} else if(v_r < v_l) {
+		if(goal_x < prev_goal_x) {
+			prev_goal_x = goal_x;
+			v_t += DECEL_2;
+			Drive(left_direction, left_speed, right_direction, right_speed);
+			return;
+		}
+	}
+	prev_goal_x = goal_x;
 
 	if(v_l > MAX_TORQUE) {
 		//v_r -= v_l - MAX_TORQUE;
-		v_r--;
+		v_r -= DECEL_2;
 		v_l = MAX_TORQUE;
 	}
 	if(v_r > MAX_TORQUE) {
 		//v_l -= v_r - MAX_TORQUE;
-		v_l--;
+		v_l -= DECEL_2;
 		v_r = MAX_TORQUE;
 	}
 	if( (v_l - v_r) > MAX_TURN) v_l -= (v_l - v_r - MAX_TURN);
 	if( (v_r - v_l) > MAX_TURN) v_r -= (v_r - v_l - MAX_TURN);
-	if(v_l < 0) v_l = 0;
-	if(v_r < 0) v_r = 0;
+	//if(v_l < 0) v_l = 0;
+	//if(v_r < 0) v_r = 0;
 
-	if(v_l - v_r > 10) {
-		v_r++;
-	}
 	Drive(left_direction, v_l, right_direction, (int)((float)v_r * L_R_BIAS));
 
 	left_speed = v_l; // Current left speed to be requested
-	right_speed = v_r; // Current right speed to be requested
+	right_speed = (int)((float)v_r * L_R_BIAS); // Current right speed to be requested
 
 	return;
 }
