@@ -27,8 +27,8 @@ class DeliveryInformation {
     
     let defaultCoord = CLLocationCoordinate2D(latitude: 40.425021, longitude: -86.914325) // Default to a special location
     
-    let PMUFrontLawnLat = 40.424449
-    let PMUFrontLawnLon = -86.911106
+    let PMUFrontLawnLat = 40.428388 // Changed to Hovde
+    let PMUFrontLawnLon = -86.914188
     
     private init() {
         setDeliveryLocation(lat: PMUFrontLawnLat, lon: PMUFrontLawnLon)

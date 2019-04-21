@@ -16,38 +16,43 @@
 #include "stdbool.h"
 
 #define IR_RECEIVE_MAX 1200
-#define IR_NO_RECEIVE_MIN 2600
+#define IR_NO_RECEIVE_MIN 3000
 #define RX_BUFFER_MAX 100
 #define TX_BUFFER_MAX 100
 #define MC_ADDRESS 130
 
 #define ARRAY_SIZE 8
 #define RESOLUTION 8
-#define LOOK_AHEAD    1.732
-#define LOOK_AHEAD_SQ 3
-#define NORMAL_SPEED 25
+#define LOOK_AHEAD    1.732f
+#define LOOK_AHEAD_SQ 3.0f
+#define NORMAL_SPEED 20
 #define TIC_LENGTH 0.053086
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
 //#define VELOCITY_EQ_B 9.5862
-#define L_R_BIAS 1.03    	//Multiply to Right Wheel
-#define ACCEL 5
+#define L_R_BIAS 1.2   	//Multiply to Right Wheel
+#define ACCEL 2
 #define VEHICLE_WIDTH 0.575
-#define MAX_SPEED 60
-#define MAX_TURN 30
+#define MAX_SPEED 30
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
+#define MAX_TURN 15//30
+#define AVERAGE_SPEED 0.2f //Average human walking speed is about 1.4 m/s // .15
+#define ACCEL_2 1
+#define DECEL_2 1
+#define MAX_TORQUE 30
 
-#define AVERAGE_SPEED 0.5f //Average human walking speed is about 1.4 m/s
-#define TURN_MULT 1.1f
-#define ACCEL_2 5
-#define DECEL_2 2
-#define MAX_TORQUE 60
+#define KPL 10.0f;
+#define KPR 15.0f;
+
+#ifndef _USE_PID_CONTROLLER
+//#define _USE_PID_CONTROLLER
+#endif
 
 enum Encoders{RECEIVE, NO_RECEIVE};
 enum Direction{FORWARD, REVERSE};
 enum LastMotorSent{LEFT, RIGHT};
-enum DisplayMode{START=0, ULTRASONICS=1, ENCODERS=2, DELIVERY=3, END=4};
+enum DisplayMode{START=0, ULTRASONICS=1, ENCODERS=2, DELIVERY=3, JETSON=4, END=5};
 typedef struct {
 	char address;
 	char command;
@@ -60,6 +65,8 @@ typedef struct _Point {
 	float y;
 } Point;
 
+static float TURN_MULT = 1.0f; // 3
+
 /* Display mode info */
 static uint8_t current_mode = ULTRASONICS;
 
@@ -70,7 +77,7 @@ enum Encoders adc0_state = NO_RECEIVE; // Current ADC channel 0 state
 enum Encoders adc1_state = NO_RECEIVE; // Current ADC channel 1 state
 
 enum Direction left_direction = FORWARD;
-enum Direction right_direction = FORWARD;
+enum Direction right_direction = REVERSE;
 
 static uint32_t adc0_val = 0; // Current ADC channel 0 reading
 static uint32_t adc1_val = 0; // Current ADC channel 1 reading
@@ -78,14 +85,17 @@ static uint32_t adc1_val = 0; // Current ADC channel 1 reading
 static uint32_t adc_left_slots = 0; // Number of times a reading on ADC channel 0 has crossed the threshold - right
 static uint32_t adc_right_slots = 0; // Number of times a reading on ADC channel 1 has crossed the threshold - left
 
+static uint32_t adc_left_same_counter = 0;
+static uint32_t adc_right_same_counter = 0;
+
 static uint32_t last_used_adc_left_slots = 0; // Right
 static uint32_t last_used_adc_right_slots = 0; // Left
 
 static uint32_t last_encoder_left_count_to_jetson = 0;
 static uint32_t last_encoder_right_count_to_jetson = 0;
 
-static uint8_t left_speed = 0; // Current left speed to be requested
-static uint8_t right_speed = 0; // Current right speed to be requested
+static int16_t left_speed = 0; // Current left speed to be requested
+static int16_t right_speed = 0; // Current right speed to be requested
 
 /* UART vars */
 static char last_message[RX_BUFFER_MAX]; // Contains last full string enclosed in curly braces
@@ -118,34 +128,47 @@ static uint8_t disp_count = 0;
 
 static uint16_t time_since_last_jetson_msg = 0; // Time in milliseconds since last message was received from jetson
 
-static uint8_t delivery_requested = 0; // Indication that delivery was requested has been received from Jetson
+static uint8_t delivery_requested = 1; // Indication that delivery was requested has been received from Jetson
 
 /* Control Algorithm Variables */
-static uint32_t encoder_diff_l;
-static uint32_t encoder_diff_r;
+static uint32_t encoder_diff_l = 0;
+static uint32_t encoder_diff_r = 0;
 static uint8_t  accel_count = 1;
 static uint8_t  decel_count = 1;
 static uint8_t  accel_fail_count = 0;
 static uint8_t  decel_fail_count = 0;
 
-static bool use_ps4_controller = false;
+static bool jetson_connected = false;
 bool new_points_ready = false;
 static uint16_t time_since_screen_change = 0;
+
+int left_speed_integral[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+int right_speed_integral[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+//int integral_sum; // Positive on left wheel
+
+float k_i = 0.0;
+float k_p = 0.6;
 
 /* New points from Jetson */
 float new_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 float new_points_y[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
 /* Current working points */
-float points_x[] = {0.0, 0.0, -1.0, -2.0, -3.0, -4.0, -5.0, -6.0};
-float points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 6.0,  7.0,  8.0};
+float orig_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.4};
+float orig_points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 6.0,  7.0,  8.4};
+
+float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+float points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 7.0,  8.4,  9.4};
 //float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-//float points_y[] = {3.0,  5.0,  7.0,  9.0, 11.0, 13.0,  15.0,  17.0};
+//float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
 //float points_x[] = {0.4, 0.56, 0.86, 0.94, 1.06, 1.23, 1.33, 1.4};
 //float points_y[] = {0.6,  1.2,  1.8,  2.4, 3.0, 3.6,  4.2,  4.8};
 
 float goal_x = 0.0;
 float goal_y = 0.0;
+
+float prev_goal_x = 0.0;
+float prev_goal_y = 0.0;
 uint8_t v_t = 0;
 uint32_t zero_count = 0; //DIAGNOSTIC ONLY TODO REMOVE
 
@@ -157,13 +180,21 @@ Packet right_packet;
 uint16_t num_chars_received = 0;
 uint32_t loop_count = 0;
 
+int int_count = 0;
+int total_int_count = 0;
+
+uint8_t motor_cmd_count = 0;
+
+//static uint8_t integral_counter = 0;
+
+
 static void decodeJetsonString();
 
 static void ADCInit();
 static void USARTInit();
 static void UltrasonicInit();
 static void SPIInit();
-static int Drive(enum Direction left_direction, char left_speed, enum Direction right_direction, char right_speed); // Return 1 if unable to send, 0 if commands sent
+static int Drive(enum Direction left_direction, int16_t left_speed, enum Direction right_direction, int16_t right_speed); // Return 1 if unable to send, 0 if commands sent
 static void Cmd(char b);
 static void Data(char b);
 static void DispString(char* data);
@@ -175,6 +206,8 @@ float distance_squared(float x1, float y1, float x2, float y2);
 void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void PointUpdate (uint32_t diff_l, uint32_t diff_r);
 void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
+void wheelControl (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
+void PIMotors(uint32_t diff_l, uint32_t diff_r);
 
 int main(void) {
 	ADCInit();
@@ -198,77 +231,87 @@ int main(void) {
 	nsWait(100000000);
 
 	bool drive_enable = true;
-	float32_t diff_t = 0.2;
+	float32_t diff_t = 0.2f;
 	//float32_t diff_t = 0.10;
 
+	int set_encoder_diff_l = 0;
+	int set_encoder_diff_r = 0;
+
 	for(;;) {
-		if(!use_ps4_controller) {
-			if(new_points_ready) {
-				memcpy(points_x, new_points_x, sizeof(float) * 8);
-				memcpy(points_y, new_points_y, sizeof(float) * 8);
-				memset(new_points_x, 0.0f, sizeof(float) * 8);
-				memset(new_points_y, 0.0f, sizeof(float) * 8);
-				new_points_ready = false;
-			}
-			drive_enable = find_goal();
-			if(!delivery_requested) { // If the delivery has not been requested from the Jetson, don't drive
-				drive_enable = false;
-			}
-			if(drive_enable) {
-				encoder_diff_l = adc_left_slots - last_used_adc_left_slots;
-				last_used_adc_left_slots = adc_left_slots;
+		if(new_points_ready) {
+			memcpy(points_x, new_points_x, sizeof(float) * 8);
+			memcpy(points_y, new_points_y, sizeof(float) * 8);
+			memset(new_points_x, 0.0f, sizeof(float) * 8);
+			memset(new_points_y, 0.0f, sizeof(float) * 8);
+			new_points_ready = false;
+		}
+		drive_enable = find_goal();
+		if(!delivery_requested) { // If the delivery has not been requested from the Jetson, don't drive
+			drive_enable = false;
+		}
+		if(drive_enable) {
 
-				encoder_diff_r = adc_right_slots - last_used_adc_right_slots;
-				last_used_adc_right_slots = adc_right_slots;
+			encoder_diff_l = adc_left_slots - last_used_adc_left_slots;
+			last_used_adc_left_slots = adc_left_slots;
 
-				SetMotors2(encoder_diff_l, encoder_diff_r, diff_t);
-				PointUpdate(encoder_diff_l, encoder_diff_r);
-			}
-			else {
-				Drive(left_direction, 0, right_direction, 0);
-			}
+			encoder_diff_r = adc_right_slots - last_used_adc_right_slots;
+			last_used_adc_right_slots = adc_right_slots;
 
-			/* Send over goal points to the Jetson */
-			int32_t goal_x_int = goal_x * 100.0f;
-			int32_t goal_y_int = goal_y * 100.0f;
-			if(jetson_tx_buffer_index == 0) {
-				jetson_tx_buffer[0] = '{';
-				jetson_tx_buffer[1] = 'C';
-				if(goal_x_int < 0) {
-					jetson_tx_buffer[2] = '-';
-					goal_x_int *= -1.0f;
-				} else {
-					jetson_tx_buffer[2] = '+';
-				}
-				for(int i = 0; i < 3; i++) {
-					char digit = goal_x_int % 10 + '0';
-					goal_x_int /= 10;
-					jetson_tx_buffer[3 + i] = digit;
-				}
-				jetson_tx_buffer[6] = ',';
-				if(goal_x_int < 0) {
-					jetson_tx_buffer[7] = '-';
-					goal_y_int *= -1.0f;
-				} else {
-					jetson_tx_buffer[7] = '+';
-				}
-				for(int i = 0; i < 3; i++) {
-					char digit = goal_y_int % 10 + '0';
-					goal_y_int /= 10;
-					jetson_tx_buffer[8 + i] = digit;
-				}
-				jetson_tx_buffer[11] = '}';
-				USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
+			set_encoder_diff_l += encoder_diff_l;
+			set_encoder_diff_r += encoder_diff_r;
+
+			motor_cmd_count++;
+			if(motor_cmd_count >= 2) {
+				PointUpdate(set_encoder_diff_l, set_encoder_diff_r);
+				//PIMotors(encoder_diff_l, encoder_diff_r);
+				SetMotors2(set_encoder_diff_l, set_encoder_diff_r, diff_t);
+				//wheelControl(set_encoder_diff_l, set_encoder_diff_r, diff_t);
+
+				motor_cmd_count = 0;
+				set_encoder_diff_l = 0;
+				set_encoder_diff_r = 0;
+				loop_count++;
 			}
-		} else {
-			if(time_since_last_jetson_msg > 1000) { // Timeout if no data is received from Jetson to stop motors
-				left_speed = right_speed = 0;
-			}
-			Drive(left_direction, left_speed, right_direction, right_speed);
+		}
+		else {
+			Drive(left_direction, 0, right_direction, 0);
 		}
 
-		nsWait(200000000);
-		loop_count++;
+		/* Send over goal points to the Jetson */
+		int32_t goal_x_int = goal_x * 100.0f;
+		int32_t goal_y_int = goal_y * 100.0f;
+		if(jetson_tx_buffer_index == 0) {
+			jetson_tx_buffer[0] = '{';
+			jetson_tx_buffer[1] = 'C';
+			if(goal_x_int < 0) {
+				jetson_tx_buffer[2] = '-';
+				goal_x_int *= -1.0f;
+			} else {
+				jetson_tx_buffer[2] = '+';
+			}
+			for(int i = 0; i < 3; i++) {
+				char digit = goal_x_int % 10 + '0';
+				goal_x_int /= 10;
+				jetson_tx_buffer[3 + i] = digit;
+			}
+			jetson_tx_buffer[6] = ',';
+			if(goal_x_int < 0) {
+				jetson_tx_buffer[7] = '-';
+				goal_y_int *= -1.0f;
+			} else {
+				jetson_tx_buffer[7] = '+';
+			}
+			for(int i = 0; i < 3; i++) {
+				char digit = goal_y_int % 10 + '0';
+				goal_y_int /= 10;
+				jetson_tx_buffer[8 + i] = digit;
+			}
+			jetson_tx_buffer[11] = '}';
+			USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
+		}
+
+		nsWait(50000000);
+		nsWait(50000000);
 	}
 }
 
@@ -389,6 +432,11 @@ static void decodeJetsonString() {
 		delivery_requested = 0;
 		break;
 	case 'D': // Delivery request received
+		// Reassign points for continuous testing
+		/*for(unsigned int i = 0; i < 8; i++) {
+			points_x[i] = orig_points_x[i];
+			points_y[i] = orig_points_y[i];
+		}*/
 		delivery_requested = 1;
 		break;
 	case 'S': // Switch modes for controller requested
@@ -410,26 +458,74 @@ static void decodeJetsonString() {
 *	Returns 1 if still sending the previous command, 0 otherwise.
 *
 **************************************************************************/
-static int Drive(enum Direction left_direction, char left_speed_v, enum Direction right_direction, char right_speed_v) {
+static int Drive(enum Direction left_direction_v, int16_t left_speed_v, enum Direction right_direction_v, int16_t right_speed_v) {
 	if(mc_tx_buffer_index != 0) {
 		return 1; // Haven't finished sending the last message
 	}
+	/*
+		float left_speed_integral_avg = 0.0f;
+		float right_speed_integral_avg = 0.0f;
+		bool add_new_integral_term = false;
+		integral_counter++;
+		if(integral_counter >= 2) {
+			add_new_integral_term = true;
+			integral_counter = 0;
+		}
+		for(int i = 0; i < 10; i++) {
+			left_speed_integral_avg += left_speed_integral[i];
+			right_speed_integral_avg += right_speed_integral[i];
+			if(i < 9 && add_new_integral_term) {
+				left_speed_integral[i] = left_speed_integral[i + 1];
+				right_speed_integral[i] = right_speed_integral[i + 1];
+			}
+		}
+		if(add_new_integral_term) {
+			left_speed_integral[9] = left_speed_v;
+			right_speed_integral[9] = right_speed_v;
+		}
+		left_speed_integral_avg /= 10.0f;
+		right_speed_integral_avg /= 10.0f;
+
+		left_speed_v = k_i * left_speed_integral_avg + k_p * (float)left_speed_v;
+		right_speed_v = k_i * right_speed_integral_avg + k_p * (float)right_speed_v;
+	*/
+	if(left_speed_v < 0) {
+		left_speed = -1 * left_speed_v;
+		if(left_direction_v == FORWARD) {
+			left_direction_v = REVERSE;
+		} else {
+			left_direction_v = FORWARD;
+		}
+	} else if(left_speed_v > 80) {
+		left_speed_v = 80;
+	}
+	if(right_speed_v < 0) {
+		right_speed = -1 * right_speed_v;
+		if(right_direction_v == FORWARD) {
+			right_direction_v = REVERSE;
+		} else {
+			right_direction_v = FORWARD;
+		}
+	} else if(right_speed_v > 80) {
+		right_speed_v = 80;
+	}
+
 
 	//DIAGNOSTIC ONLY ZERO COUNT TODO REMOVE
-	if(left_speed == 0 || right_speed == 0) {
+	if(left_speed_v == 0 || right_speed_v == 0) {
 		zero_count++;
 	}
 
-	if(left_direction == FORWARD) {
+	if(left_direction_v == FORWARD) {
 		left_packet.command = 4;
 	}
-	else if(left_direction == REVERSE) {
+	else if(left_direction_v == REVERSE) {
 		left_packet.command = 5;
 	}
-	if(right_direction == FORWARD) {
+	if(right_direction_v == FORWARD) {
 		right_packet.command = 0;
 	}
-	else if(right_direction == REVERSE) {
+	else if(right_direction_v == REVERSE) {
 		right_packet.command = 1;
 	}
 	left_packet.data = left_speed_v;
@@ -460,6 +556,7 @@ static int Drive(enum Direction left_direction, char left_speed_v, enum Directio
 *
 **************************************************************************/
 void TIM2_IRQHandler() {
+	total_int_count++;
 	TIM2->SR &= 0x00;	// Clear the IRQ flag
 
 	ADC1->CHSELR = 0;                 		// Deselect ADC Channels
@@ -494,12 +591,22 @@ void TIM2_IRQHandler() {
 	}
 
 	if(adc0_state != prev_adc0_state) {
-		adc_left_slots++;
+		if(adc_left_same_counter > 1) {
+			adc_left_slots++;
+		}
 		prev_adc0_state = adc0_state;
+		adc_left_same_counter = 0;
+	} else {
+		adc_left_same_counter++;
 	}
 	if(adc1_state != prev_adc1_state) {
-		adc_right_slots++;
+		if(adc_right_same_counter > 1) {
+			adc_right_slots++;
+		}
 		prev_adc1_state = adc1_state;
+		adc_right_same_counter = 0;
+	} else {
+		adc_right_same_counter++;
 	}
 }
 
@@ -526,6 +633,7 @@ void USART1_IRQHandler() {
 			}
 			rx_buffer[rx_buffer_index++] = in_char;
 			if(in_char == '}') {
+				jetson_connected = true;
 				memcpy(last_message, rx_buffer, rx_buffer_index * sizeof(char)); // Copy completed message to memory
 				memset(rx_buffer, '\0', RX_BUFFER_MAX); // Clear buffer
 				decodeJetsonString();
@@ -663,7 +771,16 @@ void TIM14_IRQHandler() {
 				char out_data[16] = {'N', 'O', ' ', 'D', 'E', 'L', 'I', 'V', 'E', 'R', 'Y', ' ', ' ', ' ', ' ', ' '};
 				DispString(out_data);
 			}
-		} /*else if(current_mode == CHANGE_MODE) {
+		} else if(current_mode == JETSON) {
+			if(jetson_connected) {
+				char out_data[16] = {'J', 'E', 'T', 'S', 'O', 'N', ' ', 'O', 'N', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
+				DispString(out_data);
+			} else {
+				char out_data[16] = {'J', 'E', 'T', 'S', 'O', 'N', ' ', 'O', 'F', 'F', ' ', ' ', ' ', ' ', ' ', ' '};
+				DispString(out_data);
+			}
+		}
+			/*else if(current_mode == CHANGE_MODE) {
 			if(use_ps4_controller) {
 				char out_data[13] = {'B', 'T', ' ', 'C', 'O', 'N', 'T', 'R', 'O', 'L', 'L', 'E', 'R'};
 				DispString(out_data);
@@ -701,7 +818,7 @@ void TIM15_IRQHandler() {
 		us1_started = 1;
 	}
 	else if(us1_started && us1_return) { // Pulse stayed high
-		us1_elapsed_echo_time += 60; // Increment by 60 us
+		us1_elapsed_echo_time += 120; // Increment by 60 us
 	}
 	else if(us1_started && !us1_return) { // Pulse went low
 		us1_started = 0;
@@ -712,7 +829,7 @@ void TIM15_IRQHandler() {
 		us2_started = 1;
 	}
 	else if(us2_started && us2_return) { // Pulse stayed high
-		us2_elapsed_echo_time += 60; // Increment by 60 us
+		us2_elapsed_echo_time += 120; // Increment by 60 us
 	}
 	else if(us2_started && !us2_return) { // Pulse went low
 		us2_started = 0;
@@ -723,7 +840,7 @@ void TIM15_IRQHandler() {
 		us3_started = 1;
 	}
 	else if(us3_started && us3_return) { // Pulse stayed high
-		us3_elapsed_echo_time += 60; // Increment by 60 us
+		us3_elapsed_echo_time += 120; // Increment by 60 us
 	}
 	else if(us3_started && !us3_return) { // Pulse went low
 		us3_started = 0;
@@ -748,7 +865,7 @@ static void ADCInit() {
 	while((ADC1->CR & ADC_CR_ADSTART));   	// Wait for ADCstart to be 0.
 
 	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; // Enable clock for timer 2
-	TIM2->ARR = 96000; 					// Enable interrupt at 2ms
+	TIM2->ARR = 192000; 					// Enable interrupt at 2 ms
 	TIM2->DIER |= 0x01; 				// Update interrupt enable
 	TIM2->CR1 |= 0x01; 					// Enable counter
 	NVIC_SetPriority(TIM2_IRQn, 1); 	// Set ADC interrupt priority
@@ -825,7 +942,7 @@ static void UltrasonicInit() {
 
 	RCC->APB2ENR |= RCC_APB2ENR_TIM15EN; 	// Enable clock to timer
 	TIM15->PSC = 47; 						// Prescale clock to 1MHz
-	TIM15->ARR = 60; 						// Trigger every 60 clock cycles (60 us)
+	TIM15->ARR = 120; 						// Trigger every 60 clock cycles (120 us)
 	TIM15->DIER |= 0x01; 					// Update interrupt enable
 	TIM15->CR1 |= 0x01; 					// Enable counter
 
@@ -1103,19 +1220,29 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 
 void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	float v_c = ((float)diff_l + (float)diff_r) * TIC_LENGTH / 2.00f / diff_t;	//  m/s
+	if(goal_x < 0.2 && goal_x > -0.2) {
+		TURN_MULT = 0.1f;
+	} else if(goal_x < 0.5 && goal_x > -0.5) {
+		TURN_MULT = 0.2f;
+	} else {
+		TURN_MULT = 0.4f;
+	}
 
 //	bool accel_flag = false;
-//	bool decel_flag = false;
+	bool decel_flag = false;
 
 	if(v_c < AVERAGE_SPEED) {
 //		accel_flag = true;
 		if(v_t < MAX_TORQUE) v_t += ACCEL_2;
 		else accel_fail_count++;
 	}
-	else if( v_c > AVERAGE_SPEED + 0.2f) {		// The 0.2f is so we are not constantly accel/decel, favors accel
-//		decel_flag = true;
-		if(v_t > 0) v_t -= DECEL_2;
-		else decel_fail_count--;
+	else if(v_c > AVERAGE_SPEED + 0.2f) {		// The 0.2f is so we are not constantly accel/decel, favors accel
+		if(v_t > 0) {
+			decel_flag = true;
+			v_t -= DECEL_2;
+			decel_count++;
+		}
+		else decel_fail_count++;
 	}
 
 /*	TODO Need some way to recover after COUNT exceeded
@@ -1128,23 +1255,166 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	int8_t v_l = (int) (v_t * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
 	int8_t v_r = (int) (v_t * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
 
+	if(v_l < v_r) {
+		if(goal_x > prev_goal_x) {
+			prev_goal_x = goal_x;
+			v_t += DECEL_2;
+			Drive(left_direction, left_speed, right_direction, right_speed);
+			return;
+		}
+	} else if(v_r < v_l) {
+		if(goal_x < prev_goal_x) {
+			prev_goal_x = goal_x;
+			v_t += DECEL_2;
+			Drive(left_direction, left_speed, right_direction, right_speed);
+			return;
+		}
+	}
+	prev_goal_x = goal_x;
+
 	if(v_l > MAX_TORQUE) {
-		v_r -= v_l - MAX_TORQUE;
+		//v_r -= v_l - MAX_TORQUE;
+		v_r -= DECEL_2;
 		v_l = MAX_TORQUE;
 	}
 	if(v_r > MAX_TORQUE) {
-		v_l -= v_r - MAX_TORQUE;
+		//v_l -= v_r - MAX_TORQUE;
+		v_l -= DECEL_2;
 		v_r = MAX_TORQUE;
 	}
-	if( (v_l - v_r) > MAX_TURN) v_l -= v_l - v_r - MAX_TURN;
-	if( (v_r - v_l) > MAX_TURN) v_r -= v_r - v_l - MAX_TURN;
-	if(v_l < 0) v_l = 0;
-	if(v_r < 0) v_r = 0;
+	if( (v_l - v_r) > MAX_TURN) v_l -= (v_l - v_r - MAX_TURN);
+	if( (v_r - v_l) > MAX_TURN) v_r -= (v_r - v_l - MAX_TURN);
+	//if(v_l < 0) v_l = 0;
+	//if(v_r < 0) v_r = 0;
 
-	Drive(left_direction, v_l, right_direction, (int)(v_r * L_R_BIAS));
+	Drive(left_direction, v_l, right_direction, (int)((float)v_r * L_R_BIAS));
 
 	left_speed = v_l; // Current left speed to be requested
-	right_speed = v_r; // Current right speed to be requested
+	right_speed = (int)((float)v_r * L_R_BIAS); // Current right speed to be requested
 
 	return;
+}
+
+
+
+
+
+
+
+
+
+void PIMotors(uint32_t diff_l, uint32_t diff_r) {
+	if(abs(goal_x) < 0.1) {
+		if(left_speed < NORMAL_SPEED && right_speed < NORMAL_SPEED) {
+			if(right_speed > left_speed) {
+				left_speed = right_speed;
+			} else {
+				right_speed = left_speed;
+			}
+			left_speed++;
+			right_speed++;
+			Drive(FORWARD, left_speed, FORWARD, right_speed * L_R_BIAS);
+			return;
+		}
+		else if(diff_r != 0 && diff_l != 0){
+			left_speed--;
+			right_speed--;
+			Drive(FORWARD, left_speed, FORWARD, right_speed * L_R_BIAS);
+			return;
+		}
+	}
+	if(goal_x < 0.0f) {
+		if(goal_x > -0.25f) {
+			right_speed++;
+		} else if(goal_x > -0.5f) {
+			right_speed++;
+		} else if(goal_x > -0.75f) {
+			right_speed++;
+		} else {
+			right_speed += 2;
+			left_speed--;
+		}
+	} else {
+		if(goal_x < 0.25f) {
+			left_speed++;
+		} else if(goal_x < 0.5f) {
+			left_speed++;
+			right_speed--;
+		} else if(goal_x < 0.75f) {
+			left_speed++;
+		} else {
+			left_speed += 2;
+			right_speed--;
+		}
+	}
+	if(left_speed > MAX_SPEED) {
+		left_speed = MAX_SPEED;
+		right_speed--;
+	} else if(right_speed > MAX_SPEED) {
+		right_speed = MAX_SPEED;
+		left_speed--;
+	}
+	if(diff_l > diff_r && goal_x < 0) {
+		right_speed += 2;
+	}
+	else if(diff_r > diff_l && goal_x > 0) {
+		left_speed += 2;
+	}
+	if((left_speed - right_speed) > MAX_TURN) left_speed -= left_speed - right_speed - MAX_TURN;
+	if((right_speed - left_speed) > MAX_TURN) right_speed -= right_speed - left_speed - MAX_TURN;
+	Drive(FORWARD, left_speed, FORWARD, right_speed * L_R_BIAS);
+}
+
+
+
+/**************************************************
+ *
+ *  Keith's Control algorithm Tunable Parameters
+ *  
+**************************************************/
+int16_t old_power_l = 0;
+int16_t old_power_r = 0;
+
+float last_commanded_vl = 0;
+float last_commanded_vr = 0;
+
+float old_kr = 0.0;
+float old_kl = 0.0;
+
+
+// Velocity deltas can range from 0 to .3 m/s
+// Power can range 0 - 128
+// Want to add corrections by around 25% filtered
+// 255/.3 ~= 765 so delta_velocity * 765 = linearly_scaled_power
+// Want 10 % of that so want 191.25
+
+void wheelControl(uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
+	float measured_vl = (((float) diff_l) * TIC_LENGTH) / diff_t;
+	float measured_vr = (((float) diff_r) * TIC_LENGTH) / diff_t;
+
+	float desired_vl = (AVERAGE_SPEED * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
+	float desired_vr = (AVERAGE_SPEED * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
+	desired_vl = 0.3f;
+	desired_vr = 0.4f;
+
+	// Figure out what the power scale constants will be
+	float kl;
+	kl = (last_commanded_vl - measured_vl)*KPL; // TODO: Could add integral constants here
+	kl += old_kl;
+	float kr;
+	kr = (last_commanded_vl - measured_vl)*KPR;
+	kr += old_kr;
+
+	// Adjust power outputs as a function of kl and kr
+	float power_l = 20 + (desired_vl - measured_vl) * kl;
+	float power_r = 20 + (desired_vr - measured_vr) * kr;
+	old_power_l = power_l;
+	old_power_r = power_r;
+
+	old_kl = kl;
+	old_kr = kr;
+	last_commanded_vl = desired_vl;
+	last_commanded_vr = desired_vr;
+
+	Drive(FORWARD, (int16_t)power_l, FORWARD, (int16_t)power_r);
 }

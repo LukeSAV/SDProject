@@ -48,9 +48,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     @objc func sync() {
-        ref.child("Delivery Requested").observeSingleEvent(of: .value, with: { (snapshot) in
+        /*ref.child("Delivery Requested").observeSingleEvent(of: .value, with: { (snapshot) in
             DeliveryInformation.deliveryInformation.delivering = snapshot.value as! Bool
-        })
+        })*/
         ref.child("Current Position").observeSingleEvent(of: .value, with: { (snapshot) in
             let value = snapshot.value as! String // String to convert to lat/lon
             let curPosArray = value.split(separator: ",")
