@@ -30,21 +30,21 @@
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
 //#define VELOCITY_EQ_B 9.5862
-#define L_R_BIAS 1.1   	//Multiply to Right Wheel
+#define L_R_BIAS 1.4   	//Multiply to Right Wheel
 #define ACCEL 2
 #define VEHICLE_WIDTH 0.575
 #define MAX_SPEED 40
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
 #define MAX_TURN 30//30
-#define AVERAGE_SPEED 0.4f //Average human walking speed is about 1.4 m/s // .15
-#define TURN_MULT 3.0f // 3
+#define AVERAGE_SPEED 0.3f //Average human walking speed is about 1.4 m/s // .15
+#define TURN_MULT 1.0f // 3
 #define ACCEL_2 1
 #define DECEL_2 1
 #define MAX_TORQUE 40
 
-#define KPL 1.0f;
-#define KPR 1.5f;
+#define KPL 10.0f;
+#define KPR 15.0f;
 
 #ifndef _USE_PID_CONTROLLER
 //#define _USE_PID_CONTROLLER
@@ -227,7 +227,7 @@ int main(void) {
 	nsWait(100000000);
 
 	bool drive_enable = true;
-	float32_t diff_t = 0.3;
+	float32_t diff_t = 0.5f;
 	//float32_t diff_t = 0.10;
 
 	int set_encoder_diff_l = 0;
@@ -253,20 +253,20 @@ int main(void) {
 			encoder_diff_r = adc_right_slots - last_used_adc_right_slots;
 			last_used_adc_right_slots = adc_right_slots;
 
-			PointUpdate(encoder_diff_l, encoder_diff_r);
-
 			set_encoder_diff_l += encoder_diff_l;
 			set_encoder_diff_r += encoder_diff_r;
 
 			motor_cmd_count++;
-			if(motor_cmd_count >= 3) {
+			if(motor_cmd_count >= 5) {
+				PointUpdate(set_encoder_diff_l, set_encoder_diff_r);
 				//PIMotors(encoder_diff_l, encoder_diff_r);
-				//SetMotors2(set_encoder_diff_l, set_encoder_diff_r, diff_t);
-				wheelControl(set_encoder_diff_l, set_encoder_diff_r, diff_t);
+				SetMotors2(set_encoder_diff_l, set_encoder_diff_r, diff_t);
+				//wheelControl(set_encoder_diff_l, set_encoder_diff_r, diff_t);
 
 				motor_cmd_count = 0;
 				set_encoder_diff_l = 0;
 				set_encoder_diff_r = 0;
+				loop_count++;
 			}
 		}
 		else {
@@ -308,7 +308,6 @@ int main(void) {
 
 		nsWait(50000000);
 		nsWait(50000000);
-		loop_count++;
 	}
 }
 
@@ -1346,8 +1345,8 @@ int16_t old_power_r = 0;
 float last_commanded_vl = 0;
 float last_commanded_vr = 0;
 
-float old_kr = 1.0;
-float old_kl = 1.0;
+float old_kr = 0.0;
+float old_kl = 0.0;
 
 
 // Velocity deltas can range from 0 to .3 m/s
@@ -1362,6 +1361,8 @@ void wheelControl(uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 
 	float desired_vl = (AVERAGE_SPEED * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
 	float desired_vr = (AVERAGE_SPEED * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
+	desired_vl = 0.3f;
+	desired_vr = 0.4f;
 
 	// Figure out what the power scale constants will be
 	float kl;
@@ -1372,8 +1373,8 @@ void wheelControl(uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	kr += old_kr;
 
 	// Adjust power outputs as a function of kl and kr
-	float power_l = old_power_l + (desired_vl - measured_vl) * kl;
-	float power_r = old_power_r + (desired_vr - measured_vr) * kr;
+	float power_l = 20 + (desired_vl - measured_vl) * kl;
+	float power_r = 20 + (desired_vr - measured_vr) * kr;
 	old_power_l = power_l;
 	old_power_r = power_r;
 
