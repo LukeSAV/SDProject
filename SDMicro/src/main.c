@@ -23,8 +23,8 @@
 
 #define ARRAY_SIZE 8
 #define RESOLUTION 8
-#define LOOK_AHEAD    1.732
-#define LOOK_AHEAD_SQ 3
+#define LOOK_AHEAD    1.732f
+#define LOOK_AHEAD_SQ 3.0f
 #define NORMAL_SPEED 20
 #define TIC_LENGTH 0.053086
 #define VELOCITY_EQ_M 11.013
@@ -38,10 +38,13 @@
 
 #define MAX_TURN 30//30
 #define AVERAGE_SPEED 0.4f //Average human walking speed is about 1.4 m/s // .15
-#define TURN_MULT 3.0 // 3
+#define TURN_MULT 3.0f // 3
 #define ACCEL_2 1
 #define DECEL_2 1
 #define MAX_TORQUE 40
+
+#define KPL 1.0f;
+#define KPR 1.5f;
 
 #ifndef _USE_PID_CONTROLLER
 //#define _USE_PID_CONTROLLER
@@ -153,10 +156,10 @@ float new_points_y[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 float orig_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.4};
 float orig_points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 6.0,  7.0,  8.4};
 
-//float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-//float points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 7.0,  8.4,  8.4};
 float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
+float points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 7.0,  8.4,  8.4};
+//float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+//float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
 //float points_x[] = {0.4, 0.56, 0.86, 0.94, 1.06, 1.23, 1.33, 1.4};
 //float points_y[] = {0.6,  1.2,  1.8,  2.4, 3.0, 3.6,  4.2,  4.8};
 
@@ -199,6 +202,7 @@ float distance_squared(float x1, float y1, float x2, float y2);
 void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void PointUpdate (uint32_t diff_l, uint32_t diff_r);
 void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
+void wheelControl (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void PIMotors(uint32_t diff_l, uint32_t diff_r);
 
 int main(void) {
@@ -223,7 +227,7 @@ int main(void) {
 	nsWait(100000000);
 
 	bool drive_enable = true;
-	float32_t diff_t = 1.0;
+	float32_t diff_t = 0.3;
 	//float32_t diff_t = 0.10;
 
 	int set_encoder_diff_l = 0;
@@ -255,9 +259,11 @@ int main(void) {
 			set_encoder_diff_r += encoder_diff_r;
 
 			motor_cmd_count++;
-			if(motor_cmd_count >= 10) {
+			if(motor_cmd_count >= 3) {
 				//PIMotors(encoder_diff_l, encoder_diff_r);
-				SetMotors2(set_encoder_diff_l, set_encoder_diff_r, diff_t);
+				//SetMotors2(set_encoder_diff_l, set_encoder_diff_r, diff_t);
+				wheelControl(set_encoder_diff_l, set_encoder_diff_r, diff_t);
+
 				motor_cmd_count = 0;
 				set_encoder_diff_l = 0;
 				set_encoder_diff_r = 0;
@@ -1334,8 +1340,8 @@ void PIMotors(uint32_t diff_l, uint32_t diff_r) {
  *  Keith's Control algorithm Tunable Parameters
  *  
 **************************************************/
-uint8_t old_power_l = 0;
-uint8_t old_power_r = 0;
+int16_t old_power_l = 0;
+int16_t old_power_r = 0;
 
 float last_commanded_vl = 0;
 float last_commanded_vr = 0;
@@ -1345,34 +1351,36 @@ float old_kl = 1.0;
 
 
 // Velocity deltas can range from 0 to .3 m/s
-// Power can range 0 - 255
+// Power can range 0 - 128
 // Want to add corrections by around 25% filtered
 // 255/.3 ~= 765 so delta_velocity * 765 = linearly_scaled_power
 // Want 10 % of that so want 191.25
 
-#define KPL 76.5;
-#define KPR 76.5;
-
 void wheelControl(uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
-	float v_c = ((float)diff_l + (float)diff_r) * TIC_LENGTH / 2.00f / diff_t;	//  m/s
-
 	float measured_vl = (((float) diff_l) * TIC_LENGTH) / diff_t;
 	float measured_vr = (((float) diff_r) * TIC_LENGTH) / diff_t;
 
-	float desired_vl = (AVERAGE_SPEED * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ) + 2);
-	float desired_vr = (AVERAGE_SPEED * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ) + 2);
+	float desired_vl = (AVERAGE_SPEED * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
+	float desired_vr = (AVERAGE_SPEED * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
 
 	// Figure out what the power scale constants will be
-	float kl = (last_commanded_vl - measured_vl)*KPL + old_kl; // TODO: Could add integral constants here
-	float kr = (last_commanded_vl - measured_vl)*KPR + old_kr;
-	old_kl = kl;
-	old_kr = kr;
+	float kl;
+	kl = (last_commanded_vl - measured_vl)*KPL; // TODO: Could add integral constants here
+	kl += old_kl;
+	float kr;
+	kr = (last_commanded_vl - measured_vl)*KPR;
+	kr += old_kr;
 
 	// Adjust power outputs as a function of kl and kr
-	power_l = old_power_l + (desired_vl - measured_vl) * kl;
-	power_r = old_power_r + (desired_vr - measured_vr) * kr;
+	float power_l = old_power_l + (desired_vl - measured_vl) * kl;
+	float power_r = old_power_r + (desired_vr - measured_vr) * kr;
+	old_power_l = power_l;
+	old_power_r = power_r;
 
+	old_kl = kl;
+	old_kr = kr;
+	last_commanded_vl = desired_vl;
+	last_commanded_vr = desired_vr;
 
-
-	Drive(FORWARD, power_l, FORWARD, power_r);
+	Drive(FORWARD, (int16_t)power_l, FORWARD, (int16_t)power_r);
 }
