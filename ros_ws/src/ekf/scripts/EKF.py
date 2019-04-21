@@ -29,8 +29,8 @@ class EKF(object):
           self.R[0][0] = 100
           self.R[1][1] = 100
         elif(satStatus == 2):
-          self.R[0][0] = 9
-          self.R[1][1] = 9
+          self.R[0][0] = 25
+          self.R[1][1] = 25
         elif(satStatus == 3):
           self.R[0][0] = 10
           self.R[1][1] = 10
