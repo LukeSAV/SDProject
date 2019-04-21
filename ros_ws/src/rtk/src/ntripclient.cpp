@@ -427,14 +427,16 @@ int main(int argc, char **argv)
 					}
 					*/
 					memset(read_buf, '\0', sizeof(read_buf)); // Clear the buffer
+                    input_buf_lock.lock();
 					readBytes = SerialRead(&rtk_uart, read_buf, MAXDATASIZE); // Receive any data from the UART hardware buffer
+                    input_buf_lock.unlock();
 
 					NMEAData::parseNMEA(read_buf, readBytes, gpgga_pub, gpvtg_pub); // Check the buffer for the relevant data
 
 					cur_time = std::chrono::system_clock::now();
 					elapsed_time = cur_time - start;
 					//std::cout << elapsed_time.count() << std::endl;
-					std::this_thread::sleep_for(std::chrono::seconds(1));
+					std::this_thread::sleep_for(std::chrono::milliseconds(900));
 				}
 				ntrip_thread.join();
 			}

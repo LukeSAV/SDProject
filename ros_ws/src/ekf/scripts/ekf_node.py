@@ -52,7 +52,7 @@ seq = 0
 sec = 0
 nsec = 0
 
-r = rospy.Publisher("/ekf/sim_filtered", NavSatFix, queue_size = 2)
+r = rospy.Publisher("/ekf/filtered", NavSatFix, queue_size = 2)
 r2 = rospy.Publisher("/ekf/imu/data", Imu, queue_size = 2)
 
 # TODO what is the default orientation?

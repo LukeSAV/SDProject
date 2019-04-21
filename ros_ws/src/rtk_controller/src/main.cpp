@@ -121,7 +121,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
     auto cur_time = std::chrono::system_clock::now();
     std::chrono::duration<double> time_since_last_position_series_sent = cur_time - time_last_position_series_sent;
     last_ekf_received_time = std::chrono::system_clock::now();
-    if(time_since_last_position_series_sent.count() < 2.0f) { // Not sending messages closer than one second apart
+    if(time_since_last_position_series_sent.count() < 1.0f) { // Not sending messages closer than one second apart
         return;
     }
     time_last_position_series_sent = std::chrono::system_clock::now();
