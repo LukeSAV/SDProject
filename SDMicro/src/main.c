@@ -166,9 +166,9 @@ float points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 7.0,  8.4,  9.4};
 
 float goal_x = 0.0;
 float goal_y = 0.0;
-
 float prev_goal_x = 0.0;
 float prev_goal_y = 0.0;
+
 uint8_t v_t = 0;
 uint32_t zero_count = 0; //DIAGNOSTIC ONLY TODO REMOVE
 
@@ -1252,11 +1252,14 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	}
 */
 
+  //Assign left and right torques based on total torque
 	int8_t v_l = (int) (v_t * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
 	int8_t v_r = (int) (v_t * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
 
-	if(v_l < v_r) {
-		if(goal_x > prev_goal_x) {
+
+  //Change left and right torques to prevent overcorrection towards goal line
+	if(v_l < v_r) { //Turning right
+		if(prev_goal_x < goal_x) {//approaching goal x from left
 			prev_goal_x = goal_x;
 			v_t += DECEL_2;
 			Drive(left_direction, left_speed, right_direction, right_speed);
@@ -1295,9 +1298,58 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	return;
 }
 
+//The ending to the critically acclaimed trilogy you've all been waiting for
+void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
+  uint8_t v_l;
+  uint8_t v_r;
+  if(left_speed < 15) {
+    v_l = left_speed + 2;
+    v_r = left_speed + 2;
+  } 
+  else {
+    //the REAL good stuff
+    v_l = 20;
+    v_r = 20;
 
+    float diff_x = goal_x - prev_goal_x;
+    float diff_y = goal_y - prev_goal_y;
 
+    float heading = atan(diff_x/diff_y);
 
+    prev_goal_x = goal_x;
+    prev_goal_y = goal_y;
+
+    if(goal_x >= 0) {
+      v_l = v_l + (2.5*-cos(heading))+(2.5*(goal_x/2));
+      v_r = v_r + (2.5*cos(heading))+(-2.5*(goal_x/2));
+    }
+    else if(goal_x < 0) {
+      v_l = v_l + (2.5*-cos(heading))+(2.5*(-goal_x/2));
+      v_r = v_r + (2.5*cos(heading))+(-2.5*(-goal_x/2));
+    }
+
+    if(v_l > MAX_TORQUE) {
+      //v_r -= v_l - MAX_TORQUE;
+      v_r -= DECEL_2;
+      v_l = MAX_TORQUE;
+    }
+    if(v_r > MAX_TORQUE) {
+      //v_l -= v_r - MAX_TORQUE;
+      v_l -= DECEL_2;
+      v_r = MAX_TORQUE;
+    }
+    if( (v_l - v_r) > MAX_TURN) v_l -= (v_l - v_r - MAX_TURN);
+    if( (v_r - v_l) > MAX_TURN) v_r -= (v_r - v_l - MAX_TURN);
+    //if(v_l < 0) v_l = 0;
+    //if(v_r < 0) v_r = 0;
+  }
+  
+  Drive(left_direction, v_l, right_direction, (int)((float)v_r * L_R_BIAS));
+  left_speed = v_l; // Current left speed to be requested
+  right_speed = (int)((float)v_r * L_R_BIAS); // Current right speed to be requested
+
+  return;
+}
 
 
 
