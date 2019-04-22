@@ -210,7 +210,7 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void PointUpdate (uint32_t diff_l, uint32_t diff_r);
 void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void wheelControl (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
-void PIMotors(uint32_t diff_l, uint32_t diff_r, uint32_t diff_t);
+void PIMotors(uint32_t diff_l, uint32_t diff_r, float diff_t);
 
 int main(void) {
 	ADCInit();
