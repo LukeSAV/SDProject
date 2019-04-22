@@ -1303,7 +1303,7 @@ void PIMotors(uint32_t diff_l, uint32_t diff_r, float dt) {
 	right_speed = NORMAL_SPEED;
 	left_speed = NORMAL_SPEED;
 	float goal_delta = goal_x - prev_goal_x;
-	if((float)failed_trajectory_counter / dt > 2.0f) {
+	if((float)failed_trajectory_counter / dt > 4.0f) {
 		failed_multi += 1.0f;
 		failed_trajectory_counter = 0;
 	}
@@ -1323,37 +1323,37 @@ void PIMotors(uint32_t diff_l, uint32_t diff_r, float dt) {
 			if(goal_delta > 0.0f) { // The vehicle is on a trajectory to correct left
 				failed_trajectory_counter = 0;
 				left_speed += (prop_adj * goal_delta);
-				left_speed -= 1.0f / (-1.0f * goal_x);
+				//left_speed -= 1.0f / (-1.0f * goal_x);
 			}
 			else { // Not yet on the correct trajectory
 				failed_trajectory_counter++;
 				left_speed -= (prop_adj * -1.0f * goal_x * failed_multi);
 			}
 		}
-		/*else {
+		else {
 			// Overcorrected so I want to decrease left speed
 			failed_trajectory_counter = 0;
-			left_speed -= (prop_adj * -1.0f * goal_x * goal_x);
+			left_speed -= (prop_adj * goal_x * goal_x);
 
-		}*/
+		}
 	}
 	else { // Want to turn the vehicle right
 		if(prev_goal_x > 0.1f) {
 			if(goal_delta < 0.0f) { // The vehicle is on a trajectory to correct right
 				failed_trajectory_counter = 0;
 				left_speed -= (prop_adj * -1.0f * goal_delta);
-				left_speed += 1.0f / goal_x;
+				//left_speed += 1.0f / goal_x;
 			}
 			else { // Not yet on the correct trajectory
 				failed_trajectory_counter++;
 				left_speed += (prop_adj * goal_x * failed_multi);
 			}
 		}
-		/*else {
+		else {
 			// Overcorrected so I want to increase left speed
 			failed_trajectory_counter = 0;
 			left_speed += (prop_adj * goal_x * goal_x);
-		}*/
+		}
 	}
 	prev_goal_x = goal_x;
 
