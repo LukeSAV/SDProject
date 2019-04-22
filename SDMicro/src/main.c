@@ -25,7 +25,7 @@
 #define RESOLUTION 8
 #define LOOK_AHEAD    1.732f
 #define LOOK_AHEAD_SQ 3.0f
-#define NORMAL_SPEED 25
+#define NORMAL_SPEED 20
 #define TIC_LENGTH 0.053086
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
@@ -1303,7 +1303,7 @@ void PIMotors(uint32_t diff_l, uint32_t diff_r, float dt) {
 	right_speed = NORMAL_SPEED;
 	left_speed = NORMAL_SPEED;
 	float goal_delta = goal_x - prev_goal_x;
-	if((float)failed_trajectory_counter / dt > 4.0f) {
+	if((float)failed_trajectory_counter / dt > 1.0f) {
 		failed_multi += 1.0f;
 		failed_trajectory_counter = 0;
 	}
