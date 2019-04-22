@@ -25,7 +25,7 @@
 #define RESOLUTION 8
 #define LOOK_AHEAD    1.732f
 #define LOOK_AHEAD_SQ 3.0f
-#define NORMAL_SPEED 20
+#define NORMAL_SPEED 24
 #define TIC_LENGTH 0.053086
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
@@ -94,8 +94,8 @@ static uint32_t last_used_adc_right_slots = 0; // Left
 static uint32_t last_encoder_left_count_to_jetson = 0;
 static uint32_t last_encoder_right_count_to_jetson = 0;
 
-static int16_t left_speed = 0; // Current left speed to be requested
-static int16_t right_speed = 0; // Current right speed to be requested
+static int16_t left_speed = NORMAL_SPEED; // Current left speed to be requested
+static int16_t right_speed = NORMAL_SPEED; // Current right speed to be requested
 
 /* UART vars */
 static char last_message[RX_BUFFER_MAX]; // Contains last full string enclosed in curly braces
@@ -185,6 +185,8 @@ int total_int_count = 0;
 
 uint8_t motor_cmd_count = 0;
 
+static uint16_t failed_trajectory_counter = 0;
+
 //static uint8_t integral_counter = 0;
 
 
@@ -207,7 +209,7 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void PointUpdate (uint32_t diff_l, uint32_t diff_r);
 void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void wheelControl (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
-void PIMotors(uint32_t diff_l, uint32_t diff_r);
+void PIMotors(uint32_t diff_l, uint32_t diff_r, uint32_t diff_t);
 
 int main(void) {
 	ADCInit();
@@ -231,7 +233,7 @@ int main(void) {
 	nsWait(100000000);
 
 	bool drive_enable = true;
-	float32_t diff_t = 0.5f;
+	float32_t diff_t = 0.1f;
 	//float32_t diff_t = 0.10;
 
 	int set_encoder_diff_l = 0;
@@ -261,9 +263,9 @@ int main(void) {
 			set_encoder_diff_r += encoder_diff_r;
 
 			motor_cmd_count++;
-			if(motor_cmd_count >= 5) {
+			if(motor_cmd_count >= 1) {
 				PointUpdate(set_encoder_diff_l, set_encoder_diff_r);
-				PIMotors(encoder_diff_l, encoder_diff_r);
+				PIMotors(encoder_diff_l, encoder_diff_r, diff_t);
 				//SetMotors2(set_encoder_diff_l, set_encoder_diff_r, diff_t);
 				//wheelControl(set_encoder_diff_l, set_encoder_diff_r, diff_t);
 
@@ -1292,77 +1294,68 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 
 
 
-
-
-
-
-
-
-void PIMotors(uint32_t diff_l, uint32_t diff_r) {
-	if(abs(goal_x) < 0.1) {
-		if(left_speed < NORMAL_SPEED && right_speed < NORMAL_SPEED) {
-			if(right_speed > left_speed) {
-				left_speed = right_speed;
-			} else {
-				right_speed = left_speed;
-			}
-			left_speed++;
-			right_speed++;
-			Drive(left_direction, left_speed, right_direction, right_speed * L_R_BIAS);
-			return;
-		}
-		else if(diff_r != 0 && diff_l != 0){
-			left_speed--;
-			right_speed--;
-			Drive(left_direction, left_speed, right_direction, right_speed * L_R_BIAS);
-			return;
-		}
-	}
+void PIMotors(uint32_t diff_l, uint32_t diff_r, float dt) {
+	float prop_adj = 5.0f;
+	float failed_multi = 1.0f;
+	right_speed = NORMAL_SPEED;
+	left_speed = NORMAL_SPEED;
 	float goal_delta = goal_x - prev_goal_x;
-	if(goal_x < 0.0f) {
-		if(goal_x > -0.25f) {
-			if(goal_delta > 0.0f) {
-				left_speed++;
-			}
-		} else if(goal_x > -0.5f) {
-			right_speed++;
-			if(goal_delta > 0.0f) {
-				left_speed++;
-			}
-		} else if(goal_x > -0.75f) {
-			right_speed++;
-		} else {
-			right_speed += 2;
-			left_speed--;
-		}
-	} else {
-		if(goal_x < 0.25f) {
-			if(goal_delta < 0.0f) {
-				right_speed++;
-			}
-		} else if(goal_x < 0.5f) {
-			left_speed++;
-			if(goal_delta < 0.0f) {
-				right_speed++;
-			}
-		} else if(goal_x < 0.75f) {
-			left_speed++;
-		} else {
-			left_speed += 2;
-			right_speed--;
-		}
+	if((float)failed_trajectory_counter / dt > 2.0f) {
+		failed_multi += 1.0f;
 	}
 
+	if(goal_x < 0.0f) { // Want to turn the vehicle left
+		if(prev_goal_x < 0.0f) {
+			if(goal_delta > 0.0f) { // The vehicle is on a trajectory to correct left
+				failed_trajectory_counter = 0;
+				left_speed += (prop_adj * -1.0f * goal_x);
+			}
+			else { // Not yet on the correct trajectory
+				failed_trajectory_counter++;
+				left_speed -= (prop_adj * -1.0f * goal_x * failed_multi);
+			}
+		}
+		else {
+			// Overcorrected so I want to decrease left speed
+			failed_trajectory_counter = 0;
+			left_speed -= (prop_adj * -1.0f * goal_x);
+
+		}
+	}
+	else { // Want to turn the vehicle right
+		if(prev_goal_x > 0.0f) {
+			if(goal_delta < 0.0f) { // The vehicle is on a trajectory to correct right
+				failed_trajectory_counter = 0;
+				left_speed -= (prop_adj * goal_x);
+			}
+			else { // Not yet on the correct trajectory
+				failed_trajectory_counter++;
+				left_speed += (prop_adj * goal_x * failed_multi);
+			}
+		}
+		else {
+			// Overcorrected so I want to increase left speed
+			failed_trajectory_counter = 0;
+			left_speed += (prop_adj * goal_x);
+		}
+	}
 	prev_goal_x = goal_x;
+
+	// Need to add in motor stall logic here
+
+
+	// Corrections in case the values exceed maximum specifications
 	if(left_speed > MAX_SPEED) {
+		right_speed = right_speed - (left_speed - MAX_SPEED);
 		left_speed = MAX_SPEED;
-		right_speed--;
 	} else if(right_speed > MAX_SPEED) {
+		left_speed = left_speed - (right_speed - MAX_SPEED);
 		right_speed = MAX_SPEED;
-		left_speed--;
 	}
 	if((left_speed - right_speed) > MAX_TURN) left_speed -= left_speed - right_speed - MAX_TURN;
 	if((right_speed - left_speed) > MAX_TURN) right_speed -= right_speed - left_speed - MAX_TURN;
+
+	// Drive the MF
 	Drive(left_direction, left_speed, right_direction, (float)right_speed * L_R_BIAS);
 }
 
