@@ -186,6 +186,7 @@ int total_int_count = 0;
 uint8_t motor_cmd_count = 0;
 
 static uint16_t failed_trajectory_counter = 0;
+int8_t stall_count = 0;
 
 //static uint8_t integral_counter = 0;
 
@@ -1303,12 +1304,22 @@ void PIMotors(uint32_t diff_l, uint32_t diff_r, float dt) {
 	if((float)failed_trajectory_counter / dt > 2.0f) {
 		failed_multi += 1.0f;
 	}
+	if(diff_l == 0 && diff_r == 0) {
+		stall_count++;
+	}
+	else {
+		if(stall_count >= 1) {
+			stall_count--;
+		}
+	}
+	left_speed += stall_count;
+	right_speed += stall_count;
 
 	if(goal_x < 0.0f) { // Want to turn the vehicle left
 		if(prev_goal_x < 0.0f) {
 			if(goal_delta > 0.0f) { // The vehicle is on a trajectory to correct left
 				failed_trajectory_counter = 0;
-				left_speed += (prop_adj * -1.0f * goal_x);
+				left_speed += (prop_adj * goal_delta);
 			}
 			else { // Not yet on the correct trajectory
 				failed_trajectory_counter++;
@@ -1326,7 +1337,7 @@ void PIMotors(uint32_t diff_l, uint32_t diff_r, float dt) {
 		if(prev_goal_x > 0.0f) {
 			if(goal_delta < 0.0f) { // The vehicle is on a trajectory to correct right
 				failed_trajectory_counter = 0;
-				left_speed -= (prop_adj * goal_x);
+				left_speed -= (prop_adj * -1.0f * goal_delta);
 			}
 			else { // Not yet on the correct trajectory
 				failed_trajectory_counter++;
