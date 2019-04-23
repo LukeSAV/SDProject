@@ -25,14 +25,14 @@
 #define RESOLUTION 8
 #define LOOK_AHEAD    1.732f
 #define LOOK_AHEAD_SQ 3.0f
-#define NORMAL_SPEED 18
+#define NORMAL_SPEED 25
 #define TIC_LENGTH 0.053086
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
 //#define VELOCITY_EQ_B 9.5862
 #define L_R_BIAS 1.10f   	//Multiply to Right Wheel
 #define ACCEL 2
-#define VEHICLE_WIDTH 0.575
+#define VEHICLE_WIDTH 0.6731
 #define MAX_SPEED 30
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
@@ -237,103 +237,30 @@ int main(void) {
 
 	bool drive_enable = true;
 	float32_t diff_t = 0.2f;
-	//float32_t diff_t = 0.10;
 
 	int set_encoder_diff_l = 0;
 	int set_encoder_diff_r = 0;
-	int stop_counter = 0;
 	for(;;) {
-		if(new_points_ready) {
-			memcpy(points_x, new_points_x, sizeof(float) * 8);
-			memcpy(points_y, new_points_y, sizeof(float) * 8);
-			memset(new_points_x, 0.0f, sizeof(float) * 8);
-			memset(new_points_y, 0.0f, sizeof(float) * 8);
-			new_points_ready = false;
-		}
 		drive_enable = find_goal();
-		if(!delivery_requested) { // If the delivery has not been requested from the Jetson, don't drive
-			drive_enable = false;
-		}
 		if(drive_enable) {
-
 			encoder_diff_l = adc_left_slots - last_used_adc_left_slots;
 			last_used_adc_left_slots = adc_left_slots;
 
 			encoder_diff_r = adc_right_slots - last_used_adc_right_slots;
 			last_used_adc_right_slots = adc_right_slots;
 
-	//		set_encoder_diff_l += encoder_diff_l;
-//			set_encoder_diff_r += encoder_diff_r;
-
-/*			motor_cmd_count++;
-			if(motor_cmd_count >= 2) {
-				PointUpdate(set_encoder_diff_l, set_encoder_diff_r);
-				PIMotors(set_encoder_diff_l, set_encoder_diff_r, diff_t);
-				//SetMotors2(set_encoder_diff_l, set_encoder_diff_r, diff_t);
-				//wheelControl(set_encoder_diff_l, set_encoder_diff_r, diff_t);
-
-				motor_cmd_count = 0;
-				set_encoder_diff_l = 0;
-				set_encoder_diff_r = 0;
-				loop_count++;
-			}
-*/
-			//SetMotors2(encoder_diff_l, encoder_diff_r, diff_t);
-
-/*			for(int motor_loop = 0; motor_loop < 4; motor_loop++) {
-				nSWait(100000000);
-				Drive(left_direction, left_speed, right_direction, (float)right_speed * L_R_BIAS);
-			} */
 			PointUpdate(encoder_diff_l, encoder_diff_r);
-			PIMotors(set_encoder_diff_l, set_encoder_diff_r, diff_t);
-			nsWait(10000000);
-			if(stop_counter >= 50) {
-				//Drive(left_direction, 0, right_direction, 0);
-				stop_counter = 0;
-				//nsWait(100000000);
-			}
-			nsWait(10000000);
-			stop_counter++;
+			wheelControl(encoder_diff_l, encoder_diff_r, diff_t);
 		}
 		else {
 			Drive(left_direction, 0, right_direction, 0);
 		}
 
-		/* Send over goal points to the Jetson */
-		int32_t goal_x_int = goal_x * 100.0f;
-		int32_t goal_y_int = goal_y * 100.0f;
-		if(jetson_tx_buffer_index == 0) {
-			jetson_tx_buffer[0] = '{';
-			jetson_tx_buffer[1] = 'C';
-			if(goal_x_int < 0) {
-				jetson_tx_buffer[2] = '-';
-				goal_x_int *= -1.0f;
-			} else {
-				jetson_tx_buffer[2] = '+';
-			}
-			for(int i = 0; i < 3; i++) {
-				char digit = goal_x_int % 10 + '0';
-				goal_x_int /= 10;
-				jetson_tx_buffer[3 + i] = digit;
-			}
-			jetson_tx_buffer[6] = ',';
-			if(goal_x_int < 0) {
-				jetson_tx_buffer[7] = '-';
-				goal_y_int *= -1.0f;
-			} else {
-				jetson_tx_buffer[7] = '+';
-			}
-			for(int i = 0; i < 3; i++) {
-				char digit = goal_y_int % 10 + '0';
-				goal_y_int /= 10;
-				jetson_tx_buffer[8 + i] = digit;
-			}
-			jetson_tx_buffer[11] = '}';
-			USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
-		}
-
-//		nsWait(50000000);
-//		nsWait(50000000);
+		// Ideally this waits 100ms
+		nsWait(50000000);
+		nsWait(50000000);
+		nsWait(50000000);
+		nsWait(50000000);
 	}
 }
 
@@ -484,33 +411,6 @@ static int Drive(enum Direction left_direction_v, int16_t left_speed_v, enum Dir
 	if(mc_tx_buffer_index != 0) {
 		return 1; // Haven't finished sending the last message
 	}
-	/*
-		float left_speed_integral_avg = 0.0f;
-		float right_speed_integral_avg = 0.0f;
-		bool add_new_integral_term = false;
-		integral_counter++;
-		if(integral_counter >= 2) {
-			add_new_integral_term = true;
-			integral_counter = 0;
-		}
-		for(int i = 0; i < 10; i++) {
-			left_speed_integral_avg += left_speed_integral[i];
-			right_speed_integral_avg += right_speed_integral[i];
-			if(i < 9 && add_new_integral_term) {
-				left_speed_integral[i] = left_speed_integral[i + 1];
-				right_speed_integral[i] = right_speed_integral[i + 1];
-			}
-		}
-		if(add_new_integral_term) {
-			left_speed_integral[9] = left_speed_v;
-			right_speed_integral[9] = right_speed_v;
-		}
-		left_speed_integral_avg /= 10.0f;
-		right_speed_integral_avg /= 10.0f;
-
-		left_speed_v = k_i * left_speed_integral_avg + k_p * (float)left_speed_v;
-		right_speed_v = k_i * right_speed_integral_avg + k_p * (float)right_speed_v;
-	*/
 	if(left_speed_v < 0) {
 		left_speed = -1 * left_speed_v;
 		if(left_direction_v == FORWARD) {
@@ -1421,34 +1321,22 @@ float old_kl = 0.0;
 // Want to add corrections by around 25% filtered
 // 255/.3 ~= 765 so delta_velocity * 765 = linearly_scaled_power
 // Want 10 % of that so want 191.25
+long int encoder_left_count;
+long int encoder_right_count;
+float theta = 0;
+float last_theta = 0;
 
 void wheelControl(uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
-	float measured_vl = (((float) diff_l) * TIC_LENGTH) / diff_t;
-	float measured_vr = (((float) diff_r) * TIC_LENGTH) / diff_t;
+	encoder_left_count += diff_l;
+	encoder_right_count += diff_r;
 
-	float desired_vl = (AVERAGE_SPEED * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
-	float desired_vr = (AVERAGE_SPEED * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
-	desired_vl = 0.3f;
-	desired_vr = 0.4f;
 
-	// Figure out what the power scale constants will be
-	float kl;
-	kl = (last_commanded_vl - measured_vl)*KPL; // TODO: Could add integral constants here
-	kl += old_kl;
-	float kr;
-	kr = (last_commanded_vl - measured_vl)*KPR;
-	kr += old_kr;
+	// First Quadrant
+	theta = atan(goal_x/ goal_y);
+	float power_l = NORMAL_SPEED + 50*theta + (theta - last_theta)*80;
+	float power_r = NORMAL_SPEED - 50*theta - (theta - last_theta)*80;
 
-	// Adjust power outputs as a function of kl and kr
-	float power_l = 20 + (desired_vl - measured_vl) * kl;
-	float power_r = 20 + (desired_vr - measured_vr) * kr;
-	old_power_l = power_l;
-	old_power_r = power_r;
 
-	old_kl = kl;
-	old_kr = kr;
-	last_commanded_vl = desired_vl;
-	last_commanded_vr = desired_vr;
-
-	Drive(FORWARD, (int16_t)power_l, FORWARD, (int16_t)power_r);
+	last_theta = theta;
+	Drive(left_direction, power_l, right_direction, (float)power_r* L_R_BIAS);
 }
