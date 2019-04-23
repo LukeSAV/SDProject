@@ -22,6 +22,8 @@
 #define MC_ADDRESS 130
 
 #define PI_VAR 3.14159f
+#define NORMAL_SPEED_3 20
+#define TURN_COEFF 10
 #define ARRAY_SIZE 8
 #define RESOLUTION 8
 #define LOOK_AHEAD    1.732f
@@ -1303,14 +1305,14 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
   uint8_t v_l;
   uint8_t v_r;
-  if(left_speed < 15) {
+  if(left_speed < NORMAL_SPEED_3 - 5) {
     v_l = left_speed + 2;
     v_r = left_speed + 2;
   } 
   else {
     //the REAL good stuff
-    v_l = 20;
-    v_r = 20;
+    v_l = NORMAL_SPEED_3;
+    v_r = NORMAL_SPEED_3;
 
     float diff_x = goal_x - prev_goal_x;
     float diff_y = goal_y - prev_goal_y;
@@ -1321,12 +1323,12 @@ void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
     prev_goal_y = goal_y;
 
     if(goal_x >= 0) {
-      v_l = v_l + (10*-cos(heading))+(10*sin((PI_VAR/2)*(goal_x/5)));
-      v_r = v_r + (10*cos(heading))+(-10*sin((PI_VAR/2)*(goal_x/5)));
+      v_l = v_l + (TURN_COEFF*-cos(heading))+(TURN_COEFF*sin((PI_VAR/2)*(goal_x/5)));
+      v_r = v_r + (TURN_COEFF*cos(heading))+(-TURN_COEFF*sin((PI_VAR/2)*(goal_x/5)));
     }
     else if(goal_x < 0) {
-      v_l = v_l + (10*-cos(heading))+(10*sin((PI_VAR/2)*(goal_x/5)));
-      v_r = v_r + (10*cos(heading))+(-10*sin((PI_VAR/2)*(goal_x/5)));
+      v_l = v_l + (TURN_COEFF*-cos(heading))+(TURN_COEFF*sin((PI_VAR/2)*(goal_x/5)));
+      v_r = v_r + (TURN_COEFF*cos(heading))+(-TURN_COEFF*sin((PI_VAR/2)*(goal_x/5)));
     }
 
     if(v_l > MAX_TORQUE) {
