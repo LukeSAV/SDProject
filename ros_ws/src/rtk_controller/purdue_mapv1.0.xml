@@ -22409,9 +22409,16 @@
 
  <!-- The first 10 points above had a constant offset of -0.000012, +0.000007 -->
  <!-- END MSEE to Hovde by fountain -->
-
-
-
+ <path2 id="1111111187" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428836" lon="-86.912691"/>
+ <path2 id="1111111188" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428860" lon="-86.912716"/>
+ <path2 id="1111111189" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428890" lon="-86.912748"/>
+ <path2 id="1111111190" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428909" lon="-86.912768"/>
+ <path2 id="1111111191" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428950" lon="-86.912812"/>
+ <path2 id="1111111192" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.428979" lon="-86.912845"/>
+  <path2 id="1111111193" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429019" lon="-86.912888"/>
+  <path2 id="1111111194" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429058" lon="-86.912929"/>
+  <path2 id="1111111195" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429109" lon="-86.912983"/>
+  <path2 id="1111111196" visible="true" version="1" changeset="64999103" timestamp="2018-11-29T07:11:44Z" user="Luke" uid="1111111" lat="40.429144" lon="-86.912986"/>
 
  <!-- MSEE to Hovde by fountain (Left Half) -->
 
