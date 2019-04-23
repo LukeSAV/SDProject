@@ -38,7 +38,7 @@ init_imu_meas = Imu()
 
 elapsed_time = 0
 time_init = 0
-last_time = 0
+last_time = -0.2
 avg_x = 0
 avg_y = 0
 
@@ -52,7 +52,7 @@ seq = 0
 sec = 0
 nsec = 0
 
-r = rospy.Publisher("/ekf/filtered", NavSatFix, queue_size = 2)
+r = rospy.Publisher("/ekf/sim_filtered", NavSatFix, queue_size = 2)
 r2 = rospy.Publisher("/ekf/imu/data", Imu, queue_size = 2)
 
 # TODO what is the default orientation?
@@ -88,12 +88,14 @@ def encoder_callback(encoder_msg):
 
   enc_updated = True
 
-  #print("time.time() time: " + str(float(time.time())))
+  abso_time  =rospy.Time.now()
+  time = abso_time.secs + abso_time.nsecs/1000000000.0
+  print("time.time() time: " + str(float(time)))
   purdue_fountain = (40.428642, -86.913776) 
   
   if time_init == 0:
-    time_init = time.time()
-    last_time = time.time()
+    time_init = rospy.Time.now()
+    last_time = rospy.Time.now()
   if gps_valid:
     # y is north, x is east
     lat_lon = (gps_meas.latitude, gps_meas.longitude)
@@ -113,7 +115,8 @@ def encoder_callback(encoder_msg):
 
       
   imuHeading = yaw
-  elapsed_time = time.time() - time_init
+  elapsed_dur = rospy.Time.now() - time_init
+  elapsed_time = elapsed_dur.secs * 1000 + float(elapsed_dur.nsecs) / 1000000.0
 
   if(gps_valid and not state_space_init):
       if(elapsed_time >= 0):
@@ -134,14 +137,22 @@ def encoder_callback(encoder_msg):
   ekf.update_imu_cov(0.01+0.005*elapsed_time)
 
   if(gps_valid and state_space_init):
-      timestep = time.time()-last_time
-      print("Timestep: " + str(timestep))
-      last_time = time.time()
+      timestep_dur = rospy.Time.now()-last_time
+      timestep = timestep_dur.secs*1000 + float(timestep_dur.nsecs) / 1000000.0
+      timestep = timestep / 1000;
+      if (timestep <= 0):
+        timestep = 0.2
+      #print("GPS Timestep: " + str(timestep))
+      last_time = rospy.Time.now()
+      ekf.step(timestep, x, y, imuHeading, theta_l, theta_r)
       ekf.step(timestep, x, y, imuHeading, theta_l, theta_r)
   elif (state_space_init):
-      timestep = time.time()-last_time
-      print("Timestep: " + str(timestep))
-      last_time = time.time()
+      timestep_dur = rospy.Time.now()-last_time
+      timestep = timestep_dur.secs*1000 + float(timestep_dur.nsecs) / 1000000.0
+      timestep = timestep / 1000;
+      #print("Timestep: " + str(timestep))
+      last_time = rospy.Time.now()
+      ekf.step(timestep, imuHeading, theta_l, theta_r)
       ekf.step(timestep, imuHeading, theta_l, theta_r)
   
   if(state_space_init):
@@ -163,8 +174,8 @@ def encoder_callback(encoder_msg):
     filtered_nsf.header.stamp = gps_meas.header.stamp
     filtered_nsf.header.frame_id = gps_meas.header.frame_id
     
-    print("Filtered Lat: " + str(float(filtered_nsf.latitude)))
-    print("Filtered Lon: " + str(float(filtered_nsf.longitude)))
+    #print("Filtered Lat: " + str(float(filtered_nsf.latitude)))
+    #print("Filtered Lon: " + str(float(filtered_nsf.longitude)))
   
     r.publish(filtered_nsf)
 
