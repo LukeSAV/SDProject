@@ -25,14 +25,14 @@
 #define RESOLUTION 8
 #define LOOK_AHEAD    1.732f
 #define LOOK_AHEAD_SQ 3.0f
-#define NORMAL_SPEED 21
-#define TIC_LENGTH 0.053086
+#define NORMAL_SPEED 25
+#define TIC_LENGTH 0.05461
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
 //#define VELOCITY_EQ_B 9.5862
 #define L_R_BIAS 1.10f   	//Multiply to Right Wheel
 #define ACCEL 2
-#define VEHICLE_WIDTH 0.575
+#define VEHICLE_WIDTH 0.6731
 #define MAX_SPEED 30
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
