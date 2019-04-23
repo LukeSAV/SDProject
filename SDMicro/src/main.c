@@ -236,7 +236,7 @@ int main(void) {
 	nsWait(100000000);
 
 	bool drive_enable = true;
-	float32_t diff_t = 0.1f;
+	float32_t diff_t = 0.2f;
 	//float32_t diff_t = 0.10;
 
 	int set_encoder_diff_l = 0;
@@ -266,7 +266,7 @@ int main(void) {
 			set_encoder_diff_r += encoder_diff_r;
 
 			motor_cmd_count++;
-			if(motor_cmd_count >= 1) {
+			if(motor_cmd_count >= 2) {
 				PointUpdate(set_encoder_diff_l, set_encoder_diff_r);
 				PIMotors(set_encoder_diff_l, set_encoder_diff_r, diff_t);
 				//SetMotors2(set_encoder_diff_l, set_encoder_diff_r, diff_t);
@@ -1298,13 +1298,13 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 
 
 void PIMotors(uint32_t diff_l, uint32_t diff_r, float dt) {
-	float prop_adj = 4.0f;
+	float prop_adj = 5.0f;
 	float failed_multi = 1.0f;
 	right_speed = NORMAL_SPEED;
 	left_speed = NORMAL_SPEED;
 	float goal_delta = goal_x - prev_goal_x;
 	if((float)failed_trajectory_counter / dt > 1.0f) {
-		failed_multi += 1.0f;
+		failed_multi += 0.5f;
 		failed_trajectory_counter = 0;
 	}
 	/*if(diff_l == 0 && diff_r == 0) {
@@ -1322,12 +1322,12 @@ void PIMotors(uint32_t diff_l, uint32_t diff_r, float dt) {
 		if(prev_goal_x < 0.1f) {
 			if(goal_delta > 0.0f) { // The vehicle is on a trajectory to correct left
 				failed_trajectory_counter = 0;
-				left_speed += (prop_adj * goal_delta);
+				left_speed += (prop_adj * goal_delta + 1.0f);
 				//left_speed -= 1.0f / (-1.0f * goal_x);
 			}
 			else { // Not yet on the correct trajectory
 				failed_trajectory_counter++;
-				left_speed -= (prop_adj * -1.0f * goal_x * failed_multi);
+				left_speed -= (prop_adj * -1.0f * goal_x * failed_multi + 2.0f);
 			}
 		}
 		else {
@@ -1341,12 +1341,12 @@ void PIMotors(uint32_t diff_l, uint32_t diff_r, float dt) {
 		if(prev_goal_x > 0.1f) {
 			if(goal_delta < 0.0f) { // The vehicle is on a trajectory to correct right
 				failed_trajectory_counter = 0;
-				left_speed -= (prop_adj * -1.0f * goal_delta);
+				left_speed -= (prop_adj * -1.0f * goal_delta + 1.0f);
 				//left_speed += 1.0f / goal_x;
 			}
 			else { // Not yet on the correct trajectory
 				failed_trajectory_counter++;
-				left_speed += (prop_adj * goal_x * failed_multi);
+				left_speed += (prop_adj * goal_x * failed_multi + 2.0f);
 			}
 		}
 		else {
