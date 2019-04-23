@@ -1381,39 +1381,33 @@ float old_kr = 0.0;
 float old_kl = 0.0;
 
 
-// Velocity deltas can range from 0 to .3 m/s
-// Power can range 0 - 128
-// Want to add corrections by around 25% filtered
-// 255/.3 ~= 765 so delta_velocity * 765 = linearly_scaled_power
+/**************************************************
+ *
+ *  Keith's Control algorithm Tunable Parameters
+ *  
+**************************************************/
 // Want 10 % of that so want 191.25
+long int encoder_left_count;
+long int encoder_right_count;
+float theta = 0;
+float last_theta = 0;
 
 void wheelControl(uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
-	float measured_vl = (((float) diff_l) * TIC_LENGTH) / diff_t;
-	float measured_vr = (((float) diff_r) * TIC_LENGTH) / diff_t;
+	encoder_left_count += diff_l;
+	encoder_right_count += diff_r;
 
-	float desired_vl = (AVERAGE_SPEED * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
-	float desired_vr = (AVERAGE_SPEED * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
-	desired_vl = 0.3f;
-	desired_vr = 0.4f;
+	float vr = (diff_r * TIC_LENGTH) / diff_t;
+	float vl = (diff_l * TIC_LENGTH) / diff_t;
 
-	// Figure out what the power scale constants will be
-	float kl;
-	kl = (last_commanded_vl - measured_vl)*KPL; // TODO: Could add integral constants here
-	kl += old_kl;
-	float kr;
-	kr = (last_commanded_vl - measured_vl)*KPR;
-	kr += old_kr;
+	// First Quadrant
+	theta = atan(goal_x/ goal_y);
+	float power_l = NORMAL_SPEED + 20*theta + (theta - last_theta)*60;
+	float power_r = NORMAL_SPEED - 20*theta - (theta - last_theta)*60;
 
-	// Adjust power outputs as a function of kl and kr
-	float power_l = 20 + (desired_vl - measured_vl) * kl;
-	float power_r = 20 + (desired_vr - measured_vr) * kr;
-	old_power_l = power_l;
-	old_power_r = power_r;
+	if (vl > .6) power_l = -10;
+	if (vr > .6) power_r = -10;
 
-	old_kl = kl;
-	old_kr = kr;
-	last_commanded_vl = desired_vl;
-	last_commanded_vr = desired_vr;
 
-	Drive(FORWARD, (int16_t)power_l, FORWARD, (int16_t)power_r);
+	last_theta = theta;
+	Drive(left_direction, power_l, right_direction, (float)power_r);
 }
