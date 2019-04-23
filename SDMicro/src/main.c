@@ -157,7 +157,7 @@ float new_points_y[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 float orig_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.4};
 float orig_points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 6.0,  7.0,  8.4};
 
-float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+float points_x[] = {0.0, 4.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 float points_y[] = {3.0,  6.0,  9.0,  12.0,  15.0, 18.0, 21.0, 24.0};
 //float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 //float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
@@ -412,22 +412,14 @@ static int Drive(enum Direction left_direction_v, int16_t left_speed_v, enum Dir
 		return 1; // Haven't finished sending the last message
 	}
 	if(left_speed_v < 0) {
-		left_speed = -1 * left_speed_v;
-		if(left_direction_v == FORWARD) {
-			left_direction_v = REVERSE;
-		} else {
-			left_direction_v = FORWARD;
-		}
+		left_speed_v = -1 * left_speed_v;
+		left_direction_v = REVERSE;
 	} else if(left_speed_v > 80) {
 		left_speed_v = 80;
 	}
 	if(right_speed_v < 0) {
-		right_speed = -1 * right_speed_v;
-		if(right_direction_v == FORWARD) {
-			right_direction_v = REVERSE;
-		} else {
-			right_direction_v = FORWARD;
-		}
+		right_speed_v = -1 * right_speed_v;
+		right_direction_v = FORWARD;
 	} else if(right_speed_v > 80) {
 		right_speed_v = 80;
 	}
@@ -1330,13 +1322,18 @@ void wheelControl(uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	encoder_left_count += diff_l;
 	encoder_right_count += diff_r;
 
+	float vr = (diff_r * TIC_LENGTH) / diff_t;
+	float vl = (diff_l * TIC_LENGTH) / diff_t;
 
 	// First Quadrant
 	theta = atan(goal_x/ goal_y);
-	float power_l = NORMAL_SPEED + 50*theta + (theta - last_theta)*80;
-	float power_r = NORMAL_SPEED - 50*theta - (theta - last_theta)*80;
+	float power_l = NORMAL_SPEED + 20*theta + (theta - last_theta)*60;
+	float power_r = NORMAL_SPEED - 20*theta - (theta - last_theta)*60;
+
+	if (vl > .6) power_l = -10;
+	if (vr > .6) power_r = -10;
 
 
 	last_theta = theta;
-	Drive(left_direction, power_l, right_direction, (float)power_r* L_R_BIAS);
+	Drive(left_direction, power_l, right_direction, (float)power_r);
 }
