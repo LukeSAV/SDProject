@@ -21,6 +21,7 @@
 #define TX_BUFFER_MAX 100
 #define MC_ADDRESS 130
 
+#define PI_VAR 3.14159f
 #define ARRAY_SIZE 8
 #define RESOLUTION 8
 #define LOOK_AHEAD    1.732f
@@ -1320,12 +1321,12 @@ void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
     prev_goal_y = goal_y;
 
     if(goal_x >= 0) {
-      v_l = v_l + (2.5*-cos(heading))+(2.5*(goal_x/2));
-      v_r = v_r + (2.5*cos(heading))+(-2.5*(goal_x/2));
+      v_l = v_l + (10*-cos(heading))+(10*sin((PI_VAR/2)*(goal_x/5)));
+      v_r = v_r + (10*cos(heading))+(-10*sin((PI_VAR/2)*(goal_x/5)));
     }
     else if(goal_x < 0) {
-      v_l = v_l + (2.5*-cos(heading))+(2.5*(-goal_x/2));
-      v_r = v_r + (2.5*cos(heading))+(-2.5*(-goal_x/2));
+      v_l = v_l + (10*-cos(heading))+(10*sin((PI_VAR/2)*(goal_x/5)));
+      v_r = v_r + (10*cos(heading))+(-10*sin((PI_VAR/2)*(goal_x/5)));
     }
 
     if(v_l > MAX_TORQUE) {
@@ -1338,8 +1339,8 @@ void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
       v_l -= DECEL_2;
       v_r = MAX_TORQUE;
     }
-    if( (v_l - v_r) > MAX_TURN) v_l -= (v_l - v_r - MAX_TURN);
-    if( (v_r - v_l) > MAX_TURN) v_r -= (v_r - v_l - MAX_TURN);
+    //if( (v_l - v_r) > MAX_TURN) v_l -= (v_l - v_r - MAX_TURN);
+    //if( (v_r - v_l) > MAX_TURN) v_r -= (v_r - v_l - MAX_TURN);
     //if(v_l < 0) v_l = 0;
     //if(v_r < 0) v_r = 0;
   }
