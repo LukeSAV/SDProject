@@ -52,7 +52,7 @@ seq = 0
 sec = 0
 nsec = 0
 
-r = rospy.Publisher("/ekf/sim_filtered", NavSatFix, queue_size = 2)
+r = rospy.Publisher("/ekf/filtered", NavSatFix, queue_size = 2)
 r2 = rospy.Publisher("/ekf/imu/data", Imu, queue_size = 2)
 
 # TODO what is the default orientation?
@@ -119,12 +119,11 @@ def encoder_callback(encoder_msg):
   elapsed_time = elapsed_dur.secs * 1000 + float(elapsed_dur.nsecs) / 1000000.0
 
   if(gps_valid and not state_space_init):
-      if(elapsed_time >= 0):
-        ekf.x[1] = (40.429167-purdue_fountain[0])*111139
-        ekf.x[0] = (-86.912957-purdue_fountain[1])*111139
-        ekf.x[2] = 2.094
-        yaw_init = yaw
-        state_space_init = True
+      ekf.x[1] = (40.429167-purdue_fountain[0])*111139
+      ekf.x[0] = (-86.912957-purdue_fountain[1])*111139
+      ekf.x[2] = 2.094
+      yaw_init = yaw
+      state_space_init = True
   imuHeading = (yaw - yaw_init) + 2.094
   ############# Mike takes the wheel ######
   theta_l = int(encoder_msg.data[2:4])
@@ -145,14 +144,12 @@ def encoder_callback(encoder_msg):
       #print("GPS Timestep: " + str(timestep))
       last_time = rospy.Time.now()
       ekf.step(timestep, x, y, imuHeading, theta_l, theta_r)
-      ekf.step(timestep, x, y, imuHeading, theta_l, theta_r)
   elif (state_space_init):
       timestep_dur = rospy.Time.now()-last_time
       timestep = timestep_dur.secs*1000 + float(timestep_dur.nsecs) / 1000000.0
       timestep = timestep / 1000;
       #print("Timestep: " + str(timestep))
       last_time = rospy.Time.now()
-      ekf.step(timestep, imuHeading, theta_l, theta_r)
       ekf.step(timestep, imuHeading, theta_l, theta_r)
   
   if(state_space_init):

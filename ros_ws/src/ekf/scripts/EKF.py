@@ -20,7 +20,7 @@ class EKF(object):
         self.Pest = numpy.identity(5)
         self.P = numpy.identity(5)
         self.P = 100*self.P
-        self.l = 0.5715
+        self.l = 0.6713
         self.elapsed_time = 0
 
     def update_gps_cov(self, satStatus):
@@ -29,8 +29,8 @@ class EKF(object):
           self.R[0][0] = 100
           self.R[1][1] = 100
         elif(satStatus == 2):
-          self.R[0][0] = 25
-          self.R[1][1] = 25
+          self.R[0][0] = 1000
+          self.R[1][1] = 1000
         elif(satStatus == 3):
           self.R[0][0] = 10
           self.R[1][1] = 10
@@ -67,8 +67,8 @@ class EKF(object):
             self.A[0][4] = -0.5*0.05308*math.sin(self.x[2])
             self.A[1][3] = 0.5*0.05308*math.cos(self.x[2])
             self.A[1][4] = 0.5*0.05308*math.cos(self.x[2])
-            self.A[2][3] = 1/self.l
-            self.A[2][4] = -1/self.l
+            self.A[2][3] = 0#1/self.l
+            self.A[2][4] = 0#-1/self.l
             self.xest = self.A.dot(self.x)
             #print("Previous Vr " + str(float(self.x[3])))
             #print("Previous Vl " + str(float(self.x[4])))
@@ -83,8 +83,8 @@ class EKF(object):
               self.H = numpy.identity(5)
               self.H[0][0] = 1
               self.H[1][1] = 1
-              self.H[2][3] = 0.1/(timestep*self.l)
-              self.H[2][4] = -0.1/(timestep*self.l)
+              self.H[2][3] = 0#0.1/(timestep*self.l)
+              self.H[2][4] = 0#-0.1/(timestep*self.l)
               self.H[3][3] = 1
               self.H[4][4] = 1
             else:
@@ -92,8 +92,8 @@ class EKF(object):
               self.H = numpy.identity(5)
               self.H[0][0] = 0
               self.H[1][1] = 0
-              self.H[2][3] = 0.1/(timestep*self.l)
-              self.H[2][4] = -0.1/(timestep*self.l)
+              self.H[2][3] = 0#0.1/(timestep*self.l)
+              self.H[2][4] = 0#-0.1/(timestep*self.l)
               self.H[3][3] = 1
               self.H[4][4] = 1
 
@@ -116,8 +116,8 @@ class EKF(object):
             self.A[0][4] = -0.5*0.05308 * math.sin(self.x[2])
             self.A[1][3] = 0.5*0.05308 * math.cos(self.x[2])
             self.A[1][4] = 0.5*0.05308 * math.cos(self.x[2])
-            self.A[2][3] = 1 / self.l
-            self.A[2][4] = -1 / self.l
+            self.A[2][3] = 0#1 / self.l
+            self.A[2][4] = 0#-1 / self.l
             self.xest = self.A.dot(self.x)
             # print("Previous Vr " + str(float(self.x[3])))
             # print("Previous Vl " + str(float(self.x[4])))
@@ -130,8 +130,8 @@ class EKF(object):
             self.H = numpy.identity(5)
             self.H[0][0] = 0
             self.H[1][1] = 0
-            self.H[2][3] = 0.1 / (timestep * self.l)
-            self.H[2][4] = -0.1 / (timestep * self.l)
+            self.H[2][3] = 0#0.1 / (timestep * self.l)
+            self.H[2][4] = 0#-0.1 / (timestep * self.l)
             self.H[3][3] = 1
             self.H[4][4] = 1
 
