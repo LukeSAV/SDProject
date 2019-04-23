@@ -1327,7 +1327,7 @@ void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
     float diff_x = goal_x - prev_goal_x;
     float diff_y = goal_y - prev_goal_y;
 
-    float heading = atan(diff_x/diff_y);
+    float heading = ((float)diff_r - (float)diff_l) * TIC_LENGTH / VEHICLE WIDTH;
 
     prev_goal_x = goal_x;
     prev_goal_y = goal_y;
