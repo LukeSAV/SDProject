@@ -15,8 +15,8 @@
 #include "arm_math.h"
 #include "stdbool.h"
 
-#define IR_RECEIVE_MAX 1200
-#define IR_NO_RECEIVE_MIN 3000
+#define IR_RECEIVE_MAX 500
+#define IR_NO_RECEIVE_MIN 2600
 #define RX_BUFFER_MAX 100
 #define TX_BUFFER_MAX 100
 #define MC_ADDRESS 130
@@ -39,11 +39,11 @@
 #define MAX_SPEED 30
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
-#define MAX_TURN 15//30
-#define AVERAGE_SPEED 0.2f //Average human walking speed is about 1.4 m/s // .15
+#define MAX_TURN 20//30
+#define AVERAGE_SPEED 0.3f //Average human walking speed is about 1.4 m/s // .15
 #define ACCEL_2 1
 #define DECEL_2 1
-#define MAX_TORQUE 30
+#define MAX_TORQUE 40
 
 #define KPL 10.0f;
 #define KPR 15.0f;
@@ -97,8 +97,8 @@ static uint32_t last_used_adc_right_slots = 0; // Left
 static uint32_t last_encoder_left_count_to_jetson = 0;
 static uint32_t last_encoder_right_count_to_jetson = 0;
 
-static int16_t left_speed = 0; // Current left speed to be requested
-static int16_t right_speed = 0; // Current right speed to be requested
+static int16_t left_speed = NORMAL_SPEED; // Current left speed to be requested
+static int16_t right_speed = NORMAL_SPEED; // Current right speed to be requested
 
 /* UART vars */
 static char last_message[RX_BUFFER_MAX]; // Contains last full string enclosed in curly braces
@@ -161,12 +161,14 @@ float orig_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.4};
 float orig_points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 6.0,  7.0,  8.4};
 
 float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-float points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 7.0,  8.4,  9.4};
+float points_y[] = {3.0,  6.0,  9.0,  12.0,  15.0, 18.0, 21.0, 24.0};
 //float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 //float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
 //float points_x[] = {0.4, 0.56, 0.86, 0.94, 1.06, 1.23, 1.33, 1.4};
 //float points_y[] = {0.6,  1.2,  1.8,  2.4, 3.0, 3.6,  4.2,  4.8};
 
+float debug_goal_x[100];
+int debug_goal_x_index = 0;
 float goal_x = 0.0;
 float goal_y = 0.0;
 float prev_goal_x = 0.0;
@@ -187,6 +189,9 @@ int int_count = 0;
 int total_int_count = 0;
 
 uint8_t motor_cmd_count = 0;
+
+static uint16_t failed_trajectory_counter = 0;
+int8_t stall_count = 0;
 
 //static uint8_t integral_counter = 0;
 
@@ -210,7 +215,7 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void PointUpdate (uint32_t diff_l, uint32_t diff_r);
 void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void wheelControl (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
-void PIMotors(uint32_t diff_l, uint32_t diff_r);
+void PIMotors(uint32_t diff_l, uint32_t diff_r, float diff_t);
 
 int main(void) {
 	ADCInit();
@@ -234,7 +239,7 @@ int main(void) {
 	nsWait(100000000);
 
 	bool drive_enable = true;
-	float32_t diff_t = 0.2f;
+	float32_t diff_t = 0.1f;
 	//float32_t diff_t = 0.10;
 
 	int set_encoder_diff_l = 0;
@@ -264,10 +269,10 @@ int main(void) {
 			set_encoder_diff_r += encoder_diff_r;
 
 			motor_cmd_count++;
-			if(motor_cmd_count >= 2) {
+			if(motor_cmd_count >= 1) {
 				PointUpdate(set_encoder_diff_l, set_encoder_diff_r);
-				//PIMotors(encoder_diff_l, encoder_diff_r);
-				SetMotors2(set_encoder_diff_l, set_encoder_diff_r, diff_t);
+				PIMotors(set_encoder_diff_l, set_encoder_diff_r, diff_t);
+				//SetMotors2(set_encoder_diff_l, set_encoder_diff_r, diff_t);
 				//wheelControl(set_encoder_diff_l, set_encoder_diff_r, diff_t);
 
 				motor_cmd_count = 0;
@@ -1224,11 +1229,11 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	float v_c = ((float)diff_l + (float)diff_r) * TIC_LENGTH / 2.00f / diff_t;	//  m/s
 	if(goal_x < 0.2 && goal_x > -0.2) {
-		TURN_MULT = 0.1f;
+		TURN_MULT = 0.3f;
 	} else if(goal_x < 0.5 && goal_x > -0.5) {
-		TURN_MULT = 0.2f;
+		TURN_MULT = 0.5f;
 	} else {
-		TURN_MULT = 0.4f;
+		TURN_MULT = 0.7f;
 	}
 
 //	bool accel_flag = false;
@@ -1259,6 +1264,7 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	int8_t v_l = (int) (v_t * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
 	int8_t v_r = (int) (v_t * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
 
+<<<<<<< HEAD
 
   //Change left and right torques to prevent overcorrection towards goal line
 	if(v_l < v_r) { //Turning right
@@ -1267,13 +1273,16 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 			v_t += DECEL_2;
 			Drive(left_direction, left_speed, right_direction, right_speed);
 			return;
+=======
+	float goal_delta = goal_x - prev_goal_x;
+	if(v_l < v_r) {
+		if(goal_delta > 0.0f) {
+			v_r -= ACCEL_2;
+>>>>>>> 0ff3a1ed8fa3a0b772b7c90a03d4abdf65a6e7d4
 		}
 	} else if(v_r < v_l) {
-		if(goal_x < prev_goal_x) {
-			prev_goal_x = goal_x;
-			v_t += DECEL_2;
-			Drive(left_direction, left_speed, right_direction, right_speed);
-			return;
+		if(goal_delta > 0.0f) {
+			v_l -= ACCEL_2;
 		}
 	}
 	prev_goal_x = goal_x;
@@ -1301,6 +1310,7 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	return;
 }
 
+<<<<<<< HEAD
 //The ending to the critically acclaimed trilogy you've all been waiting for
 void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
   uint8_t v_l;
@@ -1365,59 +1375,91 @@ void PIMotors(uint32_t diff_l, uint32_t diff_r) {
 				left_speed = right_speed;
 			} else {
 				right_speed = left_speed;
+=======
+
+
+void PIMotors(uint32_t diff_l, uint32_t diff_r, float dt) {
+	float prop_adj = 4.0f;
+	float failed_multi = 1.0f;
+	right_speed = NORMAL_SPEED;
+	left_speed = NORMAL_SPEED;
+	float goal_delta = goal_x - prev_goal_x;
+	if((float)failed_trajectory_counter / dt > 1.0f) {
+		failed_multi += 1.0f;
+		failed_trajectory_counter = 0;
+	}
+	/*if(diff_l == 0 && diff_r == 0) {
+		stall_count++;
+	}
+	else {
+		if(stall_count >= 1) {
+			stall_count--;
+		}
+	}
+	left_speed += stall_count;
+	right_speed += stall_count;*/
+
+	if(goal_x < 0.1f) { // Want to turn the vehicle left
+		if(prev_goal_x < 0.1f) {
+			if(goal_delta > 0.0f) { // The vehicle is on a trajectory to correct left
+				failed_trajectory_counter = 0;
+				left_speed += (prop_adj * goal_delta);
+				//left_speed -= 1.0f / (-1.0f * goal_x);
 			}
-			left_speed++;
-			right_speed++;
-			Drive(FORWARD, left_speed, FORWARD, right_speed * L_R_BIAS);
-			return;
+			else { // Not yet on the correct trajectory
+				failed_trajectory_counter++;
+				left_speed -= (prop_adj * -1.0f * goal_x * failed_multi);
+>>>>>>> 0ff3a1ed8fa3a0b772b7c90a03d4abdf65a6e7d4
+			}
 		}
-		else if(diff_r != 0 && diff_l != 0){
-			left_speed--;
-			right_speed--;
-			Drive(FORWARD, left_speed, FORWARD, right_speed * L_R_BIAS);
-			return;
-		}
-	}
-	if(goal_x < 0.0f) {
-		if(goal_x > -0.25f) {
-			right_speed++;
-		} else if(goal_x > -0.5f) {
-			right_speed++;
-		} else if(goal_x > -0.75f) {
-			right_speed++;
-		} else {
-			right_speed += 2;
-			left_speed--;
-		}
-	} else {
-		if(goal_x < 0.25f) {
-			left_speed++;
-		} else if(goal_x < 0.5f) {
-			left_speed++;
-			right_speed--;
-		} else if(goal_x < 0.75f) {
-			left_speed++;
-		} else {
-			left_speed += 2;
-			right_speed--;
+		else {
+			// Overcorrected so I want to decrease left speed
+			failed_trajectory_counter = 0;
+			left_speed -= (prop_adj * goal_x * goal_x);
+
 		}
 	}
-	if(left_speed > MAX_SPEED) {
+	else { // Want to turn the vehicle right
+		if(prev_goal_x > 0.1f) {
+			if(goal_delta < 0.0f) { // The vehicle is on a trajectory to correct right
+				failed_trajectory_counter = 0;
+				left_speed -= (prop_adj * -1.0f * goal_delta);
+				//left_speed += 1.0f / goal_x;
+			}
+			else { // Not yet on the correct trajectory
+				failed_trajectory_counter++;
+				left_speed += (prop_adj * goal_x * failed_multi);
+			}
+		}
+		else {
+			// Overcorrected so I want to increase left speed
+			failed_trajectory_counter = 0;
+			left_speed += (prop_adj * goal_x * goal_x);
+		}
+	}
+	prev_goal_x = goal_x;
+
+	// Need to add in motor stall logic here
+
+
+	// Corrections in case the values exceed maximum specifications
+	/*if(left_speed > MAX_SPEED) {
+		right_speed = right_speed - (left_speed - MAX_SPEED);
 		left_speed = MAX_SPEED;
-		right_speed--;
 	} else if(right_speed > MAX_SPEED) {
+		left_speed = left_speed - (right_speed - MAX_SPEED);
 		right_speed = MAX_SPEED;
-		left_speed--;
-	}
-	if(diff_l > diff_r && goal_x < 0) {
-		right_speed += 2;
-	}
-	else if(diff_r > diff_l && goal_x > 0) {
-		left_speed += 2;
-	}
-	if((left_speed - right_speed) > MAX_TURN) left_speed -= left_speed - right_speed - MAX_TURN;
-	if((right_speed - left_speed) > MAX_TURN) right_speed -= right_speed - left_speed - MAX_TURN;
-	Drive(FORWARD, left_speed, FORWARD, right_speed * L_R_BIAS);
+	}*/
+	//if((left_speed - right_speed) > MAX_TURN) left_speed -= left_speed - right_speed - MAX_TURN;
+	//if((right_speed - left_speed) > MAX_TURN) right_speed -= right_speed - left_speed - MAX_TURN;
+
+	// Drive the MF
+	Drive(left_direction, left_speed, right_direction, (float)right_speed * L_R_BIAS);
+	/*debug_goal_x[debug_goal_x_index++] = goal_x;
+	if(debug_goal_x_index == 99) {
+		int idx = 0;
+		idx++;
+	}*/
 }
 
 
