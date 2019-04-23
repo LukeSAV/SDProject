@@ -1,4 +1,5 @@
 /**
+ *
   ******************************************************************************
   * @file    main.c
   * @author  Luke Armbruster and Troy Conlin
@@ -25,7 +26,7 @@
 #define RESOLUTION 8
 #define LOOK_AHEAD    1.732f
 #define LOOK_AHEAD_SQ 3.0f
-#define NORMAL_SPEED 25
+#define NORMAL_SPEED 40
 #define TIC_LENGTH 0.05461
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
@@ -37,6 +38,7 @@
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
 #define MAX_TURN 30 //20
+
 #define AVERAGE_SPEED 0.1f //Average human walking speed is about 1.4 m/s // .15
 #define ACCEL_2 4
 #define DECEL_2 1
@@ -158,9 +160,9 @@ float orig_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.4};
 float orig_points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 6.0,  7.0,  8.4};
 
 float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-float points_y[] = {3.0,  6.0,  9.0,  12.0,  15.0, 18.0, 21.0, 24.0};
+//float points_y[] = {3.0,  6.0,  9.0,  12.0,  15.0, 18.0, 21.0, 24.0};
 //float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-//float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
+float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
 //float points_x[] = {0.4, 0.56, 0.86, 0.94, 1.06, 1.23, 1.33, 1.4};
 //float points_y[] = {0.6,  1.2,  1.8,  2.4, 3.0, 3.6,  4.2,  4.8};
 
@@ -189,6 +191,7 @@ uint8_t motor_cmd_count = 0;
 
 int8_t stall_count = 0;
 float PI_dt = 0.0;
+float wheelControl_dt = 0.0f;
 
 
 
@@ -256,7 +259,8 @@ int main(void) {
 			last_used_adc_right_slots = adc_right_slots;
 
 			PointUpdate(encoder_diff_l, encoder_diff_r);
-			PIMotors(encoder_diff_l, encoder_diff_r);
+			wheelControl(encoder_diff_l, encoder_diff_r, wheelControl_dt);
+			wheelControl_dt = 0.0f;
 			nsWait(100000000);
 		}
 		else {
@@ -448,50 +452,15 @@ static int Drive(enum Direction left_direction_v, int16_t left_speed_v, enum Dir
 	if(mc_tx_buffer_index != 0) {
 		return 1; // Haven't finished sending the last message
 	}
-	/*
-		float left_speed_integral_avg = 0.0f;
-		float right_speed_integral_avg = 0.0f;
-		bool add_new_integral_term = false;
-		integral_counter++;
-		if(integral_counter >= 2) {
-			add_new_integral_term = true;
-			integral_counter = 0;
-		}
-		for(int i = 0; i < 10; i++) {
-			left_speed_integral_avg += left_speed_integral[i];
-			right_speed_integral_avg += right_speed_integral[i];
-			if(i < 9 && add_new_integral_term) {
-				left_speed_integral[i] = left_speed_integral[i + 1];
-				right_speed_integral[i] = right_speed_integral[i + 1];
-			}
-		}
-		if(add_new_integral_term) {
-			left_speed_integral[9] = left_speed_v;
-			right_speed_integral[9] = right_speed_v;
-		}
-		left_speed_integral_avg /= 10.0f;
-		right_speed_integral_avg /= 10.0f;
-
-		left_speed_v = k_i * left_speed_integral_avg + k_p * (float)left_speed_v;
-		right_speed_v = k_i * right_speed_integral_avg + k_p * (float)right_speed_v;
-	*/
 	if(left_speed_v < 0) {
-		left_speed = -1 * left_speed_v;
-		if(left_direction_v == FORWARD) {
-			left_direction_v = REVERSE;
-		} else {
-			left_direction_v = FORWARD;
-		}
+		left_speed_v = -1 * left_speed_v;
+		left_direction_v = REVERSE;
 	} else if(left_speed_v > 80) {
 		left_speed_v = 80;
 	}
 	if(right_speed_v < 0) {
-		right_speed = -1 * right_speed_v;
-		if(right_direction_v == FORWARD) {
-			right_direction_v = REVERSE;
-		} else {
-			right_direction_v = FORWARD;
-		}
+		right_speed_v = -1 * right_speed_v;
+		right_direction_v = FORWARD;
 	} else if(right_speed_v > 80) {
 		right_speed_v = 80;
 	}
@@ -543,6 +512,7 @@ static int Drive(enum Direction left_direction_v, int16_t left_speed_v, enum Dir
 **************************************************************************/
 void TIM2_IRQHandler() {
 	PI_dt += 0.006;
+	wheelControl_dt += 0.006;
 	TIM2->SR &= 0x00;	// Clear the IRQ flag
 
 	ADC1->CHSELR = 0;                 		// Deselect ADC Channels
@@ -852,7 +822,7 @@ static void ADCInit() {
 
 	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; // Enable clock for timer 2
 	TIM2->PSC = 7;
-	TIM2->ARR = 24000; 					// Enable interrupt at 2.5 ms
+	TIM2->ARR = 24000; 					// Enable interrupt at 4 ms
 	TIM2->DIER |= 0x01; 				// Update interrupt enable
 	TIM2->CR1 |= 0x01; 					// Enable counter
 	NVIC_SetPriority(TIM2_IRQn, 1); 	// Set ADC interrupt priority
@@ -1366,20 +1336,6 @@ void PIMotors(uint32_t diff_l, uint32_t diff_r) {
 
 
 
-/**************************************************
- *
- *  Keith's Control algorithm Tunable Parameters
- *  
-**************************************************/
-int16_t old_power_l = 0;
-int16_t old_power_r = 0;
-
-float last_commanded_vl = 0;
-float last_commanded_vr = 0;
-
-float old_kr = 0.0;
-float old_kl = 0.0;
-
 
 /**************************************************
  *
@@ -1404,9 +1360,8 @@ void wheelControl(uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	float power_l = NORMAL_SPEED + 20*theta + (theta - last_theta)*60;
 	float power_r = NORMAL_SPEED - 20*theta - (theta - last_theta)*60;
 
-	if (vl > .6) power_l = -10;
-	if (vr > .6) power_r = -10;
-
+	if (vl > .8) power_l = -30;
+	if (vr > .8) power_r = -30;
 
 	last_theta = theta;
 	Drive(left_direction, power_l, right_direction, (float)power_r);
