@@ -25,22 +25,22 @@
 #define RESOLUTION 8
 #define LOOK_AHEAD    1.732f
 #define LOOK_AHEAD_SQ 3.0f
-#define NORMAL_SPEED 20
+#define NORMAL_SPEED 18
 #define TIC_LENGTH 0.053086
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
 //#define VELOCITY_EQ_B 9.5862
-#define L_R_BIAS 1.2   	//Multiply to Right Wheel
+#define L_R_BIAS 1.10f   	//Multiply to Right Wheel
 #define ACCEL 2
 #define VEHICLE_WIDTH 0.575
 #define MAX_SPEED 30
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
-#define MAX_TURN 20//30
-#define AVERAGE_SPEED 0.3f //Average human walking speed is about 1.4 m/s // .15
-#define ACCEL_2 1
+#define MAX_TURN 30 //20
+#define AVERAGE_SPEED 0.1f //Average human walking speed is about 1.4 m/s // .15
+#define ACCEL_2 4
 #define DECEL_2 1
-#define MAX_TORQUE 40
+#define MAX_TORQUE 60
 
 #define KPL 10.0f;
 #define KPR 15.0f;
@@ -241,7 +241,7 @@ int main(void) {
 
 	int set_encoder_diff_l = 0;
 	int set_encoder_diff_r = 0;
-
+	int stop_counter = 0;
 	for(;;) {
 		if(new_points_ready) {
 			memcpy(points_x, new_points_x, sizeof(float) * 8);
@@ -262,10 +262,10 @@ int main(void) {
 			encoder_diff_r = adc_right_slots - last_used_adc_right_slots;
 			last_used_adc_right_slots = adc_right_slots;
 
-			set_encoder_diff_l += encoder_diff_l;
-			set_encoder_diff_r += encoder_diff_r;
+	//		set_encoder_diff_l += encoder_diff_l;
+//			set_encoder_diff_r += encoder_diff_r;
 
-			motor_cmd_count++;
+/*			motor_cmd_count++;
 			if(motor_cmd_count >= 2) {
 				PointUpdate(set_encoder_diff_l, set_encoder_diff_r);
 				PIMotors(set_encoder_diff_l, set_encoder_diff_r, diff_t);
@@ -277,6 +277,23 @@ int main(void) {
 				set_encoder_diff_r = 0;
 				loop_count++;
 			}
+*/
+			//SetMotors2(encoder_diff_l, encoder_diff_r, diff_t);
+
+/*			for(int motor_loop = 0; motor_loop < 4; motor_loop++) {
+				nSWait(100000000);
+				Drive(left_direction, left_speed, right_direction, (float)right_speed * L_R_BIAS);
+			} */
+			PointUpdate(encoder_diff_l, encoder_diff_r);
+			PIMotors(set_encoder_diff_l, set_encoder_diff_r, diff_t);
+			nsWait(10000000);
+			if(stop_counter >= 50) {
+				//Drive(left_direction, 0, right_direction, 0);
+				stop_counter = 0;
+				//nsWait(100000000);
+			}
+			nsWait(10000000);
+			stop_counter++;
 		}
 		else {
 			Drive(left_direction, 0, right_direction, 0);
@@ -315,8 +332,8 @@ int main(void) {
 			USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
 		}
 
-		nsWait(50000000);
-		nsWait(50000000);
+//		nsWait(50000000);
+//		nsWait(50000000);
 	}
 }
 
@@ -377,10 +394,10 @@ static void SendEncoderCount() {
  * Switch to next display mode
  */
 static void nextMode() {
-	current_mode++;
-	if(current_mode >= END) {
+	current_mode = ENCODERS;
+	/*if(current_mode >= END) {
 		current_mode = START + 1;
-	}
+	}*/
 }
 
 /*
@@ -1224,7 +1241,10 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 }
 
 void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
-	float v_c = ((float)diff_l + (float)diff_r) * TIC_LENGTH / 2.00f / diff_t;	//  m/s
+	float v_c = ((float)diff_l + (float)diff_r) * TIC_LENGTH / 2.00f / (total_int_count * 0.006f);	//  m/s
+	total_int_count = 0;
+	TURN_MULT = 1.00f;
+/*
 	if(goal_x < 0.2 && goal_x > -0.2) {
 		TURN_MULT = 0.3f;
 	} else if(goal_x < 0.5 && goal_x > -0.5) {
@@ -1232,12 +1252,12 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	} else {
 		TURN_MULT = 0.7f;
 	}
-
-//	bool accel_flag = false;
+*/
+	bool accel_flag = false;
 	bool decel_flag = false;
 
 	if(v_c < AVERAGE_SPEED) {
-//		accel_flag = true;
+		accel_flag = true;
 		if(v_t < MAX_TORQUE) v_t += ACCEL_2;
 		else accel_fail_count++;
 	}
@@ -1259,7 +1279,7 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 
 	int8_t v_l = (int) (v_t * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
 	int8_t v_r = (int) (v_t * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
-
+/*
 	float goal_delta = goal_x - prev_goal_x;
 	if(v_l < v_r) {
 		if(goal_delta > 0.0f) {
@@ -1271,26 +1291,25 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 		}
 	}
 	prev_goal_x = goal_x;
-
+*/
 	if(v_l > MAX_TORQUE) {
-		//v_r -= v_l - MAX_TORQUE;
-		v_r -= DECEL_2;
+		v_r -= v_l - MAX_TORQUE;
 		v_l = MAX_TORQUE;
 	}
 	if(v_r > MAX_TORQUE) {
-		//v_l -= v_r - MAX_TORQUE;
-		v_l -= DECEL_2;
+		v_l -= v_r - MAX_TORQUE;
 		v_r = MAX_TORQUE;
 	}
+
 	if( (v_l - v_r) > MAX_TURN) v_l -= (v_l - v_r - MAX_TURN);
 	if( (v_r - v_l) > MAX_TURN) v_r -= (v_r - v_l - MAX_TURN);
-	//if(v_l < 0) v_l = 0;
-	//if(v_r < 0) v_r = 0;
+	if(v_l < 0) v_l = 0;
+	if(v_r < 0) v_r = 0;
 
 	Drive(left_direction, v_l, right_direction, (int)((float)v_r * L_R_BIAS));
 
 	left_speed = v_l; // Current left speed to be requested
-	right_speed = (int)((float)v_r * L_R_BIAS); // Current right speed to be requested
+	right_speed = v_r; //right_speed = (int)((float)v_r * L_R_BIAS); // Current right speed to be requested
 
 	return;
 }
@@ -1299,12 +1318,12 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 
 void PIMotors(uint32_t diff_l, uint32_t diff_r, float dt) {
 	float prop_adj = 5.0f;
-	float failed_multi = 1.0f;
+	float failed_multi = 1.5f;
 	right_speed = NORMAL_SPEED;
 	left_speed = NORMAL_SPEED;
 	float goal_delta = goal_x - prev_goal_x;
 	if((float)failed_trajectory_counter / dt > 1.0f) {
-		failed_multi += 0.5f;
+		failed_multi += 1.5f;
 		failed_trajectory_counter = 0;
 	}
 	/*if(diff_l == 0 && diff_r == 0) {
