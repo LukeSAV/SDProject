@@ -34,7 +34,7 @@
 #include <boost/multiprecision/cpp_dec_float.hpp>
 #include <limits>
 
-#define ACCEPTED_DISTANCE_TO_WAYPOINT 5
+#define ACCEPTED_DISTANCE_TO_WAYPOINT 10.0f
 #define SERIES_LENGTH 8
 
 #ifndef _USE_OBSTACLE_MAP
@@ -140,7 +140,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
     auto cur_time = std::chrono::system_clock::now();
     std::chrono::duration<double> time_since_last_position_series_sent = cur_time - time_last_position_series_sent;
     last_ekf_received_time = std::chrono::system_clock::now();
-    if(time_since_last_position_series_sent.count() < 1.0f) { // Not sending messages closer than one second apart
+    if(time_since_last_position_series_sent.count() < 3.0f) { // Not sending messages closer than one second apart
         return;
     }
     time_last_position_series_sent = std::chrono::system_clock::now();
@@ -262,7 +262,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
 
         #else
             #ifdef _USE_STRAIGHT_LINE
-                /*//Use old way of targeting waypoints
+                //Use old way of targeting waypoints
                 float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
                 float dy = LocalOp::m->end->x_index * 0.1f;
                 angle_delta = pi / 2.0f - atan2(dy, dx);
@@ -272,24 +272,24 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
 
                 // Project points along line to next waypoint for 8 * 0.6 meters (4.8 meter projection)
                 for(int i = 0; i < 8; i++) { 
-                    float new_x = 0.6f * (i + 1) * sin(angle_delta);
-                    float new_y = 0.6f * (i + 1) * cos(angle_delta);
+                    float new_x = 1.2f * (i + 1) * sin(angle_delta);
+                    float new_y = 1.2f * (i + 1) * cos(angle_delta);
                     x_series[i] = new_x;
                     y_series[i] = new_y;
                     if(new_y < 0.0f) {
                         ROS_ERROR("MISSED WAYPOINT");
                         return;
                     }
-                }*/
+                }
 
-                //angle relative to true north of line created my prev_wpt and next_wpt
-                double ang = atan((next_wpt.first - prev_wpt.first)/(next_wpt.second - prev_wpt.second));
+                /*//angle relative to true north of line created my prev_wpt and next_wpt
+                double ang = atan2((next_wpt.second - prev_wpt.second), (next_wpt.first - prev_wpt.first));
 
-
+                ROS_INFO("%f", ang);
                 //next path points in lat lon
                 for(int i = 0; i < 8; i++) {
-                  x_series[7-i] = next_wpt.second - (0.6/DEGREE_MULTI_FACTOR)*(i+1)*cos(ang);
-                  y_series[7-i] = next_wpt.first - (0.6/DEGREE_MULTI_FACTOR)*(i+1)*sin(ang);
+                  x_series[7 - i] = next_wpt.second - (0.6/DEGREE_MULTI_FACTOR)*(i+1)*cos(ang);
+                  y_series[7 - i] = next_wpt.first - (0.6/DEGREE_MULTI_FACTOR)*(i+1)*sin(ang);
                 }
 
                 //Publish last path point for visualization purposes
@@ -310,7 +310,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
 
                   x_series[i] = robot_x;
                   y_series[i] = robot_y;
-                }
+                }*/
             #else
                 float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
                 float dy = LocalOp::m->end->x_index * 0.1f;

@@ -58,6 +58,10 @@ class EKF(object):
         if thetaL != 0:
           self.R[4][4] = 5 / thetaL
 
+        if thetaR == 0 and thetaL == 0:
+          self.R[3][3] = 0.0001;
+          self.R[4][4] = 0.0001;
+
     def step(self, *args):
         if(len(args) == 6):
             timestep, gpsX, gpsY, imuHeading, thetaR, thetaL = args
