@@ -272,15 +272,12 @@ int main(void) {
 			last_used_adc_right_slots = adc_right_slots;
 
 			PointUpdate(encoder_diff_l, encoder_diff_r);
-<<<<<<< HEAD
 			wheelControl(encoder_diff_l, encoder_diff_r, wheelControl_dt);
 			//PIMotors(encoder_diff_l, encoder_diff_r);
 			wheelControl_dt = 0.0f;
-=======
 			//wheelControl(encoder_diff_l, encoder_diff_r, wheelControl_dt);
-      SetMotors3(encoder_diff_l, encoder_diff_r, wheelControl_dt);
+			//SetMotors3(encoder_diff_l, encoder_diff_r, wheelControl_dt);
 			//wheelControl_dt = 0.0f;
->>>>>>> de65d5ce379c9caad70c2666cc1a2a0aba0531a3
 			nsWait(100000000);
 		}
 		else {
