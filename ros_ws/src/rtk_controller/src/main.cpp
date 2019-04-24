@@ -10,6 +10,7 @@
 #include <cv_bridge/cv_bridge.h>
 
 #include "std_msgs/String.h"
+#include "std_msgs/Float32.h"
 #include "sensor_msgs/NavSatFix.h"
 #include "sensor_msgs/Imu.h"
 #include "ros/callback_queue.h"
@@ -61,6 +62,7 @@ static double cur_heading_gps;
 static double cur_speed;
 static std_msgs::String pub_msg;
 static sensor_msgs::NavSatFix wpt_msg;
+static std_msgs::Float32 pitch_msg;
 
 static std::chrono::time_point<std::chrono::system_clock> last_ekf_received_time = std::chrono::system_clock::now(); // Last time a message was received from the EKF
 static std::chrono::time_point<std::chrono::system_clock> time_last_position_series_sent = std::chrono::system_clock::now(); // Time that the last string of points was sent to the micro
@@ -77,6 +79,7 @@ static float y_series[SERIES_LENGTH] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f
 static std::pair<double, double> cur_coord(41.0f, -86.0f);
 
 static sensor_msgs::ImageConstPtr img_msg;
+static float pitch = 0.0f;
 
 /*
 *  Convert the floating point series to strings to publish to micro
@@ -93,6 +96,10 @@ void convertPubMsg() {
         pub_msg.data += ",";
         pub_msg.data += y_stream.str();
     }
+    std::stringstream pitch_stream;
+    pitch_stream << std::fixed << std::setprecision(3) << pitch;
+    pub_msg.data += ",";
+    pub_msg.data += pitch_stream.str();
     pub_msg.data += "}";
 }
 
@@ -112,6 +119,10 @@ void LocalMapCallback(const sensor_msgs::ImageConstPtr& msg) {
 */
 void EKFHeadingCallback(const sensor_msgs::Imu::ConstPtr& msg) { 
     cur_heading_ekf = 2 * pi - msg->orientation.y; // Rotation is inverted from standard notation
+}
+
+void PitchCallback(const std_msgs::Float32::ConstPtr& msg) {
+    pitch = msg->data ;
 }
 
 /*
@@ -405,6 +416,8 @@ int main(int argc, char **argv)
     ros::Subscriber ekf_heading_sub = nh.subscribe("/ekf/imu/data", 1000, EKFHeadingCallback);
     ros::Subscriber gpvtg_sub = nh.subscribe("rtk_gpvtg", 1000, gpvtgCallback);
     ros::Subscriber local_map = nh.subscribe("perception/map", 1000, LocalMapCallback);
+    ros::Subscriber pitch_sub = nh.subscribe("pitch", 1000, PitchCallback);
+
     auto start_landmark = std::chrono::system_clock::now();
     auto cur_time = start_landmark;
     std::chrono::duration<double> elapsed_time;
