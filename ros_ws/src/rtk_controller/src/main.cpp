@@ -262,7 +262,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
 
         #else
             #ifdef _USE_STRAIGHT_LINE
-                //Use old way of targeting waypoints
+                /*//Use old way of targeting waypoints
                 float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
                 float dy = LocalOp::m->end->x_index * 0.1f;
                 angle_delta = pi / 2.0f - atan2(dy, dx);
@@ -280,23 +280,24 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                         ROS_ERROR("MISSED WAYPOINT");
                         return;
                     }
-                }
+                }*/
 
-                //change in lat over change in lon
-                /*double ang = atan((next_wpt.first - prev_wpt.first)/(next_wpt.second - prev_wpt.second));
+                //angle relative to true north of line created my prev_wpt and next_wpt
+                double ang = atan((next_wpt.first - prev_wpt.first)/(next_wpt.second - prev_wpt.second));
 
 
-                //next path point in lat lon
+                //next path points in lat lon
                 for(int i = 0; i < 8; i++) {
                   x_series[7-i] = next_wpt.second - (0.6/DEGREE_MULTI_FACTOR)*(i+1)*cos(ang);
                   y_series[7-i] = next_wpt.first - (0.6/DEGREE_MULTI_FACTOR)*(i+1)*sin(ang);
                 }
 
+                //Publish last path point for visualization purposes
                 goal_msg.latitude = y_series[7];
                 goal_msg.longitude = x_series[7];
-                goal_pub.publish(goal_msg);*/
+                goal_pub.publish(goal_msg);
 
-                /*//Trnaslate and rotate points into robot coordinate frame
+                //Translate and rotate points into robot coordinate frame
                 for(int i = 0; i < 8; i++) {
                   //Translation
                   x_series[i] = x_series[i] - cur_coord.second;
@@ -309,7 +310,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
 
                   x_series[i] = robot_x;
                   y_series[i] = robot_y;
-                }*/
+                }
             #else
                 float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
                 float dy = LocalOp::m->end->x_index * 0.1f;
