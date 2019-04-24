@@ -297,135 +297,16 @@ int main(int argc, char **argv)
 			printf("Port: %s\n", port);
 			memset(&their_addr, 0, sizeof(struct sockaddr_in));
 			printf("Waiting for data...\n");
-			while(true) { // Wait until a message is received from the GPS
-				NMEAData::gpgga_mu.lock();
-				if(NMEAData::gpgga_msg != "") {
-					std::cout << "**" << NMEAData::gpgga_msg << "**" << std::endl;
-					NMEAData::gpgga_mu.unlock();
-					break;
-				}
-				NMEAData::gpgga_mu.unlock();
-
-				read_buf[0] = 0;
-				readBytes = SerialRead(&rtk_uart, read_buf, MAXDATASIZE);	
-				if(readBytes) { // Read some data. Check to see if it contains the GPGGA message
-					alarm(ALARMTIME); // Data has been received, reset the alarm
-					NMEAData::parseNMEA(read_buf, readBytes, gpgga_pub, gpvtg_pub);
-				}
-				NMEAData::gpgga_mu.lock();
-				std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-				if(NMEAData::gpgga_msg.size() < 36 || (NMEAData::gpgga_msg.substr(17, 4) == "0000" && NMEAData::gpgga_msg.substr(30, 5) == "00000")) { // No good yet (latitude and longitude are both 0)
-					std::cout << NMEAData::gpgga_msg << std::endl;
-					std::cout << "Data not valid yet" << std::endl;
-					NMEAData::gpgga_msg = "";
-					readBytes = 0;
-				}
-				NMEAData::gpgga_mu.unlock();
-
-			}
-			std::cout << "Obtained valid first GPGGA message to send to caster" << std::endl;
-			//	
-			if((out_i = strtol(port, &b, 10)) && (!b || !*b)) { 
-				their_addr.sin_port = htons(out_i);
-			}
-			//
-			if(!(he = gethostbyname(server))) {
-				printf("Couldn't find server\n");	
-			}
-			else if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-				printf("Socket error\n");
-			}
-			else {
-				their_addr.sin_family = AF_INET;
-				their_addr.sin_addr = *((struct in_addr *)he->h_addr);
-			}
-			//		
-			if(connect(sockfd, (struct sockaddr *)&their_addr, sizeof(struct sockaddr)) == -1) {
-				printf("Could not connect on socket\n");
-			}
-			else {
-				printf("Connected on socket\n");
-			}
-			//
-			const char *nmeahead = (args.nmea && args.mode == HTTP) ? args.nmea : 0;
-			printf("Arg data: %s\n", args.data);
-			out_i=snprintf(output_buf, MAXDATASIZE-40, /* leave some space for login */
-					"GET %s%s%s%s/%s HTTP/1.1\r\n"
-					"Host: %s\r\n%s"
-					"User-Agent: %s/%s\r\n"
-					"%s%s%s"
-					"Connection: close%s"
-					, "", "",
-					"", "",
-					args.data, args.server,
-					args.mode == NTRIP1 ? "" : "Ntrip-Version: Ntrip/2.0\r\n",
-					AGENTSTRING, revisionstr,
-					nmeahead ? "Ntrip-GGA: " : "", nmeahead ? nmeahead : "",
-					nmeahead ? "\r\n" : "",
-					//"Ntrip-GGA: ", "\r\n",
-					(*args.user || *args.password) ? "\r\nAuthorization: Basic " : "");
-			printf("%s\n", output_buf);
-			out_i += encode(output_buf + out_i, MAXDATASIZE - out_i - 4, args.user, args.password); // -4 is to save room for carriage returns and line feeds
-			output_buf[out_i++] = '\r';
-			output_buf[out_i++] = '\n';
-			output_buf[out_i++] = '\r';
-			output_buf[out_i++] = '\n';
-			//
-			if(send(sockfd, output_buf, (size_t)out_i, 0) != out_i) {
-				printf("Issue writing on socket\n");
-			}
-			else if(args.data) { // Specific stream
-				printf("Getting data from NTRIP stream:\n");
-
-				numbytes = recv(sockfd, input_buf, MAXDATASIZE-1, 0);
-
-				if(numbytes > 17 && strstr(input_buf, "ICY 200 OK")) { // Caster responded properly
-					printf("Proper stream connected. Caster expects data.\n");
-					NMEAData::gpgga_mu.lock();
-					if(send(sockfd, NMEAData::gpgga_msg.c_str(), NMEAData::gpgga_msg.size(), 0) != NMEAData::gpgga_msg.size()) {
-						printf("Issue writing on socket");
-						NMEAData::gpgga_mu.unlock();
-						break;
-					}
-					else {
-						std::cout << NMEAData::gpgga_msg << std::endl;
-						printf("GPGGA message written on socket\n");
-					}
-					NMEAData::gpgga_mu.unlock();
-				}
-				else {
-					printf("Could not connect to caster source table");
-					break;
-				}
 
 
 				auto start = std::chrono::system_clock::now();
 				auto cur_time = start;
 				std::chrono::duration<double> elapsed_time = std::chrono::duration<double>(10.0f); // Initially send message to caster
 
-				std::thread ntrip_thread(handleIPConnection, sockfd); // Launch thread to handle communication with NTRIP server
+				//std::thread ntrip_thread(handleIPConnection, sockfd); // Launch thread to handle communication with NTRIP server
 				numbytes = 0;
 
 				while(true) { // Read Caster data on socket continuously. Send GPGGA message every 5s.
-					if(elapsed_time.count() >= 5.0f) { // 5 second passed, send caster most recent GPGGA message
-						NMEAData::gpgga_mu.lock();
-						if(send(sockfd, NMEAData::gpgga_msg.c_str(), NMEAData::gpgga_msg.size(), 0) != NMEAData::gpgga_msg.size()) {
-							printf("Issue writing on socket in main loop");
-							break; // Reconnect to caster 
-						}
-						NMEAData::gpgga_mu.unlock();
-						start = std::chrono::system_clock::now();
-					}
-
-					/*
-					if(numbytes > 0) { // This should be the full blown RTCM3 message
-						alarm(ALARMTIME); // Data has been received, reset the alarm
-						int bytes_out = numbytes;
-						memcpy(buf_to_send, input_buf, numbytes);
-						numbytes = 0; // All buffer data was written
-						SerialWrite(&rtk_uart, input_buf, bytes_out);	
-					}
-					*/
 					memset(read_buf, '\0', sizeof(read_buf)); // Clear the buffer
                     input_buf_lock.lock();
 					readBytes = SerialRead(&rtk_uart, read_buf, MAXDATASIZE); // Receive any data from the UART hardware buffer
@@ -438,8 +319,7 @@ int main(int argc, char **argv)
 					//std::cout << elapsed_time.count() << std::endl;
 					std::this_thread::sleep_for(std::chrono::milliseconds(900));
 				}
-				ntrip_thread.join();
-			}
+				//ntrip_thread.join();
 			printf("Done\n");
 			//
 			sleep(1);

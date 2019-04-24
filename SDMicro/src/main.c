@@ -26,7 +26,11 @@
 #define RESOLUTION 8
 #define LOOK_AHEAD    1.732f
 #define LOOK_AHEAD_SQ 3.0f
+<<<<<<< HEAD
 #define NORMAL_SPEED 30
+=======
+#define NORMAL_SPEED 20
+>>>>>>> de65d5ce379c9caad70c2666cc1a2a0aba0531a3
 #define TIC_LENGTH 0.05461
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
@@ -36,6 +40,10 @@
 #define VEHICLE_WIDTH 0.6731
 #define MAX_SPEED 30
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
+
+#define NORMAL_SPEED_3 40
+#define TURN_COEFF 10
+#define PI_VAR 3.14159
 
 #define MAX_TURN 30 //20
 
@@ -79,7 +87,7 @@ enum Encoders adc0_state = NO_RECEIVE; // Current ADC channel 0 state
 enum Encoders adc1_state = NO_RECEIVE; // Current ADC channel 1 state
 
 enum Direction left_direction = FORWARD;
-enum Direction right_direction = REVERSE;
+enum Direction right_direction = FORWARD;
 
 static uint32_t adc0_val = 0; // Current ADC channel 0 reading
 static uint32_t adc1_val = 0; // Current ADC channel 1 reading
@@ -163,9 +171,9 @@ float orig_points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 6.0,  7.0,  8.4};
 float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 //float points_y[] = {3.0,  6.0,  9.0,  12.0,  15.0, 18.0, 21.0, 24.0};
 //float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
+//float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
 //float points_x[] = {0.4, 0.56, 0.86, 0.94, 1.06, 1.23, 1.33, 1.4};
-//float points_y[] = {0.6,  1.2,  1.8,  2.4, 3.0, 3.6,  4.2,  4.8};
+float points_y[] = {0.6,  1.2,  1.8,  2.4, 3.0, 3.6,  4.2,  4.8};
 
 float debug_goal_x[100];
 int debug_goal_x_index = 0;
@@ -174,6 +182,8 @@ float goal_y = 0.0;
 
 float prev_goal_x = 0.0;
 float prev_goal_y = 0.0;
+float heading = 0.0;
+
 uint8_t v_t = 0;
 uint32_t zero_count = 0; //DIAGNOSTIC ONLY TODO REMOVE
 
@@ -215,6 +225,7 @@ float distance_squared(float x1, float y1, float x2, float y2);
 void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void PointUpdate (uint32_t diff_l, uint32_t diff_r);
 void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
+void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void wheelControl (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void PIMotors(uint32_t diff_l, uint32_t diff_r);
 
@@ -261,9 +272,15 @@ int main(void) {
 			last_used_adc_right_slots = adc_right_slots;
 
 			PointUpdate(encoder_diff_l, encoder_diff_r);
+<<<<<<< HEAD
 			wheelControl(encoder_diff_l, encoder_diff_r, wheelControl_dt);
 			//PIMotors(encoder_diff_l, encoder_diff_r);
 			wheelControl_dt = 0.0f;
+=======
+			//wheelControl(encoder_diff_l, encoder_diff_r, wheelControl_dt);
+      SetMotors3(encoder_diff_l, encoder_diff_r, wheelControl_dt);
+			//wheelControl_dt = 0.0f;
+>>>>>>> de65d5ce379c9caad70c2666cc1a2a0aba0531a3
 			nsWait(100000000);
 		}
 		else {
@@ -467,7 +484,7 @@ static int Drive(enum Direction left_direction_v, int16_t left_speed_v, enum Dir
 	}
 	if(right_speed_v < 0) {
 		right_speed_v = -1 * right_speed_v;
-		right_direction_v = FORWARD;
+		right_direction_v = REVERSE;
 	} else if(right_speed_v > 80) {
 		right_speed_v = 80;
 	}
@@ -1257,8 +1274,54 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	return;
 }
 
+void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
+  int16_t v_l;
+  int16_t v_r;
+  if(left_speed < NORMAL_SPEED_3 - 2) {
+    v_l = left_speed + 2;
+    v_r = left_speed + 2;
+  } 
+  else {
+    //the REAL good stuff
+    v_l = NORMAL_SPEED_3;
+    v_r = NORMAL_SPEED_3;
 
+    heading = heading + ((float)diff_r - (float)diff_l) * TIC_LENGTH / VEHICLE_WIDTH;
 
+    if(goal_x >= 0) {
+      v_l = v_l + (TURN_COEFF*sin(heading))+(TURN_COEFF*sin((PI_VAR/2)*(goal_x/2)));
+      v_r = v_r + (TURN_COEFF*-sin(heading))+(-TURN_COEFF*sin((PI_VAR/2)*(goal_x/2)));
+    }
+    else if(goal_x < 0) {
+      v_l = v_l + (TURN_COEFF*sin(heading))+(TURN_COEFF*sin((PI_VAR/2)*(goal_x/2)));
+      v_r = v_r + (TURN_COEFF*-sin(heading))+(-TURN_COEFF*sin((PI_VAR/2)*(goal_x/2)));
+    }
+
+    if(v_l > MAX_TORQUE) {
+      //v_r -= v_l - MAX_TORQUE;
+      v_r -= DECEL_2;
+      v_l = MAX_TORQUE;
+    }
+    if(v_r > MAX_TORQUE) {
+      //v_l -= v_r - MAX_TORQUE;
+      v_l -= DECEL_2;
+      v_r = MAX_TORQUE;
+    }
+    //if( (v_l - v_r) > MAX_TURN) v_l -= (v_l - v_r - MAX_TURN);
+    //if( (v_r - v_l) > MAX_TURN) v_r -= (v_r - v_l - MAX_TURN);
+    //if(v_l < 0) v_l = 0;
+    //if(v_r < 0) v_r = 0;
+  }
+
+  Drive(left_direction, v_l, right_direction, (int)((float)v_r));
+  left_speed = v_l;
+  right_speed = (int)((float)v_r * L_R_BIAS);
+
+  if(left_speed <= 0 || right_speed <= 0) {
+    int idx = 0;
+    idx += 1;
+  }
+}
 void PIMotors(uint32_t diff_l, uint32_t diff_r) {
 	float prop_adj_add = 10.0f;
 	float prop_adj_sub = 10.0f;

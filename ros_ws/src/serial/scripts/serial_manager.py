@@ -131,8 +131,8 @@ def listener():
 
 
         # Failed Sync routine
-        else:
-          ser.read_until('}')
+        #else:
+          #ser.read_until('}')
 
 
 if __name__ == '__main__':

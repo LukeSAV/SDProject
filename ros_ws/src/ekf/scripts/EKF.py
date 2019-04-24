@@ -20,7 +20,8 @@ class EKF(object):
         self.Pest = numpy.identity(5)
         self.P = numpy.identity(5)
         self.P = 100*self.P
-        self.l = 0.5715
+        self.l = 0.6713
+        self.tick = 0.05461
         self.elapsed_time = 0
 
     def update_gps_cov(self, satStatus):
@@ -58,17 +59,17 @@ class EKF(object):
           self.R[4][4] = 5 / thetaL
 
     def step(self, *args):
-        self.elapsed_time = self.elapsed_time + 0.2
         if(len(args) == 6):
             timestep, gpsX, gpsY, imuHeading, thetaR, thetaL = args
+            self.elapsed_time = self.elapsed_time + timestep
             #Prediction Equations
             #print("X[2]: " + str(float(self.x[2])))
-            self.A[0][3] = -0.5*0.05308*math.sin(self.x[2])
-            self.A[0][4] = -0.5*0.05308*math.sin(self.x[2])
-            self.A[1][3] = 0.5*0.05308*math.cos(self.x[2])
-            self.A[1][4] = 0.5*0.05308*math.cos(self.x[2])
-            self.A[2][3] = 1/self.l
-            self.A[2][4] = -1/self.l
+            self.A[0][3] = -0.5*self.tick*math.sin(self.x[2])
+            self.A[0][4] = -0.5*self.tick*math.sin(self.x[2])
+            self.A[1][3] = 0.5*self.tick*math.cos(self.x[2])
+            self.A[1][4] = 0.5*self.tick*math.cos(self.x[2])
+            self.A[2][3] = 0#1/self.l
+            self.A[2][4] = 0#-1/self.l
             self.xest = self.A.dot(self.x)
             #print("Previous Vr " + str(float(self.x[3])))
             #print("Previous Vl " + str(float(self.x[4])))
@@ -78,7 +79,7 @@ class EKF(object):
 
             #Measurement Update
             displacement = math.sqrt(math.pow((gpsX-self.x[0]), 2) + math.pow((gpsY-self.x[1]), 2))
-            if(displacement < 10 or self.elapsed_time < 7):
+            if(displacement < 10):
               z = numpy.array([gpsX, gpsY, imuHeading, thetaR, thetaL]).transpose()
               self.H = numpy.identity(5)
               self.H[0][0] = 1
@@ -110,13 +111,14 @@ class EKF(object):
             self.P = (I - K.dot(self.H)).dot(self.Pest)
         elif (len(args) == 4):
             timestep, imuHeading, thetaR, thetaL = args
+            self.elapsed_time = self.elapsed_time + timestep
             # Prediction Equations
-            self.A[0][3] = -0.5*0.05308 * math.sin(self.x[2])
-            self.A[0][4] = -0.5*0.05308 * math.sin(self.x[2])
-            self.A[1][3] = 0.5*0.05308 * math.cos(self.x[2])
-            self.A[1][4] = 0.5*0.05308 * math.cos(self.x[2])
-            self.A[2][3] = 1 / self.l
-            self.A[2][4] = -1 / self.l
+            self.A[0][3] = -0.5*self.tick * math.sin(self.x[2])
+            self.A[0][4] = -0.5*self.tick * math.sin(self.x[2])
+            self.A[1][3] = 0.5*self.tick * math.cos(self.x[2])
+            self.A[1][4] = 0.5*self.tick * math.cos(self.x[2])
+            self.A[2][3] = 0#1 / self.l
+            self.A[2][4] = 0#-1 / self.l
             self.xest = self.A.dot(self.x)
             # print("Previous Vr " + str(float(self.x[3])))
             # print("Previous Vl " + str(float(self.x[4])))
