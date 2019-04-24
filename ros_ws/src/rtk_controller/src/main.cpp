@@ -145,6 +145,11 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
             prev_waypoint_key = temp_waypoint_key;
         }
         std::pair<double, double> next_wpt(MapData::path_map.at(next_waypoint_key).lat, MapData::path_map.at(next_waypoint_key).lon);
+        if(prev_waypoint_key != "") {
+          std::pair<double, double> prev_wpt(MapData::path_map.at(prev_waypoint_key).lat, MapData::path_map.at(prev_waypoint_key).lon);
+        } else {
+          return;
+        }
         // Calculate path to travel
         if(next_wpt.first == cur_coord.first && next_wpt.second == cur_coord.second) {
             return;
@@ -236,7 +241,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
 
         #else
             #ifdef _USE_STRAIGHT_LINE
-                //Use old way of targeting waypoints
+                /*//Use old way of targeting waypoints
                 float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
                 float dy = LocalOp::m->end->x_index * 0.1f;
                 angle_delta = pi / 2.0f - atan2(dy, dx);
@@ -254,7 +259,20 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                         ROS_ERROR("MISSED WAYPOINT");
                         return;
                     }
+                }*/
+
+                //change in lat of change in lon
+                double ang = atan((next_waypoint.frst - prev_waypoint_first)/(next_waypoint.second - prev_waypoint.second));
+
+                //get position of next waypoint in x and y relative to curr position of robot
+                double next_wp_y = (next_waypoint.first - cur_coord.first)*111139;
+                double next_wp_x = (next_waypoint.second - cur_coord.second)*11139;
+
+                for(int i = 0; i < 8; i++) {
+                  x_series[7-i] = next_wp_x - 0.6*(i+1)*cos(ang);
+                  y_series[7-i] = next_wp_y - 0.6*(i+1)*sin(ang);
                 }
+
             #else
                 float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
                 float dy = LocalOp::m->end->x_index * 0.1f;
