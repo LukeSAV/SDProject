@@ -37,7 +37,7 @@
 #define MAX_SPEED 30
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
-#define NORMAL_SPEED_3 20
+#define NORMAL_SPEED_3 40
 #define TURN_COEFF 10
 #define PI_VAR 3.14159
 
@@ -83,7 +83,7 @@ enum Encoders adc0_state = NO_RECEIVE; // Current ADC channel 0 state
 enum Encoders adc1_state = NO_RECEIVE; // Current ADC channel 1 state
 
 enum Direction left_direction = FORWARD;
-enum Direction right_direction = REVERSE;
+enum Direction right_direction = FORWARD;
 
 static uint32_t adc0_val = 0; // Current ADC channel 0 reading
 static uint32_t adc1_val = 0; // Current ADC channel 1 reading
@@ -468,7 +468,7 @@ static int Drive(enum Direction left_direction_v, int16_t left_speed_v, enum Dir
 	}
 	if(right_speed_v < 0) {
 		right_speed_v = -1 * right_speed_v;
-		right_direction_v = FORWARD;
+		right_direction_v = REVERSE;
 	} else if(right_speed_v > 80) {
 		right_speed_v = 80;
 	}
@@ -1295,6 +1295,8 @@ void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
     //if(v_l < 0) v_l = 0;
     //if(v_r < 0) v_r = 0;
   }
+
+  Drive(left_direction, v_l, right_direction, (float)v_r);
 }
 void PIMotors(uint32_t diff_l, uint32_t diff_r) {
 	float prop_adj_add = 10.0f;
