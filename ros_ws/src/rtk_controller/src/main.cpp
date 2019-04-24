@@ -56,11 +56,13 @@
 static const float pi = 3.1415927;
 static ros::Publisher cmd_pub;
 static ros::Publisher wpt_pub;
+static ros::Publisher goal_pub;
 static enum MapData::positionStatus position_status = MapData::FixNotValid;
 static double cur_heading_gps;
 static double cur_speed;
 static std_msgs::String pub_msg;
 static sensor_msgs::NavSatFix wpt_msg;
+static sensor_msgs::NavSatFix goal_msg;
 
 static std::chrono::time_point<std::chrono::system_clock> last_ekf_received_time = std::chrono::system_clock::now(); // Last time a message was received from the EKF
 static std::chrono::time_point<std::chrono::system_clock> time_last_position_series_sent = std::chrono::system_clock::now(); // Time that the last string of points was sent to the micro
@@ -73,6 +75,10 @@ static float cur_heading_ekf = 0.0f; // Most recent heading received from the EK
 
 static float x_series[SERIES_LENGTH] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 static float y_series[SERIES_LENGTH] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+
+static float lat_series[SERIES_LENGTH] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+static float lon_series[SERIES_LENGTH] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+
 
 static std::pair<double, double> cur_coord(41.0f, -86.0f);
 
@@ -261,18 +267,34 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                     }
                 }*/
 
-                //change in lat of change in lon
-                double ang = atan((next_waypoint.frst - prev_waypoint_first)/(next_waypoint.second - prev_waypoint.second));
+                //change in lat over change in lon
+                double ang = atan((next_waypoint.frst - prev_waypoint.first)/(next_waypoint.second - prev_waypoint.second));
 
-                //get position of next waypoint in x and y relative to curr position of robot
-                double next_wp_y = (next_waypoint.first - cur_coord.first)*111139;
-                double next_wp_x = (next_waypoint.second - cur_coord.second)*11139;
 
+                //next path point in lat lon
                 for(int i = 0; i < 8; i++) {
-                  x_series[7-i] = next_wp_x - 0.6*(i+1)*cos(ang);
-                  y_series[7-i] = next_wp_y - 0.6*(i+1)*sin(ang);
+                  x_series[7-i] = next_waypoint_x - (0.6/DEGREE_MULTI_FACTOR)*(i+1)*cos(ang);
+                  y_series[7-i] = next_waypoint_y - (0.6/DEGREE_MULTI_FACTOR)*(i+1)*sin(ang);
                 }
 
+                goal_msg.latitude = y_series[7];
+                goal_msg.longitude = x_series[7];
+                goal_pub.publish(goal_msg);
+
+                /*//Trnaslate and rotate points into robot coordinate frame
+                for(int i = 0; i < 8; i++) {
+                  //Translation
+                  x_series[i] = x_series[i] - cur_coord.second;
+                  y_series[i] = y_series[i] - cur_coord.first;
+                  
+                  // Rotation
+                  double delta_theta = cur_heading_ekf;
+                  double robot_x = (x_series[i] * cos(delta_theta) - y_series[i] * sin(delta_theta)) * DEGREE_MULTI_FACTOR;
+                  double robot_y = (x_series[i] * sin(delta_theta) + y_series[i] * cos(delta_theta)) * DEGREE_MULTI_FACTOR;
+
+                  x_series[i] = robot_x;
+                  y_series[i] = robot_y;
+                }*/
             #else
                 float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
                 float dy = LocalOp::m->end->x_index * 0.1f;
@@ -419,6 +441,7 @@ int main(int argc, char **argv)
 	ros::NodeHandle nh;
     cmd_pub = nh.advertise<std_msgs::String>("robot_cmd", 1000);
     wpt_pub = nh.advertise<sensor_msgs::NavSatFix>("next_waypoint", 1000);
+    goal_pub = nh.advertise<sensor_msgs::NavSatFix("goal_pt", 1000);
     ros::Subscriber ekf_pos_sub = nh.subscribe("/ekf/filtered", 1000, EKFPosCallback);
     ros::Subscriber ekf_heading_sub = nh.subscribe("/ekf/imu/data", 1000, EKFHeadingCallback);
     ros::Subscriber gpvtg_sub = nh.subscribe("rtk_gpvtg", 1000, gpvtgCallback);
