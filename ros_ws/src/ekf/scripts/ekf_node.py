@@ -2,10 +2,11 @@
 import rospy,tf
 import time
 from sensor_msgs.msg import NavSatFix, Imu
-from std_msgs.msg import String
+from std_msgs.msg import String, Float32
 from threading import Lock
 from copy import deepcopy, copy
 from EKF import EKF
+import math
 
 
 
@@ -54,6 +55,7 @@ nsec = 0
 
 r = rospy.Publisher("/ekf/filtered", NavSatFix, queue_size = 2)
 r2 = rospy.Publisher("/ekf/imu/data", Imu, queue_size = 2)
+imu_pub = rospy.Publisher("/pitch", Float32 , queue_size = 1)
 
 # TODO what is the default orientation?
 def gps_callback(gps_msg):
@@ -69,6 +71,15 @@ def imu_callback(imu_msg):
   imu_meas_msg = deepcopy(imu_msg)
   imu_updated = True
   imu_lock.release()
+  # Find IMU Heading (True North)
+  quaternion = (imu_msg.orientation.x,
+    imu_msg.orientation.y,
+    imu_msg.orientation.z,
+    imu_msg.orientation.w)
+  angles = tf.transformations.euler_from_quaternion(
+        quaternion)
+  pitch =  -1*angles[0] - math.pi / 2
+  imu_pub.publish(Float32(pitch))
 
 
 def encoder_callback(encoder_msg):
@@ -112,6 +123,7 @@ def encoder_callback(encoder_msg):
   angles = tf.transformations.euler_from_quaternion(
     quaternion)
   yaw = angles[2]
+  print("Angles 0: " + angles[0] + " Angles 1 " + angles[1])
 
       
   imuHeading = yaw
