@@ -180,6 +180,8 @@ float prev_goal_x = 0.0;
 float prev_goal_y = 0.0;
 float heading = 0.0;
 
+float pitch = 0.0;
+
 uint8_t v_t = 0;
 uint32_t zero_count = 0; //DIAGNOSTIC ONLY TODO REMOVE
 
@@ -418,6 +420,8 @@ static void decodePointUpdateMsg() {
 		token = strtok(NULL, comma);
 		new_points_y[i] = atof(token);
 	}
+	token = strtok(NULL, comma);
+	pitch = atof(token);
 	new_points_ready = true;
 }
 
