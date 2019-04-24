@@ -57,12 +57,14 @@ static const float pi = 3.1415927;
 static ros::Publisher cmd_pub;
 static ros::Publisher wpt_pub;
 static ros::Publisher goal_pub;
+static ros::Publisher goal_math_pub;
 static enum MapData::positionStatus position_status = MapData::FixNotValid;
 static double cur_heading_gps;
 static double cur_speed;
 static std_msgs::String pub_msg;
 static sensor_msgs::NavSatFix wpt_msg;
 static sensor_msgs::NavSatFix goal_msg;
+static sensor_msgs::NavSatFix goal_math_msg;
 
 static std::chrono::time_point<std::chrono::system_clock> last_ekf_received_time = std::chrono::system_clock::now(); // Last time a message was received from the EKF
 static std::chrono::time_point<std::chrono::system_clock> time_last_position_series_sent = std::chrono::system_clock::now(); // Time that the last string of points was sent to the micro
@@ -398,7 +400,11 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                         // These are the points interpolated along the line in latitude/longitude
                         double new_x_rot = 0.6f * (i + 1) * sin(waypoint_heading) / DEGREE_MULTI_FACTOR + intersect_pt_lon.convert_to<double>(); 
                         double new_y_rot = 0.6f * (i + 1) * cos(waypoint_heading) / DEGREE_MULTI_FACTOR + intersect_pt_lat.convert_to<double>();
-
+                        if(i == 7) {
+                          goal_math_msg.latitude = new_y_rot;
+                          goal_math_msg.longitude = new_x_rot;
+                          goal_math_pub.pubish(goal_math_msg);
+                        }
                         std::cout << "x coord: " << new_x_rot << " y coord: " << new_y_rot << std::endl;
 
 
@@ -444,6 +450,7 @@ int main(int argc, char **argv)
     cmd_pub = nh.advertise<std_msgs::String>("robot_cmd", 1000);
     wpt_pub = nh.advertise<sensor_msgs::NavSatFix>("next_waypoint", 1000);
     goal_pub = nh.advertise<sensor_msgs::NavSatFix>("goal_pt", 1000);
+    goal_math_pub = nh.advertise<sensor_msgs::NavSatFix>("goal_math_pt", 1000);
     ros::Subscriber ekf_pos_sub = nh.subscribe("/ekf/filtered", 1000, EKFPosCallback);
     ros::Subscriber ekf_heading_sub = nh.subscribe("/ekf/imu/data", 1000, EKFHeadingCallback);
     ros::Subscriber gpvtg_sub = nh.subscribe("rtk_gpvtg", 1000, gpvtgCallback);
