@@ -151,8 +151,10 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
             prev_waypoint_key = temp_waypoint_key;
         }
         std::pair<double, double> next_wpt(MapData::path_map.at(next_waypoint_key).lat, MapData::path_map.at(next_waypoint_key).lon);
+	    std::pair<double, double> prev_wpt(0.0f, 0.0f);
         if(prev_waypoint_key != "") {
-          std::pair<double, double> prev_wpt(MapData::path_map.at(prev_waypoint_key).lat, MapData::path_map.at(prev_waypoint_key).lon);
+		  prev_wpt.first = MapData::path_map.at(prev_waypoint_key).lat;
+		  prev_wpt.second = MapData::path_map.at(prev_waypoint_key).lon;
         } else {
           return;
         }
@@ -268,13 +270,13 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                 }*/
 
                 //change in lat over change in lon
-                double ang = atan((next_waypoint.frst - prev_waypoint.first)/(next_waypoint.second - prev_waypoint.second));
+                double ang = atan((next_wpt.first - prev_wpt.first)/(next_wpt.second - prev_wpt.second));
 
 
                 //next path point in lat lon
                 for(int i = 0; i < 8; i++) {
-                  x_series[7-i] = next_waypoint_x - (0.6/DEGREE_MULTI_FACTOR)*(i+1)*cos(ang);
-                  y_series[7-i] = next_waypoint_y - (0.6/DEGREE_MULTI_FACTOR)*(i+1)*sin(ang);
+                  x_series[7-i] = next_wpt.second - (0.6/DEGREE_MULTI_FACTOR)*(i+1)*cos(ang);
+                  y_series[7-i] = next_wpt.first - (0.6/DEGREE_MULTI_FACTOR)*(i+1)*sin(ang);
                 }
 
                 goal_msg.latitude = y_series[7];
@@ -441,7 +443,7 @@ int main(int argc, char **argv)
 	ros::NodeHandle nh;
     cmd_pub = nh.advertise<std_msgs::String>("robot_cmd", 1000);
     wpt_pub = nh.advertise<sensor_msgs::NavSatFix>("next_waypoint", 1000);
-    goal_pub = nh.advertise<sensor_msgs::NavSatFix("goal_pt", 1000);
+    goal_pub = nh.advertise<sensor_msgs::NavSatFix>("goal_pt", 1000);
     ros::Subscriber ekf_pos_sub = nh.subscribe("/ekf/filtered", 1000, EKFPosCallback);
     ros::Subscriber ekf_heading_sub = nh.subscribe("/ekf/imu/data", 1000, EKFHeadingCallback);
     ros::Subscriber gpvtg_sub = nh.subscribe("rtk_gpvtg", 1000, gpvtgCallback);
