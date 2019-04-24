@@ -26,7 +26,7 @@
 #define RESOLUTION 8
 #define LOOK_AHEAD    1.732f
 #define LOOK_AHEAD_SQ 3.0f
-#define NORMAL_SPEED 40
+#define NORMAL_SPEED 30
 #define TIC_LENGTH 0.05461
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
@@ -107,6 +107,7 @@ static uint16_t rx_buffer_index = 0;
 
 static char jetson_tx_buffer[TX_BUFFER_MAX]; // Buffer of UART data to transmit
 static uint16_t jetson_tx_buffer_index = 0;
+static bool jetson_buffer_lock = false;
 
 static char mc_tx_buffer[9]; // Buffer of UART data to transmit, place 255 in position 4 if only sending one packet
 static uint8_t mc_tx_buffer_index = 0;
@@ -194,6 +195,7 @@ float PI_dt = 0.0;
 float wheelControl_dt = 0.0f;
 
 
+static int int_counter = 0;
 
 static void decodeJetsonString();
 
@@ -260,6 +262,7 @@ int main(void) {
 
 			PointUpdate(encoder_diff_l, encoder_diff_r);
 			wheelControl(encoder_diff_l, encoder_diff_r, wheelControl_dt);
+			//PIMotors(encoder_diff_l, encoder_diff_r);
 			wheelControl_dt = 0.0f;
 			nsWait(100000000);
 		}
@@ -329,33 +332,37 @@ void PointUpdate (uint32_t diff_l, uint32_t diff_r) {
  * Send number of encoder ticks since last message was sent to Jetson
  */
 static void SendEncoderCount() {
-	uint32_t left_count_to_send = adc_right_slots - last_encoder_left_count_to_jetson;
-	uint32_t right_count_to_send = adc_left_slots - last_encoder_right_count_to_jetson;
+	uint32_t left_count_to_send = adc_left_slots - last_encoder_left_count_to_jetson;
+	uint32_t right_count_to_send = adc_right_slots - last_encoder_right_count_to_jetson;
 	/* If the encoder count deltas to the jetson are too high something is wrong - loop infinitely for now */
-	last_encoder_left_count_to_jetson = adc_right_slots;
-	last_encoder_right_count_to_jetson = adc_left_slots;
-	if(left_count_to_send > 99 || right_count_to_send > 99) {
-		return; // REALLY fast if this is true
-	} else {
-		char second_left_char = left_count_to_send % 10 + 48;
-		left_count_to_send /= 10;
-		char first_left_char = left_count_to_send % 10 + 48;
+	last_encoder_left_count_to_jetson = adc_left_slots;
+	last_encoder_right_count_to_jetson = adc_right_slots;
+	char second_left_char = left_count_to_send % 10 + 48;
+	left_count_to_send /= 10;
+	char first_left_char = left_count_to_send % 10 + 48;
 
-		char second_right_char = right_count_to_send % 10 + 48;
-		right_count_to_send /= 10;
-		char first_right_char = right_count_to_send % 10 + 48;
+	char second_right_char = right_count_to_send % 10 + 48;
+	right_count_to_send /= 10;
+	char first_right_char = right_count_to_send % 10 + 48;
 
-		jetson_tx_buffer[0] = '{';
-		jetson_tx_buffer[1] = 'E';
-		jetson_tx_buffer[2] = first_left_char;
-		jetson_tx_buffer[3] = second_left_char;
-		jetson_tx_buffer[4] = ',';
-		jetson_tx_buffer[5] = first_right_char;
-		jetson_tx_buffer[6] = second_right_char;
-		jetson_tx_buffer[7] = '}';
-		jetson_tx_buffer[8] = '\0';
-		USART_ITConfig(USART1, USART_IT_TXE, ENABLE);   // Enable USART1 Transmit interrupt
+	int idx = 0;
+	while(jetson_buffer_lock) { // Wait until buffer is available
+		idx += 1;
 	}
+
+	jetson_buffer_lock = true;
+
+	jetson_tx_buffer[0] = '{';
+	jetson_tx_buffer[1] = 'E';
+	jetson_tx_buffer[2] = first_left_char;
+	jetson_tx_buffer[3] = second_left_char;
+	jetson_tx_buffer[4] = ',';
+	jetson_tx_buffer[5] = first_right_char;
+	jetson_tx_buffer[6] = second_right_char;
+	jetson_tx_buffer[7] = '}';
+	jetson_tx_buffer[8] = '\0';
+	USART_ITConfig(USART1, USART_IT_TXE, ENABLE);   // Enable USART1 Transmit interrupt
+	int_counter++;
 }
 
 /*
@@ -608,6 +615,7 @@ void USART1_IRQHandler() {
 			USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
 			memset(jetson_tx_buffer, '\0', TX_BUFFER_MAX);
 			jetson_tx_buffer_index = 0;
+			jetson_buffer_lock = false;
 		}
 	}
 }
