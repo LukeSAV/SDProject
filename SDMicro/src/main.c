@@ -37,6 +37,10 @@
 #define MAX_SPEED 30
 #define MAX_MOTION_FAILURE_COUNT 30 //Each iteration is about a tenth of a second. So failure to move within 3 seconds
 
+#define NORMAL_SPEED_3 20
+#define TURN_COEFF 10
+#define PI_VAR 3.14159
+
 #define MAX_TURN 30 //20
 
 #define AVERAGE_SPEED 0.1f //Average human walking speed is about 1.4 m/s // .15
@@ -162,9 +166,9 @@ float orig_points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 6.0,  7.0,  8.4};
 float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 //float points_y[] = {3.0,  6.0,  9.0,  12.0,  15.0, 18.0, 21.0, 24.0};
 //float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
+//float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
 //float points_x[] = {0.4, 0.56, 0.86, 0.94, 1.06, 1.23, 1.33, 1.4};
-//float points_y[] = {0.6,  1.2,  1.8,  2.4, 3.0, 3.6,  4.2,  4.8};
+float points_y[] = {0.6,  1.2,  1.8,  2.4, 3.0, 3.6,  4.2,  4.8};
 
 float debug_goal_x[100];
 int debug_goal_x_index = 0;
@@ -173,6 +177,8 @@ float goal_y = 0.0;
 
 float prev_goal_x = 0.0;
 float prev_goal_y = 0.0;
+float heading = 0.0;
+
 uint8_t v_t = 0;
 uint32_t zero_count = 0; //DIAGNOSTIC ONLY TODO REMOVE
 
@@ -213,6 +219,7 @@ float distance_squared(float x1, float y1, float x2, float y2);
 void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void PointUpdate (uint32_t diff_l, uint32_t diff_r);
 void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
+void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void wheelControl (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void PIMotors(uint32_t diff_l, uint32_t diff_r);
 
@@ -259,8 +266,9 @@ int main(void) {
 			last_used_adc_right_slots = adc_right_slots;
 
 			PointUpdate(encoder_diff_l, encoder_diff_r);
-			wheelControl(encoder_diff_l, encoder_diff_r, wheelControl_dt);
-			wheelControl_dt = 0.0f;
+			//wheelControl(encoder_diff_l, encoder_diff_r, wheelControl_dt);
+      SetMotors3(encoder_diff_l, encoder_diff_r, wheelControl_dt);
+			//wheelControl_dt = 0.0f;
 			nsWait(100000000);
 		}
 		else {
@@ -1249,8 +1257,45 @@ void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	return;
 }
 
+void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
+  int16_t v_l;
+  int16_t v_r;
+  if(left_speed < NORMAL_SPEED_3 - 2) {
+    v_l = left_speed + 2;
+    v_r = left_speed + 2;
+  } 
+  else {
+    //the REAL good stuff
+    v_l = NORMAL_SPEED_3;
+    v_r = NORMAL_SPEED_3;
 
+    heading = heading + ((float)diff_r - (float)diff_l) * TIC_LENGTH / VEHICLE_WIDTH;
 
+    if(goal_x >= 0) {
+      v_l = v_l + (TURN_COEFF*sin(heading))+(TURN_COEFF*sin((PI_VAR/2)*(goal_x/2)));
+      v_r = v_r + (TURN_COEFF*-sin(heading))+(-TURN_COEFF*sin((PI_VAR/2)*(goal_x/2)));
+    }
+    else if(goal_x < 0) {
+      v_l = v_l + (TURN_COEFF*sin(heading))+(TURN_COEFF*sin((PI_VAR/2)*(goal_x/2)));
+      v_r = v_r + (TURN_COEFF*-sin(heading))+(-TURN_COEFF*sin((PI_VAR/2)*(goal_x/2)));
+    }
+
+    if(v_l > MAX_TORQUE) {
+      //v_r -= v_l - MAX_TORQUE;
+      v_r -= DECEL_2;
+      v_l = MAX_TORQUE;
+    }
+    if(v_r > MAX_TORQUE) {
+      //v_l -= v_r - MAX_TORQUE;
+      v_l -= DECEL_2;
+      v_r = MAX_TORQUE;
+    }
+    //if( (v_l - v_r) > MAX_TURN) v_l -= (v_l - v_r - MAX_TURN);
+    //if( (v_r - v_l) > MAX_TURN) v_r -= (v_r - v_l - MAX_TURN);
+    //if(v_l < 0) v_l = 0;
+    //if(v_r < 0) v_r = 0;
+  }
+}
 void PIMotors(uint32_t diff_l, uint32_t diff_r) {
 	float prop_adj_add = 10.0f;
 	float prop_adj_sub = 10.0f;
