@@ -26,7 +26,7 @@
 #define RESOLUTION 8
 #define LOOK_AHEAD    1.732f
 #define LOOK_AHEAD_SQ 3.0f
-#define NORMAL_SPEED 40
+#define NORMAL_SPEED 20
 #define TIC_LENGTH 0.05461
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
