@@ -1296,7 +1296,14 @@ void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
     //if(v_r < 0) v_r = 0;
   }
 
-  Drive(left_direction, v_l, right_direction, (float)v_r);
+  Drive(left_direction, v_l, right_direction, (int)((float)v_r));
+  left_speed = v_l;
+  right_speed = (int)((float)v_r * L_R_BIAS);
+
+  if(left_speed <= 0 || right_speed <= 0) {
+    int idx = 0;
+    idx += 1;
+  }
 }
 void PIMotors(uint32_t diff_l, uint32_t diff_r) {
 	float prop_adj_add = 10.0f;
