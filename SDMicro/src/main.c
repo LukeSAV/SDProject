@@ -26,11 +26,7 @@
 #define RESOLUTION 8
 #define LOOK_AHEAD    1.732f
 #define LOOK_AHEAD_SQ 3.0f
-<<<<<<< HEAD
-#define NORMAL_SPEED 30
-=======
 #define NORMAL_SPEED 20
->>>>>>> de65d5ce379c9caad70c2666cc1a2a0aba0531a3
 #define TIC_LENGTH 0.05461
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
@@ -1432,5 +1428,5 @@ void wheelControl(uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	if (vr > .8) power_r = -30;
 
 	last_theta = theta;
-	Drive(left_direction, power_l, right_direction, (float)power_r);
+	Drive(left_direction, power_l, right_direction, power_r*L_R_BIAS);
 }
