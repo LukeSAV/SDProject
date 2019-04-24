@@ -5,7 +5,7 @@
  *
   ******************************************************************************
   * @file    main.c
-  * @author  Luke Armbruster and Troy Conlin
+  * @author  Luke Armbruster, Troy Conlin, and Keith Aylwin
   * @version V1.0
   * @date    11-January-2019
   * @brief   Main file for D2U microcontroller source.
@@ -53,6 +53,8 @@
 #define ACCEL_2 4
 #define DECEL_2 1
 #define MAX_TORQUE 60
+
+#define BREAK_DISTANCE 80
 
 #define KPL 10.0f;
 #define KPR 15.0f;
@@ -176,10 +178,10 @@ float orig_points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 6.0,  7.0,  8.4};
 //float points_x[] = {-.95, -1.34, -1.73, -1.78, -2.56, -2.61, -3.0f, -3.39};
 //float points_y[] = {18.33/5,  18.50/5,  18.67/5,  19.61/5,  19.95/5, 20.90/5, 21.07/5, 21.23/5};
 
-float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
-//float points_x[] = {0.4, 0.56, 0.86, 0.94, 1.06, 1.23, 1.33, 1.4};
-//float points_y[] = {0.6,  1.2,  1.8,  2.4, 3.0, 3.6,  4.2,  4.8};
+//float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+//float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
+float points_x[] = {0.4, 0.56, 0.86, 0.94, 1.06, 1.23, 1.33, 1.4};
+float points_y[] = {0.6,  1.2,  1.8,  2.4, 3.0, 3.6,  4.2,  4.8};
 
 float debug_goal_x[100];
 int debug_goal_x_index = 0;
@@ -212,6 +214,7 @@ int8_t stall_count = 0;
 float PI_dt = 0.0;
 float wheelControl_dt = 0.0f;
 bool brake = false;
+bool e_stop = false;
 
 static int int_counter = 0;
 
@@ -283,7 +286,7 @@ int main(void) {
 
 			drive_enable = find_goal();
 
-			if(drive_enable) {
+			if(drive_enable && !e_stop) {
 				wheelControl(encoder_diff_l, encoder_diff_r, wheelControl_dt);
 				wheelControl_dt = 0.0f;
 			}
@@ -395,7 +398,7 @@ static void SendEncoderCount() {
  * Switch to next display mode
  */
 static void nextMode() {
-	current_mode = ENCODERS;
+	current_mode = ULTRASONICS;
 	/*if(current_mode >= END) {
 		current_mode = START + 1;
 	}*/
@@ -680,6 +683,9 @@ void USART2_IRQHandler() {
 *
 **************************************************************************/
 void TIM14_IRQHandler() {
+	if(us1_distance < BREAK_DISTANCE && us2_distance < BREAK_DISTANCE && us3_distance < BREAK_DISTANCE) {
+		brake = true;
+	}
 	SendEncoderCount();
 	time_since_last_jetson_msg += 200; // Increment timer for last jetson message
 	/* Run ultrasonic pulse */
