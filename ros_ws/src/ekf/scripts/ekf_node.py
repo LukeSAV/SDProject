@@ -101,7 +101,6 @@ def encoder_callback(encoder_msg):
 
   abso_time  =rospy.Time.now()
   time = abso_time.secs + abso_time.nsecs/1000000000.0
-  print("time.time() time: " + str(float(time)))
   purdue_fountain = (40.428642, -86.913776) 
   
   if time_init == 0:
@@ -123,7 +122,6 @@ def encoder_callback(encoder_msg):
   angles = tf.transformations.euler_from_quaternion(
     quaternion)
   yaw = angles[2]
-  print("Angles 0: " + angles[0] + " Angles 1 " + angles[1])
 
       
   imuHeading = yaw

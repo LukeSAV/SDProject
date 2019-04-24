@@ -140,7 +140,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
     auto cur_time = std::chrono::system_clock::now();
     std::chrono::duration<double> time_since_last_position_series_sent = cur_time - time_last_position_series_sent;
     last_ekf_received_time = std::chrono::system_clock::now();
-    if(time_since_last_position_series_sent.count() < 2.0f) { // Not sending messages closer than one second apart
+    if(time_since_last_position_series_sent.count() < 1.0f) { // Not sending messages closer than one second apart
         return;
     }
     time_last_position_series_sent = std::chrono::system_clock::now();
@@ -262,7 +262,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
 
         #else
             #ifdef _USE_STRAIGHT_LINE
-                /*//Use old way of targeting waypoints
+                //Use old way of targeting waypoints
                 float dx = (25.0f - LocalOp::m->end->y_index) * 0.1f;
                 float dy = LocalOp::m->end->x_index * 0.1f;
                 angle_delta = pi / 2.0f - atan2(dy, dx);
@@ -280,10 +280,10 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
                         ROS_ERROR("MISSED WAYPOINT");
                         return;
                     }
-                }*/
+                }
 
                 //change in lat over change in lon
-                double ang = atan((next_wpt.first - prev_wpt.first)/(next_wpt.second - prev_wpt.second));
+                /*double ang = atan((next_wpt.first - prev_wpt.first)/(next_wpt.second - prev_wpt.second));
 
 
                 //next path point in lat lon
@@ -294,7 +294,7 @@ void EKFPosCallback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
 
                 goal_msg.latitude = y_series[7];
                 goal_msg.longitude = x_series[7];
-                goal_pub.publish(goal_msg);
+                goal_pub.publish(goal_msg);*/
 
                 /*//Trnaslate and rotate points into robot coordinate frame
                 for(int i = 0; i < 8; i++) {
