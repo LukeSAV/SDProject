@@ -77,7 +77,6 @@ typedef struct _Point {
 	float y;
 } Point;
 
-static float TURN_MULT = 1.0f; // 3
 
 /* Display mode info */
 static uint8_t current_mode = ULTRASONICS;
@@ -212,7 +211,7 @@ uint8_t motor_cmd_count = 0;
 int8_t stall_count = 0;
 float PI_dt = 0.0;
 float wheelControl_dt = 0.0f;
-
+bool brake = false;
 
 static int int_counter = 0;
 
@@ -233,10 +232,8 @@ bool find_goal();
 float distance_squared(float x1, float y1, float x2, float y2);
 void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void PointUpdate (uint32_t diff_l, uint32_t diff_r);
-void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
-void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 void wheelControl (uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
-void PIMotors(uint32_t diff_l, uint32_t diff_r);
+void apply_brakes(uint32_t diff_l, uint32_t diff_r, float32_t diff_t);
 
 int main(void) {
 	ADCInit();
@@ -259,10 +256,6 @@ int main(void) {
 	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
 	nsWait(100000000);
 
-	//Drive(left_direction, 35, right_direction, 35*L_R_BIAS);
-	//nsWait(300000000);
-	//nsWait(300000000);
-
 	bool drive_enable = true;
 	for(;;) {
 		if(new_points_ready) {
@@ -277,26 +270,27 @@ int main(void) {
 		if(!delivery_requested) { // If the delivery has not been requested from the Jetson, don't drive
 			drive_enable = false;
 		}
-		if(drive_enable) {
 
-			encoder_diff_l = adc_left_slots - last_used_adc_left_slots;
-			last_used_adc_left_slots = adc_left_slots;
+		// Get encoder updates
+		encoder_diff_l = adc_left_slots - last_used_adc_left_slots;
+		last_used_adc_left_slots = adc_left_slots;
+		encoder_diff_r = adc_right_slots - last_used_adc_right_slots;
+		last_used_adc_right_slots = adc_right_slots;
 
-			encoder_diff_r = adc_right_slots - last_used_adc_right_slots;
-			last_used_adc_right_slots = adc_right_slots;
+		PointUpdate(encoder_diff_l, encoder_diff_r);
 
-			PointUpdate(encoder_diff_l, encoder_diff_r);
+		if(drive_enable && !brake) {
+
 			drive_enable = find_goal();
 
 			if(drive_enable) {
 				wheelControl(encoder_diff_l, encoder_diff_r, wheelControl_dt);
-				//PIMotors(encoder_diff_l, encoder_diff_r);
 				wheelControl_dt = 0.0f;
-				//wheelControl(encoder_diff_l, encoder_diff_r, wheelControl_dt);
-				//SetMotors3(encoder_diff_l, encoder_diff_r, wheelControl_dt);
-				//wheelControl_dt = 0.0f;
 			}
 			nsWait(100000000);
+		}
+		else if(brake){
+			apply_brakes(encoder_diff_l, encoder_diff_r, wheelControl_dt);
 		}
 		else {
 			Drive(left_direction, 0, right_direction, 0);
@@ -450,6 +444,10 @@ static void decodePointUpdateMsg() {
  */
 static void decodeJetsonString() {
 	switch (last_message[1]) {
+	case 'A': // Arbitrate new points coming in
+		// TODO: Apply braking arbitration
+		break;
+
 	case 'K': // Points for control algorithm
 		decodePointUpdateMsg();
 		break;
@@ -1221,211 +1219,6 @@ void SetMotors (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	return;
 }
 
-void SetMotors2 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
-	float v_c = ((float)diff_l + (float)diff_r) * TIC_LENGTH / 2.00f / (total_int_count * 0.006f);	//  m/s
-	total_int_count = 0;
-	TURN_MULT = 1.00f;
-/*
-	if(goal_x < 0.2 && goal_x > -0.2) {
-		TURN_MULT = 0.3f;
-	} else if(goal_x < 0.5 && goal_x > -0.5) {
-		TURN_MULT = 0.5f;
-	} else {
-		TURN_MULT = 0.7f;
-	}
-*/
-	bool accel_flag = false;
-	bool decel_flag = false;
-
-	if(v_c < AVERAGE_SPEED) {
-		accel_flag = true;
-		if(v_t < MAX_TORQUE) v_t += ACCEL_2;
-		else accel_fail_count++;
-	}
-	else if(v_c > AVERAGE_SPEED + 0.2f) {		// The 0.2f is so we are not constantly accel/decel, favors accel
-		if(v_t > 0) {
-			decel_flag = true;
-			v_t -= DECEL_2;
-			decel_count++;
-		}
-		else decel_fail_count++;
-	}
-
-/*	TODO Need some way to recover after COUNT exceeded
-	if(accel_fail_count >= MAX_MOTION_FAILURE_COUNT || decel_fail_count >= MAX_MOTION_FAILURE_COUNT ) {
-		Drive(left_direction, 0, right_direction, 0);
-		return;
-	}
-*/
-
-	int8_t v_l = (int) (v_t * (1.0f + VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
-	int8_t v_r = (int) (v_t * (1.0f - VEHICLE_WIDTH * goal_x * TURN_MULT / LOOK_AHEAD_SQ));
-/*
-	float goal_delta = goal_x - prev_goal_x;
-	if(v_l < v_r) {
-		if(goal_delta > 0.0f) {
-			v_r -= ACCEL_2;
-		}
-	} else if(v_r < v_l) {
-		if(goal_delta > 0.0f) {
-			v_l -= ACCEL_2;
-		}
-	}
-	prev_goal_x = goal_x;
-*/
-	if(v_l > MAX_TORQUE) {
-		v_r -= v_l - MAX_TORQUE;
-		v_l = MAX_TORQUE;
-	}
-	if(v_r > MAX_TORQUE) {
-		v_l -= v_r - MAX_TORQUE;
-		v_r = MAX_TORQUE;
-	}
-
-	if( (v_l - v_r) > MAX_TURN) v_l -= (v_l - v_r - MAX_TURN);
-	if( (v_r - v_l) > MAX_TURN) v_r -= (v_r - v_l - MAX_TURN);
-	if(v_l < 0) v_l = 0;
-	if(v_r < 0) v_r = 0;
-
-	Drive(left_direction, v_l, right_direction, (int)((float)v_r * L_R_BIAS));
-
-	left_speed = v_l; // Current left speed to be requested
-	right_speed = v_r; //right_speed = (int)((float)v_r * L_R_BIAS); // Current right speed to be requested
-
-	return;
-}
-
-void SetMotors3 (uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
-  int16_t v_l;
-  int16_t v_r;
-  if(left_speed < NORMAL_SPEED_3 - 2) {
-    v_l = left_speed + 2;
-    v_r = left_speed + 2;
-  } 
-  else {
-    //the REAL good stuff
-    v_l = NORMAL_SPEED_3;
-    v_r = NORMAL_SPEED_3;
-
-    heading = heading + ((float)diff_r - (float)diff_l) * TIC_LENGTH / VEHICLE_WIDTH;
-
-    if(goal_x >= 0) {
-      v_l = v_l + (TURN_COEFF*sin(heading))+(TURN_COEFF*sin((PI_VAR/2)*(goal_x/2)));
-      v_r = v_r + (TURN_COEFF*-sin(heading))+(-TURN_COEFF*sin((PI_VAR/2)*(goal_x/2)));
-    }
-    else if(goal_x < 0) {
-      v_l = v_l + (TURN_COEFF*sin(heading))+(TURN_COEFF*sin((PI_VAR/2)*(goal_x/2)));
-      v_r = v_r + (TURN_COEFF*-sin(heading))+(-TURN_COEFF*sin((PI_VAR/2)*(goal_x/2)));
-    }
-
-    if(v_l > MAX_TORQUE) {
-      //v_r -= v_l - MAX_TORQUE;
-      v_r -= DECEL_2;
-      v_l = MAX_TORQUE;
-    }
-    if(v_r > MAX_TORQUE) {
-      //v_l -= v_r - MAX_TORQUE;
-      v_l -= DECEL_2;
-      v_r = MAX_TORQUE;
-    }
-    //if( (v_l - v_r) > MAX_TURN) v_l -= (v_l - v_r - MAX_TURN);
-    //if( (v_r - v_l) > MAX_TURN) v_r -= (v_r - v_l - MAX_TURN);
-    //if(v_l < 0) v_l = 0;
-    //if(v_r < 0) v_r = 0;
-  }
-
-  Drive(left_direction, v_l, right_direction, (int)((float)v_r));
-  left_speed = v_l;
-  right_speed = (int)((float)v_r * L_R_BIAS);
-
-  if(left_speed <= 0 || right_speed <= 0) {
-    int idx = 0;
-    idx += 1;
-  }
-}
-void PIMotors(uint32_t diff_l, uint32_t diff_r) {
-	float prop_adj_add = 10.0f;
-	float prop_adj_sub = 10.0f;
-	float failed_multi = 1.0f + PI_dt;
-	right_speed = NORMAL_SPEED;
-	left_speed = NORMAL_SPEED;
-	float goal_delta = goal_x - prev_goal_x;
-	/*if(diff_l == 0 && diff_r == 0) {
-		stall_count++;
-	}
-	else {
-		if(stall_count >= 1) {
-			stall_count--;
-		}
-	}
-	left_speed += stall_count;
-	right_speed += stall_count;*/
-
-if(goal_x < 0.1f) { // Want to turn the vehicle left
-		if(prev_goal_x < 0.1f) {
-			if(goal_delta > 0.0f) { // The vehicle is on a trajectory to correct left
-				PI_dt = 0.0f;
-				left_speed += (prop_adj_add * goal_delta + 1.0f);
-				right_speed -= (prop_adj_add * goal_delta + 1.0f);
-				//left_speed -= 1.0f / (-1.0f * goal_x);
-			}
-			else { // Not yet on the correct trajectory
-				left_speed -= (prop_adj_sub * -1.0f * goal_x * failed_multi + 2.0f);
-				right_speed += (prop_adj_sub * -1.0f * goal_x * failed_multi + 2.0f);
-			}
-		}
-		else {
-			// Overcorrected so I want to decrease left speed
-			PI_dt = 0.0f;
-			left_speed -= (prop_adj_sub * goal_x * goal_x);
-			right_speed += (prop_adj_sub * goal_x * goal_x);
-		}
-	}
-	else { // Want to turn the vehicle right
-		if(prev_goal_x > 0.1f) {
-			if(goal_delta < 0.0f) { // The vehicle is on a trajectory to correct right
-				PI_dt = 0.0f;
-				left_speed -= (prop_adj_sub * -1.0f * goal_delta + 1.0f);
-				right_speed += (prop_adj_sub * -1.0f * goal_delta + 1.0f);
-				//left_speed += 1.0f / goal_x;
-			}
-			else { // Not yet on the correct trajectory
-				left_speed += (prop_adj_add * goal_x * failed_multi + 2.0f);
-				right_speed -= (prop_adj_add * goal_x * failed_multi + 2.0f);
-			}
-		}
-		else {
-			// Overcorrected so I want to increase left speed
-			PI_dt = 0.0f;
-			left_speed += (prop_adj_add * goal_x * goal_x);
-			right_speed -= (prop_adj_add * goal_x * goal_x);
-		}
-	}
-	prev_goal_x = goal_x;
-
-	// Need to add in motor stall logic here
-
-
-	// Corrections in case the values exceed maximum specifications
-	/*if(left_speed > MAX_SPEED) {
-		right_speed = right_speed - (left_speed - MAX_SPEED);
-		left_speed = MAX_SPEED;
-	} else if(right_speed > MAX_SPEED) {
-		left_speed = left_speed - (right_speed - MAX_SPEED);
-		right_speed = MAX_SPEED;
-	}*/
-	//if((left_speed - right_speed) > MAX_TURN) left_speed -= left_speed - right_speed - MAX_TURN;
-	//if((right_speed - left_speed) > MAX_TURN) right_speed -= right_speed - left_speed - MAX_TURN;
-
-	// Drive the MF
-	Drive(left_direction, left_speed, right_direction, (float)right_speed * L_R_BIAS);
-	/*debug_goal_x[debug_goal_x_index++] = goal_x;
-	if(debug_goal_x_index == 99) {
-		int idx = 0;
-		idx++;
-	}*/
-}
-
 
 
 
@@ -1446,9 +1239,6 @@ void wheelControl(uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	encoder_left_count += diff_l;
 	encoder_right_count += diff_r;
 
-	float vr = (diff_r * TIC_LENGTH) / diff_t;
-	float vl = (diff_l * TIC_LENGTH) / diff_t;
-
 	// First Quadrant
 	theta = atan2(goal_x,  goal_y);
 
@@ -1457,35 +1247,8 @@ void wheelControl(uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	power_l = NORMAL_SPEED + 10*theta + (theta - last_theta)*80;
 	power_r = NORMAL_SPEED - 10*theta - (theta - last_theta)*80;
 
-	/*float goal_delta = theta - last_theta;
-	// Lukes back off logic
-	if(theta < 0.0f) { // Want to turn the vehicle left
-			if(last_theta < 0.0f) {
-				if(goal_delta > 0.0f) { // The vehicle is on a trajectory to correct left
-				}
-				else { // Not yet on the correct trajectory
-
-				}
-			}
-			else {
-				// Overcorrected so I want to decrease left speed
-			}
-		}
-		else { // Want to turn the vehicle right
-			if(last_theta > 0.0f) {
-				if(goal_delta < 0.0f) { // The vehicle is on a trajectory to correct right
-				}
-				else { // Not yet on the correct trajectory
-				}
-			}
-			else {
-				// Overcorrected so I want to increase left speed
-			}
-		}*/
-
 	float v_c = ((float)diff_l + (float)diff_r) * TIC_LENGTH / 2.00f / diff_t;
-	//if (vl > .8) power_l = -30;
-	//if (vr > .8) power_r = -30;
+
 	if (v_c > .8 || backing_off) {
 		power_l = power_r = -30;
 		backing_off = 1;
@@ -1493,6 +1256,25 @@ void wheelControl(uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	if (v_c < .4) backing_off = 0;
 
 	last_theta = theta;
+
+	Drive(left_direction, power_l, right_direction, power_r*L_R_BIAS);
+}
+void apply_brakes(uint32_t diff_l, uint32_t diff_r, float32_t diff_t){
+	float v_c = ((float)diff_l + (float)diff_r) * TIC_LENGTH / 2.00f / diff_t;
+
+	if (v_c > .1){
+		power_l = -40;
+		power_r = -40*L_R_BIAS;
+	}
+	if (v_c < .1 && v_c > 0){
+		power_l = -2;
+		power_r = -2;
+	}
+	if (v_c == 0){
+		power_l = 0;
+		power_r = 0;
+		brake = false;
+	}
 
 	Drive(left_direction, power_l, right_direction, power_r*L_R_BIAS);
 }
