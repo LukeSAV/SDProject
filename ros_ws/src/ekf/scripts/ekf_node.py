@@ -119,8 +119,8 @@ def encoder_callback(encoder_msg):
   elapsed_time = elapsed_dur.secs * 1000 + float(elapsed_dur.nsecs) / 1000000.0
 
   if(gps_valid and not state_space_init):
-      ekf.x[1] = (40.429167-purdue_fountain[0])*111139
-      ekf.x[0] = (-86.912957-purdue_fountain[1])*111139
+      ekf.x[1] = (40.429155-purdue_fountain[0])*111139
+      ekf.x[0] = (-86.912950-purdue_fountain[1])*111139
       ekf.x[2] = 2.094
       yaw_init = yaw
       state_space_init = True

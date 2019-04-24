@@ -2,6 +2,7 @@
 .project
 .pydevproject
 cmake_install.cmake
+bags/
 build/
 devel/
 bin/

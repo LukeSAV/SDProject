@@ -21,6 +21,7 @@ class EKF(object):
         self.P = numpy.identity(5)
         self.P = 100*self.P
         self.l = 0.6713
+        self.tick = 0.05461
         self.elapsed_time = 0
 
     def update_gps_cov(self, satStatus):
@@ -29,8 +30,8 @@ class EKF(object):
           self.R[0][0] = 100
           self.R[1][1] = 100
         elif(satStatus == 2):
-          self.R[0][0] = 1000
-          self.R[1][1] = 1000
+          self.R[0][0] = 25
+          self.R[1][1] = 25
         elif(satStatus == 3):
           self.R[0][0] = 10
           self.R[1][1] = 10
@@ -63,10 +64,10 @@ class EKF(object):
             self.elapsed_time = self.elapsed_time + timestep
             #Prediction Equations
             #print("X[2]: " + str(float(self.x[2])))
-            self.A[0][3] = -0.5*0.05308*math.sin(self.x[2])
-            self.A[0][4] = -0.5*0.05308*math.sin(self.x[2])
-            self.A[1][3] = 0.5*0.05308*math.cos(self.x[2])
-            self.A[1][4] = 0.5*0.05308*math.cos(self.x[2])
+            self.A[0][3] = -0.5*self.tick*math.sin(self.x[2])
+            self.A[0][4] = -0.5*self.tick*math.sin(self.x[2])
+            self.A[1][3] = 0.5*self.tick*math.cos(self.x[2])
+            self.A[1][4] = 0.5*self.tick*math.cos(self.x[2])
             self.A[2][3] = 0#1/self.l
             self.A[2][4] = 0#-1/self.l
             self.xest = self.A.dot(self.x)
@@ -112,10 +113,10 @@ class EKF(object):
             timestep, imuHeading, thetaR, thetaL = args
             self.elapsed_time = self.elapsed_time + timestep
             # Prediction Equations
-            self.A[0][3] = -0.5*0.05308 * math.sin(self.x[2])
-            self.A[0][4] = -0.5*0.05308 * math.sin(self.x[2])
-            self.A[1][3] = 0.5*0.05308 * math.cos(self.x[2])
-            self.A[1][4] = 0.5*0.05308 * math.cos(self.x[2])
+            self.A[0][3] = -0.5*self.tick * math.sin(self.x[2])
+            self.A[0][4] = -0.5*self.tick * math.sin(self.x[2])
+            self.A[1][3] = 0.5*self.tick * math.cos(self.x[2])
+            self.A[1][4] = 0.5*self.tick * math.cos(self.x[2])
             self.A[2][3] = 0#1 / self.l
             self.A[2][4] = 0#-1 / self.l
             self.xest = self.A.dot(self.x)
