@@ -1,5 +1,8 @@
 /**
  *
+ *
+ *
+ *
   ******************************************************************************
   * @file    main.c
   * @author  Luke Armbruster and Troy Conlin
@@ -14,6 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "arm_math.h"
+#include <math.h>
 #include "stdbool.h"
 
 #define IR_RECEIVE_MAX 1200
@@ -24,14 +28,16 @@
 
 #define ARRAY_SIZE 8
 #define RESOLUTION 8
-#define LOOK_AHEAD    1.732f
-#define LOOK_AHEAD_SQ 3.0f
+#define LOOK_AHEAD    3.0f
+//#define LOOK_AHEAD    1.732f
+#define LOOK_AHEAD_SQ 9.0f
+//#define LOOK_AHEAD_SQ 3.0f
 #define NORMAL_SPEED 20
 #define TIC_LENGTH 0.05461
 #define VELOCITY_EQ_M 11.013
 #define VELOCITY_EQ_B 20.0
 //#define VELOCITY_EQ_B 9.5862
-#define L_R_BIAS 1.10f   	//Multiply to Right Wheel
+#define L_R_BIAS 1.23f   	//Multiply to Right Wheel
 #define ACCEL 2
 #define VEHICLE_WIDTH 0.6731
 #define MAX_SPEED 30
@@ -148,6 +154,7 @@ static uint8_t  decel_fail_count = 0;
 static bool jetson_connected = false;
 bool new_points_ready = false;
 static uint16_t time_since_screen_change = 0;
+float last_theta = 0;
 
 int left_speed_integral[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 int right_speed_integral[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
@@ -164,12 +171,16 @@ float new_points_y[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 float orig_points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.4};
 float orig_points_y[] = {1.0,  2.0,  3.0,  4.0,  5.0, 6.0,  7.0,  8.4};
 
-float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-//float points_y[] = {3.0,  6.0,  9.0,  12.0,  15.0, 18.0, 21.0, 24.0};
 //float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-//float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
+//float points_y[] = {3.0,  6.0,  9.0,  12.0,  15.0, 18.0, 21.0, 24.0};
+
+//float points_x[] = {-.95, -1.34, -1.73, -1.78, -2.56, -2.61, -3.0f, -3.39};
+//float points_y[] = {18.33/5,  18.50/5,  18.67/5,  19.61/5,  19.95/5, 20.90/5, 21.07/5, 21.23/5};
+
+float points_x[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+float points_y[] = {0.0,  0.0,  0.0,  0.0,  0.0, 0.0,  0.0, 0.0};
 //float points_x[] = {0.4, 0.56, 0.86, 0.94, 1.06, 1.23, 1.33, 1.4};
-float points_y[] = {0.6,  1.2,  1.8,  2.4, 3.0, 3.6,  4.2,  4.8};
+//float points_y[] = {0.6,  1.2,  1.8,  2.4, 3.0, 3.6,  4.2,  4.8};
 
 float debug_goal_x[100];
 int debug_goal_x_index = 0;
@@ -248,6 +259,10 @@ int main(void) {
 	USART_ITConfig(USART2, USART_IT_TXE, ENABLE); // Send initial command to enable timeout
 	nsWait(100000000);
 
+	//Drive(left_direction, 35, right_direction, 35*L_R_BIAS);
+	//nsWait(300000000);
+	//nsWait(300000000);
+
 	bool drive_enable = true;
 	for(;;) {
 		if(new_points_ready) {
@@ -256,8 +271,9 @@ int main(void) {
 			memset(new_points_x, 0.0f, sizeof(float) * 8);
 			memset(new_points_y, 0.0f, sizeof(float) * 8);
 			new_points_ready = false;
+			last_theta = 0;
 		}
-		drive_enable = find_goal();
+		drive_enable = true;
 		if(!delivery_requested) { // If the delivery has not been requested from the Jetson, don't drive
 			drive_enable = false;
 		}
@@ -270,12 +286,16 @@ int main(void) {
 			last_used_adc_right_slots = adc_right_slots;
 
 			PointUpdate(encoder_diff_l, encoder_diff_r);
-			wheelControl(encoder_diff_l, encoder_diff_r, wheelControl_dt);
-			//PIMotors(encoder_diff_l, encoder_diff_r);
-			wheelControl_dt = 0.0f;
-			//wheelControl(encoder_diff_l, encoder_diff_r, wheelControl_dt);
-			//SetMotors3(encoder_diff_l, encoder_diff_r, wheelControl_dt);
-			//wheelControl_dt = 0.0f;
+			drive_enable = find_goal();
+
+			if(drive_enable) {
+				wheelControl(encoder_diff_l, encoder_diff_r, wheelControl_dt);
+				//PIMotors(encoder_diff_l, encoder_diff_r);
+				wheelControl_dt = 0.0f;
+				//wheelControl(encoder_diff_l, encoder_diff_r, wheelControl_dt);
+				//SetMotors3(encoder_diff_l, encoder_diff_r, wheelControl_dt);
+				//wheelControl_dt = 0.0f;
+			}
 			nsWait(100000000);
 		}
 		else {
@@ -1099,6 +1119,10 @@ bool find_goal() {
 
 	//If intersected point lies beyond Look Ahead, Robot is very off course. Set course for nearest forward point
 	if(distance_squared(0.0, 0.0, target_1.x, target_1.y) > LOOK_AHEAD_SQ ) {
+//		target_2.x = target_1.x;
+//		target_2.y = target_1.y;
+//		target_1.x = 0;
+//		target_1.y = 0;
 		goal_x = target_2.x;
 		goal_y = target_2.y;
 		return true;
@@ -1337,7 +1361,7 @@ void PIMotors(uint32_t diff_l, uint32_t diff_r) {
 	left_speed += stall_count;
 	right_speed += stall_count;*/
 
-	if(goal_x < 0.1f) { // Want to turn the vehicle left
+if(goal_x < 0.1f) { // Want to turn the vehicle left
 		if(prev_goal_x < 0.1f) {
 			if(goal_delta > 0.0f) { // The vehicle is on a trajectory to correct left
 				PI_dt = 0.0f;
@@ -1414,8 +1438,10 @@ void PIMotors(uint32_t diff_l, uint32_t diff_r) {
 long int encoder_left_count;
 long int encoder_right_count;
 float theta = 0;
-float last_theta = 0;
 
+bool backing_off = 0;
+
+float power_l, power_r;
 void wheelControl(uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	encoder_left_count += diff_l;
 	encoder_right_count += diff_r;
@@ -1424,13 +1450,49 @@ void wheelControl(uint32_t diff_l, uint32_t diff_r, float32_t diff_t) {
 	float vl = (diff_l * TIC_LENGTH) / diff_t;
 
 	// First Quadrant
-	theta = atan(goal_x/ goal_y);
-	float power_l = NORMAL_SPEED + 20*theta + (theta - last_theta)*60;
-	float power_r = NORMAL_SPEED - 20*theta - (theta - last_theta)*60;
+	theta = atan2(goal_x,  goal_y);
 
-	if (vl > .8) power_l = -30;
-	if (vr > .8) power_r = -30;
+
+
+	power_l = NORMAL_SPEED + 10*theta + (theta - last_theta)*80;
+	power_r = NORMAL_SPEED - 10*theta - (theta - last_theta)*80;
+
+	/*float goal_delta = theta - last_theta;
+	// Lukes back off logic
+	if(theta < 0.0f) { // Want to turn the vehicle left
+			if(last_theta < 0.0f) {
+				if(goal_delta > 0.0f) { // The vehicle is on a trajectory to correct left
+				}
+				else { // Not yet on the correct trajectory
+
+				}
+			}
+			else {
+				// Overcorrected so I want to decrease left speed
+			}
+		}
+		else { // Want to turn the vehicle right
+			if(last_theta > 0.0f) {
+				if(goal_delta < 0.0f) { // The vehicle is on a trajectory to correct right
+				}
+				else { // Not yet on the correct trajectory
+				}
+			}
+			else {
+				// Overcorrected so I want to increase left speed
+			}
+		}*/
+
+	float v_c = ((float)diff_l + (float)diff_r) * TIC_LENGTH / 2.00f / diff_t;
+	//if (vl > .8) power_l = -30;
+	//if (vr > .8) power_r = -30;
+	if (v_c > .8 || backing_off) {
+		power_l = power_r = -30;
+		backing_off = 1;
+	}
+	if (v_c < .4) backing_off = 0;
 
 	last_theta = theta;
+
 	Drive(left_direction, power_l, right_direction, power_r*L_R_BIAS);
 }
