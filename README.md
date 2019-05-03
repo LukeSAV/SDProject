@@ -1,6 +1,6 @@
 # **SDProject**
 
-Repo for senior design app code
+Repo for senior design code
 
 ## <u>Matlab</u>
 
