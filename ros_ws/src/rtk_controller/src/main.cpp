@@ -1,3 +1,10 @@
+/*
+* @brief This program handles broadcasting points to the microcontroller in its current reference frame. It takes into account the current position and 
+*           heading of the robot as reported by the EKF and plans a trajectory to the next waypoint. #ifdef guards are used when wanting to use a different algorithm to calculate the points.
+*           A* algorithm is self contained in this package.
+* @author Luke Armbruster
+* @bug Point projection onto the waypoint line itself instead of a trajectory between the robot and the next waypoint has not been confirmed to work. Boost precision library had to be used since a double did not have enough precision for the calculation (may take a performance hit).
+*/
 #include <chrono>
 #include <exception>
 #include <iomanip>

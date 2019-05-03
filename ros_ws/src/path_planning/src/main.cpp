@@ -1,7 +1,8 @@
 /*******************************************************************************
+ *  DEPRECATED - THIS CODE MAY BE TESTED IN ISOLATION BUT WAS INTEGRATED INTO path_planning FOR PROJECT USE
  *  @package path_planning
  *  @brief Path planning code. Subscribes to the state output of the Kalman filter and
- *  outputs an optimal path using A*.
+ *  outputs an optimal path using A*. 
  *  @author Luke Armbruster 
  * 
  ******************************************************************************/

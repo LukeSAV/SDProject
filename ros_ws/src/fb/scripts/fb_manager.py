@@ -1,4 +1,6 @@
 #!/usr/bin/env python2.7
+# @brief This node is responsible for sending and reading relevant data from the Google Firebase to interact with the iOS application.
+# @author Luke Armbruster
 from firebase import firebase
 import rospy
 from std_msgs.msg import String, Bool

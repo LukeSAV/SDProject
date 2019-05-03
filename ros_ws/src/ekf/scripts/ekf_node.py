@@ -1,4 +1,7 @@
 #! /usr/bin/python
+# @brief This node runs the Extended Kalman Filter for the project.
+# @author Michael Karrs
+
 import rospy,tf
 import time
 from sensor_msgs.msg import NavSatFix, Imu

@@ -24,8 +24,7 @@
  *
  *	@brief This contains the client code for running NTRIP corrections services with an RTK capable device.
  *			
- *	Currently supports Raspberry Pi 3b. This device uses two USB ports for NMEA read and RTCM write. It also
- *	uses on-board UART on Pi to read/write to bluetooth device for companion iOS app.
+ *	Currently supports Ubuntu devices running ROS. This device uses one USB port for NMEA read and RTCM write.
  *
  *	@author Luke Armbruster
  *
@@ -175,10 +174,10 @@ static void sighandler_alarm(int sig)
 
 static void setargs(struct Args *args)
 {
-	args->server = "108.59.49.226";
+	args->server = "insert your ip address here";
 	args->port = "10000";
-	args->user = "lukea1";
-	args->password = "lukea1";
+	args->user = "insert your username here";
+	args->password = "insert your password here";
 	args->nmea = 0;
 	args->data = "RTCM3_MAX";
 	args->bitrate = 0;
@@ -303,7 +302,7 @@ int main(int argc, char **argv)
 				auto cur_time = start;
 				std::chrono::duration<double> elapsed_time = std::chrono::duration<double>(10.0f); // Initially send message to caster
 
-				//std::thread ntrip_thread(handleIPConnection, sockfd); // Launch thread to handle communication with NTRIP server
+				std::thread ntrip_thread(handleIPConnection, sockfd); // Launch thread to handle communication with NTRIP server
 				numbytes = 0;
 
 				while(true) { // Read Caster data on socket continuously. Send GPGGA message every 5s.
@@ -319,7 +318,7 @@ int main(int argc, char **argv)
 					//std::cout << elapsed_time.count() << std::endl;
 					std::this_thread::sleep_for(std::chrono::milliseconds(900));
 				}
-				//ntrip_thread.join();
+				ntrip_thread.join();
 			printf("Done\n");
 			//
 			sleep(1);

@@ -1,5 +1,5 @@
 <launch>
-
+    <!-- Main launch file for the D2U system -->
     <!-- GPS Manager -->
 	<node name="rtk_gps_node" pkg="rtk" type="rtk_gps_node" output="screen"/>
 
@@ -19,7 +19,7 @@
     <include file="/home/nvidia/workspace/SDProject/ros_ws/launch/imu.launch"/>
 
     <!-- Firebase -->
-    <!-- node name="fb_node" pkg="fb" type="fb_manager.py" output="screen"/-->
+    <node name="fb_node" pkg="fb" type="fb_manager.py" output="screen"/>
 
     <!-- Perception Layer -->
     <include file="/home/nvidia/workspace/SDProject/ros_ws/src/perception/launch/lidar_test.launch"/>

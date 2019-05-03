@@ -1,4 +1,7 @@
 #!/usr/bin/env python2.7
+# @brief This program subscribes to topics broadcast by the various nodes in the project and publishes formatted serial data to the microcontroller. The program also 
+#         reads the encoder values from the microcontroller.
+# @author Luke Armbruster, Keith Aylwin
 import rospy
 import serial
 import time

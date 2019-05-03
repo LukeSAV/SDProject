@@ -1,4 +1,6 @@
 #! /usr/bin/python
+# @brief This node runs the image processing on the lidar pointcloud for the path_planning node
+# @author Keith Aylwin
 
 import rospy
 import cv2
