@@ -86,7 +86,9 @@ class MapMainController: UIViewController, CLLocationManagerDelegate, MKMapViewD
      */
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         //let location = CLLocationCoordinate2D(latitude: 40.425021, longitude: -86.914325)
-        userLocation = Waypoint(coordinate: locations[0].coordinate, image: MapMainSettings.mapMainSettings.userPin!)
+        //userLocation = Waypoint(coordinate: locations[0].coordinate, image: MapMainSettings.mapMainSettings.userPin!)
+        userLocation = Waypoint(coordinate: defaultCoord, image: MapMainSettings.mapMainSettings.userPin!)
+
     }
 
 
