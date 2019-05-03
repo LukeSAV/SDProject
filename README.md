@@ -41,8 +41,8 @@ This package contains the fb_node that handles interfacing to firebase.
 Nodes:
 
 - fb_node: 
-  - Publishes - None
-  - Subscribes - rtk_gpgga (Type: String)
+  - Publishes - /delivery_requested_status (Type: Bool)
+  - Subscribes - /rtk_gpgga (Type: String)
 
 ##### rtk
 
@@ -51,7 +51,7 @@ This package contains the rtk_gps_node that runs code to support RTK corrections
 Nodes:
 
 - rtk_gps_node
-  - Publishes - rtk_gpgga (Type: String)
+  - Publishes - /rtk_gpgga (Type: NavSatFix), /rtk_gpvtg (Type: HeadingSpeed)
   - Subscribes - None
 
 ##### rtk_controller
@@ -61,8 +61,8 @@ This package contains the rtk_controller node that performs path point generatio
 Nodes:
 
 - rtk_controller_node
-  - Publishes - None
-  - Subscribes - rtk_gpgga(Type: String)
+  - Publishes - /robot_cmd (Type: String), /next_waypoint (Type: NavSatFix), /goal_pt (Type: NavSatFix), /goal_math_pt (Type: NavSatFix)
+  - Subscribes - /ekf/filtered (Type: NavSatFix), /ekf/imu/data (Type: Imu), /rtk_gpvtg (Type: String), /perception/map (Type: Image), /pitch (Type: Float32) 
 
 ##### joystick_drivers
 
@@ -92,3 +92,12 @@ Nodes:
 - lidar_node:
   - Publishes - /perception/map (Type: Image)
   - Subscribes - /scan_img (Type: Image)
+  
+##### ekf
+
+This package contains the ekf_node that runs the Extended Kalman Filter to fuse the robot sensor information.
+
+Nodes:
+- ekf_node:
+  - Publishes - /ekf/filtered (Type: NavSatFix), /ekf/imu/data (Type: NavSatFix), /pitch (Type: Float32)
+  - Subscribes - /imu/data (Type: Imu), /rtk_gpgga (Type: NavSatFix), /encoder (Type: String) 
