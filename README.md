@@ -2,23 +2,13 @@
 
 Repo for senior design app code
 
+## <u>Matlab</u>
 
+Contains matlab test harness and associated files for the Extended Kalman Filter - This has since been converted to ekf_node in the ROS workspace.
 
-## <u>BluetoothTuner</u>
+## <u>SDMicro</u>
 
-
-
-## <u>GroundDetector</u>
-
-
-
-## <u>Robot</u>
-
-
-
-## <u>Sabertooth_Driver</u>
-
-## Modified example of interfacing with the Sabertooth motor controller.
+Contains all microcontroller related code for the project.
 
 ## <u>boards</u>
 
@@ -66,6 +56,8 @@ Nodes:
 
 ##### rtk_controller
 
+This package contains the rtk_controller node that performs path point generation to send to the microcontroller. A* algorithm, path point projection, and much more.
+
 Nodes:
 
 - rtk_controller_node
@@ -79,35 +71,24 @@ This package contains the joy_node that interfaces the PS4 controller to ROS.
 Nodes:
 
 - joy_node: 
-  - Publishes - joy (Type: Joy)
-    - Subscribes - None 
-
-##### rc
-
-This package contains the rc_listener node that listens for RC inputs and converts that to requests sent to the microcontroller
-
-Nodes:
-
-- rc_listener:
-  - Publishes - None
-  - Subscribes - joy (Type: Joy)
+  - Publishes - /joy (Type: Joy)
+  - Subscribes - None 
 
 ##### serial
 
-This package will interface with the UART pins on the Jetson. 
+This package contains the serial_node that handles all communication with the microcontroller.
 
 Nodes:
 
 - serial_node:
-  - Publishes - None
-  - Subscribes - packet (Type: String)
+  - Publishes - /encoder (Type: String), /goal_string (Type: String)
+  - Subscribes - /joy (Type: Joy), /delivery_requested_status (Type: Bool), /robot_cmd (Type: String)
 
-##### path_planning
+##### perception
 
-This package contains the path_planning_node that uses the adjusted robot position and map provided by the perception layer to plan a local path that targets global waypoints.
+This package contains the lidar_node that handles creation of an obstacle map that the path planning algorithm may be run on.
 
 Nodes:
-
-- path_planning_node:
-  - Publishes - packet (Type: String)
-  - Subscribes - TBD
+- lidar_node:
+  - Publishes - /perception/map (Type: Image)
+  - Subscribes - /scan_img (Type: Image)
