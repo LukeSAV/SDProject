@@ -4,6 +4,8 @@ Repo for senior design code
 
 Link to project video: https://www.youtube.com/watch?v=O6JMgqfRybo&t=1s
 
+<img src="./Chassis v44_iso.png">
+
 ## <u>Matlab</u>
 
 Contains matlab test harness and associated files for the Extended Kalman Filter - This has since been converted to ekf_node in the ROS workspace.
